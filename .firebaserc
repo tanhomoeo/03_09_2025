@@ -1,0 +1,9 @@
+{
+  "projects": {
+    "default": "dr-nihar",
+    "staging": "dr-nihar",
+    "y": "dr-nihar"
+  },
+  "targets": {},
+  "etags": {}
+}

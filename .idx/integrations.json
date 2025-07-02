@@ -1,0 +1,7 @@
+{
+  "firebase_hosting": {
+    "deploymentHostingUrl": "https://dr-nihar.web.app"
+  },
+  "cloud_run_deploy": {},
+  "gemini_api": {}
+}

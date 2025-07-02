@@ -1,0 +1,305 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'PT Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@layer base {
+  :root {
+    /* Glassmorphism & Neumorphism Light Theme */
+    --background: 220 20% 95%; /* Subtle cool gray background */
+    --foreground: 224 71% 4%;
+
+    /* Glass effect for cards: semi-transparent white */
+    --card: 220 20% 100% / 0.6;
+    --card-foreground: 224 71% 4%;
+
+    /* Glass effect for popovers */
+    --popover: 220 20% 100% / 0.7;
+    --popover-foreground: 224 71% 4%;
+
+    --primary: 262.1 83.3% 57.8%; /* Vibrant Purple */
+    --primary-foreground: 210 20% 98%;
+
+    --secondary: 220 14.3% 95.9%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 220 14.3% 95.9%;
+    --muted-foreground: 220 8.9% 46.1%;
+    
+    --accent: 220 14.3% 95.9%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 20% 98%;
+
+    --border: 220 13% 91% / 0.8; /* Semi-transparent border for glass edge */
+    --input: 220 13% 91%;
+    --ring: 262.1 83.3% 57.8%;
+    
+    --radius: 0.8rem;
+
+    /* Dark Blue Shadow colors for Neumorphism */
+    --shadow-light: 0 0% 100% / 0.6;
+    --shadow-dark: 220 30% 25% / 0.25;
+
+    /* Sidebar specific colors (also glassy) */
+    --sidebar-background: 220 15% 98% / 0.75;
+    --sidebar-foreground: 224 71% 4%;
+    --sidebar-primary: hsl(var(--primary));
+    --sidebar-primary-foreground: hsl(var(--primary-foreground));
+    --sidebar-accent: 262.1 83.3% 57.8% / 0.15; /* Light purple, slightly more opaque */
+    --sidebar-accent-2: 220 80% 60% / 0.15; /* Light blue */
+    --sidebar-accent-foreground: hsl(var(--primary));
+    --sidebar-border: 220 13% 91% / 0.5;
+    --sidebar-ring: hsl(var(--ring));
+  }
+
+  .dark {
+    /* Glassmorphism & Neumorphism Dark Theme */
+    --background: 224 71% 4%;
+    --foreground: 210 20% 98%;
+
+    /* Glass effect for cards: semi-transparent dark gray */
+    --card: 216 34% 12% / 0.5;
+    --card-foreground: 210 20% 98%;
+
+    /* Glass effect for popovers */
+    --popover: 216 34% 12% / 0.7;
+    --popover-foreground: 210 20% 98%;
+    
+    --primary: 262.1 83.3% 57.8%;
+    --primary-foreground: 210 20% 98%;
+
+    --secondary: 215 28% 17%;
+    --secondary-foreground: 210 20% 98%;
+
+    --muted: 215 28% 17%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 215 28% 17%;
+    --accent-foreground: 210 20% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 215 28% 17% / 0.8; /* Semi-transparent border for glass edge */
+    --input: 215 28% 22%;
+    --ring: 262.1 83.3% 57.8%;
+    
+    --radius: 0.8rem;
+
+    /* Shadow colors for Dark Neumorphism */
+    --shadow-light: 220 15% 25% / 0.35;
+    --shadow-dark: 220 70% 3% / 0.9;
+
+    /* Sidebar specific colors (also glassy) */
+    --sidebar-background: 220 20% 15% / 0.6;
+    --sidebar-foreground: 210 20% 98%;
+    --sidebar-primary: hsl(var(--primary));
+    --sidebar-primary-foreground: hsl(var(--primary-foreground));
+    --sidebar-accent: 262.1 83.3% 57.8% / 0.15;
+    --sidebar-accent-2: 220 80% 60% / 0.15;
+    --sidebar-accent-foreground: hsl(var(--primary));
+    --sidebar-border: 215 28% 17% / 0.5;
+    --sidebar-ring: hsl(var(--ring));
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    background-image: radial-gradient(circle at top left, hsl(var(--primary) / 0.05), transparent 30%), 
+                      radial-gradient(circle at bottom right, hsl(var(--primary) / 0.05), transparent 40%);
+    background-attachment: fixed;
+  }
+}
+
+@layer utilities {
+  .text-shadow-3d {
+    text-shadow: 1px 1px 2px hsl(var(--shadow-dark));
+  }
+  .text-shadow-md {
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+  }
+}
+
+/* Custom styles for printing */
+.print-only-block {
+  display: none;
+}
+
+@media print {
+  .hide-on-print {
+    display: none !important;
+  }
+  .print-only-block {
+    display: block !important;
+  }
+  
+  body.printing-dashboard-active, 
+  body.printing-report-active,
+  body.printing-active {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    margin: 0;
+    padding: 0;
+    background-color: #fff !important;
+    background-image: none !important;
+  }
+
+  .print-dashboard-container,
+  .print-container {
+    width: 100%;
+    margin: 0 auto;
+    padding: 5mm;
+    box-sizing: border-box;
+    font-family: 'PT Sans', Arial, sans-serif;
+    color: #000 !important;
+  }
+
+  .print-header {
+    text-align: center;
+    margin-bottom: 4mm;
+    border-bottom: 1px solid #666;
+    padding-bottom: 2mm;
+  }
+  .print-header h1 { font-size: 14pt; }
+  .print-header p, .print-header h2 { font-size: 10pt; }
+  .print-title { font-size: 12pt; }
+  
+  .print-dashboard-container table,
+  .print-container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 2mm;
+    font-size: 9pt;
+  }
+
+  .print-dashboard-container th, .print-dashboard-container td,
+  .print-container th, .print-container td {
+    border: 1px solid #bbb;
+    padding: 1.5mm 2mm;
+    text-align: left;
+    vertical-align: top;
+    word-break: break-word;
+  }
+
+  .print-dashboard-container th,
+  .print-container th {
+    background-color: #f0f0f0 !important;
+    font-weight: bold;
+  }
+
+  .print-instruction-container {
+      width: 100%;
+      margin: 0 auto;
+      padding: 10mm 12mm;
+      box-sizing: border-box;
+      font-family: 'PT Sans', Arial, sans-serif;
+      font-size: 11pt;
+      line-height: 1.5;
+      color: #000 !important;
+  }
+  .print-instruction-container .print-header {
+      border-bottom: 2px solid #333;
+      padding-bottom: 3mm;
+  }
+  .print-instruction-container .print-header h1 {
+      font-family: 'Poppins', 'PT Sans', sans-serif;
+  }
+   .print-instruction-container .meta-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 9pt;
+      margin-top: 3mm;
+      padding-bottom: 1mm;
+      border-bottom: 1px dotted #888;
+  }
+  .print-instruction-container .patient-name {
+      font-size: 10pt;
+      margin-top: 2mm;
+      margin-bottom: 2mm;
+  }
+  .print-instruction-container .patient-diary-no-print {
+      font-size: 10pt;
+      margin-top: -2mm;
+      margin-bottom: 3mm;
+  }
+  .print-instruction-container .instruction-title {
+      text-align: center;
+      font-weight: bold;
+      text-decoration: underline;
+      margin: 4mm 0;
+      font-size: 12pt;
+  }
+  .print-instruction-container .main-instruction {
+      font-size: 11pt;
+      text-align: center;
+      margin: 5mm 0;
+      padding: 3mm;
+      border: 1px dashed #555;
+      border-radius: 5px;
+      min-height: 50px;
+  }
+  .print-instruction-container .advice-section {
+      margin-top: 5mm;
+  }
+  .print-instruction-container .advice-title {
+      font-weight: bold;
+      font-size: 11pt;
+      margin-bottom: 2mm;
+  }
+  .print-instruction-container .advice-list {
+      list-style-type: none;
+      padding-left: 0;
+      font-size: 10pt;
+      line-height: 1.6;
+  }
+  .print-instruction-container .advice-list li {
+      display: flex;
+      align-items: flex-start;
+  }
+  .print-instruction-container .print-footer {
+      margin-top: 15mm;
+      padding-top: 5mm;
+      position: relative;
+      height: 40mm;
+      text-align: right;
+  }
+  .print-instruction-container .signature-line {
+      display: block;
+      width: 150px;
+      border-bottom: 1px solid #333;
+      margin-bottom: 2mm;
+      margin-left: auto;
+  }
+  .print-instruction-container .signature-area p {
+      margin: 1mm 0;
+      font-size: 10pt;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-muted/30;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-primary/50;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-primary/70;
+}
