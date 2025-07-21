@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import type { PaymentSlip, ClinicSettings, PaymentMethod } from '@/lib/types';
+import type { PaymentSlip, ClinicSettings } from '@/lib/types';
 import { formatDate, formatCurrency, getClinicSettings, getPaymentMethodLabel } from '@/lib/firestoreService';
 import { Printer } from 'lucide-react';
 import { APP_NAME } from '@/lib/constants';

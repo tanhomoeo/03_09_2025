@@ -12,7 +12,7 @@ import {
   Timestamp,
   setDoc,
 } from 'firebase/firestore';
-import type { Patient, Visit, Prescription, PaymentSlip, ClinicSettings, PaymentMethod, CategorizedCaseNotes } from './types';
+import type { Patient, Visit, Prescription, PaymentSlip, ClinicSettings, PaymentMethod } from './types';
 import { startOfWeek, endOfWeek, startOfMonth, endOfMonth, isValid } from 'date-fns';
 
 const convertTimestampsToISO = <T>(data: unknown): T => {

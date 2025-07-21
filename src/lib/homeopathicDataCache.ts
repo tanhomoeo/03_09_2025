@@ -1,22 +1,22 @@
 // Simple cache implementation without external dependencies
 
 interface RepertoryData {
-  metadata: any;
-  remedies: Record<string, any>;
-  symptomIndex: Record<string, any>;
-  repertoryRubrics: Record<string, any>;
+  metadata: Record<string, unknown>;
+  remedies: Record<string, unknown>;
+  symptomIndex: Record<string, unknown>;
+  repertoryRubrics: Record<string, unknown>;
 }
 
 interface MateriaMedicaData {
-  metadata: any;
-  remedies: Record<string, any>;
-  therapeuticIndex: Record<string, any>;
-  clinicalConditions: Record<string, any>;
+  metadata: Record<string, unknown>;
+  remedies: Record<string, unknown>;
+  therapeuticIndex: Record<string, unknown>;
+  clinicalConditions: Record<string, unknown>;
 }
 
 // Simple in-memory cache for JSON data
 class HomeopathicDataCache {
-  private cache = new Map<string, any>();
+  private cache = new Map<string, { data: unknown, timestamp: number }>();
   private readonly maxAge = 30 * 60 * 1000; // 30 minutes
   private readonly maxSize = 10; // Maximum cache entries
 
@@ -25,7 +25,7 @@ class HomeopathicDataCache {
     const cached = this.cache.get(cacheKey);
     
     if (cached && Date.now() - cached.timestamp < this.maxAge) {
-      return cached.data;
+      return cached.data as RepertoryData;
     }
 
     try {
@@ -50,7 +50,7 @@ class HomeopathicDataCache {
     const cached = this.cache.get(cacheKey);
     
     if (cached && Date.now() - cached.timestamp < this.maxAge) {
-      return cached.data;
+      return cached.data as MateriaMedicaData;
     }
 
     try {
@@ -114,8 +114,8 @@ class HomeopathicDataCache {
       const normalizedSymptom = symptom.toLowerCase().trim();
       
       // Search in symptom index
-      Object.entries(repertoryData.symptomIndex).forEach(([category, categorySymptoms]) => {
-        if (typeof categorySymptoms === 'object') {
+      Object.entries(repertoryData.symptomIndex).forEach(([, categorySymptoms]) => {
+        if (typeof categorySymptoms === 'object' && categorySymptoms !== null) {
           Object.entries(categorySymptoms).forEach(([symptomKey, remedies]) => {
             if (symptomKey.includes(normalizedSymptom) && Array.isArray(remedies)) {
               remedies.forEach(remedy => suggestions.add(remedy));
@@ -129,15 +129,15 @@ class HomeopathicDataCache {
   }
 
   // Get remedy details
-  async getRemedyDetails(remedyName: string): Promise<any> {
+  async getRemedyDetails(remedyName: string): Promise<{ repertory: unknown, materiaMedica: unknown }> {
     const [repertoryData, materiaMedicaData] = await Promise.all([
       this.getRepertoryData(),
       this.getMateriaMedicaData()
     ]);
 
     return {
-      repertory: repertoryData.remedies[remedyName],
-      materiaMedica: materiaMedicaData.remedies[remedyName]
+      repertory: (repertoryData.remedies as Record<string, unknown>)[remedyName],
+      materiaMedica: (materiaMedicaData.remedies as Record<string, unknown>)[remedyName]
     };
   }
 

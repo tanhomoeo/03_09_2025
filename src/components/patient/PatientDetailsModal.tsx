@@ -26,7 +26,6 @@ import * as z from 'zod';
 import type {
   Patient,
   EnrichedVisit,
-  CategorizedCaseNotes,
   PatientGender,
   GuardianRelation,
 } from '@/lib/types';
@@ -50,7 +49,6 @@ import {
   FileText,
   PackageCheck,
   Truck,
-  User,
   Banknote,
   ClipboardList,
 } from 'lucide-react';

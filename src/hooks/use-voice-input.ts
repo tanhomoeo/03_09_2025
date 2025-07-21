@@ -94,7 +94,7 @@ export function useVoiceInput() {
       return;
     }
 
-    const SpeechRecognitionAPI = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const SpeechRecognitionAPI = (window as {SpeechRecognition?: new () => SpeechRecognition}).SpeechRecognition || (window as {webkitSpeechRecognition?: new () => SpeechRecognition}).webkitSpeechRecognition;
     if (!SpeechRecognitionAPI) {
       setIsSupported(false);
       return;

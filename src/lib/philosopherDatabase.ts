@@ -1,5 +1,3 @@
-import { homeopathicDataCache } from './homeopathicDataCache';
-
 interface PhilosopherData {
   metadata: {
     author: string;
@@ -10,8 +8,8 @@ interface PhilosopherData {
     created: string;
     philosophy: string;
   };
-  remedies: Record<string, any>;
-  rubrics?: Record<string, any>; // Optional for Kent's repertory
+  remedies: Record<string, unknown>;
+  rubrics?: Record<string, unknown>; // Optional for Kent's repertory
 }
 
 interface RemedySuggestion {
@@ -25,7 +23,7 @@ interface RemedySuggestion {
 }
 
 class PhilosopherDatabase {
-  private cache = new Map<string, PhilosopherData>();
+  private cache = new Map<string, { data: PhilosopherData, timestamp: number }>();
   private readonly philosophers = ['kent', 'boericke', 'hahnemann'];
   private readonly maxAge = 30 * 60 * 1000; // 30 minutes
 
@@ -96,7 +94,7 @@ class PhilosopherDatabase {
     for (const [philosopher, data] of Object.entries(allData)) {
       if (philosopher === 'kent' && data.rubrics) {
         // Kent repertory analysis
-        suggestions.push(...this.analyzeKentRubrics(data, normalizedSymptoms, philosopher));
+        suggestions.push(...this.analyzeKentRubrics(data, normalizedSymptoms));
       } else if (data.remedies) {
         // Materia medica analysis
         suggestions.push(...this.analyzeMateriaMedica(data, normalizedSymptoms, philosopher));
@@ -108,28 +106,29 @@ class PhilosopherDatabase {
     return uniqueSuggestions.sort((a, b) => b.score - a.score).slice(0, 10);
   }
 
-  private analyzeKentRubrics(data: any, symptoms: string[], philosopher: string): RemedySuggestion[] {
+  private analyzeKentRubrics(data: PhilosopherData, symptoms: string[]): RemedySuggestion[] {
     const suggestions: RemedySuggestion[] = [];
     const remedyScores = new Map<string, number>();
 
     if (!data.rubrics) return suggestions;
 
     // Analyze rubrics for symptom matches
-    Object.entries(data.rubrics).forEach(([category, categoryRubrics]: [string, any]) => {
-      Object.entries(categoryRubrics).forEach(([rubric, rubricData]: [string, any]) => {
+    Object.entries(data.rubrics).forEach(([category, categoryRubrics]) => {
+      Object.entries(categoryRubrics as Record<string, unknown>).forEach(([rubric, rubricData]) => {
         const rubricText = `${category} ${rubric}`.toLowerCase();
         
         symptoms.forEach(symptom => {
           if (rubricText.includes(symptom) || symptom.length > 4 && rubricText.includes(symptom.substring(0, 4))) {
-            if (rubricData.general) {
+            const general = (rubricData as { general: Record<string, {grade3?: string[], grade2?: string[], grade1?: string[]}>})?.general;
+            if (general) {
               // Add remedies based on their grades
-              rubricData.general.grade3?.forEach((remedy: string) => {
+              general.grade3?.forEach((remedy: string) => {
                 remedyScores.set(remedy, (remedyScores.get(remedy) || 0) + 30);
               });
-              rubricData.general.grade2?.forEach((remedy: string) => {
+              general.grade2?.forEach((remedy: string) => {
                 remedyScores.set(remedy, (remedyScores.get(remedy) || 0) + 20);
               });
-              rubricData.general.grade1?.forEach((remedy: string) => {
+              general.grade1?.forEach((remedy: string) => {
                 remedyScores.set(remedy, (remedyScores.get(remedy) || 0) + 10);
               });
             }
@@ -140,7 +139,7 @@ class PhilosopherDatabase {
 
     // Convert scores to suggestions
     remedyScores.forEach((score, remedy) => {
-      const remedyData = data.remedies?.[remedy];
+      const remedyData = data.remedies?.[remedy] as { keynotes: string[] };
       suggestions.push({
         name: remedy,
         score: Math.min(score, 100),
@@ -155,10 +154,11 @@ class PhilosopherDatabase {
     return suggestions;
   }
 
-  private analyzeMateriaMedica(data: any, symptoms: string[], philosopher: string): RemedySuggestion[] {
+  private analyzeMateriaMedica(data: PhilosopherData, symptoms: string[], philosopher: string): RemedySuggestion[] {
     const suggestions: RemedySuggestion[] = [];
 
-    Object.entries(data.remedies).forEach(([remedyName, remedyData]: [string, any]) => {
+    Object.entries(data.remedies).forEach(([remedyName, remedyDataUntyped]) => {
+      const remedyData = remedyDataUntyped as { keynotes?: string[], mindSymptoms?: { symptoms?: string[] }, modalities?: { worse?: string[], better?: string[] }, clinicalUses?: unknown };
       let matchScore = 0;
       const matchedSymptoms: string[] = [];
 
@@ -247,9 +247,12 @@ class PhilosopherDatabase {
     }
   }
 
-  async getRemedyDetails(remedyName: string): Promise<any> {
+  async getRemedyDetails(remedyName: string): Promise<unknown> {
     const allData = await this.getAllPhilosopherData();
-    const details: any = {
+    const details: {
+      name: string;
+      sources: Record<string, unknown>;
+    } = {
       name: remedyName,
       sources: {}
     };
@@ -266,23 +269,29 @@ class PhilosopherDatabase {
   // Get comprehensive remedy information from all sources
   async getComprehensiveRemedyInfo(remedyName: string): Promise<{
     name: string;
-    sources: Record<string, any>;
+    sources: Record<string, unknown>;
     combinedKeynotes: string[];
     combinedModalities: { worse: string[]; better: string[] };
     philosophy: string[];
   }> {
     const allData = await this.getAllPhilosopherData();
-    const info = {
+    const info: {
+      name: string;
+      sources: Record<string, unknown>;
+      combinedKeynotes: string[];
+      combinedModalities: { worse: string[]; better: string[] };
+      philosophy: string[];
+    } = {
       name: remedyName,
-      sources: {} as Record<string, any>,
-      combinedKeynotes: [] as string[],
-      combinedModalities: { worse: [] as string[], better: [] as string[] },
-      philosophy: [] as string[]
+      sources: {},
+      combinedKeynotes: [],
+      combinedModalities: { worse: [], better: [] },
+      philosophy: []
     };
 
     for (const [philosopher, data] of Object.entries(allData)) {
-      if (data.remedies[remedyName]) {
-        const remedyData = data.remedies[remedyName];
+      const remedyData = data.remedies[remedyName] as { keynotes?: string[], modalities?: { worse?: string[], better?: string[] } };
+      if (remedyData) {
         info.sources[philosopher] = remedyData;
         
         // Combine keynotes
