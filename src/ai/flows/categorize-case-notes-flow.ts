@@ -118,7 +118,16 @@ const categorizeCaseNotesFlow = ai.defineFlow(
       if (!output) {
         throw new Error('AI কোনো তথ্য প্রদান করেনি।');
       }
-      return output;
+      
+      const validationResult = CategorizedCaseNotesOutputSchema.safeParse(output);
+
+      if (!validationResult.success) {
+          console.error("AI output validation failed:", validationResult.error.format());
+          throw new Error('AI একটি ভুল উত্তর দিয়েছে যা প্রসেস করা সম্ভব হচ্ছে না। অনুগ্রহ করে আবার চেষ্টা করুন।');
+      }
+
+      return validationResult.data;
+
     } catch (error: unknown) {
       console.error('Error in categorizeCaseNotesFlow:', error);
       let errorMessage =
@@ -132,7 +141,7 @@ const categorizeCaseNotesFlow = ai.defineFlow(
         ) {
           errorMessage =
             'AI পরিষেবা কনফিগার করা যায়নি। অনুগ্রহ করে আপনার GEMINI_API_KEY এবং বিলিং সেটিংস যাচাই করুন।';
-        } else if (msg.includes('json') || msg.includes('zod')) {
+        } else if (msg.includes('json') || msg.includes('zod') || msg.startsWith('ai একটি ভুল উত্তর দিয়েছে')) {
           errorMessage =
             'AI একটি ভুল উত্তর দিয়েছে যা প্রসেস করা সম্ভব হচ্ছে না। অনুগ্রহ করে আবার চেষ্টা করুন।';
         } else if (
