@@ -1,3 +1,4 @@
+
 import type {Config} from 'tailwindcss';
 import tailwindcssAnimate from 'tailwindcss-animate';
 
@@ -18,8 +19,8 @@ const config = {
     },
     extend: {
       fontFamily: {
-        body: ['var(--font-alegreya)', 'serif'],
-        headline: ['var(--font-alegreya)', 'serif'],
+        body: ['var(--font-hind-siliguri)', 'sans-serif'],
+        headline: ['var(--font-baloo-da-2)', 'sans-serif'],
         code: ['monospace'],
       },
       colors: {
