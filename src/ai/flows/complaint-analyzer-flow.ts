@@ -28,9 +28,9 @@ export type ComplaintAnalyzerOutput = z.infer<typeof ComplaintAnalyzerOutputSche
 
 // Exported wrapper function to be called from the UI
 export async function analyzeComplaint(input: ComplaintAnalyzerInput): Promise<ComplaintAnalyzerOutput> {
-  const apiKey = process.env.GOOGLE_API_KEY || process.env.GEMINI_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey || apiKey === "আপনার_কপি_করা_API_কী_এখানে_দিন" || apiKey.length < 10) {
-    throw new Error('AI পরিষেবা কনফিগার করা নেই। অনুগ্রহ করে `.env` ফাইলে আপনার GOOGLE_API_KEY যোগ করুন এবং সার্ভার রিস্টার্ট করুন।');
+    throw new Error('AI পরিষেবা কনফিগার করা নেই। অনুগ্রহ করে `.env` ফাইলে আপনার GEMINI_API_KEY যোগ করুন এবং সার্ভার রিস্টার্ট করুন।');
   }
 
   const validationResult = ComplaintAnalyzerInputSchema.safeParse(input);
@@ -47,7 +47,7 @@ const complaintAnalysisPrompt = ai.definePrompt({
   name: 'complaintAnalysisPrompt',
   input: { schema: ComplaintAnalyzerInputSchema },
   output: { schema: ComplaintAnalyzerOutputSchema },
-  model: 'gemini-1.5-flash-latest', 
+  model: 'gemini-1.5-flash', 
   config: {
     safetySettings: [
       { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' },
@@ -104,7 +104,7 @@ const complaintAnalyzerFlow = ai.defineFlow(
         if (msg.includes('deadline') || msg.includes('timeout')) {
           errorMessage = 'AI সার্ভার থেকে উত্তর পেতে বেশি সময় লাগছে। কিছুক্ষণ পর আবার চেষ্টা করুন।';
         } else if (msg.includes('api key') || msg.includes('failed_precondition') || (error.cause?.code === 'UNAUTHENTICATED')) {
-          errorMessage = 'AI পরিষেবা কনফিগার করা যায়নি। অনুগ্রহ করে নিশ্চিত করুন যে আপনার `.env` ফাইলে সঠিক GOOGLE_API_KEY সেট করা আছে এবং আপনার Google Cloud প্রজেক্টে Vertex AI API চালু রয়েছে।';
+          errorMessage = 'AI পরিষেবা কনফিগার করা যায়নি। অনুগ্রহ করে নিশ্চিত করুন যে আপনার `.env` ফাইলে সঠিক GEMINI_API_KEY সেট করা আছে এবং আপনার Google Cloud প্রজেক্টে Vertex AI API চালু রয়েছে।';
         } else if (msg.includes('permission denied') || msg.includes('permission_denied') || msg.includes("api not enabled") || (error.cause?.code === 'PERMISSION_DENIED')) {
            errorMessage = 'AI পরিষেবা ব্যবহারের জন্য আপনার অনুমতি নেই। অনুগ্রহ করে নিশ্চিত করুন যে আপনার Google Cloud প্রজেক্টে "Vertex AI API" চালু আছে এবং বিলিং অ্যাকাউন্ট সঠিকভাবে সংযুক্ত আছে।';
         } else if (msg.includes('quota') || msg.includes('limit')) {

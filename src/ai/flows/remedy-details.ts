@@ -52,11 +52,6 @@ export type RemedyDetailsOutput = z.infer<typeof RemedyDetailsOutputSchema>;
 export async function getRemedyDetails(
   input: RemedyDetailsInput
 ): Promise<RemedyDetailsOutput> {
-  if (!process.env.GEMINI_API_KEY) {
-    throw new Error(
-      'AI পরিষেবা কনফিগার করা যায়নি। GEMINI_API_KEY সেট করা নেই।'
-    );
-  }
   return remedyDetailsFlow(input);
 }
 
