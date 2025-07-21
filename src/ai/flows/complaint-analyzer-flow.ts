@@ -81,41 +81,54 @@ const complaintAnalyzerFlow = ai.defineFlow(
     outputSchema: ComplaintAnalyzerOutputSchema,
   },
   async (input) => {
-    try {
-      const { output } = await complaintAnalysisPrompt(input);
+    let retries = 3;
+    while (retries > 0) {
+      try {
+        const { output } = await complaintAnalysisPrompt(input);
 
-      if (!output) {
-        throw new Error('AI বিশ্লেষণ থেকে কোনো উত্তর পাওয়া যায়নি। সম্ভবত ইনপুট কন্টেন্ট সেফটি ফিল্টার দ্বারা ব্লক করা হয়েছে অথবা মডেলটি কোনো আউটপুট দেয়নি।');
-      }
-      
-      const validation = ComplaintAnalyzerOutputSchema.safeParse(output);
-      if (!validation.success) {
-          console.error('LLM output validation failed:', validation.error.format());
-          throw new Error('AI মডেল একটি ভুল উত্তর দিয়েছে যা প্রসেস করা সম্ভব হচ্ছে না। অনুগ্রহ করে আবার চেষ্টা করুন।');
-      }
-
-      return validation.data;
-    } catch (error: any) {
-      console.error("Full error in complaintAnalyzerFlow:", error);
-
-      let errorMessage = 'অভিযোগ বিশ্লেষণ করার সময় একটি অপ্রত্যাশিত ত্রুটি হয়েছে।';
-      if (error && error.message) {
-        const msg = error.message.toLowerCase();
-        if (msg.includes('deadline') || msg.includes('timeout')) {
-          errorMessage = 'AI সার্ভার থেকে উত্তর পেতে বেশি সময় লাগছে। কিছুক্ষণ পর আবার চেষ্টা করুন।';
-        } else if (msg.includes('api key') || msg.includes('failed_precondition') || (error.cause?.code === 'UNAUTHENTICATED')) {
-          errorMessage = 'AI পরিষেবা কনফিগার করা যায়নি। অনুগ্রহ করে নিশ্চিত করুন যে আপনার `.env` ফাইলে সঠিক GEMINI_API_KEY সেট করা আছে এবং আপনার Google Cloud প্রজেক্টে Vertex AI API চালু রয়েছে।';
-        } else if (msg.includes('permission denied') || msg.includes('permission_denied') || msg.includes("api not enabled") || (error.cause?.code === 'PERMISSION_DENIED')) {
-           errorMessage = 'AI পরিষেবা ব্যবহারের জন্য আপনার অনুমতি নেই। অনুগ্রহ করে নিশ্চিত করুন যে আপনার Google Cloud প্রজেক্টে "Vertex AI API" চালু আছে এবং বিলিং অ্যাকাউন্ট সঠিকভাবে সংযুক্ত আছে।';
-        } else if (msg.includes('quota') || msg.includes('limit')) {
-           errorMessage = 'AI পরিষেবা ব্যবহারের দৈনিক সীমা অতিক্রম করেছে। কিছুক্ষণ পর আবার চেষ্টা করুন।';
-        } else if (error.message.startsWith('ইনপুট ডেটা সঠিক নয়:') || error.message.startsWith('AI মডেল একটি ভুল উত্তর দিয়েছে যা প্রসেস করা সম্ভব হচ্ছে না।') || error.message.startsWith('AI বিশ্লেষণ থেকে কোনো উত্তর পাওয়া যায়নি')) {
-           errorMessage = error.message; 
-        } else if (error.message.startsWith('AI পরিষেবা কনফিগার করা নেই')) {
-           errorMessage = error.message;
+        if (!output) {
+          throw new Error('AI বিশ্লেষণ থেকে কোনো উত্তর পাওয়া যায়নি। সম্ভবত ইনপুট কন্টেন্ট সেফটি ফিল্টার দ্বারা ব্লক করা হয়েছে অথবা মডেলটি কোনো আউটপুট দেয়নি।');
         }
+        
+        const validation = ComplaintAnalyzerOutputSchema.safeParse(output);
+        if (!validation.success) {
+            console.error('LLM output validation failed:', validation.error.format());
+            throw new Error('AI মডেল একটি ভুল উত্তর দিয়েছে যা প্রসেস করা সম্ভব হচ্ছে না। অনুগ্রহ করে আবার চেষ্টা করুন।');
+        }
+
+        return validation.data;
+      } catch (error: any) {
+        console.error(`Full error in complaintAnalyzerFlow (attempt ${4 - retries}):`, error);
+
+        if (error.message.includes('AI মডেল একটি ভুল উত্তর দিয়েছে') && retries > 1) {
+            retries--;
+            console.log(`Retrying... (${retries} attempts left)`);
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second before retrying
+            continue;
+        }
+
+        let errorMessage = 'অভিযোগ বিশ্লেষণ করার সময় একটি অপ্রত্যাশিত ত্রুটি হয়েছে।';
+        if (error && error.message) {
+          const msg = error.message.toLowerCase();
+          if (msg.includes('deadline') || msg.includes('timeout')) {
+            errorMessage = 'AI সার্ভার থেকে উত্তর পেতে বেশি সময় লাগছে। কিছুক্ষণ পর আবার চেষ্টা করুন।';
+          } else if (msg.includes('api key') || msg.includes('failed_precondition') || (error.cause?.code === 'UNAUTHENTICATED')) {
+            errorMessage = 'AI পরিষেবা কনফিগার করা যায়নি। অনুগ্রহ করে নিশ্চিত করুন যে আপনার `.env` ফাইলে সঠিক GEMINI_API_KEY সেট করা আছে এবং আপনার Google Cloud প্রজেক্টে Vertex AI API চালু রয়েছে।';
+          } else if (msg.includes('permission denied') || msg.includes('permission_denied') || msg.includes("api not enabled") || (error.cause?.code === 'PERMISSION_DENIED')) {
+             errorMessage = 'AI পরিষেবা ব্যবহারের জন্য আপনার অনুমতি নেই। অনুগ্রহ করে নিশ্চিত করুন যে আপনার Google Cloud প্রজেক্টে "Vertex AI API" চালু আছে এবং বিলিং অ্যাকাউন্ট সঠিকভাবে সংযুক্ত আছে।';
+          } else if (msg.includes('quota') || msg.includes('limit')) {
+             errorMessage = 'AI পরিষেবা ব্যবহারের দৈনিক সীমা অতিক্রম করেছে। কিছুক্ষণ পর আবার চেষ্টা করুন।';
+          } else if (error.message.startsWith('ইনপুট ডেটা সঠিক নয়:') || error.message.startsWith('AI মডেল একটি ভুল উত্তর দিয়েছে যা প্রসেস করা সম্ভব হচ্ছে না।') || error.message.startsWith('AI বিশ্লেষণ থেকে কোনো উত্তর পাওয়া যায়নি')) {
+             errorMessage = error.message; 
+          } else if (error.message.startsWith('AI পরিষেবা কনফিগার করা নেই')) {
+             errorMessage = error.message;
+          }
+        }
+        throw new Error(errorMessage);
       }
-      throw new Error(errorMessage);
     }
+    // This part should be unreachable if retries are exhausted and the last attempt throws.
+    // However, to satisfy TypeScript, we throw a final error here.
+    throw new Error('পুনরাবৃত্তি করার পরেও AI মডেল একটি সঠিক উত্তর দিতে ব্যর্থ হয়েছে।');
   }
 );

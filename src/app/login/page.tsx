@@ -128,7 +128,7 @@ export default function LoginPage() {
 
   // While checking auth state or if user is already logged in, show a loader
   if (loading || user) {
-    return <LoadingSpinner variant="page" showLogo={true} label="পরিচয় যাচাই করা হচ্ছে..." />;
+    return <LoadingSpinner variant="page" showLogo={true} label="অ প্রমাণীকরণ করা হচ্ছে..." />;
   }
 
   // Render the login page if not loading and no user is found
