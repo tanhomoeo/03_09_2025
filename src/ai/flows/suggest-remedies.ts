@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -9,10 +10,11 @@
  */
 import {ai} from '../genkit';
 import {z} from 'zod';
-import type {SuggestRemediesOutput as SuggestRemediesOutputType} from '@/lib/types';
-import fs from 'fs';
-import path from 'path';
-
+// Use raw-loader to import text files directly as strings
+// This ensures the content is bundled with the serverless function
+import hahnemannsMateriaMedica from 'raw-loader!../../../public/data/materia-medica.txt';
+import boerickesMateriaMedica from 'raw-loader!../../../public/data/Boerickes_Materia_Medica.txt';
+import kentsMateriaMedica from 'raw-loader!../../../public/data/Kents_Lectures_On_Materia_Medica.txt';
 
 const SuggestRemediesInputSchema = z.object({
   symptoms: z
@@ -21,75 +23,76 @@ const SuggestRemediesInputSchema = z.object({
 });
 export type SuggestRemediesInput = z.infer<typeof SuggestRemediesInputSchema>;
 
+const CategorizedSymptomsSchema = z.object({
+  physicalSymptoms: z.object({
+    general: z.string().optional().describe("সাধারণ উপসর্গ যেমন মাথাব্যথা, জ্বর, দুর্বলতা।"),
+    gastrointestinal: z.string().optional().describe("পায়খানা সংক্রান্ত সমস্যা যেমন কোষ্ঠকাঠিন্য, পাতলা পায়খানা, মলে রক্ত।"),
+    urinary: z.string().optional().describe("প্রস্রাব সংক্রান্ত সমস্যা যেমন বারবার প্রস্রাব, জ্বালাপোড়া।"),
+    femaleSpecific: z.string().optional().describe("মেয়েলী সমস্যা যেমন অনিয়মিত মাসিক, সাদা স্রাব।"),
+    modalities: z.string().optional().describe("লক্ষণের হ্রাস-বৃদ্ধি (কখন বাড়ে বা কমে)।"),
+    locationAndNature: z.string().optional().describe("লক্ষণের অবস্থান ও প্রকৃতি (কোন অংশে, কেমন ব্যথা)।")
+  }).describe("বর্তমান শারীরিক উপসর্গ"),
+  mentalAndEmotionalSymptoms: z.object({
+    fear: z.string().optional().describe("ভয় সম্পর্কিত বিবরণ।"),
+    sadnessAndDepression: z.string().optional().describe("দুঃখ, হতাশা সম্পর্কিত বিবরণ।"),
+    angerAndMoodSwings: z.string().optional().describe("রাগ, মেজাজের পরিবর্তন সম্পর্কিত বিবরণ।"),
+    loneliness: z.string().optional().describe("একাকীত্ব সম্পর্কিত বিবরণ।")
+  }).describe("বর্তমান মানসিক ও আবেগজনিত উপসর্গ"),
+  excitingCause: z.object({
+    weather: z.string().optional().describe("আবহাওয়ার কারণে রোগ শুরু।"),
+    diet: z.string().optional().describe("খাদ্যাভ্যাসের কারণে রোগ শুরু।"),
+    mentalTrauma: z.string().optional().describe("মানসিক আঘাতের কারণে রোগ শুরু।"),
+    accidentOrInfection: z.string().optional().describe("দুর্ঘটনা বা সংক্রমণের কারণে রোগ শুরু।")
+  }).describe("রোগ শুরু হওয়ার কারণ (Exciting Cause)"),
+  maintainingCause: z.object({
+    lifestyle: z.string().optional().describe("অনিয়মিত জীবনযাপন।"),
+    mentalStress: z.string().optional().describe("অতিরিক্ত মানসিক চাপ।"),
+    habits: z.string().optional().describe("অভ্যাসগত কারণ।")
+  }).describe("রোগ স্থায়ী হওয়ার কারণ (Maintaining Cause)"),
+  familyAndHereditaryHistory: z.object({
+    diabetes: z.string().optional().describe("ডায়াবেটিস সম্পর্কিত পারিবারিক ইতিহাস।"),
+    highBloodPressure: z.string().optional().describe("উচ্চ রক্তচাপ সম্পর্কিত পারিবারিক ইতিহাস।"),
+    cancer: z.string().optional().describe("ক্যান্সার সম্পর্কিত পারিবারিক ইতিহাস।"),
+    allergies: z.string().optional().describe("অ্যালার্জি সম্পর্কিত পারিবারিক ইতিহাস।")
+  }).describe("পারিবারিক বা বংশগত ইতিহাস (Hereditary Cause / Miasm)"),
+  pastMedicalHistory: z.object({
+    majorIllnesses: z.string().optional().describe("রোগীর বড় কোনো পূর্বের রোগের বিবরণ।"),
+    operationsOrTrauma: z.string().optional().describe("রোগীর পূর্বের কোনো অপারেশন বা ট্রমার বিবরণ।"),
+    chronicIssues: z.string().optional().describe("রোগীর দীর্ঘমেয়াদি কোনো সমস্যার বিবরণ।")
+  }).describe("রোগীর পূর্বের রোগের ইতিহাস"),
+  pastTreatmentHistory: z.object({
+    previousMedication: z.string().optional().describe("রোগী পূর্বে কোন কোন ওষুধ নিয়েছে তার বিবরণ।"),
+    treatmentSystems: z.string().optional().describe("পূর্বে কোন চিকিৎসা পদ্ধতি (হোমিওপ্যাথি/অ্যালোপ্যাথি/আয়ুর্বেদ) নিয়েছেন।"),
+    otherTreatments: z.string().optional().describe("অন্য কোনো চিকিৎসা পদ্ধতি গ্রহণ করে থাকলে তার বিবরণ।")
+  }).describe("ওষুধের/চিকিৎসার ইতিহাস")
+});
+
 const SuggestRemediesPromptInputSchema = SuggestRemediesInputSchema.extend({
-  hahnemannsMateriaMedica: z.string(),
-  boerickesMateriaMedica: z.string(),
-  kentsMateriaMedica: z.string(),
+    hahnemannsMateriaMedica: z.string(),
+    boerickesMateriaMedica: z.string(),
+    kentsMateriaMedica: z.string(),
 });
 
 const RemedySchema = z.object({
-  name: z
-    .string()
-    .describe(
-      'The name of the suggested homeopathic medicine in English, as found in the knowledge base.'
-    ),
-  description: z
-    .string()
-    .describe(
-      "A brief explanation in Bengali for why the remedy is suggested, based on the provided knowledge bases."
-    ),
-  score: z
-    .number()
-    .describe(
-      "A similarity score from 1 to 100, where 100 is a perfect match between the user's symptoms and the remedy's profile in the knowledge base."
-    ),
-  justification: z
-    .string()
-    .describe(
-      "A detailed justification in Bengali, quoting or referencing specific symptoms from the respective Materia Medica that match the user's symptoms. This explains the basis for the score."
-    ),
-  source: z
-    .string()
-    .describe(
-      "The source of the information. Use 'H' for Hahnemann's Materia Medica, 'B' for Boericke's Materia Medica, 'K' for Kent's Materia Medica, and 'AI' for the AI's general knowledge."
-    ),
+  name: z.string().describe("The name of the suggested homeopathic medicine in English, as found in the knowledge base."),
+  description: z.string().describe("A brief explanation in Bengali for why the remedy is suggested, based on the provided knowledge bases."),
+  score: z.number().describe("A similarity score from 1 to 100, where 100 is a perfect match between the user's symptoms and the remedy's profile in the knowledge base."),
+  justification: z.string().describe("A detailed justification in Bengali, quoting or referencing specific symptoms from the respective Materia Medica that match the user's symptoms. This explains the basis for the score."),
+  source: z.string().describe("The source of the information. Use 'H' for Hahnemann's Materia Medica, 'B' for Boericke's Materia Medica, 'K' for Kent's Materia Medica, and 'AI' for the AI's general knowledge.")
 });
 
 const SuggestRemediesOutputSchema = z.object({
-  caseAnalysis: z
-    .string()
-    .describe(
-      "A detailed, paragraph-based analysis of the patient's case in Bengali, summarizing the key symptoms and overall picture."
-    ),
+  categorizedSymptoms: CategorizedSymptomsSchema.describe("The user's symptoms, categorized by the AI into 7 specific sections."),
+  bestRepertorySuggestion: z.string().describe("A brief analysis in Bengali explaining which repertory (Hahnemann, Boericke, Kent, or general AI knowledge) is likely most suitable for this specific case and why."),
   remedies: z
     .array(RemedySchema)
-    .describe(
-      'A ranked list of potential homeopathic medicine suggestions, sorted from highest score to lowest.'
-    ),
+    .describe('A ranked list of potential homeopathic medicine suggestions, sorted from highest score to lowest.'),
 });
-
 export type SuggestRemediesOutput = z.infer<typeof SuggestRemediesOutputSchema>;
 
-function loadMateriaMedica(): { hahnemannsMateriaMedica: string; boerickesMateriaMedica: string; kentsMateriaMedica: string; } {
-    try {
-        const dataPath = path.join(process.cwd(), 'public', 'data');
-        const hahnemannsMateriaMedica = fs.readFileSync(path.join(dataPath, 'hahnemann-materia-medica.txt'), 'utf-8');
-        const boerickesMateriaMedica = fs.readFileSync(path.join(dataPath, 'boericke-materia-medica.txt'), 'utf-8');
-        const kentsMateriaMedica = fs.readFileSync(path.join(dataPath, 'kent-repertory.txt'), 'utf-8');
-        return { hahnemannsMateriaMedica, boerickesMateriaMedica, kentsMateriaMedica };
-    } catch (error) {
-        console.error("Failed to load Materia Medica files:", error);
-        throw new Error("AI জ্ঞান ভান্ডারের ফাইল লোড করা সম্ভব হয়নি।");
-    }
-}
-
-export async function suggestRemedies(
-  input: SuggestRemediesInput
-): Promise<SuggestRemediesOutputType> {
+export async function suggestRemedies(input: SuggestRemediesInput): Promise<SuggestRemediesOutput> {
   if (!process.env.GEMINI_API_KEY) {
-    throw new Error(
-      'AI পরিষেবা কনফিগার করা যায়নি। GEMINI_API_KEY সেট করা নেই।'
-    );
+    throw new Error('AI পরিষেবা কনফিগার করা যায়নি। GEMINI_API_KEY সেট করা নেই।');
   }
   return suggestRemediesFlow(input);
 }
@@ -99,21 +102,22 @@ const prompt = ai.definePrompt({
   input: {schema: SuggestRemediesPromptInputSchema},
   output: {schema: SuggestRemediesOutputSchema},
   config: {
-    model: 'googleai/gemini-1.5-flash',
     temperature: 0.1,
     safetySettings: [
-      {category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE'},
-      {category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_NONE'},
-      {category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_NONE'},
-      {category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_NONE'},
+        { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' },
+        { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_NONE' },
+        { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_NONE' },
+        { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_NONE' },
     ],
   },
   prompt: `You are a highly experienced homeopathic doctor. You will analyze the patient's symptoms based on the core principles of classical homeopathy.
 Your tasks are:
 
-1.  **Analyze and Summarize**: Your first task is to provide a comprehensive analysis of the patient's case in a detailed paragraph. This analysis should cover the totality of symptoms, identifying the most important physical, mental, and general symptoms. This summary will be the value for the 'caseAnalysis' field.
+1.  **Categorize Symptoms**: Your first task is to categorize the given symptoms into the seven specific sections defined in the 'categorizedSymptoms' output schema. The output object for categorized symptoms should contain the defined fields directly, NOT nested under a title for each category. If no information is provided for a category or sub-category, you MUST leave it as an empty string.
 
-2.  **Suggest Remedies**: Perform a comprehensive analysis using FOUR distinct sources of information (Hahnemann, Boericke, Kent, and your general knowledge) to generate a single, unified list of remedy suggestions.
+2.  **Best Repertory Suggestion**: Analyze the case as a whole and determine which knowledge source (Hahnemann's, Boericke's, Kent's, or your own general AI knowledge) appears most suited for finding the primary remedy for this specific patient. Provide a short justification for your choice in the 'bestRepertorySuggestion' field.
+
+3.  **Suggest Remedies**: Perform a comprehensive analysis using your categorized symptoms and FOUR distinct sources of information (Hahnemann, Boericke, Kent, and your general knowledge) to generate a single, unified list of remedy suggestions.
 
     -   For each potential remedy, provide:
         a.  The medicine's name in English.
@@ -125,14 +129,14 @@ Your tasks are:
     -   Combine all found remedies into a single 'remedies' array.
     -   Sort this 'remedies' array from the highest score to the lowest.
 
-All output (descriptions, justifications, case analysis) MUST be in Bengali, except for the medicine names, which must be in English.
+All output (descriptions, justifications, categorized symptoms, and repertory suggestions) MUST be in Bengali, except for the medicine names, which must be in English.
 
 Knowledge Bases:
 - Hahnemann's Materia Medica: {{{hahnemannsMateriaMedica}}}
 - Boericke's Materia Medica: {{{boerickesMateriaMedica}}}
 - Kent's Materia Medica: {{{kentsMateriaMedica}}}
 
-Patient's Symptoms: {{{symptoms}}}`,
+Patient's Symptoms: {{{symptoms}}}`
 });
 
 const suggestRemediesFlow = ai.defineFlow(
@@ -143,69 +147,36 @@ const suggestRemediesFlow = ai.defineFlow(
   },
   async (input: SuggestRemediesInput) => {
     try {
-      if (!input.symptoms || input.symptoms.trim().length < 20) {
-        throw new Error(
-          'অপর্যাপ্ত তথ্য। বিশ্লেষণ করার জন্য অনুগ্রহ করে রোগীর সমস্যা ও ইতিহাস সম্পর্কে আরও বিস্তারিত লিখুন (কমপক্ষে ২০ অক্ষর)।'
-        );
-      }
-      
-      const { hahnemannsMateriaMedica, boerickesMateriaMedica, kentsMateriaMedica } = loadMateriaMedica();
-
       const {output} = await prompt({
-        ...input,
-        hahnemannsMateriaMedica,
-        boerickesMateriaMedica,
-        kentsMateriaMedica,
+          ...input,
+          hahnemannsMateriaMedica,
+          boerickesMateriaMedica,
+          kentsMateriaMedica
       });
-
+      
       if (!output) {
         throw new Error('AI সহকারী কোনো উত্তর দেয়নি।');
       }
-      
-      const validationResult = SuggestRemediesOutputSchema.safeParse(output);
-      if (!validationResult.success) {
-        console.error("AI output validation failed in suggestRemediesFlow:", validationResult.error.format());
-        throw new Error('AI একটি ভুল উত্তর দিয়েছে যা প্রসেস করা সম্ভব হচ্ছে না। অনুগ্রহ করে আবার চেষ্টা করুন।');
-      }
+      return output;
 
-      return validationResult.data;
     } catch (error: unknown) {
-      console.error('Error in suggestRemediesFlow:', error);
       let errorMessage = 'AI বিশ্লেষণ ব্যর্থ হয়েছে। মডেল একটি সমস্যার সম্মুখীন হয়েছে।';
       if (error instanceof Error) {
-        if ((error as NodeJS.ErrnoException).code === 'ENOENT' || error.message.includes('AI জ্ঞান ভান্ডারের ফাইল')) {
-          errorMessage =
-            'AI জ্ঞান ভান্ডারের ফাইল খুঁজে পাওয়া যায়নি। অনুগ্রহ করে সিস্টেম অ্যাডমিনের সাথে যোগাযোগ করুন।';
+        if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+            errorMessage = 'AI জ্ঞান ভান্ডারের ফাইল খুঁজে পাওয়া যায়নি। অনুগ্রহ করে সিস্টেম অ্যাডমিনের সাথে যোগাযোগ করুন।';
         } else {
-          const msg = error.message.toLowerCase();
-          if (
-            msg.includes('api key') ||
-            msg.includes('permission denied') ||
-            msg.includes('authentication') ||
-            msg.includes('billing')
-          ) {
-            errorMessage =
-              'AI পরিষেবা কনফিগার করা যায়নি। অনুগ্রহ করে আপনার GEMINI_API_KEY এবং বিলিং সেটিংস যাচাই করুন।';
-          } else if (msg.includes('json') || msg.includes('zod') || msg.includes('প্রসেস করা সম্ভব হচ্ছে না')) {
-            errorMessage =
-              'AI মডেল একটি ভুল উত্তর দিয়েছে যা প্রসেস করা সম্ভব হচ্ছে না। অনুগ্রহ করে আবার চেষ্টা করুন।';
-          } else if (
-            msg.includes('503') ||
-            msg.includes('unavailable') ||
-            msg.includes('internal error')
-          ) {
-            errorMessage =
-              'AI পরিষেবাটি বর্তমানে ওভারলোড বা недоступ্য। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।';
-          } else if (
-            msg.startsWith('ai ') ||
-            msg.startsWith('ইনপুট') ||
-            msg.startsWith('ai পরিষেবা কনফিগার করা নেই') ||
-            msg.startsWith('অপর্যাপ্ত তথ্য')
-          ) {
-            throw error;
-          } else {
-            errorMessage = `অপ্রত্যাশিত ত্রুটি: ${error.message}`;
-          }
+            const msg = error.message.toLowerCase();
+            if (msg.includes('api key') || msg.includes('permission denied') || msg.includes('authentication')) {
+                errorMessage = 'AI পরিষেবা কনফিগার করা যায়নি। অনুগ্রহ করে আপনার GEMINI_API_KEY এবং বিলিং সেটিংস যাচাই করুন।';
+            } else if (msg.includes('json')) {
+                errorMessage = 'AI মডেল একটি ভুল উত্তর দিয়েছে যা প্রসেস করা সম্ভব হচ্ছে না। অনুগ্রহ করে আবার চেষ্টা করুন।';
+            } else if (msg.includes('503') || msg.includes('unavailable') || msg.includes('internal error')) {
+                errorMessage = 'AI পরিষেবাটি বর্তমানে ওভারলোড বা недоступ্য। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।';
+            } else if (msg.startsWith('ai ') || msg.startsWith('ইনপুট') || msg.startsWith('ai পরিষেবা কনফিগার করা নেই')) {
+                throw error;
+            } else {
+                errorMessage = error.message;
+            }
         }
       }
       throw new Error(errorMessage);

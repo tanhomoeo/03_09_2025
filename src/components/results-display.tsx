@@ -1,3 +1,4 @@
+
 "use client";
 
 import React from "react";
@@ -88,26 +89,26 @@ const getSourceInfo = (source: string): { icon: React.ReactNode; title: string; 
 const RemedyItem: React.FC<{ remedy: Remedy; onRemedyClick: (name: string) => void }> = ({ remedy, onRemedyClick }) => {
     const { icon, title } = getSourceInfo(remedy.source);
     return (
-      <Card className="shadow-md hover:shadow-lg hover:-translate-y-px transition-all duration-300 rounded-xl bg-card/60 backdrop-blur-lg border-l-4 border-l-primary/30">
-        <CardContent className="p-5">
-            <div className="flex items-start justify-between gap-4">
-                <div className="flex-1 min-w-0">
-                    <Button variant="link" onClick={() => onRemedyClick(remedy.name)} className="p-0 h-auto text-lg font-bold text-foreground self-start mb-2 hover:text-primary text-left justify-start leading-tight whitespace-normal">
+      <Card className="shadow-md hover:shadow-lg hover:-translate-y-px transition-all duration-300 rounded-xl bg-card/60 backdrop-blur-lg">
+        <CardContent className="p-4">
+            <div className="flex items-start justify-between gap-3">
+                <div className="flex-1">
+                    <Button variant="link" onClick={() => onRemedyClick(remedy.name)} className="p-0 h-auto text-lg font-bold text-foreground self-start mb-1 hover:text-primary text-left justify-start leading-tight whitespace-normal">
                        {remedy.name}
                     </Button>
-                    <p className="text-foreground/80 text-sm leading-relaxed text-pretty">{remedy.description}</p>
+                    <p className="text-foreground/70 text-sm leading-relaxed mt-1 text-pretty">{remedy.description}</p>
                 </div>
-                <div className="flex-shrink-0 flex flex-col items-center gap-2">
-                    <ScoreCircle score={remedy.score} />
-                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium">
+                <ScoreCircle score={remedy.score} />
+            </div>
+            
+            <div className="border-t border-black/10 dark:border-white/10 pt-3 mt-3 text-xs">
+                <div className="flex justify-between items-center">
+                    <h4 className="font-semibold text-foreground/90">ভিত্তি:</h4>
+                    <div className="flex items-center gap-1.5 text-muted-foreground font-medium">
                        {icon} <span>{title}</span>
                     </div>
                 </div>
-            </div>
-
-            <div className="border-t border-border/50 pt-3 mt-4 text-xs">
-                <h4 className="font-semibold text-foreground/90 mb-2">বিস্তারিত যুক্তি:</h4>
-                <p className="text-muted-foreground whitespace-pre-wrap leading-relaxed">{remedy.justification}</p>
+                <p className="text-muted-foreground whitespace-pre-wrap mt-1">{remedy.justification}</p>
             </div>
         </CardContent>
       </Card>

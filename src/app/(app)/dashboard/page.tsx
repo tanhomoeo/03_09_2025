@@ -1,3 +1,4 @@
+
 'use client';
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import Image from 'next/image';
@@ -17,7 +18,6 @@ import { bn } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import QuickActionCard from '@/components/dashboard/QuickActionCard';
 import ActivityCard from '@/components/dashboard/ActivityCard';
-import DashboardMobile from './DashboardMobile';
 
 interface AppointmentDisplayItem {
   visitId: string;
@@ -92,23 +92,12 @@ export default function DashboardPage() {
 
   const [clientRenderedTimestamp, setClientRenderedTimestamp] = useState<Date | null>(null);
   const [clinicSettings, setClinicSettings] = useState<ClinicSettings | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
 
   const [showRevenue, setShowRevenue] = useState(false);
   const revenueTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     setClientRenderedTimestamp(new Date());
-
-    // Mobile detection
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-
-    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   const handleRevenueClick = () => {
@@ -268,19 +257,6 @@ export default function DashboardPage() {
     return <DashboardSkeleton />;
   }
 
-  // Mobile layout
-  if (isMobile) {
-    return (
-      <DashboardMobile
-        stats={stats}
-        todaysAppointments={todaysAppointments}
-        clientRenderedTimestamp={clientRenderedTimestamp}
-        onStartWorkflow={handleStartWorkflow}
-      />
-    );
-  }
-
-  // Desktop layout
   return (
     <TooltipProvider>
     <div className="max-w-6xl mx-auto space-y-6 md:space-y-8">

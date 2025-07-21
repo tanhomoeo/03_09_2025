@@ -23,7 +23,7 @@ import { bn } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
-import type { CreatePaymentSlipModalProps } from '@/components/slip/CreatePaymentSlipModal';
+import { CreatePaymentSlipModalProps } from '@/components/slip/CreatePaymentSlipModal';
 
 
 const CreatePaymentSlipModal = dynamic<CreatePaymentSlipModalProps>(() =>

@@ -1,25 +1,15 @@
-
 import type {Metadata, Viewport} from 'next';
 import './globals.css';
 import { APP_NAME } from '@/lib/constants';
-import { Hind_Siliguri, Baloo_Da_2 } from 'next/font/google';
+import { Alegreya } from 'next/font/google';
 import RootLayoutClient from './RootLayoutClient';
 
-
-const hindSiliguri = Hind_Siliguri({
-  subsets: ['bengali', 'latin'],
-  weight: ['400', '500', '600', '700'],
+const alegreya = Alegreya({
+  subsets: ['latin'],
+  weight: ['400', '500', '700', '800', '900'],
   display: 'swap',
-  variable: '--font-hind-siliguri',
+  variable: '--font-alegreya',
 });
-
-const balooDa2 = Baloo_Da_2({
-  subsets: ['bengali', 'latin'],
-  weight: ['400', '500', '600', '700', '800'],
-  display: 'swap',
-  variable: '--font-baloo-da-2',
-});
-
 
 const APP_DESCRIPTION = `Patient Management System for ${APP_NAME}`;
 
@@ -63,7 +53,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="bn" className={`${hindSiliguri.variable} ${balooDa2.variable}`} suppressHydrationWarning>
+    <html lang="bn" className={`${alegreya.variable}`} suppressHydrationWarning>
       <head>
           <meta name="mobile-web-app-capable" content="yes" />
           <meta name="apple-mobile-web-app-capable" content="yes" />

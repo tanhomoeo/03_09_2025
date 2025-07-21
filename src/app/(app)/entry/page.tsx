@@ -1,19 +1,18 @@
 
 "use client";
-import React, {useEffect, useState, Suspense} from 'react';
-import {useForm, type SubmitHandler} from 'react-hook-form';
-import {zodResolver} from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import {Button} from '@/components/ui/button';
-import {Input} from '@/components/ui/input';
+import React, { useEffect, useState, Suspense } from "react";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
-  CardFooter
-} from '@/components/ui/card';
+} from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -21,64 +20,65 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import {useToast} from '@/hooks/use-toast';
-import {addPatient} from '@/lib/firestoreService';
-import type {Patient, CategorizedCaseNotes} from '@/lib/types';
-import {PageHeaderCard} from '@/components/shared/PageHeaderCard';
-import {useSearchParams} from 'next/navigation';
+} from "@/components/ui/form";
+import { useToast } from "@/hooks/use-toast";
+import { addPatient } from "@/lib/firestoreService";
+import type { Patient, CategorizedCaseNotes } from "@/lib/types";
+import { PageHeaderCard } from "@/components/shared/PageHeaderCard";
+import { useSearchParams } from "next/navigation";
 import {
   Loader2,
   CalendarIcon,
   Camera,
-  Sparkles,
-  AlertCircle
-} from 'lucide-react';
+  Brain,
+  ClipboardEdit,
+} from "lucide-react";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover';
-import {Calendar} from '@/components/ui/calendar';
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group';
-import {format, isValid} from 'date-fns';
-import {bn} from 'date-fns/locale';
-import {cn} from '@/lib/utils';
-import {Textarea} from '@/components/ui/textarea';
-import dynamic from 'next/dynamic';
-import type {HandwrittenFormOutput} from '@/ai/flows/handwritten-patient-form-parser-flow';
-import {LoadingSpinner} from '@/components/shared/LoadingSpinner';
+} from "@/components/ui/select";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { format, isValid } from "date-fns";
+import { bn } from "date-fns/locale";
+import { cn } from "@/lib/utils";
+import { Textarea } from "@/components/ui/textarea";
+import dynamic from "next/dynamic";
+import type { HandwrittenFormOutput } from "@/ai/flows/handwritten-patient-form-parser-flow";
+import { categorizeCaseNotes } from "@/ai/flows/categorize-case-notes-flow";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import {
-  categorizeCaseNotes,
-  type CategorizedCaseNotesOutput,
-} from '@/ai/flows/categorize-case-notes-flow';
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
-import { CategorizedSymptomsDisplay, LABELS as CATEGORY_LABELS } from '@/components/categorized-symptoms-display';
+  CategorizedSymptomsDisplay,
+  LABELS as CATEGORY_LABELS,
+} from "@/components/categorized-symptoms-display";
+import { LoadingSpinner } from "@/components/shared/LoadingSpinner";
+
 
 const patientFormSchema = z.object({
-  registrationDate: z.date({required_error: 'নিবন্ধনের তারিখ আবশ্যক।'}),
+  registrationDate: z.date({ required_error: "নিবন্ধনের তারিখ আবশ্যক।" }),
   diaryNumber: z.string().optional(),
-  name: z.string().min(1, {message: 'পুরো নাম আবশ্যক।'}),
+  name: z.string().min(1, { message: "পুরো নাম আবশ্যক।" }),
   age: z.string().optional(),
   gender: z
-    .enum(['male', 'female', 'other', ''], {
-      errorMap: () => ({message: 'লিঙ্গ নির্বাচন করুন।'}),
+    .enum(["male", "female", "other", ""], {
+      errorMap: () => ({ message: "লিঙ্গ নির্বাচন করুন।" }),
     })
     .optional(),
   occupation: z.string().optional(),
   phone: z.string().regex(/^(\+8801|01)\d{9}$/, {
-    message: 'একটি বৈধ বাংলাদেশী ফোন নম্বর লিখুন।',
+    message: "একটি বৈধ বাংলাদেশী ফোন নম্বর লিখুন।",
   }),
   guardianRelation: z
-    .enum(['father', 'husband', ''], {
-      errorMap: () => ({message: 'অভিভাবকের সম্পর্ক নির্বাচন করুন।'}),
+    .enum(["father", "husband", ""], {
+      errorMap: () => ({ message: "অভিভাবকের সম্পর্ক নির্বাচন করুন।" }),
     })
     .optional(),
   guardianName: z.string().optional(),
@@ -95,44 +95,42 @@ const ScanPatientFormModal = dynamic(
   () => import('@/components/patient/ScanPatientFormModal'),
   {
     ssr: false,
-    loading: () => (
-      <div className="fixed inset-0 bg-background/50 flex items-center justify-center z-50">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />{' '}
-        <span className="ml-2">ক্যামেরা লোড হচ্ছে...</span>
-      </div>
-    ),
+    loading: () => <div className="fixed inset-0 bg-background/50 flex items-center justify-center z-50"><Loader2 className="h-8 w-8 animate-spin text-primary" /> <span className="ml-2">ক্যামেরা লোড হচ্ছে...</span></div>
   }
 );
 
+
 function PatientEntryPageContent() {
-  const {toast} = useToast();
+  const { toast } = useToast();
   const searchParams = useSearchParams();
   const [isCameraModalOpen, setIsCameraModalOpen] = useState(false);
-  const [isAiCategorizing, setIsAiCategorizing] = useState(false);
-  const [aiCategorizeError, setAiCategorizeError] = useState<string | null>(null);
+  const [isCategorizing, setIsCategorizing] = useState(false);
+  const [categorizationError, setCategorizationError] = useState<string | null>(
+    null,
+  );
 
   const form = useForm<PatientFormValues>({
     resolver: zodResolver(patientFormSchema),
     defaultValues: {
       registrationDate: new Date(),
-      diaryNumber: '',
-      name: '',
-      age: '',
-      gender: '',
-      occupation: '',
-      phone: '',
-      guardianRelation: '',
-      guardianName: '',
-      district: '',
-      thanaUpazila: '',
-      villageUnion: '',
-      caseNotes: '',
+      diaryNumber: "",
+      name: "",
+      age: "",
+      gender: "",
+      occupation: "",
+      phone: "",
+      guardianRelation: "",
+      guardianName: "",
+      district: "",
+      thanaUpazila: "",
+      villageUnion: "",
+      caseNotes: "",
       categorizedCaseNotes: undefined,
     },
   });
 
   const {
-    formState: {isDirty},
+    formState: { isDirty },
   } = form;
 
   useEffect(() => {
@@ -140,14 +138,14 @@ function PatientEntryPageContent() {
       if (isDirty) {
         event.preventDefault();
         event.returnValue =
-          'আপনার করা পরিবর্তনগুলো সেভ করা হয়নি। আপনি কি নিশ্চিত যে আপনি এই পেজটি ছাড়তে চান?';
+          "আপনার করা পরিবর্তনগুলো সেভ করা হয়নি। আপনি কি নিশ্চিত যে আপনি এই পেজটি ছাড়তে চান?";
       }
     };
 
-    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [isDirty]);
 
@@ -156,7 +154,7 @@ function PatientEntryPageContent() {
     if (Object.keys(urlParams).length > 0) {
       Object.entries(urlParams).forEach(([key, value]) => {
         if (value && key in form.getValues()) {
-          if (key !== 'registrationDate' && key !== 'categorizedCaseNotes') {
+          if (key !== "registrationDate" && key !== "categorizedCaseNotes") {
             form.setValue(key as keyof PatientFormValues, value, {
               shouldDirty: true,
             });
@@ -168,66 +166,72 @@ function PatientEntryPageContent() {
 
   const handleDataExtracted = (extractedData: HandwrittenFormOutput) => {
     if (extractedData.name)
-      form.setValue('name', extractedData.name, {shouldDirty: true});
+      form.setValue("name", extractedData.name, { shouldDirty: true });
     if (extractedData.phone)
-      form.setValue('phone', extractedData.phone, {shouldDirty: true});
+      form.setValue("phone", extractedData.phone, { shouldDirty: true });
     if (extractedData.guardianName)
-      form.setValue('guardianName', extractedData.guardianName, {
+      form.setValue("guardianName", extractedData.guardianName, {
         shouldDirty: true,
       });
     if (extractedData.villageUnion)
-      form.setValue('villageUnion', extractedData.villageUnion, {
+      form.setValue("villageUnion", extractedData.villageUnion, {
         shouldDirty: true,
       });
     if (extractedData.thanaUpazila)
-      form.setValue('thanaUpazila', extractedData.thanaUpazila, {
+      form.setValue("thanaUpazila", extractedData.thanaUpazila, {
         shouldDirty: true,
       });
     if (extractedData.district)
-      form.setValue('district', extractedData.district, {shouldDirty: true});
+      form.setValue("district", extractedData.district, { shouldDirty: true });
     if (extractedData.age)
-      form.setValue('age', extractedData.age, {shouldDirty: true});
-
+      form.setValue("age", extractedData.age, { shouldDirty: true });
+    
     setIsCameraModalOpen(false);
 
     toast({
-      title: 'ফর্ম পূরণ হয়েছে',
+      title: "ফর্ম পূরণ হয়েছে",
       description:
-        'AI দ্বারা সনাক্ত করা তথ্য দিয়ে ফর্মটি পূরণ করা হয়েছে। অনুগ্রহ করে যাচাই করে নিন।',
+        "AI দ্বারা সনাক্ত করা তথ্য দিয়ে ফর্মটি পূরণ করা হয়েছে। অনুগ্রহ করে যাচাই করে নিন।",
     });
   };
 
   const handleCategorizeNotes = async () => {
-    const caseNotesText = form.getValues('caseNotes');
+    const caseNotesText = form.getValues("caseNotes");
     if (!caseNotesText || caseNotesText.trim().length < 20) {
       toast({
-        title: 'অপর্যাপ্ত তথ্য',
-        description: 'বিশ্লেষণ করার জন্য অনুগ্রহ করে রোগীর সমস্যা ও ইতিহাস সম্পর্কে আরও বিস্তারিত লিখুন (কমপক্ষে ২০ অক্ষর)।',
-        variant: 'destructive',
+        title: "অপর্যাপ্ত তথ্য",
+        description:
+          "বিশ্লেষণ করার জন্য অনুগ্রহ করে রোগীর সমস্যা ও ইতিহাস সম্পর্কে আরও বিস্তারিত লিখুন (কমপক্ষে ২০ অক্ষর)।",
+        variant: "destructive",
       });
       return;
     }
 
-    setIsAiCategorizing(true);
-    setAiCategorizeError(null);
+    setIsCategorizing(true);
+    setCategorizationError(null);
 
     try {
-      const result: CategorizedCaseNotesOutput = await categorizeCaseNotes({ caseNotesText });
-      form.setValue('categorizedCaseNotes', result, { shouldDirty: true });
+      const result = await categorizeCaseNotes({ caseNotesText });
+      form.setValue("categorizedCaseNotes", result, { shouldDirty: true });
       toast({
-        title: 'সফলভাবে ক্যাটাগরি করা হয়েছে',
-        description: 'AI দ্বারা রোগীর লক্ষণগুলি ৭টি বিভাগে ভাগ করা হয়েছে।',
+        title: "লক্ষণ শ্রেণীবিভাগ সফল হয়েছে",
+        description:
+          "AI দ্বারা রোগীর লক্ষণগুলো সফলভাবে ৭টি ক্যাটাগরিতে ভাগ করা হয়েছে।",
       });
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'একটি অজানা ত্রুটি ঘটেছে।';
-      setAiCategorizeError(errorMessage);
-      console.error("AI categorization error:", error);
+        const errorMessage = error instanceof Error ? error.message : "একটি অজানা ত্রুটি ঘটেছে।";
+        setCategorizationError(errorMessage);
+        toast({
+            title: "বিশ্লেষণ ব্যর্থ হয়েছে",
+            description: errorMessage,
+            variant: "destructive",
+        });
     } finally {
-      setIsAiCategorizing(false);
+      setIsCategorizing(false);
     }
-  };
+  }; 
 
-  const onSubmit: SubmitHandler<PatientFormValues> = async data => {
+  const onSubmit: SubmitHandler<PatientFormValues> = async (data) => {
     try {
       const newPatientData: Partial<Patient> = {
         name: data.name as string,
@@ -236,42 +240,37 @@ function PatientEntryPageContent() {
         age: (data.age as string) || undefined,
         gender: (data.gender as Patient['gender']) || undefined,
         occupation: (data.occupation as string) || undefined,
-        guardianRelation:
-          (data.guardianRelation as Patient['guardianRelation']) || undefined,
+        guardianRelation: (data.guardianRelation as Patient['guardianRelation']) || undefined,
         guardianName: (data.guardianName as string) || undefined,
         district: (data.district as string) || undefined,
         thanaUpazila: (data.thanaUpazila as string) || undefined,
         villageUnion: (data.villageUnion as string) || undefined,
         diaryNumber: (data.diaryNumber as string) || undefined,
         caseNotes: (data.caseNotes as string) || undefined,
-        categorizedCaseNotes:
-          (data.categorizedCaseNotes as CategorizedCaseNotes) || undefined,
+        categorizedCaseNotes: (data.categorizedCaseNotes as CategorizedCaseNotes) || undefined,
       };
 
       const newPatientId = await addPatient(newPatientData);
 
       toast({
-        title: 'রোগী নিবন্ধিত',
+        title: "রোগী নিবন্ধিত",
         description: `${data.name} সফলভাবে নিবন্ধিত হয়েছেন। আইডি: ${newPatientId}`,
       });
 
-      form.reset();
+      form.reset(); 
       window.dispatchEvent(new CustomEvent('firestoreDataChange'));
     } catch (error) {
-      console.error('Failed to register patient:', error);
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : 'An unknown error occurred during patient registration.';
+      console.error("Failed to register patient:", error);
+      const errorMessage = error instanceof Error ? error.message : "An unknown error occurred during patient registration.";
       toast({
-        title: 'নিবন্ধন ব্যর্থ হয়েছে',
+        title: "নিবন্ধন ব্যর্থ হয়েছে",
         description: `রোগী নিবন্ধন করার সময় একটি ত্রুটি ঘটেছে: ${errorMessage}`,
-        variant: 'destructive',
+        variant: "destructive",
       });
     }
   };
-  
-  const categorizedNotes = form.watch('categorizedCaseNotes');
+
+  const categorizedResult = form.watch("categorizedCaseNotes");
 
   return (
     <>
@@ -307,24 +306,24 @@ function PatientEntryPageContent() {
                   <FormField
                     control={form.control}
                     name="registrationDate"
-                    render={({field}) => (
+                    render={({ field }) => (
                       <FormItem>
                         <FormLabel>
-                          নিবন্ধনের তারিখ{' '}
+                          নিবন্ধনের তারিখ{" "}
                           <span className="text-destructive">*</span>
                         </FormLabel>
                         <Popover>
                           <PopoverTrigger asChild>
                             <Button
-                              variant={'outline'}
+                              variant={"outline"}
                               className={cn(
-                                'w-full justify-start text-left font-normal',
-                                !field.value && 'text-muted-foreground'
+                                "w-full justify-start text-left font-normal",
+                                !field.value && "text-muted-foreground",
                               )}
                             >
                               <CalendarIcon className="mr-2 h-4 w-4 opacity-70" />
                               {field.value && isValid(field.value) ? (
-                                format(field.value, 'PPP', {locale: bn})
+                                format(field.value, "PPP", { locale: bn })
                               ) : (
                                 <span>একটি তারিখ নির্বাচন করুন</span>
                               )}
@@ -335,9 +334,9 @@ function PatientEntryPageContent() {
                               mode="single"
                               selected={field.value}
                               onSelect={field.onChange}
-                              disabled={date =>
+                              disabled={(date) =>
                                 date > new Date() ||
-                                date < new Date('1900-01-01')
+                                date < new Date("1900-01-01")
                               }
                               initialFocus
                               locale={bn}
@@ -351,7 +350,7 @@ function PatientEntryPageContent() {
                   <FormField
                     control={form.control}
                     name="diaryNumber"
-                    render={({field}) => (
+                    render={({ field }) => (
                       <FormItem>
                         <FormLabel>ডায়েরি নম্বর</FormLabel>
                         <FormControl>
@@ -371,7 +370,7 @@ function PatientEntryPageContent() {
                   <FormField
                     control={form.control}
                     name="name"
-                    render={({field}) => (
+                    render={({ field }) => (
                       <FormItem className="lg:col-span-3">
                         <FormLabel>
                           পুরো নাম <span className="text-destructive">*</span>
@@ -391,7 +390,7 @@ function PatientEntryPageContent() {
                   <FormField
                     control={form.control}
                     name="age"
-                    render={({field}) => (
+                    render={({ field }) => (
                       <FormItem>
                         <FormLabel>বয়স</FormLabel>
                         <FormControl>
@@ -410,7 +409,7 @@ function PatientEntryPageContent() {
                   <FormField
                     control={form.control}
                     name="gender"
-                    render={({field}) => (
+                    render={({ field }) => (
                       <FormItem>
                         <FormLabel>লিঙ্গ</FormLabel>
                         <Select
@@ -437,7 +436,7 @@ function PatientEntryPageContent() {
                   <FormField
                     control={form.control}
                     name="occupation"
-                    render={({field}) => (
+                    render={({ field }) => (
                       <FormItem>
                         <FormLabel>রোগীর পেশা (ঐচ্ছিক)</FormLabel>
                         <Select
@@ -472,7 +471,7 @@ function PatientEntryPageContent() {
                   <FormField
                     control={form.control}
                     name="phone"
-                    render={({field}) => (
+                    render={({ field }) => (
                       <FormItem>
                         <FormLabel>
                           ফোন নম্বর <span className="text-destructive">*</span>
@@ -493,13 +492,13 @@ function PatientEntryPageContent() {
                   <FormField
                     control={form.control}
                     name="guardianRelation"
-                    render={({field}) => (
+                    render={({ field }) => (
                       <FormItem className="space-y-1">
                         <FormLabel>অভিভাবকের সম্পর্ক</FormLabel>
                         <FormControl>
                           <RadioGroup
                             onValueChange={field.onChange}
-                            value={field.value || ''}
+                            value={field.value || ""}
                             className="flex space-x-3 pt-1 items-center h-10"
                             id="patientGuardianRelationEntry"
                           >
@@ -529,7 +528,7 @@ function PatientEntryPageContent() {
                   <FormField
                     control={form.control}
                     name="guardianName"
-                    render={({field}) => (
+                    render={({ field }) => (
                       <FormItem>
                         <FormLabel>অভিভাবকের নাম (ঐচ্ছিক)</FormLabel>
                         <FormControl>
@@ -547,7 +546,7 @@ function PatientEntryPageContent() {
                   <FormField
                     control={form.control}
                     name="villageUnion"
-                    render={({field}) => (
+                    render={({ field }) => (
                       <FormItem>
                         <FormLabel>গ্রাম / ইউনিয়ন (ঐচ্ছিক)</FormLabel>
                         <FormControl>
@@ -564,7 +563,7 @@ function PatientEntryPageContent() {
                   <FormField
                     control={form.control}
                     name="thanaUpazila"
-                    render={({field}) => (
+                    render={({ field }) => (
                       <FormItem>
                         <FormLabel>থানা / উপজেলা (ঐচ্ছিক)</FormLabel>
                         <FormControl>
@@ -581,7 +580,7 @@ function PatientEntryPageContent() {
                   <FormField
                     control={form.control}
                     name="district"
-                    render={({field}) => (
+                    render={({ field }) => (
                       <FormItem>
                         <FormLabel>জেলা (ঐচ্ছিক)</FormLabel>
                         <FormControl>
@@ -602,7 +601,7 @@ function PatientEntryPageContent() {
             <Card className="shadow-md bg-card/80 backdrop-blur-lg">
               <CardHeader>
                 <CardTitle className="font-headline text-lg">
-                  রোগীর সমস্যা ও ইতিহাস
+                  রোগীর সমস্যা ও বিশ্লেষণ
                 </CardTitle>
                 <CardDescription>
                   এখানে রোগীর সকল সমস্যা, মানসিক অবস্থা, রোগের কারণ, পূর্ব ও
@@ -613,7 +612,7 @@ function PatientEntryPageContent() {
                 <FormField
                   control={form.control}
                   name="caseNotes"
-                  render={({field}) => (
+                  render={({ field }) => (
                     <FormItem>
                       <FormLabel htmlFor="caseNotes-textarea">
                         রোগীর সমস্যা, ইতিহাস এবং অন্যান্য লক্ষণ
@@ -631,59 +630,53 @@ function PatientEntryPageContent() {
                     </FormItem>
                   )}
                 />
-              </CardContent>
-            </Card>
 
-            <Card className="shadow-md bg-card/80 backdrop-blur-lg">
-              <CardHeader className="flex flex-row items-center justify-between">
-                <div>
-                  <CardTitle className="font-headline text-lg">
-                    AI দ্বারা লক্ষণ বিশ্লেষণ
-                  </CardTitle>
-                  <CardDescription>
-                    উপরে লেখা বিবরণ থেকে AI দ্বারা লক্ষণগুলো ৭টি ক্যাটাগরিতে সাজান।
-                  </CardDescription>
-                </div>
-                 <Button type="button" onClick={handleCategorizeNotes} disabled={isAiCategorizing}>
-                  {isAiCategorizing ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      বিশ্লেষণ চলছে...
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="mr-2 h-4 w-4" />
-                      এখন বিশ্লেষণ করুন
-                    </>
+                <div className="space-y-4 rounded-lg border bg-card p-4">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                    <div>
+                      <h3 className="font-semibold text-base text-primary flex items-center">
+                        <Brain className="w-5 h-5 mr-2" />
+                        AI দ্বারা লক্ষণ বিশ্লেষণ
+                      </h3>
+                      <p className="text-xs text-muted-foreground">
+                        উপরের টেক্সটবক্সে লেখা বিবরণ থেকে স্বয়ংক্রিয়ভাবে
+                        লক্ষণগুলো ৭টি ক্যাটাগরিতে ভাগ করুন।
+                      </p>
+                    </div>
+                    <Button
+                      type="button"
+                      onClick={handleCategorizeNotes}
+                      disabled={isCategorizing}
+                    >
+                      {isCategorizing ? (
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      ) : (
+                        <ClipboardEdit className="mr-2 h-4 w-4" />
+                      )}
+                      {isCategorizing
+                        ? "বিশ্লেষণ চলছে..."
+                        : "নোট বিশ্লেষণ করুন"}
+                    </Button>
+                  </div>
+
+                  {categorizationError && (
+                    <Alert variant="destructive">
+                      <AlertTitle>ত্রুটি</AlertTitle>
+                      <AlertDescription>{categorizationError}</AlertDescription>
+                    </Alert>
                   )}
-                </Button>
-              </CardHeader>
-              <CardContent>
-                {isAiCategorizing && (
-                    <div className="flex items-center justify-center p-4">
-                        <Loader2 className="h-6 w-6 animate-spin text-primary" />
-                        <p className="ml-2">AI লক্ষণগুলো বিশ্লেষণ করছে...</p>
+
+                  {categorizedResult && (
+                    <div className="space-y-3 pt-3 mt-3 border-t">
+                      <CategorizedSymptomsDisplay
+                        symptoms={categorizedResult}
+                        labels={CATEGORY_LABELS}
+                        showNumbers={true}
+                      />
                     </div>
-                )}
-                {aiCategorizeError && (
-                  <Alert variant="destructive">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertTitle>একটি ত্রুটি ঘটেছে</AlertTitle>
-                    <AlertDescription>{aiCategorizeError}</AlertDescription>
-                  </Alert>
-                )}
-                {categorizedNotes && !isAiCategorizing && (
-                   <CategorizedSymptomsDisplay symptoms={categorizedNotes} labels={CATEGORY_LABELS} />
-                )}
-                {!categorizedNotes && !isAiCategorizing && !aiCategorizeError && (
-                    <div className="text-center text-sm text-muted-foreground py-6">
-                        AI বিশ্লেষণের ফলাফল এখানে দেখানো হবে।
-                    </div>
-                )}
+                  )}
+                </div>
               </CardContent>
-              <CardFooter className="text-xs text-muted-foreground border-t pt-4">
-                সতর্কতা: AI দ্বারা তৈরি এই বিশ্লেষণ শুধুমাত্র তথ্য সাজানোর জন্য, এটি কোনো চূড়ান্ত রোগ নির্ণয় বা প্রেসক্রিপশন নয়। সর্বদা নিজের জ্ঞান ও অভিজ্ঞতার উপর নির্ভর করুন।
-              </CardFooter>
             </Card>
 
             <div className="flex justify-end pt-2">
@@ -698,7 +691,7 @@ function PatientEntryPageContent() {
                     করা হচ্ছে...
                   </>
                 ) : (
-                  'নিবন্ধন করুন'
+                  "নিবন্ধন করুন"
                 )}
               </Button>
             </div>
@@ -718,13 +711,9 @@ function PatientEntryPageContent() {
 }
 
 export default function PatientEntryPage() {
-  return (
-    <Suspense
-      fallback={
-        <LoadingSpinner variant="page" label="নিবন্ধন পৃষ্ঠা লোড হচ্ছে..." />
-      }
-    >
-      <PatientEntryPageContent />
-    </Suspense>
-  );
+    return (
+        <Suspense fallback={<LoadingSpinner variant="page" label="নিবন্ধন পৃষ্ঠা লোড হচ্ছে..." />}>
+            <PatientEntryPageContent />
+        </Suspense>
+    )
 }
