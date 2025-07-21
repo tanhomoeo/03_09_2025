@@ -56,7 +56,6 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@ducanh2912/next-pwa": "^10.2.7",
     "@types/dom-speech-recognition": "^0.0.4",
     "@types/node": "^22.16.4",
     "@types/react": "18.3.3",
