@@ -258,8 +258,8 @@ class PhilosopherDatabase {
     };
 
     for (const [philosopher, data] of Object.entries(allData)) {
-      if (data.remedies[remedyName]) {
-        details.sources[philosopher] = data.remedies[remedyName];
+      if ((data.remedies as Record<string, unknown>)[remedyName]) {
+        details.sources[philosopher] = (data.remedies as Record<string, unknown>)[remedyName];
       }
     }
 
@@ -290,7 +290,7 @@ class PhilosopherDatabase {
     };
 
     for (const [philosopher, data] of Object.entries(allData)) {
-      const remedyData = data.remedies[remedyName] as { keynotes?: string[], modalities?: { worse?: string[], better?: string[] } };
+      const remedyData = (data.remedies as Record<string, any>)[remedyName] as { keynotes?: string[], modalities?: { worse?: string[], better?: string[] } };
       if (remedyData) {
         info.sources[philosopher] = remedyData;
         

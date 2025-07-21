@@ -118,7 +118,7 @@ class HomeopathicDataCache {
         if (typeof categorySymptoms === 'object' && categorySymptoms !== null) {
           Object.entries(categorySymptoms).forEach(([symptomKey, remedies]) => {
             if (symptomKey.includes(normalizedSymptom) && Array.isArray(remedies)) {
-              remedies.forEach(remedy => suggestions.add(remedy));
+              remedies.forEach(remedy => suggestions.add(remedy as string));
             }
           });
         }
