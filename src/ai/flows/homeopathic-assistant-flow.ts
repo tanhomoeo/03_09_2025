@@ -114,32 +114,21 @@ const homeopathicAssistantFlow = ai.defineFlow(
       console.error('Error in homeopathicAssistantFlow:', error);
       let errorMessage = 'AI বিশ্লেষণ ব্যর্থ হয়েছে। মডেল একটি সমস্যার সম্মুখীন হয়েছে।';
       if (error instanceof Error) {
-        const msg = error.message.toLowerCase();
-        if (
-          msg.includes('api key') ||
-          msg.includes('permission denied') ||
-          msg.includes('authentication')
-        ) {
-          errorMessage =
-            'AI পরিষেবা কনফিগার করা যায়নি। অনুগ্রহ করে আপনার GEMINI_API_KEY এবং বিলিং সেটিংস যাচাই করুন।';
-        } else if (msg.includes('json')) {
-          errorMessage =
-            'AI মডেল একটি ভুল উত্তর দিয়েছে যা প্রসেস করা সম্ভব হচ্ছে না। অনুগ্রহ করে আবার চেষ্টা করুন।';
-        } else if (
-          msg.includes('503') ||
-          msg.includes('unavailable') ||
-          msg.includes('internal error')
-        ) {
-          errorMessage =
-            'AI পরিষেবাটি বর্তমানে ওভারলোড বা недоступ্য। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।';
-        } else if (
-          msg.startsWith('ai ') ||
-          msg.startsWith('ইনপুট') ||
-          msg.startsWith('ai পরিষেবা কনফিগার করা নেই')
-        ) {
+        if (error.message.startsWith('AI পরিষেবা কনফিগার করা যায়নি')) {
           throw error;
+        }
+        
+        const msg = error.message.toLowerCase();
+        if (msg.includes('api key') || msg.includes('permission denied') || msg.includes('authentication')) {
+          errorMessage = 'AI পরিষেবা কনফিগার করা যায়নি। অনুগ্রহ করে আপনার GEMINI_API_KEY এবং বিলিং সেটিংস যাচাই করুন।';
+        } else if (msg.includes('json') || msg.includes('zod')) {
+          errorMessage = 'AI মডেল একটি ভুল উত্তর দিয়েছে যা প্রসেস করা সম্ভব হচ্ছে না। অনুগ্রহ করে আবার চেষ্টা করুন।';
+        } else if (msg.includes('503') || msg.includes('unavailable') || msg.includes('internal error')) {
+          errorMessage = 'AI পরিষেবাটি বর্তমানে ওভারলোড বা недоступ্য। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।';
+        } else if (msg.includes('deadline') || msg.includes('timeout')) {
+          errorMessage = 'AI সার্ভার থেকে উত্তর পেতে বেশি সময় লাগছে। কিছুক্ষণ পর আবার চেষ্টা করুন।';
         } else {
-          errorMessage = error.message;
+          errorMessage = `অপ্রত্যাশিত ত্রুটি: ${error.message}`;
         }
       }
       throw new Error(errorMessage);

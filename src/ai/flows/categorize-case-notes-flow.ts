@@ -1,4 +1,3 @@
-
 'use server';
 /**
  * @fileOverview A Genkit flow to categorize unstructured homeopathic case notes into a structured format.
@@ -96,7 +95,7 @@ const caseNotesCategorizerPrompt = ai.definePrompt({
       {category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_NONE'},
     ],
   },
-  prompt: `You are an expert homeopathic assistant. Your task is to read the following unstructured case notes written in Bengali and categorize the information into a structured JSON format. 
+  prompt: `You are an expert homeopathic assistant. Your task is to read the following unstructured case notes written in Bengali and categorize the information into a structured JSON format.
 For each of the 7 categories in the output schema, consolidate all relevant information from the user's text into a single summary string.
 If no information is found for a specific category, you MUST return an empty string "" for that field.
 
@@ -115,6 +114,7 @@ const categorizeCaseNotesFlow = ai.defineFlow(
   async (input: CaseNotesInput) => {
     try {
       const {output} = await caseNotesCategorizerPrompt(input);
+      
       if (!output) {
         throw new Error('AI কোনো তথ্য প্রদান করেনি।');
       }
@@ -133,33 +133,26 @@ const categorizeCaseNotesFlow = ai.defineFlow(
       let errorMessage =
         'কেস নোট ক্যাটাগরি করতে একটি অপ্রত্যাশিত সমস্যা হয়েছে।';
       if (error instanceof Error) {
-        const msg = error.message.toLowerCase();
+        // Re-throw errors that are already user-friendly
         if (
-          msg.includes('api key') ||
-          msg.includes('permission denied') ||
-          msg.includes('authentication')
-        ) {
-          errorMessage =
-            'AI পরিষেবা কনফিগার করা যায়নি। অনুগ্রহ করে আপনার GEMINI_API_KEY এবং বিলিং সেটিংস যাচাই করুন।';
-        } else if (msg.includes('json') || msg.includes('zod') || msg.startsWith('ai একটি ভুল উত্তর দিয়েছে')) {
-          errorMessage =
-            'AI একটি ভুল উত্তর দিয়েছে যা প্রসেস করা সম্ভব হচ্ছে না। অনুগ্রহ করে আবার চেষ্টা করুন।';
-        } else if (
-          msg.includes('503') ||
-          msg.includes('unavailable') ||
-          msg.includes('internal error')
-        ) {
-          errorMessage =
-            'AI পরিষেবাটি বর্তমানে ওভারলোড বা недоступ্য। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।';
-        } else if (
-          msg.startsWith('ai ') ||
-          msg.startsWith('ইনপুট') ||
-          msg.startsWith('ai পরিষেবা কনফিগার করা নেই') ||
-          msg.startsWith('অপর্যাপ্ত তথ্য')
+          error.message.startsWith('AI পরিষেবা কনফিগার করা যায়নি') ||
+          error.message.startsWith('অপর্যাপ্ত তথ্য') ||
+          error.message.startsWith('AI একটি ভুল উত্তর দিয়েছে')
         ) {
           throw error;
+        }
+
+        const msg = error.message.toLowerCase();
+        if (msg.includes('api key') || msg.includes('permission denied') || msg.includes('authentication')) {
+          errorMessage = 'AI পরিষেবা কনফিগার করা যায়নি। অনুগ্রহ করে আপনার GEMINI_API_KEY এবং বিলিং সেটিংস যাচাই করুন।';
+        } else if (msg.includes('json') || msg.includes('zod')) {
+          errorMessage = 'AI একটি ভুল উত্তর দিয়েছে যা প্রসেস করা সম্ভব হচ্ছে না। অনুগ্রহ করে আবার চেষ্টা করুন।';
+        } else if (msg.includes('503') || msg.includes('unavailable') || msg.includes('internal error')) {
+          errorMessage = 'AI পরিষেবাটি বর্তমানে ওভারলোড বা недоступ্য। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।';
+        } else if (msg.includes('deadline') || msg.includes('timeout')) {
+          errorMessage = 'AI সার্ভার থেকে উত্তর পেতে বেশি সময় লাগছে। কিছুক্ষণ পর আবার চেষ্টা করুন।';
         } else {
-          errorMessage = error.message;
+          errorMessage = `অপ্রত্যাশিত ত্রুটি: ${error.message}`;
         }
       }
       throw new Error(errorMessage);
