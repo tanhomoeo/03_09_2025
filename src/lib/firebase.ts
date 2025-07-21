@@ -1,4 +1,3 @@
-
 import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
 // Import Firebase services you will use
 import { getAuth, type Auth } from "firebase/auth";
