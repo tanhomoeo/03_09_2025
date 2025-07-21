@@ -8,7 +8,7 @@ import { PageHeaderCard } from '@/components/shared/PageHeaderCard';
 import { getPatients } from '@/lib/firestoreService';
 import type { Patient } from '@/lib/types';
 import { BENGALI_VOWELS_FOR_FILTER, BENGALI_CONSONANTS_FOR_FILTER } from '@/lib/constants';
-import { Loader2, Users } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { ROUTES } from '@/lib/constants';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -25,9 +25,14 @@ export default function DictionaryPage() {
 
   const fetchPatients = useCallback(async () => {
     setIsLoading(true);
-    const patientsData = await getPatients();
-    setAllPatients(patientsData.sort((a, b) => a.name.localeCompare(b.name, 'bn')));
-    setIsLoading(false);
+    try {
+        const patientsData = await getPatients();
+        setAllPatients(patientsData.sort((a, b) => a.name.localeCompare(b.name, 'bn')));
+    } catch (error) {
+        console.error("Failed to fetch patients", error);
+    } finally {
+        setIsLoading(false);
+    }
   }, []);
 
   useEffect(() => {
@@ -59,9 +64,9 @@ export default function DictionaryPage() {
         description="রোগীর রেকর্ড ব্রাউজ, অনুসন্ধান এবং ফিল্টার করুন।"
       />
 
-      <Card className="shadow-sm bg-blue-500/10">
+      <Card className="shadow-sm bg-blue-500/10 backdrop-blur-lg">
         <CardHeader className="pb-2 pt-4">
-          <CardTitle className="font-headline text-lg text-blue-700">স্বরবর্ণ দ্বারা ফিল্টার:</CardTitle>
+          <CardTitle className="font-headline text-lg">স্বরবর্ণ দ্বারা ফিল্টার:</CardTitle>
         </CardHeader>
         <CardContent className="pb-4">
           <ScrollArea className="h-auto max-h-[100px] w-full whitespace-nowrap rounded-md">
@@ -83,9 +88,9 @@ export default function DictionaryPage() {
         </CardContent>
       </Card>
 
-      <Card className="shadow-sm bg-purple-500/10">
+      <Card className="shadow-sm bg-purple-500/10 backdrop-blur-lg">
         <CardHeader className="pb-2 pt-4">
-          <CardTitle className="font-headline text-lg text-purple-700">ব্যঞ্জনবর্ণ দ্বারা ফিল্টার:</CardTitle>
+          <CardTitle className="font-headline text-lg">ব্যঞ্জনবর্ণ দ্বারা ফিল্টার:</CardTitle>
         </CardHeader>
         <CardContent className="pb-4">
           <ScrollArea className="h-auto max-h-[150px] w-full whitespace-nowrap rounded-md">
@@ -113,7 +118,7 @@ export default function DictionaryPage() {
           <p className="ml-2 text-muted-foreground">রোগীর তালিকা লোড হচ্ছে...</p>
         </div>
       ) : (
-        <Card className="shadow-sm mt-4">
+        <Card className="shadow-sm mt-4 bg-card/80 backdrop-blur-lg">
           <CardHeader>
             <CardTitle className="font-headline text-xl">
               {selectedLetter && selectedLetter !== 'সব' ? `"${selectedLetter}" দিয়ে শুরু হওয়া রোগীগণ` : "সকল রোগী"}
@@ -140,8 +145,8 @@ export default function DictionaryPage() {
                         <TableCell>{patient.phone}</TableCell>
                         <TableCell>{patient.villageUnion}{patient.district ? `, ${patient.district}` : ''}</TableCell>
                         <TableCell className="text-right">
-                          <Button variant="link" asChild size="sm">
-                            <Link href={`${ROUTES.PATIENT_SEARCH}?phone=${patient.phone}`}>বিস্তারিত দেখুন</Link>
+                          <Button variant="link" asChild size="sm" className="text-primary font-medium">
+                            <Link href={`${ROUTES.PATIENT_SEARCH}?q=${patient.phone}&tab=history`}>বিস্তারিত দেখুন</Link>
                           </Button>
                         </TableCell>
                       </TableRow>

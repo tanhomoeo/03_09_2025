@@ -13,7 +13,7 @@ export default function PersonalExpensesPage() {
         description="আপনার ব্যক্তিগত খরচ এবং হিসাব পরিচালনা করুন।"
         actions={<DollarSign className="h-8 w-8 text-primary" />}
       />
-      <Card className="shadow-md">
+      <Card className="shadow-md bg-card/80 backdrop-blur-lg">
         <CardHeader>
           <CardTitle className="font-headline text-lg flex items-center">
             <Construction className="mr-3 h-6 w-6 text-amber-500" />

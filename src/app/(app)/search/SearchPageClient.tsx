@@ -1,6 +1,6 @@
 
 'use client';
-import React, { useState, useEffect, Suspense, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,39 +9,69 @@ import { getPatients, createVisitForPrescription } from '@/lib/firestoreService'
 import type { Patient } from '@/lib/types';
 import { PageHeaderCard } from '@/components/shared/PageHeaderCard';
 import {
-  UserCircle,
-  PlusCircle,
   CreditCard,
   History,
-  Edit3,
+  ClipboardList,
   Loader2,
   Search as SearchIconLucide,
   X,
-  ClipboardList,
-  BriefcaseMedical,
+  FileHeart,
   CalendarPlus,
-  PlayCircle
 } from 'lucide-react';
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ROUTES } from '@/lib/constants';
 import dynamic from 'next/dynamic';
 import { useToast } from '@/hooks/use-toast';
+import type { PatientDetailsModalProps } from '@/components/patient/PatientDetailsModal';
+import type { CreatePaymentSlipModalProps } from '@/components/slip/CreatePaymentSlipModal';
 
-const PatientDetailsModal = dynamic(() =>
-  import('@/components/patient/PatientDetailsModal').then(mod => mod.PatientDetailsModal),
+
+const PatientDetailsModal = dynamic<PatientDetailsModalProps>(() =>
+ import('@/components/patient/PatientDetailsModal').then(mod => mod.PatientDetailsModal),
   {
  loading: () => <div className="fixed inset-0 bg-background/50 flex items-center justify-center z-50"><Loader2 className="h-8 w-8 animate-spin text-primary" /> <span className="ml-2">Loading Details...</span></div>,
-    ssr: false,
+ ssr: false,
   }
 );
 
-const CreatePaymentSlipModal = dynamic(() =>
-    import('@/components/slip/CreatePaymentSlipModal').then(mod => mod.CreatePaymentSlipModal),
-    { ssr: false,
+
+const CreatePaymentSlipModal = dynamic<CreatePaymentSlipModalProps>(() =>
+ import('@/components/slip/CreatePaymentSlipModal').then(mod => mod.CreatePaymentSlipModal),
+  { ssr: false,
     loading: () => <div className="fixed inset-0 bg-background/50 flex items-center justify-center z-50"><Loader2 className="h-8 w-8 animate-spin text-primary" /> <span className="ml-2">Loading Payment Form...</span></div>
 });
 
+const SearchResultSkeleton = () => (
+  <div className="space-y-4 animate-pulse">
+    {[...Array(3)].map((_, i) => (
+      <Card key={i} className="bg-card/70">
+        <CardHeader className="pb-3">
+          <div className="flex items-center gap-3">
+            <div className="h-12 w-12 rounded-full bg-muted"></div>
+            <div>
+              <div className="h-6 w-48 rounded bg-muted"></div>
+              <div className="h-3 w-64 rounded bg-muted mt-1"></div>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="h-5 w-32 rounded bg-muted mb-3"></div>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+            <div className="h-9 rounded-md bg-muted"></div>
+            <div className="h-9 rounded-md bg-muted"></div>
+            <div className="h-9 rounded-md bg-muted"></div>
+            <div className="h-9 rounded-md bg-muted"></div>
+            <div className="h-9 rounded-md bg-muted"></div>
+            <div className="h-9 rounded-md bg-muted"></div>
+          </div>
+        </CardContent>
+      </Card>
+    ))}
+  </div>
+);
+
+type ModalTab = 'info' | 'history';
 
 export default function SearchPageClient() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -51,26 +81,26 @@ export default function SearchPageClient() {
   const [selectedPatientForModal, setSelectedPatientForModal] = useState<Patient | null>(null);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
-  const [activeModalTab, setActiveModalTab] = useState<'info' | 'history' | 'addVisitAndPayment'>('info');
+  const [activeModalTab, setActiveModalTab] = useState<ModalTab>('info');
   const [isLoading, setIsLoading] = useState(true);
   const [isCreatingVisit, setIsCreatingVisit] = useState<string | null>(null);
   const router = useRouter();
   const { toast } = useToast();
 
-  useEffect(() => {
-    const doFetchPatients = async () => {
-      setIsLoading(true);
-      try {
-        const patientsData = await getPatients();
-        setAllPatients(patientsData);
-      } catch (error) {
-        console.error("Failed to fetch patients", error);
-        toast({ title: "ত্রুটি", description: "রোগীর তালিকা আনতে সমস্যা হয়েছে।", variant: "destructive" });
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const doFetchPatients = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const patientsData = await getPatients();
+      setAllPatients(patientsData);
+    } catch (error) {
+      console.error("Failed to fetch patients", error);
+      toast({ title: "ত্রুটি", description: "রোগীর তালিকা আনতে সমস্যা হয়েছে।", variant: "destructive" });
+    } finally {
+      setIsLoading(false);
+    }
+  }, [toast]);
 
+  useEffect(() => {
     doFetchPatients();
 
     const handleDataChange = () => {
@@ -81,7 +111,7 @@ export default function SearchPageClient() {
     return () => {
       window.removeEventListener('firestoreDataChange', handleDataChange);
     };
-  }, [toast]);
+  }, [doFetchPatients]);
 
   useEffect(() => {
     const querySearchTerm = searchParams.get('q');
@@ -111,9 +141,15 @@ export default function SearchPageClient() {
       );
     });
     setFilteredPatients(results);
+
+    const tabParam = searchParams.get('tab');
+    if ((tabParam === 'history' || tabParam === 'info') && results.length === 1) {
+        handleOpenDetailsModal(results[0], tabParam as ModalTab);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm, allPatients]);
 
-  const handleOpenDetailsModal = (patient: Patient, tab: 'info' | 'history' | 'addVisitAndPayment') => {
+  const handleOpenDetailsModal = (patient: Patient, tab: ModalTab) => {
     setSelectedPatientForModal(patient);
     setActiveModalTab(tab);
     setIsDetailsModalOpen(true);
@@ -128,23 +164,22 @@ export default function SearchPageClient() {
     router.push(`${ROUTES.MEDICINE_INSTRUCTIONS}?patientId=${patient.id}&name=${encodeURIComponent(patient.name)}`);
   };
 
-  const handlePatientUpdatedInModal = (updatedPatient: Patient) => {
-    const newAllPatientsList = allPatients.map(p => p.id === updatedPatient.id ? updatedPatient : p);
-    setAllPatients(newAllPatientsList);
+  const handlePatientUpdatedInModal = useCallback((updatedPatient: Patient) => {
+    setAllPatients(prev => prev.map(p => p.id === updatedPatient.id ? updatedPatient : p));
     window.dispatchEvent(new CustomEvent('firestoreDataChange'));
-  };
+  }, []);
 
-  const handleAddTodaysVisitAndPrescribe = async (patient: Patient) => {
+  const handleAddPatientToTodaysQueue = async (patient: Patient) => {
     setIsCreatingVisit(patient.id);
     try {
       const newVisitId = await createVisitForPrescription(patient.id, "পুনরায় সাক্ষাৎ / Follow-up", 'direct');
       if (newVisitId) {
         toast({
-          title: "ভিজিট তৈরি হয়েছে",
-          description: `${patient.name}-এর জন্য আজকের ভিজিট তৈরি করা হয়েছে। প্রেসক্রিপশন পৃষ্ঠায় নেয়া হচ্ছে।`,
+          title: "রোগী তালিকায় যুক্ত হয়েছে",
+          description: `${patient.name}-কে আজকের সাক্ষাতের তালিকায় যুক্ত করা হয়েছে।`,
         });
-        router.push(`${ROUTES.PRESCRIPTION}/${patient.id}?visitId=${newVisitId}`);
         window.dispatchEvent(new CustomEvent('firestoreDataChange'));
+        router.push(ROUTES.DASHBOARD);
       } else {
         throw new Error("Failed to create visit ID.");
       }
@@ -166,6 +201,8 @@ export default function SearchPageClient() {
         title="রোগী অনুসন্ধান"
         description="রোগীর রেকর্ড খুঁজুন"
         actions={<SearchIconLucide className="h-8 w-8 text-primary" />}
+        className="bg-gradient-to-br from-indigo-100 to-blue-200 dark:from-indigo-900/30 dark:to-blue-900/30"
+        titleClassName="text-indigo-900 dark:text-indigo-300"
       >
         <p className="text-sm text-muted-foreground mt-1">
           নাম, ডায়েরি নম্বর, ফোন, ঠিকানা বা অভিভাবকের নাম দ্বারা বিদ্যমান রোগীর রেকর্ড খুঁজতে নীচের অনুসন্ধান বার ব্যবহার করুন।
@@ -193,10 +230,7 @@ export default function SearchPageClient() {
       </div>
 
       {isLoading ? (
-        <div className="flex justify-center items-center py-10">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          <p className="ml-2 text-muted-foreground">লোড হচ্ছে...</p>
-        </div>
+        <SearchResultSkeleton />
       ) : searchTerm.trim() && filteredPatients.length === 0 ? (
         <div className="text-center py-10 text-muted-foreground">
           &quot;{searchTerm}&quot; এর জন্য কোন রোগী খুঁজে পাওয়া যায়নি।
@@ -208,15 +242,15 @@ export default function SearchPageClient() {
       ) : (
         <div className="space-y-4">
           {filteredPatients.map((patient) => (
-            <Card key={patient.id} className="bg-card/70 backdrop-blur-md">
+            <Card key={patient.id} className="bg-card/80 backdrop-blur-lg">
               <CardHeader className="pb-3">
                 <div className="flex items-center gap-3">
-                  <Avatar className="h-12 w-12">
+                  <Avatar className="h-10 w-10 md:h-12 md:w-12">
                     <AvatarImage src={`https://placehold.co/100x100.png?text=${patient.name.charAt(0)}`} alt={patient.name} data-ai-hint="profile person" />
                     <AvatarFallback>{patient.name.substring(0, 2).toUpperCase()}</AvatarFallback>
                   </Avatar>
                   <div>
-                    <CardTitle className="font-headline text-xl text-primary">{patient.name}</CardTitle>
+                    <CardTitle className="font-headline text-base md:text-lg">{patient.name}</CardTitle>
                     <p className="text-xs text-muted-foreground">
                       ডায়েরি নং: {patient.diaryNumber?.toString() || 'N/A'} | ফোন: {patient.phone}
                     </p>
@@ -224,31 +258,27 @@ export default function SearchPageClient() {
                 </div>
               </CardHeader>
               <CardContent>
-                <h4 className="font-semibold text-md mb-3 text-foreground">রোগীর কার্যক্রম</h4>
+                <h4 className="font-semibold text-sm mb-3 text-foreground">রোগীর কার্যক্রম</h4>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                   <Button
-                    size="sm"
-                    onClick={() => handleAddTodaysVisitAndPrescribe(patient)}
+                    onClick={() => handleAddPatientToTodaysQueue(patient)}
                     disabled={isCreatingVisit === patient.id}
-                    className="bg-gradient-to-r from-green-100 to-lime-200 text-green-800 hover:brightness-105 transition-all"
+                    className="h-8 px-2.5 text-xs rounded-md shadow-md hover:shadow-lg hover:-translate-y-px bg-gradient-to-r from-green-100 to-lime-200 text-green-800 transition-all"
                   >
-                    {isCreatingVisit === patient.id ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <PlayCircle className="mr-2 h-4 w-4" />}
-                    {isCreatingVisit === patient.id ? 'প্রসেসিং...' : 'আজকের কার্যক্রম'}
+                    {isCreatingVisit === patient.id ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CalendarPlus className="mr-2 h-4 w-4" />}
+                    {isCreatingVisit === patient.id ? 'প্রসেসিং...' : 'আজকের কার্যক্রমে যুক্ত করুন'}
                   </Button>
-                  <Button size="sm" onClick={() => handleOpenDetailsModal(patient, 'history')} className="bg-gradient-to-r from-purple-100 to-indigo-200 text-purple-800 hover:brightness-105 transition-all">
-                    <History className="mr-2 h-4 w-4" /> কেস হিস্ট্রি দেখুন
+                   <Button onClick={() => handleOpenDetailsModal(patient, 'info')} className="h-8 px-2.5 text-xs rounded-md shadow-md hover:shadow-lg hover:-translate-y-px bg-gradient-to-r from-amber-100 to-orange-200 text-amber-800 transition-all">
+                    <FileHeart className="mr-2 h-4 w-4" /> কেস হিস্ট্রি দেখুন
                   </Button>
-                   <Button size="sm" onClick={() => handleOpenMedicineInstructions(patient)} className="bg-gradient-to-r from-indigo-100 to-blue-200 text-indigo-800 hover:brightness-105 transition-all">
+                  <Button onClick={() => handleOpenDetailsModal(patient, 'history')} className="h-8 px-2.5 text-xs rounded-md shadow-md hover:shadow-lg hover:-translate-y-px bg-gradient-to-r from-purple-100 to-indigo-200 text-purple-800 transition-all">
+                    <History className="mr-2 h-4 w-4" /> ভিজিটের বিবরণ
+                  </Button>
+                   <Button onClick={() => handleOpenMedicineInstructions(patient)} className="h-8 px-2.5 text-xs rounded-md shadow-md hover:shadow-lg hover:-translate-y-px bg-gradient-to-r from-indigo-100 to-blue-200 text-indigo-800 transition-all">
                     <ClipboardList className="mr-2 h-4 w-4" /> ঔষধের নিয়মাবলী
                   </Button>
-                  <Button size="sm" onClick={() => handleOpenPaymentModal(patient)} className="bg-gradient-to-r from-sky-100 to-cyan-200 text-sky-800 hover:brightness-105 transition-all">
+                  <Button onClick={() => handleOpenPaymentModal(patient)} className="h-8 px-2.5 text-xs rounded-md shadow-md hover:shadow-lg hover:-translate-y-px bg-gradient-to-r from-sky-100 to-cyan-200 text-sky-800 transition-all">
                     <CreditCard className="mr-2 h-4 w-4" /> সাধারণ পেমেন্ট
-                  </Button>
-                   <Button size="sm" onClick={() => handleOpenDetailsModal(patient, 'addVisitAndPayment')} className="bg-gradient-to-r from-teal-100 to-emerald-200 text-teal-800 hover:brightness-105 transition-all">
-                    <CalendarPlus className="mr-2 h-4 w-4" /> পুরোনো ভিজিট পেমেন্ট
-                  </Button>
-                  <Button size="sm" onClick={() => handleOpenDetailsModal(patient, 'info')} className="bg-gradient-to-r from-amber-100 to-orange-200 text-amber-800 hover:brightness-105 transition-all">
-                    <Edit3 className="mr-2 h-4 w-4" /> তথ্য সম্পাদনা
                   </Button>
                 </div>
               </CardContent>
@@ -257,28 +287,26 @@ export default function SearchPageClient() {
         </div>
       )}
 
-      <Suspense fallback={<div className="fixed inset-0 bg-background/50 flex items-center justify-center z-50"><Loader2 className="h-8 w-8 animate-spin text-primary" /> <span className="ml-2">Loading Modal...</span></div>}>
-        {selectedPatientForModal && isDetailsModalOpen && (
-          <PatientDetailsModal
-            patient={selectedPatientForModal}
-            isOpen={isDetailsModalOpen}
-            onClose={() => setIsDetailsModalOpen(false)}
-            defaultTab={activeModalTab}
-            onPatientUpdate={handlePatientUpdatedInModal}
-          />
-        )}
-      </Suspense>
+      {selectedPatientForModal && isDetailsModalOpen && (
+        <PatientDetailsModal
+          patient={selectedPatientForModal}
+          isOpen={isDetailsModalOpen}
+          onClose={() => setIsDetailsModalOpen(false)}
+          defaultTab={activeModalTab}
+          onPatientUpdate={handlePatientUpdatedInModal}
+        />
+      )}
 
-      <Suspense fallback={<div className="fixed inset-0 bg-background/50 flex items-center justify-center z-50"><Loader2 className="h-8 w-8 animate-spin text-primary" /> <span className="ml-2">Loading Payment Form...</span></div>}>
-        {selectedPatientForModal && isPaymentModalOpen && (
-          <CreatePaymentSlipModal
-            patient={selectedPatientForModal}
-            isOpen={isPaymentModalOpen}
-            onClose={() => setIsPaymentModalOpen(false)}
-            onSlipCreated={() => { window.dispatchEvent(new CustomEvent('firestoreDataChange')); }}
-          />
-        )}
-      </Suspense>
+      {selectedPatientForModal && isPaymentModalOpen && (
+        <CreatePaymentSlipModal
+          patient={selectedPatientForModal}
+          isOpen={isPaymentModalOpen}
+          onClose={(slipCreated) => { 
+            setIsPaymentModalOpen(false);
+            if (slipCreated) window.dispatchEvent(new CustomEvent('firestoreDataChange'));
+          }}
+        />
+      )}
     </div>
   );
 }

@@ -4,18 +4,18 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Camera, AlertCircle, Upload, CheckCircle } from 'lucide-react';
+import { Loader2, Camera, AlertCircle, CheckCircle } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { parseHandwrittenForm, type HandwrittenFormOutput } from '@/ai/flows/handwritten-patient-form-parser-flow';
 import Image from 'next/image';
 
-interface ScanPatientFormModalProps {
+export interface ScanPatientFormModalProps {
   isOpen: boolean;
   onClose: () => void;
   onDataExtracted: (data: HandwrittenFormOutput) => void;
 }
 
-export function ScanPatientFormModal({ isOpen, onClose, onDataExtracted }: ScanPatientFormModalProps) {
+export default function ScanPatientFormModal({ isOpen, onClose, onDataExtracted }: ScanPatientFormModalProps) {
   const { toast } = useToast();
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -85,12 +85,13 @@ export function ScanPatientFormModal({ isOpen, onClose, onDataExtracted }: ScanP
     try {
       const result = await parseHandwrittenForm({ photoDataUri: capturedImage });
       onDataExtracted(result);
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'ছবি থেকে তথ্য বের করতে একটি সমস্যা হয়েছে।';
       console.error("AI parsing error:", error);
       toast({
         variant: 'destructive',
         title: 'AI প্রসেসিং ব্যর্থ হয়েছে',
-        description: error.message || 'ছবি থেকে তথ্য বের করতে একটি সমস্যা হয়েছে।',
+        description: errorMessage,
       });
     } finally {
       setIsProcessing(false);

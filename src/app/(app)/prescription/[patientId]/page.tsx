@@ -1,6 +1,5 @@
-
 'use client';
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useSearchParams, useRouter } from 'next/navigation';
 import { useForm, useFieldArray, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -9,18 +8,23 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { getPatientById, addPrescription, getVisitById, getPrescriptionsByPatientId, getPrescriptionById, updatePrescription, formatDate, getClinicSettings } from '@/lib/firestoreService';
+import { getPatientById, addPrescription, getVisitById, getPrescriptionsByPatientId, getPrescriptionById, updatePrescription, getClinicSettings } from '@/lib/firestoreService';
 import type { Patient, Prescription, Visit, ClinicSettings } from '@/lib/types';
 import { PageHeaderCard } from '@/components/shared/PageHeaderCard';
 import { DiagnosisAssistant } from '@/components/ai/DiagnosisAssistant';
-import { PlusCircle, Trash2, Save, Loader2, Printer, ClipboardList } from 'lucide-react';
+import { PlusCircle, Trash2, Save, Printer, ClipboardList, ChevronsDown, ChevronsUp } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
-import { APP_NAME, ROUTES } from '@/lib/constants';
+import { ROUTES } from '@/lib/constants';
 import { format } from 'date-fns';
 import { bn } from 'date-fns/locale';
+import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
+import { PrintLayout } from '@/components/prescription/PrintLayout';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { cn } from '@/lib/utils';
+import { CategorizedSymptomsDisplay, LABELS as CATEGORY_LABELS } from '@/components/categorized-symptoms-display';
+
 
 const prescriptionItemSchema = z.object({
   medicineName: z.string().min(1, "Medicine name is required"),
@@ -31,7 +35,6 @@ const prescriptionItemSchema = z.object({
 });
 
 const prescriptionFormSchema = z.object({
-  prescriptionType: z.enum(['adult', 'child']),
   items: z.array(prescriptionItemSchema).min(1, "At least one medicine is required"),
   followUpDays: z.coerce.number().int().positive().optional(),
   advice: z.string().optional(),
@@ -56,11 +59,11 @@ export default function PrescriptionPage() {
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
   const [pageHeaderDescriptionString, setPageHeaderDescriptionString] = useState<string>('রোগীর তথ্য লোড হচ্ছে...');
+  const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
 
   const form = useForm<PrescriptionFormValues>({
     resolver: zodResolver(prescriptionFormSchema),
     defaultValues: {
-      prescriptionType: 'adult',
       items: [{ medicineName: '', dosage: '', frequency: '', duration: '', notes: '' }],
       followUpDays: 7,
       advice: '',
@@ -73,6 +76,8 @@ export default function PrescriptionPage() {
     control: form.control,
     name: "items",
   });
+  
+  const formValues = form.watch();
 
   const fetchPrescriptionData = useCallback(async () => {
     setIsLoading(true);
@@ -81,23 +86,25 @@ export default function PrescriptionPage() {
     let fetchedClinicSettings: ClinicSettings | null = null;
 
     try {
-      fetchedPatient = await getPatientById(patientId);
-      setPatient(fetchedPatient || null);
-      fetchedClinicSettings = await getClinicSettings();
+      [fetchedPatient, fetchedClinicSettings] = await Promise.all([
+        getPatientById(patientId),
+        getClinicSettings()
+      ]);
+
+      setPatient(fetchedPatient);
       setClinicSettings(fetchedClinicSettings);
 
       if (visitId) {
         const visit = await getVisitById(visitId);
-        setCurrentVisit(visit || null);
+        setCurrentVisit(visit);
         fetchedVisit = visit;
       }
       
-      let resetValues: PrescriptionFormValues = {
-          prescriptionType: 'adult',
+      const resetValues: Partial<PrescriptionFormValues> = {
           items: [{ medicineName: '', dosage: '', frequency: '', duration: '', notes: '' }],
           followUpDays: 7,
           advice: '',
-          diagnosis: '',
+          diagnosis: fetchedVisit?.diagnosis || fetchedVisit?.symptoms || '',
           doctorName: fetchedClinicSettings?.doctorName || '',
       };
 
@@ -105,40 +112,30 @@ export default function PrescriptionPage() {
           const prescription = await getPrescriptionById(prescriptionIdQuery);
           if (prescription) {
               setExistingPrescription(prescription);
-              resetValues = {
-                  prescriptionType: prescription.prescriptionType,
+              Object.assign(resetValues, {
                   items: prescription.items,
                   followUpDays: prescription.followUpDays,
                   advice: prescription.advice,
-                  diagnosis: prescription.diagnosis || (fetchedVisit?.diagnosis || fetchedVisit?.symptoms || ''),
-                  doctorName: prescription.doctorName || fetchedClinicSettings?.doctorName || '',
-              };
-          } else if (fetchedVisit) {
-              resetValues.diagnosis = fetchedVisit.diagnosis || fetchedVisit.symptoms || '';
+                  diagnosis: prescription.diagnosis || resetValues.diagnosis,
+                  doctorName: prescription.doctorName || resetValues.doctorName,
+              });
           }
       } else if (visitId) {
           const prescriptionsForVisit = (await getPrescriptionsByPatientId(patientId)).filter(p => p.visitId === visitId);
           if (prescriptionsForVisit.length > 0) {
               const currentPrescriptionForVisit = prescriptionsForVisit[0];
               setExistingPrescription(currentPrescriptionForVisit);
-              resetValues = {
-                  prescriptionType: currentPrescriptionForVisit.prescriptionType,
+              Object.assign(resetValues, {
                   items: currentPrescriptionForVisit.items,
                   followUpDays: currentPrescriptionForVisit.followUpDays,
                   advice: currentPrescriptionForVisit.advice,
-                  diagnosis: currentPrescriptionForVisit.diagnosis || (fetchedVisit?.diagnosis || fetchedVisit?.symptoms || ''),
-                  doctorName: currentPrescriptionForVisit.doctorName || fetchedClinicSettings?.doctorName || '',
-              };
-          } else if (fetchedVisit) {
-             resetValues.diagnosis = fetchedVisit.diagnosis || fetchedVisit.symptoms || '';
-             resetValues.doctorName = fetchedClinicSettings?.doctorName || '';
+                  diagnosis: currentPrescriptionForVisit.diagnosis || resetValues.diagnosis,
+                  doctorName: currentPrescriptionForVisit.doctorName || resetValues.doctorName,
+              });
           }
       }
       
-      if (!resetValues.diagnosis && fetchedVisit) {
-          resetValues.diagnosis = fetchedVisit.diagnosis || fetchedVisit.symptoms || '';
-      }
-      form.reset(resetValues);
+      form.reset(resetValues as PrescriptionFormValues);
 
       const patientName = fetchedPatient ? fetchedPatient.name : 'N/A';
       const diaryNumber = fetchedPatient ? (fetchedPatient.diaryNumber || 'N/A') : 'N/A';
@@ -169,7 +166,6 @@ export default function PrescriptionPage() {
         patientId: patient.id,
         visitId: visitId,
         date: new Date().toISOString(),
-        prescriptionType: data.prescriptionType,
         items: data.items,
         followUpDays: data.followUpDays,
         advice: data.advice,
@@ -202,11 +198,8 @@ export default function PrescriptionPage() {
 
   const handlePrintPrescription = () => {
     if (typeof window !== 'undefined') {
-      const elementsToHide = document.querySelectorAll('.hide-on-print');
-      elementsToHide.forEach(el => (el as HTMLElement).style.display = 'none');
       document.body.classList.add('printing-prescription-active');
       window.print();
-      elementsToHide.forEach(el => (el as HTMLElement).style.display = '');
       document.body.classList.remove('printing-prescription-active');
     }
   };
@@ -228,7 +221,7 @@ export default function PrescriptionPage() {
   };
 
   if (isLoading) {
-    return <div className="flex h-screen items-center justify-center"><Loader2 className="h-12 w-12 animate-spin text-primary" /><p className="ml-3">প্রেসক্রিপশন ডেটা লোড হচ্ছে...</p></div>;
+    return <LoadingSpinner variant="page" label="প্রেসক্রিপশন ডেটা লোড হচ্ছে..." />;
   }
 
   if (!patient && !isLoading) {
@@ -236,7 +229,7 @@ export default function PrescriptionPage() {
   }
 
   return (
-    <div className="space-y-6 print:space-y-2">
+    <div className="space-y-6">
       <PageHeaderCard
         title="প্রেসক্রিপশন শিট"
         description={pageHeaderDescriptionString}
@@ -247,7 +240,7 @@ export default function PrescriptionPage() {
         <div className="lg:col-span-2">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
-              <Card className="shadow-lg">
+              <Card className="shadow-lg bg-card/80 backdrop-blur-lg">
                 <CardHeader>
                   <div className="flex justify-between items-start">
                     <div>
@@ -270,28 +263,7 @@ export default function PrescriptionPage() {
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  <FormField
-                    control={form.control}
-                    name="prescriptionType"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>প্রেসক্রিপশন এর জন্য</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="ধরন নির্বাচন করুন" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="adult">প্রাপ্তবয়স্ক</SelectItem>
-                            <SelectItem value="child">শিশু</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
+                  
                   <Separator />
                   <FormField
                     control={form.control}
@@ -434,7 +406,7 @@ export default function PrescriptionPage() {
                     size="sm"
                     className="w-full sm:w-auto bg-gradient-to-r from-green-500 to-teal-500 text-white hover:brightness-105 transition-all"
                   >
-                    {form.formState.isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+                    {form.formState.isSubmitting ? <LoadingSpinner variant="button" /> : <Save className="mr-2 h-4 w-4" />}
                     {existingPrescription ? 'আপডেট করুন' : 'সংরক্ষণ করুন'}
                   </Button>
                   {existingPrescription && (
@@ -470,203 +442,44 @@ export default function PrescriptionPage() {
             visit={currentVisit}
             onKeySymptomsSelect={handleKeySymptomsSelect}
           />
-          {patient && (
-            <Card className="bg-gradient-to-br from-green-100 to-lime-200">
+          {patient && patient.categorizedCaseNotes && (
+            <Card className="shadow-md bg-gradient-to-br from-indigo-100 to-blue-200 dark:from-indigo-900/40 dark:to-blue-900/40 backdrop-blur-lg">
               <CardHeader>
-                <CardTitle className="font-headline text-lg text-slate-800">রোগীর তথ্য</CardTitle>
+                <div className="flex justify-between items-center w-full">
+                  <CardTitle className="font-headline text-lg text-slate-800 dark:text-slate-200">রোগীর সমস্যার সারসংক্ষেপ</CardTitle>
+                  <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-600 dark:text-slate-300" onClick={() => setIsSummaryExpanded(!isSummaryExpanded)}>
+                    {isSummaryExpanded ? <ChevronsUp className="h-5 w-5" /> : <ChevronsDown className="h-5 w-5" />}
+                    <span className="sr-only">{isSummaryExpanded ? "সংক্ষিপ্ত করুন" : "বিস্তারিত দেখুন"}</span>
+                  </Button>
+                </div>
+                <CardDescription className="text-xs text-slate-600 dark:text-slate-400">নিবন্ধিত তথ্য অনুযায়ী একটি সংক্ষিপ্ত বিবরণ।</CardDescription>
               </CardHeader>
-              <CardContent className="text-sm space-y-1 text-slate-700">
-                <p><strong>নাম:</strong> {patient.name}</p>
-                <p><strong>ফোন:</strong> {patient.phone}</p>
-                <p><strong>গ্রাম:</strong> {patient.villageUnion || 'N/A'}</p>
-                <p><strong>নিবন্ধিত:</strong> {patient.createdAt ? formatDate(patient.createdAt) : 'N/A'}</p>
+              <CardContent className="text-sm relative">
+                 <ScrollArea className={cn("h-auto pr-4 transition-all ease-in-out duration-500", isSummaryExpanded ? "max-h-[500px]" : "max-h-[250px]")}>
+                  {patient.categorizedCaseNotes ? (
+                     <CategorizedSymptomsDisplay 
+                       symptoms={patient.categorizedCaseNotes} 
+                       labels={CATEGORY_LABELS} 
+                       showNumbers
+                     />
+                  ) : (
+                    <p className="text-muted-foreground italic">এই রোগীর জন্য কোনো বিস্তারিত বা শ্রেণীবদ্ধ নোট নেই।</p>
+                  )}
+                 </ScrollArea>
+                 {!isSummaryExpanded && <div className="absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-indigo-100 to-transparent dark:from-indigo-900/40 pointer-events-none"></div>}
               </CardContent>
             </Card>
           )}
         </div>
       </div>
-
-      <div className="print-only-block print-prescription-container bg-white text-black">
-        <div className="print-header">
-          <h1 className="font-headline text-2xl font-bold">{clinicSettings?.clinicName || APP_NAME}</h1>
-          {clinicSettings?.clinicAddress && <p className="text-sm">{clinicSettings.clinicAddress}</p>}
-          {clinicSettings?.clinicContact && <p className="text-sm">যোগাযোগ: {clinicSettings.clinicContact}</p>}
-          <h2 className="print-title text-lg font-semibold mt-2 underline">প্রেসক্রিপশন</h2>
-        </div>
-
-        <div className="patient-info-grid">
-          <div><strong>রোগী:</strong> {patient?.name || 'N/A'}</div>
-          <div><strong>বয়স/লিঙ্গ:</strong> {patient?.age || 'N/A'} / {patient?.gender ? patient.gender.charAt(0).toUpperCase() + patient.gender.slice(1) : 'N/A'}</div>
-          <div><strong>ডায়েরি নং:</strong> {patient?.diaryNumber || 'N/A'}</div>
-          <div><strong>তারিখ:</strong> {format(new Date(form.getValues("items").length > 0 && existingPrescription?.date ? existingPrescription.date : (currentVisit?.visitDate || new Date().toISOString())), "dd MMM, yyyy", { locale: bn })}</div>
-        </div>
-
-        <div className="print-section">
-          {form.getValues("diagnosis") && (
-            <div className="mb-2">
-              <strong className="section-title">প্রধান অভিযোগ / রোগ নির্ণয়:</strong>
-              <p className="whitespace-pre-line text-sm">{form.getValues("diagnosis")}</p>
-            </div>
-          )}
-        </div>
-
-        <div className="print-section rx-section">
-          <div className="flex justify-between items-baseline">
-            <strong className="text-xl font-bold section-title">Rx</strong>
-            <span className="text-xs">({form.getValues("prescriptionType") === 'child' ? 'শিশু' : 'প্রাপ্তবয়স্ক'})</span>
-          </div>
-          <table className="medicines-table">
-            <thead>
-              <tr>
-                <th className="w-[35%]">ঔষধের নাম ও শক্তি</th>
-                <th className="w-[15%]">মাত্রা</th>
-                <th className="w-[15%]">পুনরাবৃত্তি</th>
-                <th className="w-[15%]">সময়কাল</th>
-                <th className="w-[20%]">নোট/নির্দেশনা</th>
-              </tr>
-            </thead>
-            <tbody>
-              {form.getValues("items").filter(item => item.medicineName.trim() !== '').map((item, index) => (
-                <tr key={index}>
-                  <td>{item.medicineName}</td>
-                  <td>{item.dosage}</td>
-                  <td>{item.frequency}</td>
-                  <td>{item.duration}</td>
-                  <td>{item.notes}</td>
-                </tr>
-              ))}
-              {[...Array(Math.max(0, 6 - form.getValues("items").filter(item => item.medicineName.trim() !== '').length))].map((_, i) => (
-                <tr key={`empty-${i}`} className="empty-row"><td className="empty-cell">&nbsp;</td><td></td><td></td><td></td><td></td></tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {form.getValues("advice") && (
-          <div className="print-section">
-            <strong className="section-title">পরামর্শ:</strong>
-            <p className="whitespace-pre-line text-sm">{form.getValues("advice")}</p>
-          </div>
-        )}
-
-        {form.getValues("followUpDays") && (
-          <div className="print-section follow-up">
-            <strong>ফলো-আপ:</strong> {form.getValues("followUpDays")?.toLocaleString('bn-BD')} দিন পর।
-          </div>
-        )}
-
-        <div className="print-footer">
-          <div className="signature-area">
-            <p className="signature-line"></p>
-            <p>{form.getValues("doctorName") || clinicSettings?.doctorName || 'ডাক্তারের নাম'}</p>
-            {clinicSettings?.bmRegNo && <p>বিএমডিসি রেজি. নং: {clinicSettings.bmRegNo}</p>}
-          </div>
-        </div>
-      </div>
-
-      <style jsx global>{`
-        .print-only-block { display: none; }
-        @media print {
-          .hide-on-print { display: none !important; }
-          .print-only-block { display: block !important; }
-          body.printing-prescription-active {
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
-            margin: 0; padding: 0;
-            background-color: #fff !important;
-          }
-          .print-prescription-container {
-            width: 100%;
-            margin: 0 auto;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'PT Sans', Arial, sans-serif;
-            font-size: 10pt;
-            line-height: 1.4;
-            color: #000 !important;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-          }
-          .print-header { 
-            text-align: center; 
-            margin-bottom: 6mm; 
-            border-bottom: 1px solid #555; 
-            padding-bottom: 4mm;
-            padding-top: 4mm;
-            background: linear-gradient(to bottom, #f3f4f6, #ffffff) !important;
-            border-radius: 8px 8px 0 0;
-          }
-          .print-header h1 { font-family: 'Poppins', 'PT Sans', sans-serif; margin: 0 0 1mm 0; }
-          .print-header p { font-size: 9pt; margin: 0.5mm 0; }
-          .print-title { margin-top: 3mm; }
-
-          .patient-info-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1mm 5mm;
-            font-size: 9.5pt;
-            padding: 3mm 12mm;
-            border-bottom: 1px solid #ccc;
-            margin-bottom: 4mm;
-          }
-          .patient-info-grid div { padding: 0.5mm 0; }
-
-          .print-section { 
-            margin-bottom: 4mm;
-            padding: 0 12mm;
-          }
-          .section-title { font-weight: bold; font-size: 11pt; display: block; margin-bottom: 1mm; }
-          .rx-section { 
-            margin-top: 2mm;
-            padding: 2mm;
-            border: 1px solid #e5e7eb;
-            border-radius: 6px;
-            margin-left: 10mm;
-            margin-right: 10mm;
-          }
-          .rx-section .section-title { margin-bottom: 0.5mm; }
-
-          .medicines-table { width: 100%; border-collapse: collapse; font-size: 9pt; margin-bottom: 2mm; table-layout: fixed; }
-          .medicines-table th, .medicines-table td { border: 1px solid #777; padding: 1.5mm 2mm; text-align: left; vertical-align: top; word-wrap: break-word; }
-          .medicines-table th { 
-            background-color: #f3f4f6 !important;
-            font-weight: bold; 
-            font-size: 9.5pt; 
-          }
-          .medicines-table .empty-row td { height: 1.8em; }
-          .medicines-table .empty-cell { border-left: 1px solid #777; border-right: 1px solid #777; }
-
-          .whitespace-pre-line { white-space: pre-line; }
-          .follow-up { font-size: 9.5pt; margin-top: 3mm; }
-
-          .print-footer {
-            margin-top: 12mm;
-            padding: 0 12mm 4mm 12mm;
-            position: relative;
-            height: 40mm;
-          }
-          .signature-area {
-            text-align: right;
-            font-size: 9.5pt;
-            position: absolute;
-            bottom: 5mm;
-            right: 12mm;
-          }
-          .signature-line {
-            display: block;
-            width: 150px;
-            border-bottom: 1px solid #333;
-            margin-bottom: 2mm;
-            margin-left: auto;
-          }
-          .signature-area p { margin: 1mm 0; }
-        }
-        @page {
-          size: A4 portrait;
-          margin: 15mm;
-        }
-      `}
-      </style>
+      
+      <PrintLayout 
+        patient={patient}
+        clinicSettings={clinicSettings}
+        formValues={formValues}
+        visitDate={currentVisit?.visitDate || null}
+        prescriptionDate={existingPrescription?.date || null}
+      />
     </div>
   );
 }

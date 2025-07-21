@@ -1,6 +1,6 @@
 
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -10,12 +10,12 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import type { Patient, PaymentSlip, PaymentMethod } from '@/lib/types';
+import type { Patient, PaymentSlip, PaymentMethod, MedicineDeliveryMethod } from '@/lib/types';
 import { addPaymentSlip, formatCurrency, updateVisit } from '@/lib/firestoreService';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Receipt } from 'lucide-react';
 
-interface CreatePaymentSlipModalProps {
+export interface CreatePaymentSlipModalProps {
   patient: Patient;
   isOpen: boolean;
   onClose: (slipCreated?: boolean) => void;
@@ -23,7 +23,7 @@ interface CreatePaymentSlipModalProps {
   visitId?: string;
 }
 
-const paymentMethodOptions: { value: Exclude<PaymentMethod, ''>; label: string }[] = [
+const paymentMethodOptions: { value: PaymentMethod; label: string }[] = [
   { value: 'cash', label: 'ক্যাশ' },
   { value: 'bkash', label: 'বিকাশ' },
   { value: 'nagad', label: 'নগদ' },
@@ -31,7 +31,7 @@ const paymentMethodOptions: { value: Exclude<PaymentMethod, ''>; label: string }
   { value: 'other', label: 'অন্যান্য' },
 ];
 
-const medicineDeliveryMethodOptions: { value: 'direct' | 'courier'; label: string }[] = [
+const medicineDeliveryMethodOptions: { value: MedicineDeliveryMethod; label: string }[] = [
   { value: 'direct', label: 'সরাসরি প্রদান' },
   { value: 'courier', label: 'কুরিয়ারের মাধ্যমে প্রেরণ' },
 ];
@@ -39,9 +39,9 @@ const medicineDeliveryMethodOptions: { value: 'direct' | 'courier'; label: strin
 const paymentSlipSchema = z.object({
   purpose: z.string().min(1, "উদ্দেশ্য আবশ্যক।"),
   amount: z.coerce.number().nonnegative("টাকার পরিমাণ অবশ্যই একটি অ-ঋণাত্মক সংখ্যা হতে হবে।"),
-  paymentMethod: z.enum(['cash', 'bkash', 'nagad', 'rocket', 'other', '']).optional(),
+  paymentMethod: z.custom<PaymentMethod>().optional(),
   receivedBy: z.string().optional(),
-  medicineDeliveryMethod: z.enum(['direct', 'courier', '']).optional(),
+  medicineDeliveryMethod: z.custom<MedicineDeliveryMethod>().optional(),
 }).superRefine((data, ctx) => {
   if (data.amount > 0 && !data.paymentMethod) {
     ctx.addIssue({
@@ -89,12 +89,12 @@ export function CreatePaymentSlipModal({ patient, isOpen, onClose, onSlipCreated
         date: new Date().toISOString(),
         amount: data.amount,
         purpose: data.purpose,
-        paymentMethod: data.amount > 0 ? data.paymentMethod as Exclude<PaymentMethod, ''> : undefined,
+        paymentMethod: data.amount > 0 ? data.paymentMethod : undefined,
         receivedBy: data.receivedBy,
       };
 
       if (visitId && data.medicineDeliveryMethod) {
-        await updateVisit(visitId, { medicineDeliveryMethod: data.medicineDeliveryMethod as 'direct' | 'courier' });
+        await updateVisit(visitId, { medicineDeliveryMethod: data.medicineDeliveryMethod });
       }
 
       const slipId = await addPaymentSlip(newSlipData);
@@ -108,7 +108,7 @@ export function CreatePaymentSlipModal({ patient, isOpen, onClose, onSlipCreated
         description: `স্লিপ ${createdSlip.slipNumber} (${formatCurrency(createdSlip.amount)}) সফলভাবে তৈরি করা হয়েছে।`,
       });
       if (onSlipCreated) {
-        onSlipCreated(createdSlip);
+        onSlipCreated(createdSlip as PaymentSlip);
       }
       onClose(true);
       window.dispatchEvent(new CustomEvent('firestoreDataChange'));

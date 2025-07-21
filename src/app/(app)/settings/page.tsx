@@ -8,15 +8,14 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { useTheme } from 'next-themes';
 import { PageHeaderCard } from '@/components/shared/PageHeaderCard';
-import { Settings as SettingsIcon, Download, Upload, AlertTriangle, Info, Loader2, LogOut } from 'lucide-react';
+import { Settings as SettingsIcon, Download, Upload, AlertTriangle, LogOut, Check } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { getPatients, getVisits, getPrescriptions, getPaymentSlips, getClinicSettings } from '@/lib/firestoreService';
-import { APP_NAME, APP_VERSION, ROUTES } from '@/lib/constants';
+import { APP_NAME, APP_VERSION } from '@/lib/constants';
 import type { Patient, Visit, Prescription, PaymentSlip, ClinicSettings } from '@/lib/types';
 import { useAuth } from '@/contexts/AuthContext';
-import { useRouter } from 'next/navigation';
-
+import { cn } from '@/lib/utils';
 
 interface AllData {
   patients: Patient[];
@@ -26,6 +25,12 @@ interface AllData {
   clinicSettings: ClinicSettings; 
 }
 
+const THEME_OPTIONS = [
+  { value: 'default', label: 'ডিফল্ট', color: 'bg-blue-900' },
+  { value: 'serene', label: 'প্রশান্তি', color: 'bg-teal-600' },
+  { value: 'vibrant', label: 'স্পন্দন', color: 'bg-orange-600' },
+];
+
 export default function AppSettingsPage() {
   const { theme, setTheme } = useTheme();
   const { isAdmin, signOutUser } = useAuth();
@@ -34,8 +39,6 @@ export default function AppSettingsPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
   const [fileToImport, setFileToImport] = useState<File | null>(null);
-  const router = useRouter();
-
 
   useEffect(() => setMounted(true), []);
 
@@ -46,7 +49,6 @@ export default function AppSettingsPage() {
         title: "সফলভাবে লগ আউট হয়েছে",
         description: "আপনি এখন লগইন পৃষ্ঠায় ফিরে এসেছেন।",
       });
-      // The AuthContext listener will automatically handle the redirection.
     } catch (error) {
       console.error("Failed to log out:", error);
       toast({
@@ -59,21 +61,12 @@ export default function AppSettingsPage() {
 
   const handleExportData = async () => {
     try {
-      // Fetch all data from Firestore
       const patients = await getPatients();
       const visits = await getVisits();
       const prescriptions = await getPrescriptions();
       const paymentSlips = await getPaymentSlips();
       const clinicSettings = await getClinicSettings();
-
-      const allData: AllData = { 
-        patients,
-        visits,
-        prescriptions,
-        paymentSlips,
-        clinicSettings,
-      };
-
+      const allData: AllData = { patients, visits, prescriptions, paymentSlips, clinicSettings };
       const jsonString = JSON.stringify(allData, null, 2);
       const blob = new Blob([jsonString], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
@@ -108,9 +101,7 @@ export default function AppSettingsPage() {
       toast({ title: "কোনো ফাইল নির্বাচন করা হয়নি", description: "অনুগ্রহ করে ইম্পোর্ট করার জন্য একটি JSON ফাইল নির্বাচন করুন।", variant: "destructive" });
       return;
     }
-
     toast({ title: "ইম্পোর্ট (Firestore)", description: "Firestore-এ ডেটা ইম্পোর্ট করার প্রক্রিয়া জটিল এবং বর্তমানে এই ডেমো অ্যাপে স্বয়ংক্রিয়ভাবে সমর্থিত নয়। ডেটা মাইগ্রেশনের জন্য বিশেষ স্ক্রিপ্ট প্রয়োজন।", variant: "default" });
-
     setSelectedFileName(null);
     setFileToImport(null);
     if (fileInputRef.current) fileInputRef.current.value = ""; 
@@ -133,26 +124,54 @@ export default function AppSettingsPage() {
         actions={<SettingsIcon className="h-8 w-8 text-primary" />}
       />
 
-      <Card>
+      <Card className="bg-card/80 backdrop-blur-lg">
         <CardHeader>
           <CardTitle className="font-headline text-lg">অ্যাপের ধরণ</CardTitle>
-          <CardDescription>অ্যাপ্লিকেশনের কাস্টমাইজ করুন।</CardDescription>
+          <CardDescription>অ্যাপ্লিকেশনের ভিজ্যুয়াল স্টাইল পরিবর্তন করুন।</CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="flex items-center space-x-2">
+        <CardContent className="space-y-4">
+          <div>
+            <Label className="font-semibold">অ্যাপ থিম</Label>
+            <div className="flex flex-wrap gap-3 mt-2">
+              {THEME_OPTIONS.map((option) => (
+                <button
+                  key={option.value}
+                  onClick={() => setTheme(option.value)}
+                  className={cn(
+                    "flex items-center gap-3 p-2 rounded-lg border-2 transition-all duration-200 w-full sm:w-auto sm:flex-1",
+                    theme === option.value ? "border-primary bg-primary/10" : "border-transparent bg-muted/60 hover:bg-muted"
+                  )}
+                  aria-pressed={theme === option.value}
+                >
+                  <span className={cn("h-6 w-6 rounded-full", option.color)} />
+                  <span className="font-medium text-sm">{option.label}</span>
+                  {theme === option.value && <Check className="h-5 w-5 text-primary ml-auto" />}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="flex items-center space-x-2 pt-4 border-t mt-4">
             <Switch
               id="dark-mode"
-              checked={theme === 'dark'}
-              onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')}
+              checked={document.documentElement.classList.contains('dark')}
+              onCheckedChange={(checked) => {
+                if (checked) {
+                  document.documentElement.classList.add('dark');
+                  localStorage.setItem('dark-mode', 'true');
+                } else {
+                  document.documentElement.classList.remove('dark');
+                  localStorage.setItem('dark-mode', 'false');
+                }
+              }}
               aria-label="Dark mode toggle"
             />
-            <Label htmlFor="dark-mode">ডার্ক মোড</Label>
+            <Label htmlFor="dark-mode">ডার্ক মোড (পরীক্ষামূলক)</Label>
           </div>
         </CardContent>
       </Card>
       
       {isAdmin && (
-        <Card>
+        <Card className="bg-card/80 backdrop-blur-lg">
           <CardHeader>
             <CardTitle className="font-headline text-lg">ডেটা ম্যানেজমেন্ট (Firestore)</CardTitle>
             <CardDescription>আপনার অ্যাপ্লিকেশন ডেটা এক্সপোর্ট বা ইম্পোর্ট করুন। ইম্পোর্ট করার আগে সতর্কতা অবলম্বন করুন।</CardDescription>
@@ -217,7 +236,7 @@ export default function AppSettingsPage() {
         </Card>
       )}
 
-      <Card>
+      <Card className="bg-card/80 backdrop-blur-lg">
         <CardHeader>
           <CardTitle className="font-headline text-lg">অ্যাকাউন্ট</CardTitle>
           <CardDescription>আপনার অ্যাকাউন্ট থেকে লগ আউট করুন।</CardDescription>
@@ -229,7 +248,7 @@ export default function AppSettingsPage() {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="bg-card/80 backdrop-blur-lg">
         <CardHeader>
           <CardTitle className="font-headline text-lg">সম্পর্কিত</CardTitle>
         </CardHeader>

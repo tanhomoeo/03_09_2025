@@ -1,4 +1,3 @@
-
 import type {Config} from 'tailwindcss';
 import tailwindcssAnimate from 'tailwindcss-animate';
 
@@ -10,10 +9,17 @@ const config = {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+      },
+    },
     extend: {
       fontFamily: {
-        body: ['var(--font-pt-sans)', 'sans-serif'],
-        headline: ['var(--font-poppins)', 'sans-serif'],
+        body: ['var(--font-alegreya)', 'serif'],
+        headline: ['var(--font-alegreya)', 'serif'],
         code: ['monospace'],
       },
       colors: {
@@ -67,6 +73,9 @@ const config = {
           border: 'hsl(var(--sidebar-border))',
           ring: 'hsl(var(--sidebar-ring))',
         },
+        title: 'hsl(var(--text-title))',
+        heading: 'hsl(var(--text-heading))',
+        body: 'hsl(var(--text-body))',
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -75,8 +84,8 @@ const config = {
         xl: 'calc(var(--radius) + 4px)',
       },
       boxShadow: {
-        'neumorphic-outset': '4px 4px 8px hsl(var(--shadow-dark)), -4px -4px 8px hsl(var(--shadow-light))',
-        'neumorphic-inset': 'inset 0 0 6px hsl(var(--shadow-dark))',
+        'neumorphic-outset': '5px 5px 10px hsl(var(--background) / 0.7), -5px -5px 10px hsl(var(--background) / 1.3)',
+        'neumorphic-inset': 'inset 0 0 6px hsl(var(--background) / 0.7)',
       },
       keyframes: {
         'accordion-down': {
@@ -99,11 +108,21 @@ const config = {
           '0%': { transform: 'translateX(-100%)' },
           '100%': { transform: 'translateX(100%)' },
         },
+        'slide-in': {
+          from: { transform: 'translateX(100%)', opacity: '0' },
+          to: { transform: 'translateX(0)', opacity: '1' },
+        },
+        'slide-out': {
+          from: { transform: 'translateX(0)', opacity: '1' },
+          to: { transform: 'translateX(-100%)', opacity: '0' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         'progress-bar': 'progress-bar 1.5s linear infinite',
+        'slide-in': 'slide-in 0.3s ease-out forwards',
+        'slide-out': 'slide-out 0.3s ease-in forwards',
       },
       transitionTimingFunction: {
         'elastic': 'cubic-bezier(0.68, -0.55, 0.27, 1.55)',

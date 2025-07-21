@@ -366,13 +366,14 @@ export default function EnhancedReportPage() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[30px] text-center">Sl.</TableHead>
-                    <TableHead className="w-[90px]">Date</TableHead>
-                    <TableHead>Patient Name</TableHead>
-                    <TableHead className="print:hidden">Diary No.</TableHead>
-                    <TableHead>Purpose/Symptoms</TableHead>
-                    <TableHead className="w-[100px] print:w-[80px]">Payment Method</TableHead>
-                    <TableHead className="text-right w-[70px]">Amount</TableHead>
+                    <TableHead className="w-[5%] text-center">নং</TableHead>
+                    <TableHead className="w-[10%]">তারিখ</TableHead>
+                    <TableHead className="w-[20%]">রোগীর নাম</TableHead>
+                    <TableHead className="w-[10%]">ডায়েরি নং</TableHead>
+                    <TableHead className="w-[15%]">ফোন</TableHead>
+                    <TableHead className="w-[20%]">উদ্দেশ্য/উপসর্গ</TableHead>
+                    <TableHead className="w-[10%]">মাধ্যম</TableHead>
+                    <TableHead className="text-right w-[10%]">পরিমাণ</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -382,7 +383,8 @@ export default function EnhancedReportPage() {
                         <TableCell className="text-center">{index + 1}</TableCell>
                         <TableCell>{format(new Date(item.visit.visitDate), "dd/MM/yy", { locale: bn })}</TableCell>
                         <TableCell className="font-medium">{item.patient?.name || 'N/A'}</TableCell>
-                        <TableCell className="print:hidden">{item.patient?.diaryNumber || 'N/A'}</TableCell>
+                        <TableCell>{item.patient?.diaryNumber || 'N/A'}</TableCell>
+                        <TableCell>{item.patient?.phone || 'N/A'}</TableCell>
                         <TableCell className="print:max-w-[120px] print:whitespace-normal print:truncate">{item.visit.symptoms || item.slips.map(s => s.purpose).join(', ') || 'N/A'}</TableCell>
                         <TableCell className="print:max-w-[70px] print:whitespace-normal print:truncate">
                           {item.slips.length > 0 ? item.slips.map(s => getPaymentMethodLabel(s.paymentMethod)).filter((v, i, a) => a.indexOf(v) === i).join(', ') || '-' : '-'}
@@ -392,16 +394,17 @@ export default function EnhancedReportPage() {
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
+                      <TableCell colSpan={8} className="h-24 text-center text-muted-foreground">
                         এই ফিল্টার অনুযায়ী কোনো ডেটা পাওয়া যায়নি।
                       </TableCell>
                     </TableRow>
                   )}
                 </TableBody>
                 <TableFooter>
-                  <TableRow className="font-bold bg-muted/50">
-                    <TableCell colSpan={6} className="text-right print:col-span-5">মোট ভিজিট: {summary.totalVisits.toLocaleString('bn-BD')}</TableCell>
-                    <TableCell className="text-right print:col-span-1" colSpan={1}>মোট আয়: {formatCurrency(summary.totalRevenue)}</TableCell>
+                  <TableRow className="font-bold bg-gray-100">
+                    <TableCell colSpan={4} className="text-left">মোট ভিজিট: {summary.totalVisits.toLocaleString('bn-BD')}</TableCell>
+                    <TableCell colSpan={3} className="text-right">সর্বমোট আয়:</TableCell>
+                    <TableCell className="text-right">{formatCurrency(summary.totalRevenue)}</TableCell>
                   </TableRow>
                 </TableFooter>
               </Table>
@@ -420,16 +423,16 @@ export default function EnhancedReportPage() {
         ) : (
           <div className="hide-on-print">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-              <Card className="shadow-sm">
-                <CardHeader className="pb-2"><CardTitle className="text-lg font-headline">মোট ভিজিট</CardTitle></CardHeader>
-                <CardContent><p className="text-3xl font-bold text-primary">{summary.totalVisits.toLocaleString('bn-BD')}</p></CardContent>
+              <Card className="shadow-sm bg-card/80 backdrop-blur-lg">
+                <CardHeader className="pb-2"><CardTitle className="text-base md:text-lg font-headline">মোট ভিজিট</CardTitle></CardHeader>
+                <CardContent><p className="text-2xl md:text-3xl font-bold text-primary">{summary.totalVisits.toLocaleString('bn-BD')}</p></CardContent>
               </Card>
-              <Card className="shadow-sm">
-                <CardHeader className="pb-2"><CardTitle className="text-lg font-headline">মোট আয়</CardTitle></CardHeader>
-                <CardContent><p className="text-3xl font-bold text-primary">{formatCurrency(summary.totalRevenue)}</p></CardContent>
+              <Card className="shadow-sm bg-card/80 backdrop-blur-lg">
+                <CardHeader className="pb-2"><CardTitle className="text-base md:text-lg font-headline">মোট আয়</CardTitle></CardHeader>
+                <CardContent><p className="text-2xl md:text-3xl font-bold text-primary">{formatCurrency(summary.totalRevenue)}</p></CardContent>
               </Card>
             </div>
-            <div className="overflow-x-auto rounded-lg border shadow-sm">
+            <div className="overflow-x-auto rounded-lg border shadow-sm bg-card/80 backdrop-blur-lg">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -446,7 +449,7 @@ export default function EnhancedReportPage() {
                 <TableBody>
                   {reportData.length > 0 ? (
                     reportData.map((item, index) => (
-                      <TableRow key={item.visit.id}>
+                      <TableRow key={item.visit.id} className="hover:bg-muted/50">
                         <TableCell className="text-center">{index + 1}</TableCell>
                         <TableCell>{formatDate(item.visit.visitDate)}</TableCell>
                         <TableCell className="font-medium">{item.patient?.name || 'N/A'}</TableCell>
@@ -471,7 +474,8 @@ export default function EnhancedReportPage() {
                 </TableBody>
                 <TableFooter>
                   <TableRow className="font-bold bg-muted/50 dark:bg-muted/30">
-                    <TableCell colSpan={7} className="text-right">মোট</TableCell>
+                    <TableCell colSpan={4} className="text-left">মোট ভিজিট: {summary.totalVisits.toLocaleString('bn-BD')}</TableCell>
+                    <TableCell colSpan={3} className="text-right">মোট আয়:</TableCell>
                     <TableCell className="text-right">{formatCurrency(summary.totalRevenue)}</TableCell>
                   </TableRow>
                 </TableFooter>
@@ -497,7 +501,7 @@ export default function EnhancedReportPage() {
               padding: 5mm;
               box-sizing: border-box;
               font-family: 'PT Sans', Arial, sans-serif;
-              font-size: 8.5pt;
+              font-size: 8pt;
               line-height: 1.2;
               color: #000 !important;
             }
@@ -505,19 +509,15 @@ export default function EnhancedReportPage() {
             .print-header h1 { font-size: 12pt; }
             .print-header p { font-size: 7.5pt; }
             .print-title { font-size: 10pt; }
-            .report-table-container table { width: 100%; border-collapse: collapse; margin-top: 2mm; }
-            .report-table-container th, .report-table-container td { border: 1px solid #bbb; padding: 1mm 1.5mm; text-align: left; vertical-align: top; font-size:8pt; word-break: break-word; }
-            .report-table-container th { background-color: #f0f0f0 !important; font-weight: bold; }
+            .report-table-container table { width: 100%; border-collapse: collapse; margin-top: 2mm; table-layout: fixed; }
+            .report-table-container th, .report-table-container td { border: 1px solid #bbb; padding: 1mm 1.5mm; text-align: left; vertical-align: top; font-size: 8pt; word-break: break-word; }
+            .report-table-container th { background-color: #f0f0f0 !important; font-weight: bold; font-size: 8.5pt; }
             .report-table-container td.text-right, .report-table-container th.text-right { text-align: right; }
             .report-table-container td.text-center, .report-table-container th.text-center { text-align: center; }
-            .print\\:hidden { display: none !important; }
+            .print\\:hidden { display: table-cell !important; }
             .print\\:max-w-\\[120px\\] { max-width: 120px !important; }
-            .print\\:max-w-\\[70px\\] { max-width: 70px !important; }
             .print\\:whitespace-normal { white-space: normal !important; }
             .print\\:truncate { overflow: visible !important; white-space: normal !important; text-overflow: clip !important; }
-            .print\\:col-span-5 { grid-column: span 5 / span 5 !important; }
-            .print\\:col-span-1 { grid-column: span 1 / span 1 !important; }
-            .print\\:w-\\[80px\\] { width: 80px !important; }
           }
           @page {
             size: A4 landscape;

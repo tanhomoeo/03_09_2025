@@ -1,0 +1,8 @@
+# Ignore the Firebase Functions directory
+functions/
+
+# Ignore other Firebase-specific files not needed by Vercel
+.firebase
+firebase.json
+firestore.rules
+firestore.indexes.json

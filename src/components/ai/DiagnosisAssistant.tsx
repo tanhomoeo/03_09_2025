@@ -22,8 +22,8 @@ export function DiagnosisAssistant({ patient, visit, onKeySymptomsSelect }: Diag
   const { toast } = useToast();
 
   const handleAnalyze = async () => {
-    if (!patient || !visit) {
-      toast({ title: "প্রয়োজনীয় তথ্য নেই", description: "বিশ্লেষণ শুরু করার জন্য রোগী এবং ভিজিটের তথ্য প্রয়োজন।", variant: "destructive" });
+    if (!patient) {
+      toast({ title: "প্রয়োজনীয় তথ্য নেই", description: "বিশ্লেষণ শুরু করার জন্য রোগীর তথ্য প্রয়োজন।", variant: "destructive" });
       return;
     }
 
@@ -33,29 +33,29 @@ export function DiagnosisAssistant({ patient, visit, onKeySymptomsSelect }: Diag
 
     // Combine all patient data into a single string for the AI
     const caseDataParts = [
-      `বর্তমান ভিজিটের প্রধান সমস্যা: ${visit.symptoms || 'উল্লেখ নেই'}`,
-      `রোগীর নাম: ${patient.name}, বয়স: ${patient.age || 'N/A'}, লিঙ্গ: ${patient.gender || 'N/A'}`,
-      patient.chiefComplaints && `অতীতের প্রধান সমস্যা: ${patient.chiefComplaints}`,
-      patient.patientHistory && `রোগীর পূর্ব ইতিহাস: ${patient.patientHistory}`,
-      patient.familyHistory && `পারিবারিক রোগের ইতিহাস: ${patient.familyHistory}`,
-      patient.mentalState && `মানসিক অবস্থা: ${patient.mentalState}`,
-      patient.thermalReaction?.length && `কাতরতা: ${patient.thermalReaction.join(', ')}`,
-      patient.thirst && `পিপাসা: ${patient.thirst}`,
-      patient.sleep && `ঘুম: ${patient.sleep}`,
-      patient.perspiration && `ঘাম: ${patient.perspiration}`,
-      patient.foodAndCraving && `খাদ্য ও ইচ্ছা: ${patient.foodAndCraving}`,
-      patient.likesDislikes && `পছন্দ/অপছন্দ: ${patient.likesDislikes}`,
-      patient.stoolDetails && `পায়খানা: ${patient.stoolDetails}`,
-      patient.urineDetails && `প্রস্রাব: ${patient.urineDetails}`,
-      patient.mensesDetails && `মাসিক স্রাব: ${patient.mensesDetails}`,
+      visit?.symptoms && `বর্তমান ভিজিটের প্রধান সমস্যা: ${visit.symptoms}`,
+      `রোগীর নাম: ${patient.name}, বয়স: ${patient.age || "N/A"}, লিঙ্গ: ${patient.gender || "N/A"}`,
+      // Use the structured case notes if available, otherwise use the raw text
+      patient.categorizedCaseNotes
+        ? `রোগীর বিস্তারিত ইতিহাস (AI দ্বারা শ্রেণীবদ্ধ): ${JSON.stringify(patient.categorizedCaseNotes, null, 2)}`
+        : patient.caseNotes && `রোগীর ইতিহাস: ${patient.caseNotes}`,
+      // Include basic demographic information available in current Patient type
+      patient.occupation && `পেশা: ${patient.occupation}`,
+      patient.district && `জেলা: ${patient.district}`,
+      patient.thanaUpazila && `থানা/উপজেলা: ${patient.thanaUpazila}`,
+      patient.villageUnion && `গ্রাম/ইউনিয়ন: ${patient.villageUnion}`,
+      patient.guardianName && `অভিভাবকের নাম: ${patient.guardianName}`,
+      patient.guardianRelation &&
+        `অভিভাবকের সম্পর্ক: ${patient.guardianRelation}`,
     ];
-    const fullCaseData = caseDataParts.filter(Boolean).join('\n');
+    const fullCaseData = caseDataParts.filter(Boolean).join("\n");
 
     try {
       const result = await analyzeHomeopathicCase({ caseData: fullCaseData });
       setAnalysisResult(result);
-    } catch (e: any) {
-      setError(e.message || 'AI বিশ্লেষণ করার সময় একটি অজানা ত্রুটি হয়েছে।');
+    } catch (e: unknown) {
+      const errorMessage = e instanceof Error ? e.message : 'AI বিশ্লেষণ করার সময় একটি অজানা ত্রুটি হয়েছে।';
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -78,7 +78,7 @@ export function DiagnosisAssistant({ patient, visit, onKeySymptomsSelect }: Diag
   };
 
   return (
-    <Card className="shadow-md bg-gradient-to-br from-purple-100 to-indigo-200">
+    <Card className="shadow-md bg-gradient-to-br from-purple-100 to-indigo-200 backdrop-blur-lg">
       <CardHeader>
         <CardTitle className="font-headline text-lg flex items-center text-slate-800">
           <Sparkles className="mr-2 h-5 w-5 text-purple-600" />
@@ -89,7 +89,7 @@ export function DiagnosisAssistant({ patient, visit, onKeySymptomsSelect }: Diag
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <Button onClick={handleAnalyze} disabled={isLoading || !patient || !visit} className="w-full">
+        <Button onClick={handleAnalyze} disabled={isLoading || !patient} className="w-full">
           {isLoading ? (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           ) : (

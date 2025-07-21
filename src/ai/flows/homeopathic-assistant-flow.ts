@@ -1,4 +1,3 @@
-
 'use server';
 /**
  * @fileOverview A Genkit flow to act as a Homeopathic AI Assistant.
@@ -10,43 +9,77 @@
  * - HomeopathicAssistantOutput - The output type for the flow.
  */
 
-import { ai } from '@/ai/genkit';
-import { z } from 'genkit';
+import {ai} from '../genkit';
+import {z} from 'genkit';
 
-// Input Schema: A comprehensive patient case.
-export const HomeopathicAssistantInputSchema = z.object({
-  caseData: z.string().describe('A detailed summary of the patient case in Bengali, including current complaints, patient history, family history, mental state, physical generals (thirst, sleep, thermal reaction), and specific modalities.'),
+const HomeopathicAssistantInputSchema = z.object({
+  caseData: z
+    .string()
+    .describe(
+      'A detailed summary of the patient case in Bengali, including current complaints, patient history, family history, mental state, physical generals (thirst, sleep, thermal reaction), and specific modalities.'
+    ),
 });
-export type HomeopathicAssistantInput = z.infer<typeof HomeopathicAssistantInputSchema>;
+export type HomeopathicAssistantInput = z.infer<
+  typeof HomeopathicAssistantInputSchema
+>;
 
-// Output Schema: Structured analysis and suggestions.
-export const HomeopathicAssistantOutputSchema = z.object({
-  keySymptoms: z.array(z.string()).describe('An array of key guiding symptoms identified from the case, based on homeopathic principles (e.g., strange, rare, peculiar, modalities, causation).'),
-  remedySuggestions: z.array(
-    z.object({
-      remedyName: z.string().describe('The name of the suggested homeopathic remedy (e.g., "Pulsatilla Nigricans").'),
-      potency: z.string().describe('A commonly used potency for the remedy (e.g., "30C", "200C").'),
-      justification: z.string().describe('A brief justification explaining why this remedy is suggested, linking it to the key symptoms.'),
-    })
-  ).describe('An array of 2-4 potential remedy suggestions with potency and justification.'),
+const HomeopathicAssistantOutputSchema = z.object({
+  keySymptoms: z
+    .array(z.string())
+    .describe(
+      'An array of key guiding symptoms identified from the case, based on homeopathic principles (e.g., strange, rare, peculiar, modalities, causation).'
+    ),
+  remedySuggestions: z
+    .array(
+      z.object({
+        remedyName: z
+          .string()
+          .describe(
+            'The name of the suggested homeopathic remedy (e.g., "Pulsatilla Nigricans").'
+          ),
+        potency: z
+          .string()
+          .describe('A commonly used potency for the remedy (e.g., "30C", "200C").'),
+        justification: z
+          .string()
+          .describe(
+            'A brief justification explaining why this remedy is suggested, linking it to the key symptoms.'
+          ),
+      })
+    )
+    .describe(
+      'An array of 2-4 potential remedy suggestions with potency and justification.'
+    ),
 });
-export type HomeopathicAssistantOutput = z.infer<typeof HomeopathicAssistantOutputSchema>;
+export type HomeopathicAssistantOutput = z.infer<
+  typeof HomeopathicAssistantOutputSchema
+>;
 
-// Exported wrapper function for the UI to call.
-export async function analyzeHomeopathicCase(input: HomeopathicAssistantInput): Promise<HomeopathicAssistantOutput> {
-  const apiKey = process.env.GOOGLE_API_KEY || process.env.GEMINI_API_KEY;
-  if (!apiKey || apiKey.length < 10) {
-    throw new Error('AI পরিষেবা কনফিগার করা নেই। অনুগ্রহ করে `.env` ফাইলে আপনার `GOOGLE_API_KEY` যোগ করুন এবং সার্ভার রিস্টার্ট করুন।');
+export async function analyzeHomeopathicCase(
+  input: HomeopathicAssistantInput
+): Promise<HomeopathicAssistantOutput> {
+  if (!process.env.GEMINI_API_KEY) {
+    throw new Error(
+      'AI পরিষেবা কনফিগার করা যায়নি। GEMINI_API_KEY সেট করা নেই।'
+    );
   }
   return homeopathicAssistantFlow(input);
 }
 
-// Define the Genkit prompt for the AI model.
 const homeopathicAssistantPrompt = ai.definePrompt({
   name: 'homeopathicAssistantPrompt',
-  input: { schema: HomeopathicAssistantInputSchema },
-  output: { schema: HomeopathicAssistantOutputSchema },
-  model: 'gemini-1.5-flash-latest',
+  input: {schema: HomeopathicAssistantInputSchema},
+  output: {schema: HomeopathicAssistantOutputSchema},
+  config: {
+    model: 'googleai/gemini-1.5-flash',
+    temperature: 0.2,
+    safetySettings: [
+      {category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE'},
+      {category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_NONE'},
+      {category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_NONE'},
+      {category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_NONE'},
+    ],
+  },
   prompt: `আপনি একজন বিশেষজ্ঞ এবং অভিজ্ঞ হোমিওপ্যাথিক ডাক্তারের সহকারী। আপনার কাজ হলো প্রদত্ত রোগীর কেসটি বিশ্লেষণ করে সিদ্ধান্ত গ্রহণে ডাক্তারকে সহায়তা করা।
 হোমিওপ্যাথির মূলনীতি অনুসরণ করে আপনার কাজগুলো হলো:
 
@@ -64,29 +97,49 @@ const homeopathicAssistantPrompt = ai.definePrompt({
 আপনার বিশ্লেষণ JSON ফরম্যাটে প্রদান করুন।`,
 });
 
-// Define the Genkit flow that orchestrates the process.
 const homeopathicAssistantFlow = ai.defineFlow(
   {
     name: 'homeopathicAssistantFlow',
     inputSchema: HomeopathicAssistantInputSchema,
     outputSchema: HomeopathicAssistantOutputSchema,
   },
-  async (input) => {
+  async input => {
     try {
-      const { output } = await homeopathicAssistantPrompt(input);
+      const {output} = await homeopathicAssistantPrompt(input);
       if (!output) {
         throw new Error('AI সহকারী কোনো উত্তর দেয়নি।');
       }
       return output;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error in homeopathicAssistantFlow:', error);
       let errorMessage = 'AI বিশ্লেষণ ব্যর্থ হয়েছে। মডেল একটি সমস্যার সম্মুখীন হয়েছে।';
-      if (error && error.message) {
+      if (error instanceof Error) {
         const msg = error.message.toLowerCase();
-        if (msg.includes('api key') || msg.includes('failed_precondition') || (error.cause?.code === 'UNAUTHENTICATED')) {
-           errorMessage = 'AI পরিষেবা কনফিগার করা যায়নি। অনুগ্রহ করে নিশ্চিত করুন যে আপনার `.env` ফাইলে সঠিক GOOGLE_API_KEY সেট করা আছে এবং আপনার Google Cloud প্রজেক্টে Vertex AI API চালু রয়েছে।';
-        } else if (msg.includes('permission denied') || msg.includes('permission_denied') || msg.includes("api not enabled") || (error.cause?.code === 'PERMISSION_DENIED')) {
-           errorMessage = 'AI পরিষেবা ব্যবহারের জন্য আপনার অনুমতি নেই। অনুগ্রহ করে নিশ্চিত করুন যে আপনার Google Cloud প্রজেক্টে "Vertex AI API" চালু আছে এবং বিলিং অ্যাকাউন্ট সঠিকভাবে সংযুক্ত আছে।';
+        if (
+          msg.includes('api key') ||
+          msg.includes('permission denied') ||
+          msg.includes('authentication')
+        ) {
+          errorMessage =
+            'AI পরিষেবা কনফিগার করা যায়নি। অনুগ্রহ করে আপনার GEMINI_API_KEY এবং বিলিং সেটিংস যাচাই করুন।';
+        } else if (msg.includes('json')) {
+          errorMessage =
+            'AI মডেল একটি ভুল উত্তর দিয়েছে যা প্রসেস করা সম্ভব হচ্ছে না। অনুগ্রহ করে আবার চেষ্টা করুন।';
+        } else if (
+          msg.includes('503') ||
+          msg.includes('unavailable') ||
+          msg.includes('internal error')
+        ) {
+          errorMessage =
+            'AI পরিষেবাটি বর্তমানে ওভারলোড বা недоступ্য। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।';
+        } else if (
+          msg.startsWith('ai ') ||
+          msg.startsWith('ইনপুট') ||
+          msg.startsWith('ai পরিষেবা কনফিগার করা নেই')
+        ) {
+          throw error;
+        } else {
+          errorMessage = error.message;
         }
       }
       throw new Error(errorMessage);

@@ -1,0 +1,18 @@
+This is a placeholder for Hahnemann's Materia Medica Pura. The content of the book should be placed here.
+
+Example Entry:
+
+NUX VOMICA
+(Poison-nut)
+
+Mind
+Very irritable; sensitive to all impressions. Cannot bear noises, odors, light, etc. Does not want to be touched. Quarrelsome, spiteful, malicious; nervous and melancholic.
+
+Stomach
+Nausea in the morning, after eating. Sour taste, and nausea in the morning. Weight and pain in stomach; worse, eating, some time after.
+
+Back
+Backache in lumbar region. Must sit up or turn over in bed to get relief.
+
+Sleep
+Cannot sleep after 3 am; lies awake for hours; mind full of ideas; wakes up tired and weak.

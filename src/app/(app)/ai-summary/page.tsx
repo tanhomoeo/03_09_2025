@@ -1,280 +1,207 @@
+"use client";
 
-'use client';
-import React, { useState, useRef, useEffect } from 'react';
-import { PageHeaderCard } from '@/components/shared/PageHeaderCard';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Loader2, MessageSquareText, Wand2, AlertCircle, List, Pill, User, ChevronsUpDown, Check } from 'lucide-react';
-import { analyzeComplaint, type ComplaintAnalyzerInput, type ComplaintAnalyzerOutput } from '@/ai/flows/complaint-analyzer-flow';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { getPatients, getVisitsByPatientId, formatDate, getVisitsWithinDateRange } from '@/lib/firestoreService';
-import type { Patient, Visit } from '@/lib/types';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '@/components/ui/command';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { cn } from '@/lib/utils';
-import { startOfDay, endOfDay } from 'date-fns';
+import {useState, useCallback, startTransition} from 'react';
+import {useForm} from 'react-hook-form';
+import {zodResolver} from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import {Dialog} from '@/components/ui/dialog';
+import {
+  Wand2,
+  FileText,
+  Brain,
+  ClipboardCheck,
+  Bot,
+} from 'lucide-react';
+import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert';
+import { AnalysisLoading, ErrorDisplay } from '@/components/ui/professional-loading';
+import {
+  suggestRemedies,
+  type SuggestRemediesOutput,
+} from '@/ai/flows/suggest-remedies';
+import {SymptomForm, type SymptomFormValues} from '@/components/symptom-form';
+import {ResultsDisplay} from '@/components/results-display';
+import {RemedyDetailsDialogContent} from '@/components/remedy-details-dialog-content';
+import {PageHeaderCard} from '@/components/shared/PageHeaderCard';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 
-export default function AiSummaryPage() {
-  const [complaintText, setComplaintText] = useState('');
-  const [analysisResult, setAnalysisResult] = useState<ComplaintAnalyzerOutput | null>(null);
+const formSchema = z.object({
+  symptoms: z.string().min(20, {
+    message: 'অনুগ্রহ করে লক্ষণগুলি কমপক্ষে ২০টি অক্ষরে বর্ণনা করুন।',
+  }),
+});
+
+export default function AiRepertoryPage() {
+  const [results, setResults] = useState<SuggestRemediesOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const complaintTextAreaRef = useRef<HTMLTextAreaElement>(null);
+  const [selectedRemedy, setSelectedRemedy] = useState<string | null>(null);
+  const [isRemedyDetailOpen, setIsRemedyDetailOpen] = useState(false);
 
-  const [patients, setPatients] = useState<Patient[]>([]);
-  const [isFetchingDetails, setIsFetchingDetails] = useState(false);
-  const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
-  const [isPatientListOpen, setIsPatientListOpen] = useState(false);
+  const form = useForm<SymptomFormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      symptoms: '',
+    },
+  });
 
-  useEffect(() => {
-    const loadTodaysPatients = async () => {
-      try {
-        const todayStart = startOfDay(new Date());
-        const todayEnd = endOfDay(new Date());
-        
-        const [todaysVisits, allPatients] = await Promise.all([
-            getVisitsWithinDateRange(todayStart, todayEnd),
-            getPatients()
-        ]);
-
-        const todaysPatientIds = new Set(todaysVisits.map(v => v.patientId));
-        const todaysPatientList = allPatients.filter(p => todaysPatientIds.has(p.id));
-        
-        setPatients(todaysPatientList.sort((a, b) => a.name.localeCompare(b.name, 'bn')));
-      } catch (e) {
-        console.error("Failed to load today's patients for AI summary:", e);
-        setError("আজকের রোগীদের তালিকা লোড করতে একটি সমস্যা হয়েছে।");
-      }
-    };
-    loadTodaysPatients();
+  const handleStopVoiceInput = useCallback(() => {
+    window.dispatchEvent(new CustomEvent('stop-voice-input'));
   }, []);
 
-  const handleSelectPatient = async (patient: Patient) => {
-    setSelectedPatient(patient);
-    setIsPatientListOpen(false);
-    setIsFetchingDetails(true);
-    setComplaintText('');
+  const handleSubmit = (values: SymptomFormValues) => {
+    handleStopVoiceInput();
+    setIsLoading(true);
+    setResults(null);
     setError(null);
-    setAnalysisResult(null);
+    setSelectedRemedy(null);
 
-    try {
-      const visits = await getVisitsByPatientId(patient.id);
-      const complaintParts: string[] = [];
-
-      if (patient.chiefComplaints) complaintParts.push(`বর্তমান প্রধান সমস্যা:\n${patient.chiefComplaints}`);
-      if (patient.patientHistory) complaintParts.push(`রোগীর পূর্ব ইতিহাস:\n${patient.patientHistory}`);
-      if (patient.familyHistory) complaintParts.push(`পারিবারিক রোগের ইতিহাস:\n${patient.familyHistory}`);
-      if (patient.mentalState) complaintParts.push(`বর্তমান মানসিক অবস্থা:\n${patient.mentalState}`);
-
-      if (visits.length > 0) {
-        const visitSymptoms = visits
-          .map((v, i) => `ভিজিট #${visits.length - i} (${formatDate(v.visitDate)}):\n${v.symptoms || 'N/A'}`)
-          .join('\n\n');
-        complaintParts.push(`পূর্ববর্তী ভিজিটের লক্ষণসমূহ:\n${visitSymptoms}`);
+    startTransition(async () => {
+      try {
+        const result = await suggestRemedies({symptoms: values.symptoms});
+        if (!result) {
+          throw new Error('AI কোনো সাজেশন দিতে পারেনি।');
+        }
+        setResults(result);
+      } catch (e: unknown) {
+        const errorMessage =
+          e instanceof Error
+            ? e.message
+            : 'সাজেশন আনতে একটি ত্রুটি ঘটেছে। অনুগ্রহ করে আপনার সংযোগ বা API কী পরীক্ষা করে আবার চেষ্টা করুন।';
+        setError(errorMessage);
+        console.error(e);
+      } finally {
+        setIsLoading(false);
       }
-
-      const fullComplaint = complaintParts.join('\n\n---\n\n');
-      setComplaintText(fullComplaint || "এই রোগীর জন্য কোনো অভিযোগ ডাটাবেসে পাওয়া যায়নি।");
-    } catch (e) {
-      setError("রোগীর বিস্তারিত তথ্য আনতে সমস্যা হয়েছে।");
-      console.error(e);
-    } finally {
-      setIsFetchingDetails(false);
-    }
+    });
   };
 
-  const handleAnalyzeComplaint = async () => {
-    if (!complaintText.trim()) {
-      setError("অনুগ্রহ করে রোগীর অভিযোগ লিখুন।");
-      complaintTextAreaRef.current?.focus();
-      return;
-    }
-    setIsLoading(true);
-    setError(null);
-    setAnalysisResult(null);
-    try {
-      const input: ComplaintAnalyzerInput = { complaintText };
-      const result = await analyzeComplaint(input);
-      setAnalysisResult(result);
-    } catch (err: any) {
-      let errorMessage = "অভিযোগ বিশ্লেষণ করার সময় একটি ত্রুটি হয়েছে।";
-      if (err.message) {
-           errorMessage = err.message;
-      }
-      setError(errorMessage);
-    } finally {
-      setIsLoading(false);
-    }
+  const handleRemedyClick = (remedyName: string) => {
+    setSelectedRemedy(remedyName);
+    setIsRemedyDetailOpen(true);
   };
 
   return (
-    <div className="space-y-6">
-      <PageHeaderCard
-        title="AI দ্বারা অভিযোগ বিশ্লেষণ"
-        description="রোগীর অভিযোগ ইনপুট করুন এবং AI দ্বারা তৈরি সারাংশ ও সম্ভাব্য ঔষধের তালিকা পান।"
-        actions={<Wand2 className="h-8 w-8 text-primary" />}
-      />
+    <Dialog open={isRemedyDetailOpen} onOpenChange={setIsRemedyDetailOpen}>
+      <div className="space-y-6 px-4 md:px-6 lg:px-8 max-w-[1600px] mx-auto">
+        <PageHeaderCard
+          title="রেপার্টরি"
+          description="রোগীর লক্ষণসমূহের বিস্তারিত বিবরণ দিন এবং জেমিনি AI-এ�� মা��্য��ে সম্ভাব্য প্রতিকারগুলো সম্পর্কে জানুন।"
+          actions={<Wand2 className="h-8 w-8 text-primary" />}
+        />
+        <div className="grid grid-cols-1 xl:grid-cols-5 gap-6 lg:gap-8">
+          <div className="xl:col-span-2 space-y-6">
+            <Card className="shadow-lg border-border/20 bg-card/50 backdrop-blur-lg p-4 sm:p-6 rounded-2xl">
+              <CardHeader className="p-2 pb-4">
+                <CardTitle className="flex items-center gap-3 text-lg md:text-xl font-bold text-foreground font-headline">
+                  <FileText className="w-6 h-6 text-primary" />
+                  <span>রোগীর লক্ষণ বিবরণ</span>
+                </CardTitle>
+                <CardDescription className="pt-1 pl-9 text-sm">
+                  এখানে রোগীর পূর্ণাঙ্গ বিবরণ লিখুন।
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="p-2 pt-0">
+                <SymptomForm
+                  form={form}
+                  onSubmit={handleSubmit}
+                  isLoading={isLoading}
+                />
+              </CardContent>
+            </Card>
 
-      <Card className="shadow-md">
-        <CardHeader>
-            <CardTitle className="font-headline text-lg flex items-center">
-                <User className="mr-3 h-6 w-6 text-primary" />
-                আজকের রোগী নির্বাচন করুন
-            </CardTitle>
-            <CardDescription>
-              আজকের ভিজিটের তালিকা থেকে একজন রোগী নির্বাচন করুন। এটি স্বয়ংক্রিয়ভাবে তার সকল অভিযোগ লোড করবে।
-            </CardDescription>
-        </CardHeader>
-        <CardContent>
-            <Popover open={isPatientListOpen} onOpenChange={setIsPatientListOpen}>
-                <PopoverTrigger asChild>
-                    <Button
-                        variant="outline"
-                        role="combobox"
-                        aria-expanded={isPatientListOpen}
-                        className="w-full md:w-[300px] justify-between"
-                    >
-                        {selectedPatient ? selectedPatient.name : "একজন রোগী নির্বাচন করুন..."}
-                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                    </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-[300px] p-0">
-                    <Command>
-                        <CommandInput placeholder="রোগীর নাম দিয়ে খুঁজুন..." />
-                        <CommandEmpty>আজকের জন্য কোনো রোগী পাওয়া যায়নি।</CommandEmpty>
-                        <CommandGroup>
-                          <ScrollArea className="h-64">
-                            {patients.map((patient) => (
-                                <CommandItem
-                                    key={patient.id}
-                                    value={patient.name}
-                                    onSelect={() => handleSelectPatient(patient)}
-                                >
-                                    <Check
-                                        className={cn(
-                                            "mr-2 h-4 w-4",
-                                            selectedPatient?.id === patient.id ? "opacity-100" : "opacity-0"
-                                        )}
-                                    />
-                                    {patient.name}
-                                </CommandItem>
-                            ))}
-                          </ScrollArea>
-                        </CommandGroup>
-                    </Command>
-                </PopoverContent>
-            </Popover>
-        </CardContent>
-      </Card>
-
-      <Card className="shadow-md">
-        <CardHeader>
-          <CardTitle className="font-headline text-lg flex items-center">
-            <MessageSquareText className="mr-3 h-6 w-6 text-primary" />
-            রোগীর অভিযোগ
-          </CardTitle>
-          <CardDescription>
-            রোগীর সম্পূর্ণ অভিযোগ এখানে বাংলা ভাষায় লিখুন অথবা ভয়েস ইনপুট ব্যবহার করুন। AI এটি বিশ্লেষণ করে গুরুত্বপূর্ণ পয়েন্ট এবং সম্ভাব্য ঔষধের তালিকা দেবে। অনুগ্রহ করে কমপক্ষে ১০ শব্দের অভিযোগ লিখুন।
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-             <div className="relative">
-                {isFetchingDetails && (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/80 z-10 rounded-md">
-                        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                        <p className="text-muted-foreground mt-2">রোগীর তথ্য লোড হচ্ছে...</p>
-                    </div>
-                )}
-                 <Textarea
-                    id="aiSummaryComplaintText"
-                    ref={complaintTextAreaRef}
-                    placeholder="রোগীর সম্পূর্ণ অভিযোগ এখানে বাংলা ভাষায় লিখুন..."
-                    rows={8}
-                    className="w-full rounded-md border border-input bg-card shadow-inner focus:ring-1 focus:ring-ring focus:border-primary min-h-[150px] px-3 py-2 text-base placeholder-muted-foreground resize-y"
-                    value={complaintText}
-                    onChange={(e) => setComplaintText(e.target.value)}
-                    aria-label="রোগীর অভিযোগ"
-                    disabled={isFetchingDetails}
-                  />
-            </div>
-            <div className="flex justify-end">
-              <Button onClick={handleAnalyzeComplaint} disabled={isLoading || isFetchingDetails} className="min-w-[180px]">
-                {isLoading ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : (
-                  <Wand2 className="mr-2 h-4 w-4" />
-                )}
-                অভিযোগ বিশ্লেষণ করুন
-              </Button>
-            </div>
+            {results && !isLoading && !error && results.caseAnalysis && (
+              <Card className="shadow-lg border-border/20 bg-card/50 backdrop-blur-lg p-4 sm:p-6 rounded-2xl">
+                <CardHeader className="p-2 pb-4">
+                  <CardTitle className="flex items-center gap-3 text-lg md:text-xl font-bold text-foreground font-headline">
+                    <ClipboardCheck className="w-6 h-6 text-primary" />
+                    <span>AI কেস বিশ্লেষণ</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-2 pt-0">
+                  <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                    {results.caseAnalysis}
+                  </p>
+                </CardContent>
+              </Card>
+            )}
           </div>
 
-          {error && (
-            <Alert variant="destructive" className="mt-6">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>ত্রুটি</AlertTitle>
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )}
+          <div className="xl:col-span-3 shadow-lg border-border/20 bg-card/50 backdrop-blur-lg p-6 md:p-8 rounded-2xl min-h-[500px]">
+            {isLoading && (
+              <div className="flex items-center justify-center h-full">
+                <AnalysisLoading
+                  stage="analyzing"
+                  message="উন্নত AI সিস্টেম দিয়ে লক্ষণ বিশ্লেষণ করা হচ্ছে..."
+                />
+              </div>
+            )}
 
-          {isLoading && (
-            <div className="mt-6 text-center">
-              <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto" />
-              <p className="text-muted-foreground mt-2">AI আপনার অভিযোগ বিশ্লেষণ করছে...</p>
-            </div>
-          )}
+            {error && (
+              <div className="flex items-center justify-center h-full min-h-[400px]">
+                <ErrorDisplay
+                  error={error}
+                  onRetry={() => {
+                    setError(null);
+                    const formValues = form.getValues();
+                    if (formValues.symptoms) {
+                      handleSubmit(formValues);
+                    }
+                  }}
+                  variant="destructive"
+                />
+              </div>
+            )}
 
-          {analysisResult && !isLoading && (
-            <div className="mt-8 space-y-6">
-              <Card className="bg-muted/30">
-                <CardHeader>
-                  <CardTitle className="font-headline text-md flex items-center">
-                    <List className="mr-2 h-5 w-5 text-blue-600" />
-                    অভিযোগের গুরুত্বপূর্ণ পয়েন্টসমূহ:
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {analysisResult.summaryPoints && analysisResult.summaryPoints.length > 0 ? (
-                    <ul className="list-disc space-y-1 pl-5 text-sm">
-                      {analysisResult.summaryPoints.map((point, index) => (
-                        <li key={`summary-${index}`}>{point}</li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className="text-sm text-muted-foreground">AI কোনো সারাংশ পয়েন্ট তৈরি করতে পারেনি। অনুগ্রহ করে অভিযোগটি আরও বিস্তারিতভাবে লিখুন।</p>
-                  )}
-                </CardContent>
-              </Card>
+            {!isLoading && !error && !results && (
+              <div className="flex flex-col items-center justify-center h-full min-h-[400px]">
+                <div className="text-6xl text-muted-foreground/20 mb-4">
+                  <Brain />
+                </div>
+                <p className="text-muted-foreground text-center font-headline text-lg">
+                  AI বিশ্লেষণের ফলাফল
+                </p>
+                <p className="text-muted-foreground/80 text-sm text-center mt-1">
+                  ঔষধের পরামর্শ এখানে প্রদর্শিত হবে।
+                </p>
+              </div>
+            )}
 
-              <Card className="bg-muted/30">
-                <CardHeader>
-                  <CardTitle className="font-headline text-md flex items-center">
-                    <Pill className="mr-2 h-5 w-5 text-green-600" />
-                    সম্ভাব্য হোমিওপ্যাথিক ঔষধের তালিকা:
-                  </CardTitle>
-                  <CardDescription className="text-xs text-destructive font-medium">
-                    সতর্কীকরণ: এটি শুধুমাত্র AI দ্বারা প্রস্তাবিত একটি তালিকা, চূড়ান্ত প্রেসক্রিপশন নয়। যে কোনো ঔষধ সেবনের পূর্বে অবশ্যই একজন অভিজ্ঞ ও রেজিস্টার্ড চিকিৎসকের পরামর্শ নিন।
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {analysisResult.medicineSuggestions && analysisResult.medicineSuggestions.length > 0 ? (
-                    <ul className="list-decimal space-y-1 pl-5 text-sm">
-                      {analysisResult.medicineSuggestions.map((suggestion, index) => (
-                        <li key={`med-${index}`}>{suggestion}</li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className="text-sm text-muted-foreground">AI কোনো ঔষধের প্রস্তাব দিতে পারেনি। অভিযোগটি আরও স্পষ্ট করার চেষ্টা করুন।</p>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-    </div>
+            {results && !isLoading && !error && (
+              <div className="space-y-6">
+                <h3 className="font-semibold text-foreground/90 text-xl">
+                  ঔষধের পরামর্শ:
+                </h3>
+                {results.remedies.length > 0 ? (
+                  <ResultsDisplay
+                    results={results}
+                    onRemedyClick={handleRemedyClick}
+                  />
+                ) : (
+                  <Alert className="w-full">
+                    <Bot className="h-4 w-4" />
+                    <AlertTitle>কোনো সাজেশন পাওয়া যায়নি</AlertTitle>
+                    <AlertDescription>
+                      বর্ণিত লক্ষণগুলির জন্য আমরা কোনও নির্দিষ্ট প্রতিকার খুঁজে
+                      পাইনি। অনুগ্রহ করে বাক্যটি পুনর্গঠন করে বা আরও বিশদ বিবরণ
+                      যোগ করে আবার চেষ্টা করুন।
+                    </AlertDescription>
+                  </Alert>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {selectedRemedy && (
+        <RemedyDetailsDialogContent remedyName={selectedRemedy} />
+      )}
+    </Dialog>
   );
 }

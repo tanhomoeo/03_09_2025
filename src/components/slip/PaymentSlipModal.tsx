@@ -1,4 +1,3 @@
-
 'use client';
 import React, { useEffect, useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose, DialogFooter } from '@/components/ui/dialog';
@@ -8,7 +7,7 @@ import { formatDate, formatCurrency, getClinicSettings, getPaymentMethodLabel } 
 import { Printer } from 'lucide-react';
 import { APP_NAME } from '@/lib/constants';
 
-interface PaymentSlipModalProps {
+export interface PaymentSlipModalProps {
   slip: PaymentSlip & { patientName?: string };
   isOpen: boolean;
   onClose: () => void;
@@ -31,8 +30,7 @@ export function PaymentSlipModal({ slip, isOpen, onClose }: PaymentSlipModalProp
 
   const handlePrint = () => {
      if (typeof window !== 'undefined') {
-      const printArea = document.getElementById('slip-print-area-content');
-      if (printArea && clinicSettings) {
+      if (clinicSettings) {
         const paymentMethodDisplay = getPaymentMethodLabel(slip.paymentMethod);
         
         const iframe = document.createElement('iframe');

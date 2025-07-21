@@ -1,134 +1,119 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
-  font-family: 'PT Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 @layer base {
   :root {
-    /* Glassmorphism & Neumorphism Light Theme */
-    --background: 220 20% 95%; /* Subtle cool gray background */
-    --foreground: 224 71% 4%;
+    --background: 145 50% 96%;
+    
+    /* === Text Color Hierarchy === */
+    --text-title: 222.2 84% 4.9%;   /* Deep, saturated blue for main page titles */
+    --text-heading: 222.2 47.4% 11.2%;   /* Almost-black blue for card titles and sub-headings */
+    --text-body: 215.4 16.3% 30%;   /* Dark grayish-blue for body text, ensuring high contrast */
 
-    /* Glass effect for cards: semi-transparent white */
-    --card: 220 20% 100% / 0.6;
-    --card-foreground: 224 71% 4%;
-
-    /* Glass effect for popovers */
-    --popover: 220 20% 100% / 0.7;
-    --popover-foreground: 224 71% 4%;
-
-    --primary: 262.1 83.3% 57.8%; /* Vibrant Purple */
-    --primary-foreground: 210 20% 98%;
-
-    --secondary: 220 14.3% 95.9%;
+    --foreground: hsl(var(--text-heading));
+    --card: 0 0% 100%;
+    --card-foreground: hsl(var(--text-heading));
+    --popover: 0 0% 100%;
+    --popover-foreground: hsl(var(--text-heading));
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 220 14.3% 95.9%;
-    --muted-foreground: 220 8.9% 46.1%;
-    
-    --accent: 220 14.3% 95.9%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%; /* Lighter, for descriptions and less important text */
+    --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
-
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 20% 98%;
-
-    --border: 220 13% 91% / 0.8; /* Semi-transparent border for glass edge */
-    --input: 220 13% 91%;
-    --ring: 262.1 83.3% 57.8%;
-    
-    --radius: 0.8rem;
-
-    /* Dark Blue Shadow colors for Neumorphism */
-    --shadow-light: 0 0% 100% / 0.6;
-    --shadow-dark: 220 30% 25% / 0.25;
-
-    /* Sidebar specific colors (also glassy) */
-    --sidebar-background: 220 15% 98% / 0.75;
-    --sidebar-foreground: 224 71% 4%;
-    --sidebar-primary: hsl(var(--primary));
-    --sidebar-primary-foreground: hsl(var(--primary-foreground));
-    --sidebar-accent: 262.1 83.3% 57.8% / 0.15; /* Light purple, slightly more opaque */
-    --sidebar-accent-2: 220 80% 60% / 0.15; /* Light blue */
-    --sidebar-accent-foreground: hsl(var(--primary));
-    --sidebar-border: 220 13% 91% / 0.5;
-    --sidebar-ring: hsl(var(--ring));
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --radius: 0.5rem;
   }
-
+ 
   .dark {
-    /* Glassmorphism & Neumorphism Dark Theme */
-    --background: 224 71% 4%;
-    --foreground: 210 20% 98%;
-
-    /* Glass effect for cards: semi-transparent dark gray */
-    --card: 216 34% 12% / 0.5;
-    --card-foreground: 210 20% 98%;
-
-    /* Glass effect for popovers */
-    --popover: 216 34% 12% / 0.7;
-    --popover-foreground: 210 20% 98%;
+    --background: 222.2 84% 4.9%;
     
-    --primary: 262.1 83.3% 57.8%;
-    --primary-foreground: 210 20% 98%;
-
-    --secondary: 215 28% 17%;
-    --secondary-foreground: 210 20% 98%;
-
-    --muted: 215 28% 17%;
+    /* === Text Color Hierarchy for Dark Mode === */
+    --text-title: 210 40% 98%;   /* Bright white for main titles */
+    --text-heading: 210 40% 92%;  /* Slightly off-white for headings */
+    --text-body: 215 20.2% 75%;  /* Lighter gray for body text */
+    
+    --foreground: hsl(var(--text-heading));
+    --card: 222.2 84% 4.9%;
+    --card-foreground: hsl(var(--text-heading));
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: hsl(var(--text-heading));
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 215 28% 17%;
-    --accent-foreground: 210 20% 98%;
-
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-
-    --border: 215 28% 17% / 0.8; /* Semi-transparent border for glass edge */
-    --input: 215 28% 22%;
-    --ring: 262.1 83.3% 57.8%;
-    
-    --radius: 0.8rem;
-
-    /* Shadow colors for Dark Neumorphism */
-    --shadow-light: 220 15% 25% / 0.35;
-    --shadow-dark: 220 70% 3% / 0.9;
-
-    /* Sidebar specific colors (also glassy) */
-    --sidebar-background: 220 20% 15% / 0.6;
-    --sidebar-foreground: 210 20% 98%;
-    --sidebar-primary: hsl(var(--primary));
-    --sidebar-primary-foreground: hsl(var(--primary-foreground));
-    --sidebar-accent: 262.1 83.3% 57.8% / 0.15;
-    --sidebar-accent-2: 220 80% 60% / 0.15;
-    --sidebar-accent-foreground: hsl(var(--primary));
-    --sidebar-border: 215 28% 17% / 0.5;
-    --sidebar-ring: hsl(var(--ring));
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 215 20.2% 65.1%;
   }
-}
 
-@layer base {
   * {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
-    background-image: radial-gradient(circle at top left, hsl(var(--primary) / 0.05), transparent 30%), 
-                      radial-gradient(circle at bottom right, hsl(var(--primary) / 0.05), transparent 40%);
+    @apply bg-background;
+    color: hsl(var(--text-body));
+  }
+  
+  body:not(.login-page-active) {
+    background-image: radial-gradient(circle at 15% 25%, hsl(145 60% 95% / 0.1), transparent 40%), radial-gradient(circle at 85% 75%, hsl(145 40% 90% / 0.15), transparent 40%);
     background-attachment: fixed;
+    background-color: hsl(var(--background));
   }
-}
+  
+  body.login-page-active {
+     background-color: #e8f5e9; /* Light green fallback */
+     background-image: linear-gradient(135deg, hsl(145 70% 97%) 0%, hsl(175 40% 95%) 100%);
+  }
 
-@layer utilities {
-  .text-shadow-3d {
-    text-shadow: 1px 1px 2px hsl(var(--shadow-dark));
+  .dark body.login-page-active {
+      background-color: #0c140d; /* Dark green fallback */
+      background-image: linear-gradient(135deg, hsl(145 60% 8%) 0%, hsl(175 40% 7%) 100%);
   }
-  .text-shadow-md {
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+
+  h1, .text-title {
+      @apply text-xl sm:text-2xl md:text-3xl;
+      color: hsl(var(--text-title));
+      text-shadow: 1px 1px 3px hsl(var(--primary) / 0.1);
+  }
+  
+  h2, .text-heading {
+      @apply text-lg sm:text-xl md:text-2xl;
+      color: hsl(var(--text-heading));
+  }
+
+  h3, .text-subheading {
+      @apply text-base sm:text-lg md:text-xl;
+  }
+  
+  [data-sidebar="content"] {
+    overflow: visible !important;
+  }
+  [data-sidebar="content"]::-webkit-scrollbar {
+    display: none;
+  }
+  /* For IE, Edge and Firefox */
+  [data-sidebar="content"] {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
   }
 }
 
@@ -138,6 +123,9 @@ body {
 }
 
 @media print {
+  body {
+    animation: none !important;
+  }
   .hide-on-print {
     display: none !important;
   }
@@ -147,7 +135,8 @@ body {
   
   body.printing-dashboard-active, 
   body.printing-report-active,
-  body.printing-active {
+  body.printing-active,
+  body.printing-prescription-active {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
     margin: 0;
@@ -162,7 +151,7 @@ body {
     margin: 0 auto;
     padding: 5mm;
     box-sizing: border-box;
-    font-family: 'PT Sans', Arial, sans-serif;
+    font-family: Arial, sans-serif; /* Use standard fonts for print */
     color: #000 !important;
   }
 
@@ -204,7 +193,7 @@ body {
       margin: 0 auto;
       padding: 10mm 12mm;
       box-sizing: border-box;
-      font-family: 'PT Sans', Arial, sans-serif;
+      font-family: Arial, sans-serif;
       font-size: 11pt;
       line-height: 1.5;
       color: #000 !important;
@@ -212,9 +201,6 @@ body {
   .print-instruction-container .print-header {
       border-bottom: 2px solid #333;
       padding-bottom: 3mm;
-  }
-  .print-instruction-container .print-header h1 {
-      font-family: 'Poppins', 'PT Sans', sans-serif;
   }
    .print-instruction-container .meta-info {
       display: flex;
@@ -286,20 +272,108 @@ body {
       margin: 1mm 0;
       font-size: 10pt;
   }
+  
+  .print-prescription-container {
+    width: 100%;
+    margin: 0 auto;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'PT Sans', Arial, sans-serif;
+    font-size: 10pt;
+    line-height: 1.4;
+    color: #000 !important;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+  }
+  .print-header { 
+    text-align: center; 
+    margin-bottom: 6mm; 
+    border-bottom: 1px solid #555; 
+    padding-bottom: 4mm;
+    padding-top: 4mm;
+    background: linear-gradient(to bottom, #f3f4f6, #ffffff) !important;
+    border-radius: 8px 8px 0 0;
+  }
+  .print-header h1 { font-family: 'Poppins', 'PT Sans', sans-serif; margin: 0 0 1mm 0; }
+  .print-header p { font-size: 9pt; margin: 0.5mm 0; }
+  .print-title { margin-top: 3mm; }
+
+  .patient-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1mm 5mm;
+    font-size: 9.5pt;
+    padding: 3mm 12mm;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 4mm;
+  }
+  .patient-info-grid div { padding: 0.5mm 0; }
+
+  .print-section { 
+    margin-bottom: 4mm;
+    padding: 0 12mm;
+  }
+  .section-title { font-weight: bold; font-size: 11pt; display: block; margin-bottom: 1mm; }
+  .rx-section { 
+    margin-top: 2mm;
+    padding: 2mm;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    margin-left: 10mm;
+    margin-right: 10mm;
+  }
+  .rx-section .section-title { margin-bottom: 0.5mm; }
+
+  .medicines-table { width: 100%; border-collapse: collapse; font-size: 9pt; margin-bottom: 2mm; table-layout: fixed; }
+  .medicines-table th, .medicines-table td { border: 1px solid #777; padding: 1.5mm 2mm; text-align: left; vertical-align: top; word-wrap: break-word; }
+  .medicines-table th { 
+    background-color: #f3f4f6 !important;
+    font-weight: bold; 
+    font-size: 9.5pt; 
+  }
+  .medicines-table .empty-row td { height: 1.8em; }
+  .medicines-table .empty-cell { border-left: 1px solid #777; border-right: 1px solid #777; }
+
+  .whitespace-pre-line { white-space: pre-line; }
+  .follow-up { font-size: 9.5pt; margin-top: 3mm; }
+
+  .print-footer {
+    margin-top: 12mm;
+    padding: 0 12mm 4mm 12mm;
+    position: relative;
+    height: 40mm;
+  }
+  .signature-area {
+    text-align: right;
+    font-size: 9.5pt;
+    position: absolute;
+    bottom: 5mm;
+    right: 12mm;
+  }
+  .signature-line {
+    display: block;
+    width: 150px;
+    border-bottom: 1px solid #333;
+    margin-bottom: 2mm;
+    margin-left: auto;
+  }
+  .signature-area p { margin: 1mm 0; }
 }
 
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-::-webkit-scrollbar-track {
-  @apply bg-muted/30;
-  border-radius: 10px;
-}
-::-webkit-scrollbar-thumb {
-  @apply bg-primary/50;
-  border-radius: 10px;
-}
-::-webkit-scrollbar-thumb:hover {
-  @apply bg-primary/70;
+@layer utilities {
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-muted/30;
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary/50;
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary/70;
+  }
 }

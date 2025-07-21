@@ -1,26 +1,36 @@
-
 {
+  "theme_color": "#e8f5e9",
+  "background_color": "#FFFFFF",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/dashboard",
   "name": "ত্রিফুল আরোগ্য নিকেতন",
   "short_name": "আরোগ্য নিকেতন",
-  "description": "ত্রিফুল আরোগ্য নিকেতন-এর জন্য একটি আদর্শ হোমিওপ্যাথিক চিকিৎসালয় এবং রোগী ম্যানেজমেন্ট সিস্টেম।",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#EAF2F8",
-  "theme_color": "#4A90E2",
+  "description": "Patient Management System for ত্রিফুল আরোগ্য নিকেতন",
   "icons": [
     {
-      "src": "/icons/icon-192x192.png",
+      "src": "/icons/icon.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
-      "src": "/icons/icon-512x512.png",
+      "src": "/icons/icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
-  ],
-  "orientation": "portrait-primary",
-  "scope": "/"
+  ]
 }

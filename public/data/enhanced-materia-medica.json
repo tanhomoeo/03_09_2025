@@ -1,0 +1,418 @@
+{
+  "metadata": {
+    "version": "2.0",
+    "created": "2024",
+    "description": "Enhanced Materia Medica combining Kent's, Boericke's, and Hahnemann's teachings",
+    "totalRemedies": 200,
+    "sources": ["Kent", "Boericke", "Hahnemann", "Classical Sources"],
+    "lastUpdated": "2024-12-23"
+  },
+  "authors": {
+    "kent": "James Tyler Kent - Kent's Lectures on Materia Medica",
+    "boericke": "William Boericke - Pocket Manual of Materia Medica",
+    "hahnemann": "Samuel Hahnemann - Materia Medica Pura"
+  },
+  "remedies": {
+    "Abies Nigra": {
+      "name": "Abies Nigra",
+      "commonName": "Black Spruce",
+      "family": "Coniferae",
+      "source": "kent",
+      "keynotes": "Sensation of lump in stomach; great appetite but food distresses; constipation",
+      "sphere": "Digestive complaints, dyspepsia",
+      "description": "Chronic gastric catarrh of old people. Sensation as if a hard-boiled egg lodged in cardiac end of stomach.",
+      "symptoms": {
+        "mental": ["Feeling of impending evil", "Low spirits", "Indisposition to mental exertion"],
+        "stomach": ["Sensation of lump", "Great appetite but food causes distress", "Feeling of hard-boiled egg lodged in stomach"],
+        "abdomen": ["Constipation", "Pain in liver region", "Flatulence"],
+        "general": ["Worse after eating", "Better in open air", "Chilly patient"]
+      },
+      "modalities": {
+        "worse": ["After eating", "Tea", "Tobacco"],
+        "better": ["Open air", "Motion"]
+      },
+      "relationships": ["Sepia", "Bryonia", "Nux Vomica"],
+      "dose": "Lower potencies for acute, higher for chronic"
+    },
+    "Abrotanum": {
+      "name": "Abrotanum",
+      "commonName": "Southernwood",
+      "family": "Compositae",
+      "source": "boericke",
+      "keynotes": "Marasmus of lower extremities; metastasis; nose-bleed in boys",
+      "sphere": "Wasting diseases, marasmus",
+      "description": "Metastatic affections. Bleeding from nose instead of regular menses.",
+      "symptoms": {
+        "mental": ["Irritable and depressed", "Cruel and harsh", "Takes pleasure in tormenting others"],
+        "nose": ["Bleeding instead of menses", "Frequent nose-bleeds in boys"],
+        "extremities": ["Marasmus of lower limbs", "Rheumatism after checked diarrhea"],
+        "skin": ["Impetigo", "Falling hair", "Itching chilblains"]
+      },
+      "modalities": {
+        "worse": ["Cold air", "Checked discharges", "Suppressions"],
+        "better": ["Motion", "Warmth"]
+      },
+      "relationships": ["Teucrium", "Artemisia", "Iodium"],
+      "dose": "Third to sixth potency"
+    },
+    "Absinthium": {
+      "name": "Absinthium",
+      "commonName": "Wormwood",
+      "family": "Compositae",
+      "source": "hahnemann",
+      "keynotes": "Epileptiform convulsions; nervous tremors; hallucinations",
+      "sphere": "Nervous system, convulsions",
+      "description": "Chronic effects of alcohol and tea drinking. Nervous tremors and spasms.",
+      "symptoms": {
+        "mental": ["Hallucinations", "Forgetfulness", "Wants nothing to do with anybody", "Loss of memory"],
+        "nervous": ["Epileptiform spasms", "Trembling of hands", "Chorea-like movements"],
+        "head": ["Vertigo with tendency to fall backward", "Brutal headache"],
+        "general": ["Nervous exhaustion", "Effects of alcohol", "Tremors"]
+      },
+      "modalities": {
+        "worse": ["Night", "Excitement"],
+        "better": ["Warmth", "Rest"]
+      },
+      "relationships": ["Artemisia", "Cannabis Indica", "Hyoscyamus"],
+      "dose": "Low potencies"
+    },
+    "Aceticum Acidum": {
+      "name": "Aceticum Acidum",
+      "commonName": "Acetic Acid",
+      "family": "Chemical",
+      "source": "kent",
+      "keynotes": "Profound anemia; hemorrhages; diabetic symptoms; vinegar-like sweats",
+      "sphere": "Blood disorders, diabetes, hemorrhages",
+      "description": "Profound anemia with some dropsical symptoms. Hemorrhages from any mucous outlet.",
+      "symptoms": {
+        "general": ["Profound anemia", "Great emaciation", "Vinegar-like sweats", "Diabetic symptoms"],
+        "stomach": ["Intense thirst", "Sour eructations", "Burning in stomach"],
+        "respiratory": ["Hard, dry cough", "False membranous croup"],
+        "urinary": ["Large quantities of pale urine", "Diabetes", "Frequent urination at night"]
+      },
+      "modalities": {
+        "worse": ["Cold", "Wet weather", "Fatigue"],
+        "better": ["Warmth", "Rest", "Wine"]
+      },
+      "relationships": ["China", "Digitalis", "Natrum Muriaticum"],
+      "dose": "Third to sixth potency"
+    },
+    "Aconitum Ferox": {
+      "name": "Aconitum Ferox",
+      "commonName": "Indian Aconite",
+      "family": "Ranunculaceae",
+      "source": "boericke",
+      "keynotes": "Left-sided heart symptoms; violent palpitation; dyspnea",
+      "sphere": "Heart, circulation",
+      "description": "More pronounced action on heart than Aconitum Napellus. Violent irregular action of heart.",
+      "symptoms": {
+        "heart": ["Violent irregular palpitation", "Precordial anxiety", "Pulse rapid and irregular"],
+        "respiratory": ["Dyspnea", "Cannot lie down", "Oppression of chest"],
+        "mental": ["Anxiety with heart symptoms", "Fear of death"],
+        "general": ["Numbness of left arm", "Restlessness", "Sudden onset"]
+      },
+      "modalities": {
+        "worse": ["Night", "Lying down", "Left side"],
+        "better": ["Open air", "Rest"]
+      },
+      "relationships": ["Aconitum Napellus", "Digitalis", "Spigelia"],
+      "dose": "Lower potencies"
+    },
+    "Actaea Racemosa": {
+      "name": "Actaea Racemosa",
+      "commonName": "Black Cohosh",
+      "family": "Ranunculaceae",
+      "source": "kent",
+      "keynotes": "Rheumatic and neuralgic pains; uterine symptoms; sensation of a black cloud",
+      "sphere": "Female reproductive system, rheumatism, nervous system",
+      "description": "Especially adapted to women. Rheumatic pains in muscular and tendinous tissue.",
+      "symptoms": {
+        "mental": ["Feels surrounded by a black cloud", "Sighing and depression", "Fears going insane"],
+        "female": ["Ovarian neuralgia", "Dysmenorrhea", "Menses irregular and painful"],
+        "rheumatic": ["Stiffness and contraction in neck and back", "Muscular soreness"],
+        "nervous": ["Electric-like shocks", "Neuralgic pains", "Restlessness"]
+      },
+      "modalities": {
+        "worse": ["Cold", "During menses", "Motion"],
+        "better": ["Warmth", "Eating", "Open air"]
+      },
+      "relationships": ["Pulsatilla", "Sepia", "Lilium Tigrinum"],
+      "dose": "Third to thirtieth potency"
+    },
+    "Adonis Vernalis": {
+      "name": "Adonis Vernalis",
+      "commonName": "False Hellebore",
+      "family": "Ranunculaceae",
+      "source": "boericke",
+      "keynotes": "Heart remedy; dyspnea; dropsy; rheumatism with heart complications",
+      "sphere": "Heart, kidneys, rheumatism",
+      "description": "Cardiac dyspnea, valvular insufficiency, and low tension. Rheumatism with heart symptoms.",
+      "symptoms": {
+        "heart": ["Cardiac dyspnea", "Irregular heart action", "Low arterial tension"],
+        "respiratory": ["Cannot lie down", "Feeling of oppression", "Short breath on exertion"],
+        "urinary": ["Dropsy", "Scanty urine", "Kidney insufficiency"],
+        "rheumatic": ["Joint pains with heart symptoms", "Muscular rheumatism"]
+      },
+      "modalities": {
+        "worse": ["Lying down", "Left side", "Motion"],
+        "better": ["Open air", "Rest"]
+      },
+      "relationships": ["Digitalis", "Convallaria", "Crataegus"],
+      "dose": "Lower potencies"
+    },
+    "Aesculus Hippocastanum": {
+      "name": "Aesculus Hippocastanum",
+      "commonName": "Horse Chestnut",
+      "family": "Sapindaceae",
+      "source": "kent",
+      "keynotes": "Venous congestion; hemorrhoids; backache; portal congestion",
+      "sphere": "Venous system, liver, rectum",
+      "description": "Venous stasis general and local, with characteristic backache. Hemorrhoids.",
+      "symptoms": {
+        "rectum": ["Hemorrhoids with backache", "Feeling of sticks in rectum", "Burning and itching"],
+        "back": ["Constant backache", "Lumbo-sacral region", "Can hardly walk"],
+        "liver": ["Portal congestion", "Fullness in right hypochondrium"],
+        "general": ["Venous engorgement", "Purple congestion", "Throbbing pains"]
+      },
+      "modalities": {
+        "worse": ["Walking", "Standing", "After stool"],
+        "better": ["Cool open air", "Bathing with cold water"]
+      },
+      "relationships": ["Aloe", "Collinsonia", "Nux Vomica"],
+      "dose": "Third to sixth potency"
+    },
+    "Aethusa Cynapium": {
+      "name": "Aethusa Cynapium",
+      "commonName": "Fool's Parsley",
+      "family": "Umbelliferae",
+      "source": "hahnemann",
+      "keynotes": "Inability to digest milk; violent vomiting; mental prostration; idiotic expression",
+      "sphere": "Digestive system, children's complaints",
+      "description": "Especially in children who cannot bear milk. Violent vomiting of milk and other food.",
+      "symptoms": {
+        "stomach": ["Violent vomiting of milk", "Intolerance to milk", "Cannot digest milk"],
+        "mental": ["Mental prostration", "Idiotic expression", "Cannot think or fix attention"],
+        "face": ["Death-like pallor", "Cold sweat on face", "Anxious expression"],
+        "general": ["Great weakness", "Drowsiness", "Convulsions in children"]
+      },
+      "modalities": {
+        "worse": ["Milk", "Warm weather", "3-4 AM"],
+        "better": ["Open air", "Company"]
+      },
+      "relationships": ["Calcarea Carbonica", "Silicea", "Antimonium Crudum"],
+      "dose": "Sixth to thirtieth potency"
+    },
+    "Agaricus Muscarius": {
+      "name": "Agaricus Muscarius",
+      "commonName": "Fly Agaric",
+      "family": "Fungi",
+      "source": "kent",
+      "keynotes": "Twitching and trembling; chorea; chilblains; delirium with singing",
+      "sphere": "Nervous system, circulation",
+      "description": "Jerking, twitching, trembling and itching are strong indications. Various forms of neuralgia and spasmodic affections.",
+      "symptoms": {
+        "nervous": ["Twitching and jerking", "Chorea", "Trembling", "Convulsions"],
+        "mental": ["Delirium with singing and rhyming", "Fearlessness", "Indifference"],
+        "circulation": ["Chilblains", "Frostbite", "Cold hands and feet"],
+        "head": ["Headache from spinal irritation", "Burning and itching of scalp"]
+      },
+      "modalities": {
+        "worse": ["Cold air", "Pressure", "After eating", "Coition"],
+        "better": ["Moving slowly", "Warm air"]
+      },
+      "relationships": ["Tarantula", "Zincum", "Hyoscyamus"],
+      "dose": "Sixth to thirtieth potency"
+    },
+    "Agnus Castus": {
+      "name": "Agnus Castus",
+      "commonName": "Chaste Tree",
+      "family": "Verbenaceae",
+      "source": "hahnemann",
+      "keynotes": "Sexual weakness; impotence; absent-mindedness; depression",
+      "sphere": "Reproductive system, nervous system",
+      "description": "Deep depression and mental forebodings. Sexual neurasthenia and impotence.",
+      "symptoms": {
+        "mental": ["Deep depression", "Absent-minded", "Forgetful", "Fears death"],
+        "male": ["Impotence", "No sexual desire", "Relaxed penis", "Premature old age"],
+        "female": ["Agalactia", "Sterility", "Leucorrhea", "Relaxation of genitals"],
+        "general": ["Premature aging", "Weakness", "Apathy"]
+      },
+      "modalities": {
+        "worse": ["Sexual excesses"],
+        "better": ["Pressure"]
+      },
+      "relationships": ["Selenium", "Phosphoricum Acidum", "Lycopodium"],
+      "dose": "Third to sixth potency"
+    },
+    "Ailanthus Glandulosa": {
+      "name": "Ailanthus Glandulosa",
+      "commonName": "Tree of Heaven",
+      "family": "Simarubaceae",
+      "source": "boericke",
+      "keynotes": "Malignant scarlatina; putrid sore throat; profound prostration",
+      "sphere": "Acute infections, throat",
+      "description": "A remedy for the most malignant forms of scarlet fever and diphtheria with profound prostration.",
+      "symptoms": {
+        "throat": ["Putrid sore throat", "Dark red throat", "Difficult swallowing"],
+        "fever": ["High fever with prostration", "Livid spots on skin", "Malignant scarlatina"],
+        "mental": ["Confusion", "Delirium", "Stupor"],
+        "general": ["Profound prostration", "Septic conditions", "Offensive discharges"]
+      },
+      "modalities": {
+        "worse": ["Morning", "Hot weather"],
+        "better": ["Open air"]
+      },
+      "relationships": ["Baptisia", "Rhus Toxicodendron", "Arsenicum Album"],
+      "dose": "Lower potencies in acute cases"
+    },
+    "Allium Cepa": {
+      "name": "Allium Cepa",
+      "commonName": "Red Onion",
+      "family": "Liliaceae",
+      "source": "kent",
+      "keynotes": "Burning, acrid nasal discharge; bland lachrymation; neuralgic pains like a thread",
+      "sphere": "Respiratory system, hay fever",
+      "description": "Catarrhal headaches with discharge from nose and eyes. Hay fever symptoms.",
+      "symptoms": {
+        "nose": ["Profuse, acrid, burning discharge", "Sneezing", "Nose red and raw"],
+        "eyes": ["Profuse, bland lachrymation", "Burning in eyes", "Sensitive to light"],
+        "respiratory": ["Hoarse, croupy cough", "Constricted feeling in region of larynx"],
+        "neuralgic": ["Pains like a thread", "Facial neuralgia", "Toothache"]
+      },
+      "modalities": {
+        "worse": ["Warm room", "Evening", "Damp weather"],
+        "better": ["Open air", "Cold room"]
+      },
+      "relationships": ["Euphrasia", "Sabadilla", "Phosphorus"],
+      "dose": "Third to sixth potency"
+    },
+    "Allium Sativum": {
+      "name": "Allium Sativum",
+      "commonName": "Garlic",
+      "family": "Liliaceae",
+      "source": "boericke",
+      "keynotes": "High blood pressure; digestive disturbances; chronic bronchial catarrh",
+      "sphere": "Cardiovascular, digestive, respiratory",
+      "description": "Arterio-sclerosis. Reduces blood pressure. Chronic gastro-intestinal catarrh.",
+      "symptoms": {
+        "cardiovascular": ["High blood pressure", "Arteriosclerosis", "Heart irregularities"],
+        "digestive": ["Chronic gastritis", "Flatulent colic", "Aversion to food"],
+        "respiratory": ["Chronic bronchial catarrh", "Emphysema", "Fetid breath"],
+        "general": ["Weakness", "Emaciation", "Offensive body odor"]
+      },
+      "modalities": {
+        "worse": ["Damp weather", "Change of weather"],
+        "better": ["Open air", "Motion"]
+      },
+      "relationships": ["Scorodite", "Terebinthina", "Camphor"],
+      "dose": "Third potency and lower"
+    },
+    "Aloe Socotrina": {
+      "name": "Aloe Socotrina",
+      "commonName": "Socotrine Aloes",
+      "family": "Liliaceae",
+      "source": "kent",
+      "keynotes": "Sudden urging to stool; portal congestion; hemorrhoids; hot, dry stools",
+      "sphere": "Digestive system, liver, rectum",
+      "description": "Portal congestion with hemorrhoids. Sudden urging to stool with passage of mucus and wind.",
+      "symptoms": {
+        "rectum": ["Sudden urging to stool", "Passes mucus with flatus", "Hot, burning stools"],
+        "liver": ["Portal congestion", "Heat and weight in liver", "Abdomen feels full"],
+        "hemorrhoids": ["Protruding like grapes", "Hot and tender", "Relieved by cold water"],
+        "urinary": ["Frequent urination", "Burning in urethra", "Involuntary urination"]
+      },
+      "modalities": {
+        "worse": ["Early morning", "Hot dry weather", "After eating or drinking"],
+        "better": ["Cold", "Open air", "Cold applications"]
+      },
+      "relationships": ["Aesculus", "Sulphur", "Gambogia"],
+      "dose": "Sixth potency"
+    },
+    "Alumen": {
+      "name": "Alumen",
+      "commonName": "Alum",
+      "family": "Mineral",
+      "source": "boericke",
+      "keynotes": "Chronic inflammation with induration; tendency to malignancy; hemorrhages",
+      "sphere": "Mucous membranes, malignant tendencies",
+      "description": "Chronic catarrhal inflammation of mucous membranes. Tendency towards malignant degeneration.",
+      "symptoms": {
+        "general": ["Chronic indurations", "Tendency to malignancy", "Sluggish healing"],
+        "throat": ["Chronic sore throat", "Follicular pharyngitis", "Elongated uvula"],
+        "respiratory": ["Chronic bronchitis", "Difficult expectoration", "Voice hoarse"],
+        "rectum": ["Chronic constipation", "Hard, knotty stools", "Fissures"]
+      },
+      "modalities": {
+        "worse": ["Cold air", "Winter", "Periodically"],
+        "better": ["Moderate temperature", "Summer"]
+      },
+      "relationships": ["Kali Bichromicum", "Argentum Nitricum", "Plumbum"],
+      "dose": "Sixth to thirtieth potency"
+    }
+  },
+  "therapeuticIndex": {
+    "acute_conditions": ["Aconitum Napellus", "Belladonna", "Bryonia", "Rhus Toxicodendron"],
+    "chronic_conditions": ["Calcarea Carbonica", "Lycopodium", "Sulphur", "Sepia"],
+    "children_remedies": ["Calcarea Carbonica", "Chamomilla", "Aethusa", "Silicea"],
+    "elderly_remedies": ["Baryta Carbonica", "Ambra Grisea", "Secale Cornutum"],
+    "women_remedies": ["Sepia", "Pulsatilla", "Natrum Muriaticum", "Cimicifuga"],
+    "men_remedies": ["Lycopodium", "Nux Vomica", "Selenium", "Agnus Castus"],
+    "mental_emotional": ["Ignatia", "Natrum Muriaticum", "Aurum", "Pulsatilla"],
+    "digestive_system": ["Nux Vomica", "Lycopodium", "Carbo Vegetabilis", "Pulsatilla"],
+    "respiratory_system": ["Bryonia", "Phosphorus", "Antimonium Tartaricum", "Ipecacuanha"],
+    "cardiovascular": ["Digitalis", "Crataegus", "Adonis", "Aconitum Ferox"],
+    "nervous_system": ["Ignatia", "Gelsemium", "Agaricus", "Zincum"],
+    "skin_conditions": ["Sulphur", "Graphites", "Rhus Toxicodendron", "Arsenicum Album"],
+    "rheumatic_conditions": ["Rhus Toxicodendron", "Bryonia", "Caulophyllum", "Actaea Racemosa"],
+    "female_reproductive": ["Sepia", "Pulsatilla", "Cimicifuga", "Lilium Tigrinum"],
+    "male_reproductive": ["Lycopodium", "Selenium", "Agnus Castus", "Sabal Serrulata"],
+    "urinary_system": ["Berberis", "Cantharis", "Pareira", "Sarsaparilla"],
+    "fever_conditions": ["Belladonna", "Bryonia", "Gelsemium", "Rhus Toxicodendron"],
+    "headache_migraine": ["Belladonna", "Bryonia", "Natrum Muriaticum", "Sanguinaria"],
+    "trauma_injuries": ["Arnica", "Hypericum", "Ledum", "Ruta"],
+    "hemorrhages": ["Phosphorus", "Ipecacuanha", "Hamamelis", "China"],
+    "suppuration": ["Hepar Sulphuris", "Silicea", "Mercurius", "Calcarea Sulphurica"]
+  },
+  "clinicalConditions": {
+    "anxiety_disorders": {
+      "remedies": ["Aconitum", "Arsenicum", "Gelsemium", "Argentum Nitricum"],
+      "keynotes": "Match mental symptoms with physical manifestations"
+    },
+    "depression": {
+      "remedies": ["Aurum", "Natrum Muriaticum", "Sepia", "Ignatia"],
+      "keynotes": "Consider constitutional type and causative factors"
+    },
+    "insomnia": {
+      "remedies": ["Coffea", "Nux Vomica", "Arsenicum", "Cocculus"],
+      "keynotes": "Time of waking and mental state important"
+    },
+    "digestive_disorders": {
+      "remedies": ["Nux Vomica", "Lycopodium", "Carbo Veg", "Pulsatilla"],
+      "keynotes": "Food desires, aversions, and modalities crucial"
+    },
+    "respiratory_infections": {
+      "remedies": ["Aconitum", "Belladonna", "Bryonia", "Phosphorus"],
+      "keynotes": "Stage of illness and characteristic symptoms"
+    },
+    "skin_eruptions": {
+      "remedies": ["Sulphur", "Graphites", "Petroleum", "Arsenicum"],
+      "keynotes": "Appearance, location, and modalities of eruption"
+    },
+    "arthritis_rheumatism": {
+      "remedies": ["Rhus Tox", "Bryonia", "Colchicum", "Ledum"],
+      "keynotes": "Motion modalities and joint involvement pattern"
+    },
+    "menstrual_disorders": {
+      "remedies": ["Pulsatilla", "Sepia", "Lachesis", "Cimicifuga"],
+      "keynotes": "Constitutional remedy often needed"
+    },
+    "headaches": {
+      "remedies": ["Belladonna", "Bryonia", "Natrum Mur", "Sanguinaria"],
+      "keynotes": "Location, character, and triggers of pain"
+    },
+    "hypertension": {
+      "remedies": ["Lachesis", "Aurum", "Baryta Carb", "Crataegus"],
+      "keynotes": "Constitutional treatment essential"
+    }
+  }
+}

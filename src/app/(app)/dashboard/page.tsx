@@ -1,116 +1,23 @@
-
 'use client';
-import React, { useEffect, useState, useCallback, Suspense } from 'react';
-import dynamic from 'next/dynamic';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableFooter } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import {
-    Users, UserPlus, FileText, BarChart3, TrendingUp, Search as SearchIcon, Printer, CalendarDays, Loader2,
-    MessageSquareText, PlayCircle
-} from 'lucide-react';
-import {
-    getPatients,
-    getVisitsWithinDateRange,
-    getPaymentSlipsWithinDateRange,
-    getPatientsRegisteredWithinDateRange,
-    formatCurrency,
-    getPaymentMethodLabel,
-    getClinicSettings,
-} from '@/lib/firestoreService';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Users, UserPlus, FileText, BarChart3, TrendingUp, Search as SearchIcon, Printer, CalendarDays, MessageSquareText, PlayCircle } from 'lucide-react';
+import { getPatients, getVisitsWithinDateRange, getPaymentSlipsWithinDateRange, getPatientsRegisteredWithinDateRange, formatCurrency, getPaymentMethodLabel, getClinicSettings } from '@/lib/firestoreService';
 import type { ClinicSettings, Patient, Visit, PaymentSlip, PaymentMethod } from '@/lib/types';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { ROUTES, APP_NAME } from '@/lib/constants';
 import { format, startOfDay, endOfDay, startOfMonth, endOfMonth, isValid } from 'date-fns';
 import { bn } from 'date-fns/locale';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
-
-
-const CreatePaymentSlipModal = dynamic(() =>
-  import('@/components/slip/CreatePaymentSlipModal').then((mod) => mod.CreatePaymentSlipModal),
-  {
-    ssr: false,
-    loading: () => <div className="flex justify-center items-center p-4"><Loader2 className="h-6 w-6 animate-spin text-primary" /> <span className="ml-2">পেমেন্ট মডাল লোড হচ্ছে...</span></div>
-  }
-);
-
-interface QuickActionCardProps {
-  title: string;
-  description: string;
-  icon: React.ElementType;
-  href: string;
-  iconColorClass: string;
-  gradientClass: string;
-}
-
-const QuickActionCardMemoized: React.FC<QuickActionCardProps> = React.memo(({ title, description, icon: Icon, iconColorClass, href, gradientClass }) => (
-  <Link href={href} className="block group">
-    <Card className={cn(
-        "transition-all duration-300 p-4 h-full flex flex-col items-center justify-center text-center border-0 shadow-lg group-hover:shadow-xl group-hover:-translate-y-1",
-        gradientClass
-      )}>
-        <div className="p-3 bg-white/60 rounded-full mb-3 shadow-md backdrop-blur-sm">
-          <Icon className={cn("h-7 w-7 transition-transform duration-200 group-hover:scale-110", iconColorClass)} />
-        </div>
-        <h3 className="text-md font-headline font-semibold text-slate-800">{title}</h3>
-        <p className="text-xs text-slate-600 mt-1">{description}</p>
-    </Card>
-  </Link>
-));
-QuickActionCardMemoized.displayName = 'QuickActionCard';
-
-
-interface ActivityStat {
-  label: string;
-  value: string | number;
-  icon?: React.ElementType;
-}
-
-interface ActivityCardProps {
-  title: string;
-  stats: ActivityStat[];
-  detailsLink?: string;
-  icon?: React.ElementType;
-  iconColorClass: string;
-  gradientClass: string;
-}
-
-const ActivityCardMemoized: React.FC<ActivityCardProps> = React.memo(({ title, stats, detailsLink, icon: TitleIcon, iconColorClass, gradientClass }) => (
-    <Card className={cn("h-full border-0 shadow-lg", gradientClass)}>
-      <CardHeader className="pb-3">
-        <div className="flex items-center gap-3">
-           <div className="p-2 bg-white/60 rounded-lg shadow-md backdrop-blur-sm">
-            {TitleIcon && <TitleIcon className={cn("h-6 w-6", iconColorClass)} />}
-          </div>
-          <CardTitle className="text-lg font-headline text-slate-800">{title}</CardTitle>
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-2 text-sm pt-0">
-        {stats.map((stat, index) => (
-          <div key={index} className="flex items-center text-slate-600 justify-between">
-            <div className="flex items-center">
-              {stat.icon && <stat.icon className="h-4 w-4 mr-2" />}
-              <span>{stat.label}:</span>
-            </div>
-            <span className="font-semibold ml-1 text-slate-800">{stat.value}</span>
-          </div>
-        ))}
-      </CardContent>
-      {detailsLink && (
-        <CardFooter className="pt-2">
-          <Link href={detailsLink} className="text-sm text-primary hover:underline">
-            বিস্তারিত দেখুন →
-          </Link>
-        </CardFooter>
-      )}
-    </Card>
-));
-ActivityCardMemoized.displayName = 'ActivityCard';
-
+import QuickActionCard from '@/components/dashboard/QuickActionCard';
+import ActivityCard from '@/components/dashboard/ActivityCard';
+import DashboardMobile from './DashboardMobile';
 
 interface AppointmentDisplayItem {
   visitId: string;
@@ -126,6 +33,47 @@ interface AppointmentDisplayItem {
   createdAt: string;
 }
 
+interface ClinicStats {
+  totalPatients: number;
+  todayPatientCount: number;
+  monthlyPatientCount: number;
+  todayRevenue: number;
+  monthlyIncome: number;
+  dailyActivePatients: number;
+  dailyOtherRegistered: number;
+  monthlyNewPatients: number;
+}
+
+const DashboardSkeleton = () => (
+  <div className="space-y-8 animate-pulse max-w-6xl mx-auto">
+    <div className="mb-6">
+      <div className="h-10 bg-muted rounded w-3/4 mb-2"></div>
+      <div className="h-6 bg-muted rounded w-1/2 mb-6"></div>
+    </div>
+    <div className="h-12 bg-muted rounded-full max-w-md mx-auto"></div>
+    <div>
+      <div className="h-8 bg-muted rounded w-1/3 mb-3"></div>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        {[...Array(4)].map((_, i) => <div key={i} className="h-28 bg-muted rounded-lg"></div>)}
+      </div>
+    </div>
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      {[...Array(2)].map((_, i) => (
+        <div key={i} className="bg-muted rounded-lg p-4 h-48"></div>
+      ))}
+    </div>
+    <div className="bg-muted rounded-lg p-4">
+      <div className="h-8 bg-muted-foreground/30 rounded w-1/3 mb-4"></div>
+      <div className="space-y-2">
+        {[...Array(3)].map((_, i) => (
+            <div key={i} className="h-12 bg-muted-foreground/20 rounded"></div>
+        ))}
+      </div>
+    </div>
+  </div>
+);
+
+
 export default function DashboardPage() {
   const [stats, setStats] = useState<ClinicStats>({
     totalPatients: 0,
@@ -135,22 +83,50 @@ export default function DashboardPage() {
     monthlyIncome: 0,
     dailyActivePatients: 0,
     dailyOtherRegistered: 0,
-    monthlyNewPatients:0,
-    monthlyTotalRegistered:0,
+    monthlyNewPatients: 0,
   });
   const [loading, setLoading] = useState(true);
   const [todaysAppointments, setTodaysAppointments] = useState<AppointmentDisplayItem[]>([]);
   const [dashboardSearchTerm, setDashboardSearchTerm] = useState('');
   const router = useRouter();
 
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
-  const [selectedPatientForPaymentModal, setSelectedPatientForPaymentModal] = useState<Patient | null>(null);
-  const [currentVisitIdForPaymentModal, setCurrentVisitIdForPaymentModal] = useState<string | undefined>();
   const [clientRenderedTimestamp, setClientRenderedTimestamp] = useState<Date | null>(null);
   const [clinicSettings, setClinicSettings] = useState<ClinicSettings | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  const [showRevenue, setShowRevenue] = useState(false);
+  const revenueTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     setClientRenderedTimestamp(new Date());
+
+    // Mobile detection
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const handleRevenueClick = () => {
+    if (revenueTimeoutRef.current) {
+        clearTimeout(revenueTimeoutRef.current);
+    }
+    setShowRevenue(true);
+    revenueTimeoutRef.current = setTimeout(() => {
+        setShowRevenue(false);
+    }, 5000);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (revenueTimeoutRef.current) {
+        clearTimeout(revenueTimeoutRef.current);
+      }
+    };
   }, []);
 
   const processAppointments = useCallback((todayVisits: Visit[], todaySlips: PaymentSlip[], allPatients: Patient[]): AppointmentDisplayItem[] => {
@@ -221,8 +197,8 @@ export default function DashboardPage() {
         setClinicSettings(settings);
         const uniqueTodayPatientIds = new Set(todayVisits.map(v => v.patientId));
     
-        const todayRevenue = todaySlips.reduce((sum, s) => sum + s.amount, 0);
-        const monthlyIncome = monthSlips.reduce((sum, s) => sum + s.amount, 0);
+        const todayRevenue = todaySlips.reduce((sum, s) => sum + (s.amount || 0), 0);
+        const monthlyIncome = monthSlips.reduce((sum, s) => sum + (s.amount || 0), 0);
     
         const dailyOtherRegisteredPatientIds = new Set(
             patientsCreatedToday
@@ -240,14 +216,17 @@ export default function DashboardPage() {
           dailyActivePatients: uniqueTodayPatientIds.size,
           dailyOtherRegistered: dailyOtherRegisteredPatientIds.size,
           monthlyNewPatients: patientsCreatedThisMonth.length,
-          monthlyTotalRegistered: allPatients.length,
         });
 
         const processedAppointments = processAppointments(todayVisits, todaySlips, allPatients);
         setTodaysAppointments(processedAppointments);
 
-    } catch(error) {
-        console.error("Failed to load dashboard data", error);
+    } catch(error: unknown) {
+        if (error instanceof Error) {
+          console.error("Failed to load dashboard data", error.message);
+        } else {
+          console.error("An unknown error occurred while loading dashboard data");
+        }
     } finally {
         setLoading(false);
     }
@@ -264,7 +243,8 @@ export default function DashboardPage() {
     };
   }, [loadDashboardData]);
 
-  const handleDashboardSearch = () => {
+  const handleDashboardSearch = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     if (dashboardSearchTerm.trim()) {
       router.push(`${ROUTES.PATIENT_SEARCH}?q=${encodeURIComponent(dashboardSearchTerm)}`);
     }
@@ -285,68 +265,88 @@ export default function DashboardPage() {
   const todaysTotalRevenue = todaysAppointments.reduce((sum, appt) => sum + appt.paymentAmount, 0);
 
   if (loading) {
+    return <DashboardSkeleton />;
+  }
+
+  // Mobile layout
+  if (isMobile) {
     return (
-      <div className="space-y-8 animate-pulse">
-        <div className="mb-6">
-          <div className="h-10 bg-muted rounded w-3/4 mb-2"></div>
-          <div className="h-6 bg-muted rounded w-1/2 mb-6"></div>
-          <div className="mt-6 max-w-xl">
-            <div className="h-11 bg-muted rounded-md"></div>
-          </div>
-        </div>
-        <div>
-          <div className="h-8 bg-muted rounded w-1/3 mb-3"></div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {[...Array(4)].map((_, i) => <div key={i} className="h-40 bg-muted rounded-lg"></div>)}
-          </div>
-        </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          {[...Array(2)].map((_, i) => (
-            <div key={i} className="bg-muted rounded-lg p-4 h-48"></div>
-          ))}
-        </div>
-        <div className="bg-muted rounded-lg p-4">
-          <div className="h-8 bg-muted-foreground/30 rounded w-1/3 mb-4"></div>
-          <div className="space-y-2">
-            {[...Array(3)].map((_, i) => (
-                <div key={i} className="h-12 bg-muted-foreground/20 rounded"></div>
-            ))}
-          </div>
-        </div>
-      </div>
+      <DashboardMobile
+        stats={stats}
+        todaysAppointments={todaysAppointments}
+        clientRenderedTimestamp={clientRenderedTimestamp}
+        onStartWorkflow={handleStartWorkflow}
+      />
     );
   }
 
+  // Desktop layout
   return (
     <TooltipProvider>
-    <div className="space-y-8">
-      <div className="mb-6 hide-on-print">
-        <h1 className="text-2xl font-bold font-headline text-blue-900 dark:text-blue-300 text-shadow-3d">ড্যাশবোর্ড</h1>
-        <p className="text-muted-foreground">আপনার ক্লিনিকের কার্যক্রমের একটি সারসংক্ষেপ।</p>
+    <div className="max-w-6xl mx-auto space-y-6 md:space-y-8">
+      <div className="mb-6 hide-on-print hidden md:block">
+        <h1 className="text-2xl md:text-3xl font-bold font-headline">ড্যাশবোর্ড</h1>
+        <p className="text-muted-foreground mt-1 text-sm md:text-base">আপনার ক্লিনিকের কার্যক্রমের একটি সারসংক্ষেপ।</p>
       </div>
-       
-      <div className="hide-on-print flex justify-center my-2">
-          <div className="group relative w-72 lg:w-80 focus-within:w-full lg:focus-within:w-3/4 transition-all duration-200 ease-in-out
-                bg-background/60 backdrop-blur-sm rounded-lg shadow-xl shadow-black/20 focus-within:shadow-2xl focus-within:shadow-black/30">
-             <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-                <SearchIcon className="h-5 w-5 text-muted-foreground" />
-             </div>
-             <Input
-                id="dashboardSearchInput"
-                type="search"
-                placeholder="রোগী অনুসন্ধান করুন..."
-                className="w-full pl-12 h-12 text-base bg-transparent shadow-none border-none focus-visible:ring-0 rounded-lg"
-                value={dashboardSearchTerm}
-                onChange={(e) => setDashboardSearchTerm(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleDashboardSearch()}
-              />
+
+       <Card className="md:hidden hide-on-print -mx-4 -mt-4 sm:-mx-6 rounded-none sm:rounded-b-2xl shadow-lg bg-card bg-gradient-to-r from-blue-100 to-violet-200 overflow-hidden">
+        <CardContent className="p-4 pt-3">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <Image src="/icons/icon.png" width={28} height={28} alt="Logo" data-ai-hint="clinic health logo" className="flex-shrink-0"/>
+              <div>
+                <p className="text-sm text-foreground font-semibold">{clientRenderedTimestamp ? format(clientRenderedTimestamp, "eeee, dd MMMM", { locale: bn }) : '...'}</p>
+                 <p className="text-xs text-muted-foreground">আজকের ভিজিট: {(stats.todayPatientCount || 0).toLocaleString('bn-BD')}</p>
+              </div>
+            </div>
+            <div className="text-center" onClick={handleRevenueClick} style={{ cursor: 'pointer' }}>
+                <p className="text-xs text-muted-foreground">আজকের আয়</p>
+                <div className="relative h-6">
+                    <p className={cn(
+                        "text-lg font-bold text-primary transition-opacity duration-300",
+                        showRevenue ? "opacity-100" : "opacity-0"
+                    )}>
+                        {formatCurrency(stats.todayRevenue || 0)}
+                    </p>
+                    <p className={cn(
+                        "absolute top-0 left-0 right-0 text-lg font-bold text-primary transition-opacity duration-300",
+                        showRevenue ? "opacity-0" : "opacity-100"
+                    )}>
+                        ব্যালেন্স দেখুন
+                    </p>
+                </div>
+            </div>
           </div>
-       </div>
+        </CardContent>
+      </Card>
+      
+      <div className="hide-on-print flex justify-center my-4 md:my-6 md:mt-0">
+        <div className="relative w-full max-w-sm lg:max-w-md focus-within:max-w-xl transition-all duration-300 ease-in-out">
+            <form onSubmit={handleDashboardSearch} className="relative w-full">
+                <Input
+                    id="dashboardSearchInput"
+                    type="search"
+                    placeholder="রোগী অনুসন্ধান করুন (নাম, ডায়েরি নং, ফোন...)"
+                    className="w-full h-11 md:h-12 text-sm md:text-base pl-4 pr-12 rounded-full bg-card/80 border-2 border-transparent focus:bg-background shadow-lg backdrop-blur-sm focus-visible:ring-transparent focus-visible:ring-offset-0"
+                    value={dashboardSearchTerm}
+                    onChange={(e) => setDashboardSearchTerm(e.target.value)}
+                />
+                <Button 
+                    type="submit" 
+                    size="icon" 
+                    className="absolute right-1.5 top-1/2 -translate-y-1/2 h-8 w-8 md:h-9 md:w-9 rounded-full"
+                    aria-label="Search"
+                >
+                    <SearchIcon className="h-4 w-4 md:h-5" />
+                </Button>
+            </form>
+        </div>
+      </div>
 
       <div className="hide-on-print">
-        <h2 className="text-xl font-semibold font-headline text-foreground mb-3">দ্রুত কার্যক্রম</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-           <QuickActionCardMemoized
+        <h2 className="text-lg md:text-xl font-semibold font-headline mb-3">দ্রুত কার্যক্রম</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+           <QuickActionCard
             title="নতুন রোগী ভর্তি"
             description="সিস্টেমে নতুন রোগীদের নিবন্ধন করুন।"
             icon={UserPlus}
@@ -354,7 +354,7 @@ export default function DashboardPage() {
             href={ROUTES.PATIENT_ENTRY}
             gradientClass="bg-gradient-to-br from-sky-100 to-blue-200"
           />
-          <QuickActionCardMemoized
+          <QuickActionCard
             title="রোগীর তালিকা"
             description="সকল নিবন্ধিত রোগীদের খুঁজুন।"
             icon={Users}
@@ -362,7 +362,7 @@ export default function DashboardPage() {
             href={ROUTES.DICTIONARY}
             gradientClass="bg-gradient-to-br from-teal-100 to-green-200"
           />
-          <QuickActionCardMemoized
+          <QuickActionCard
             title="দৈনিক প্রতিবেদন"
             description="দৈনিক কার্যক্রমের বিস্তারিত সারসংক্ষেপ।"
             icon={FileText}
@@ -370,8 +370,8 @@ export default function DashboardPage() {
             href={ROUTES.DAILY_REPORT}
             gradientClass="bg-gradient-to-br from-green-100 to-lime-200"
           />
-          <QuickActionCardMemoized
-            title="AI অভিযোগ সারাংশ"
+          <QuickActionCard
+            title="অভিযোগ সারাংশ"
             description="AI দ্বারা অভিযোগ বিশ্লেষণ করুন।"
             icon={MessageSquareText}
             iconColorClass="text-purple-500"
@@ -380,39 +380,83 @@ export default function DashboardPage() {
           />
         </div>
       </div>
+      
+       <div className="md:hidden">
+        <h2 className="text-lg font-semibold font-headline mb-3 mt-4">আজকের সাক্ষাৎকার</h2>
+        {todaysAppointments.length > 0 ? (
+          <div className="space-y-3">
+            {todaysAppointments.map((appt) => (
+              <Card key={appt.visitId} className="bg-card/80 backdrop-blur-lg shadow-md">
+                <CardContent className="p-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="font-bold text-base text-foreground">{appt.patientName}</p>
+                      <p className="text-xs text-muted-foreground">ডায়েরি: {appt.diaryNumberDisplay} | সময়: {appt.time}</p>
+                    </div>
+                     <Badge variant={appt.status === 'Completed' ? 'default' : 'secondary'}
+                          className={
+                            `text-xs shrink-0 ${appt.status === 'Completed' ? 'bg-green-100 text-green-800 border-green-300' :
+                            'bg-yellow-100 text-yellow-800 border-yellow-300'}`
+                          }
+                    >
+                      {appt.status === 'Completed' ? 'সম্পন্ন' : 'অপেক্ষমান'}
+                    </Badge>
+                  </div>
+                  <div className="mt-2 pt-2 border-t flex justify-between items-center">
+                     <p className="text-sm font-semibold text-primary">{formatCurrency(appt.paymentAmount)}</p>
+                     <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleStartWorkflow(appt.patient.id, appt.visitId)}
+                        className="h-8 text-xs bg-primary/10 text-primary border-primary/20"
+                    >
+                        <PlayCircle className="mr-2 h-4 w-4" />
+                        কার্যক্রম
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-8 text-muted-foreground bg-card/50 rounded-lg">
+            আজকের জন্য কোন সাক্ষাৎ নেই।
+          </div>
+        )}
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 hide-on-print">
-        <ActivityCardMemoized
+        <ActivityCard
           title="মাসিক কার্যকলাপ"
           icon={BarChart3}
           iconColorClass="text-blue-500"
           gradientClass="bg-gradient-to-br from-blue-100 to-violet-200"
           stats={[
-            { label: 'এই মাসে নতুন রোগী', value: stats.monthlyNewPatients || 0, icon: UserPlus },
-            { label: 'মোট নিবন্ধিত রোগী', value: stats.monthlyTotalRegistered || 0, icon: Users },
+            { label: 'এই মাসে নতুন রোগী', value: (stats.monthlyNewPatients || 0).toLocaleString('bn-BD'), icon: UserPlus },
+            { label: 'মোট নিবন্ধিত রোগী', value: (stats.totalPatients || 0).toLocaleString('bn-BD'), icon: Users },
             { label: 'আনুমানিক মাসিক আয়', value: formatCurrency(stats.monthlyIncome || 0), icon: TrendingUp },
           ]}
           detailsLink={ROUTES.DAILY_REPORT}
         />
-        <ActivityCardMemoized
+        <ActivityCard
           title="দৈনিক কার্যকলাপ"
           icon={CalendarDays}
           iconColorClass="text-lime-600"
           gradientClass="bg-gradient-to-br from-lime-100 to-amber-200"
           stats={[
-            { label: 'আজ নতুন/সক্রিয় রোগী', value: stats.dailyActivePatients || 0, icon: UserPlus },
-            { label: 'অন্যান্য নিবন্ধিত রোগী', value: stats.dailyOtherRegistered || 0, icon: Users },
+            { label: 'আজ নতুন/সক্রিয় রোগী', value: (stats.dailyActivePatients || 0).toLocaleString('bn-BD'), icon: UserPlus },
+            { label: 'অন্যান্য নিবন্ধিত রোগী', value: (stats.dailyOtherRegistered || 0).toLocaleString('bn-BD'), icon: Users },
             { label: 'আজকের আয়', value: formatCurrency(stats.todayRevenue || 0), icon: TrendingUp },
           ]}
           detailsLink={ROUTES.DAILY_REPORT}
         />
       </div>
 
-      <Card className="shadow-neumorphic-outset dashboard-appointments-card hide-on-print">
-        <CardHeader className="flex flex-row items-center justify-between">
+      <Card className="dashboard-appointments-card hide-on-print hidden md:block">
+        <CardHeader className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
           <div>
-            <CardTitle className="font-headline text-xl">আজকের সাক্ষাৎকার</CardTitle>
-            <CardDescription>
+            <CardTitle className="font-headline text-lg md:text-xl">আজকের সাক্ষাৎকার</CardTitle>
+            <CardDescription className="text-sm">
               {clientRenderedTimestamp ? format(clientRenderedTimestamp, "eeee, MMMM dd, yyyy", { locale: bn }) : 'লোড হচ্ছে...'}
             </CardDescription>
           </div>
@@ -424,29 +468,29 @@ export default function DashboardPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-[15%]">রোগীর নাম</TableHead>
-                  <TableHead className="w-[10%]">সময়</TableHead>
+                  <TableHead className="w-[10%] hidden md:table-cell">সময়</TableHead>
                   <TableHead className="w-[10%]">ডায়েরি নং</TableHead>
-                  <TableHead className="w-[15%]">ঠিকানা</TableHead>
-                  <TableHead className="w-[10%]">পেমেন্ট মাধ্যম</TableHead>
+                  <TableHead className="w-[15%] hidden sm:table-cell">ঠিকানা</TableHead>
+                  <TableHead className="w-[10%] hidden lg:table-cell">পেমেন্ট মাধ্যম</TableHead>
                   <TableHead className="w-[10%] text-right">পরিমাণ</TableHead>
                   <TableHead className="w-[20%] text-center">অবস্থা ও কার্যক্রম</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {todaysAppointments.length > 0 ? todaysAppointments.map((appt) => (
-                  <TableRow key={appt.visitId}>
+                  <TableRow key={appt.visitId} className="text-sm">
                     <TableCell className="font-medium">{appt.patientName}</TableCell>
-                    <TableCell>{appt.time}</TableCell>
+                    <TableCell className="hidden md:table-cell">{appt.time}</TableCell>
                     <TableCell>{appt.diaryNumberDisplay}</TableCell>
-                    <TableCell>{appt.address}</TableCell>
-                    <TableCell>{appt.paymentMethod}</TableCell>
+                    <TableCell className="hidden sm:table-cell">{appt.address}</TableCell>
+                    <TableCell className="hidden lg:table-cell">{appt.paymentMethod}</TableCell>
                     <TableCell className="text-right">{formatCurrency(appt.paymentAmount)}</TableCell>
                     <TableCell className="text-center">
                       <div className="flex flex-col items-center justify-center gap-1">
                          <Badge variant={appt.status === 'Completed' ? 'default' : 'secondary'}
                               className={
-                                appt.status === 'Completed' ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100 border-green-300 dark:border-green-600' :
-                                'bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100 border-yellow-300 dark:border-yellow-600'
+                                `text-xs ${appt.status === 'Completed' ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100 border-green-300 dark:border-green-600' :
+                                'bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100 border-yellow-300 dark:border-yellow-600'}`
                               }
                         >
                           {appt.status === 'Completed' ? 'কার্যক্রম শেষ' : 'অপেক্ষমান'}
@@ -512,7 +556,7 @@ export default function DashboardPage() {
           <TableBody>
             {todaysAppointments.length > 0 ? todaysAppointments.map((appt, index) => (
               <TableRow key={appt.visitId}>
-                <TableCell>{index + 1}</TableCell>
+                <TableCell>{(index + 1).toLocaleString('bn-BD')}</TableCell>
                 <TableCell className="font-medium">{appt.patientName}</TableCell>
                 <TableCell>{appt.diaryNumberDisplay}</TableCell>
                 <TableCell>{appt.patient.phone}</TableCell>
@@ -536,17 +580,6 @@ export default function DashboardPage() {
       </div>
 
 
-      {isPaymentModalOpen && selectedPatientForPaymentModal && (
-        <CreatePaymentSlipModal
-          patient={selectedPatientForPaymentModal}
-          visitId={currentVisitIdForPaymentModal}
-          isOpen={isPaymentModalOpen}
-          onClose={(slipCreated) => {
-            setIsPaymentModalOpen(false);
-            if (slipCreated) loadDashboardData();
-          }}
-        />
-      )}
     </div>
     </TooltipProvider>
   );

@@ -1,0 +1,260 @@
+{
+  "metadata": {
+    "author": "William Boericke",
+    "title": "Boericke's Pocket Manual of Materia Medica with Repertory",
+    "version": "1.0",
+    "totalRemedies": 80,
+    "description": "Practical clinical materia medica with therapeutic indications and proven remedies",
+    "created": "2024-12-23",
+    "philosophy": "Clinical application focus with practical therapeutic indications"
+  },
+  "remedies": {
+    "Aconitum Napellus": {
+      "commonName": "Monkshood",
+      "naturalOrder": "Ranunculaceae",
+      "preparation": "Tincture of whole plant when beginning to flower",
+      "clinicalUses": ["Acute inflammation", "Fever", "Anxiety", "Shock", "Pneumonia", "Croup"],
+      "therapeuticIndication": "First remedy in acute inflammatory conditions with sudden onset",
+      "keynotes": [
+        "Great fear, anxiety, and worry accompany every ailment",
+        "Sudden violent onset of symptoms",
+        "High fever with dry heat and thirst",
+        "Restlessness and anguish",
+        "Numbness and tingling"
+      ],
+      "mindAndHead": {
+        "description": "Great fear, anxiety, and worry accompany every ailment. Delirium with unhappiness, worry, fear. Forehead feels hot, band-like sensation.",
+        "symptoms": [
+          "Predicts time of death",
+          "Great fear with restlessness",
+          "Music unbearable",
+          "Fears crowds, crossing streets",
+          "Vertigo with nausea"
+        ]
+      },
+      "fever": {
+        "description": "High fever with full, hard, tense pulse. Skin dry and hot. Patient restless and anxious.",
+        "symptoms": [
+          "Sudden onset of high fever",
+          "Dry, hot skin",
+          "Thirst for large quantities of cold water",
+          "Evening chills",
+          "Sweat relieves all symptoms except weakness"
+        ]
+      },
+      "respiratory": {
+        "description": "Useful in the early stages of croup and pneumonia",
+        "symptoms": [
+          "Dry, short, hacking cough",
+          "Difficult respiration",
+          "Chest feels constricted",
+          "Anxiety with dyspnea"
+        ]
+      },
+      "modalities": {
+        "worse": ["Warm room", "Evening and night", "Lying on affected side", "Music", "Tobacco smoke", "Dry cold winds"],
+        "better": ["Open air", "Rest"]
+      },
+      "relationships": {
+        "complementary": ["Coffea", "Sulphur"],
+        "compare": ["Belladonna", "Chamomilla", "Coffea"],
+        "antidotes": ["Vinum", "Coffea"],
+        "antidoteTo": ["Acids", "Chamomilla", "Coffea", "Nux Vomica"]
+      },
+      "dosage": "First to third potency in repeated doses. For anxiety states, higher potencies.",
+      "duration": "Short acting, effects last 1-7 days"
+    },
+    "Belladonna": {
+      "commonName": "Deadly Nightshade",
+      "naturalOrder": "Solanaceae",
+      "preparation": "Tincture of whole fresh plant when beginning to flower",
+      "clinicalUses": ["Inflammation", "Fever", "Headache", "Sore throat", "Convulsions", "Delirium"],
+      "therapeuticIndication": "Violent acute conditions with heat, redness, throbbing, and burning",
+      "keynotes": [
+        "Sudden violent onset",
+        "Heat, redness, throbbing, burning",
+        "Right-sided complaints",
+        "No thirst with fever",
+        "Hypersensitivity to all impressions"
+      ],
+      "mindAndHead": {
+        "description": "Violent delirium, sees monsters and hideous faces. Intense throbbing headache worse light and noise.",
+        "symptoms": [
+          "Violent delirium with fever",
+          "Sees horrible things",
+          "Bites, strikes, wants to escape",
+          "Intense throbbing headache",
+          "Head hot, face red and flushed"
+        ]
+      },
+      "fever": {
+        "description": "High fever with hot, red skin but no thirst. Burning heat with delirium.",
+        "symptoms": [
+          "High fever without thirst",
+          "Burning hot skin",
+          "Sleep interrupted by starting and delirium",
+          "Sweat on covered parts only"
+        ]
+      },
+      "throat": {
+        "description": "Throat dry, feels constricted. Difficult swallowing, especially liquids.",
+        "symptoms": [
+          "Throat red and dry",
+          "Constricted feeling",
+          "Difficult swallowing liquids",
+          "Spasms on attempting to drink"
+        ]
+      },
+      "modalities": {
+        "worse": ["Touch", "Jar", "Noise", "Light", "3 PM", "Lying down"],
+        "better": ["Semi-erect position", "Rest", "Warmth"]
+      },
+      "relationships": {
+        "complementary": ["Calcarea Carbonica"],
+        "compare": ["Aconitum", "Gelsemium", "Hyoscyamus", "Stramonium"],
+        "antidotes": ["Aconitum", "Camphor", "Opium", "Coffea"],
+        "antidoteTo": ["Lead poisoning", "Opium"]
+      },
+      "dosage": "First to thirtieth potency. For inflammation, lower potencies repeated frequently.",
+      "duration": "Acute remedy, effects 1-7 days"
+    },
+    "Bryonia Alba": {
+      "commonName": "White Bryony",
+      "naturalOrder": "Cucurbitaceae",
+      "preparation": "Tincture of fresh root before flowering",
+      "clinicalUses": ["Rheumatism", "Pneumonia", "Pleurisy", "Headache", "Constipation", "Mammitis"],
+      "therapeuticIndication": "Mucous membranes dry. Excessive thirst. Aggravation from motion",
+      "keynotes": [
+        "Great thirst for large quantities",
+        "Dryness of mucous membranes",
+        "Worse from slightest motion",
+        "Stitching pains",
+        "Irritable, wants to be alone"
+      ],
+      "mindAndHead": {
+        "description": "Irritable, wants to be quiet. Talks of business. Bursting, splitting headache.",
+        "symptoms": [
+          "Extremely irritable",
+          "Wants to be left alone",
+          "Talks constantly of business",
+          "Bursting, crushing headache",
+          "Vertigo on rising"
+        ]
+      },
+      "respiratory": {
+        "description": "Dry, hacking cough worse on entering warm room. Expectoration rust-colored.",
+        "symptoms": [
+          "Dry, hard cough",
+          "Must sit up to cough",
+          "Holds chest when coughing",
+          "Difficult expectoration",
+          "Stitching pains in chest"
+        ]
+      },
+      "digestive": {
+        "description": "Intense thirst for large quantities at long intervals. Constipation.",
+        "symptoms": [
+          "Extreme thirst for large amounts",
+          "Dry mouth and lips",
+          "Stomach sensitive to touch",
+          "Constipation with hard, dry stools",
+          "Liver region sensitive"
+        ]
+      },
+      "modalities": {
+        "worse": ["Motion", "Touch", "Hot weather", "Morning", "Eating"],
+        "better": ["Rest", "Pressure", "Cool air", "Cloudy days"]
+      },
+      "relationships": {
+        "complementary": ["Alumina", "Rhus Toxicodendron"],
+        "compare": ["Aconitum", "Belladonna", "Phosphorus"],
+        "antidotes": ["Aconitum", "Chamomilla", "Ignatia", "Nux Vomica"],
+        "antidoteTo": ["Rhus Toxicodendron"]
+      },
+      "dosage": "Third to thirtieth potency. For acute conditions, frequent repetition.",
+      "duration": "Deep acting, effects may last weeks"
+    },
+    "Arsenicum Album": {
+      "commonName": "White Arsenic",
+      "naturalOrder": "Mineral",
+      "preparation": "Triturations",
+      "clinicalUses": ["Gastroenteritis", "Asthma", "Anxiety", "Skin conditions", "Food poisoning", "Cholera"],
+      "therapeuticIndication": "Burning pains relieved by heat. Great restlessness and prostration",
+      "keynotes": [
+        "Burning pains ameliorated by heat",
+        "Great restlessness with prostration",
+        "Extreme anxiety and fear",
+        "Thirst for small quantities often",
+        "Periodicity of complaints"
+      ],
+      "mindAndHead": {
+        "description": "Great anguish and restlessness. Fear of death. Despair of recovery.",
+        "symptoms": [
+          "Great mental restlessness",
+          "Fear of death when alone",
+          "Despair of recovery",
+          "Fastidious and particular",
+          "Memory weak"
+        ]
+      },
+      "digestive": {
+        "description": "Burning pains in stomach. Vomiting and diarrhea after eating or drinking.",
+        "symptoms": [
+          "Burning pain in stomach",
+          "Vomiting immediately after eating",
+          "Diarrhea with burning and tenesmus",
+          "Thirst for small quantities frequently",
+          "Cannot bear sight or smell of food"
+        ]
+      },
+      "respiratory": {
+        "description": "Asthma worse midnight. Cannot lie down, fears suffocation.",
+        "symptoms": [
+          "Wheezing respiration",
+          "Asthma worse after midnight",
+          "Suffocative attacks",
+          "Darting pain through lung",
+          "Cough worse lying down"
+        ]
+      },
+      "skin": {
+        "description": "Dry, rough, scaly skin. Burning like fire, better heat.",
+        "symptoms": [
+          "Rough, dry, dirty skin",
+          "Burning eruptions",
+          "Psoriasis and eczema",
+          "Ulcers with offensive discharge",
+          "Itching worse undressing"
+        ]
+      },
+      "modalities": {
+        "worse": ["After midnight", "Cold", "Cold drinks", "Seashore", "Right side"],
+        "better": ["Heat", "Head elevated", "Warm drinks", "Motion"]
+      },
+      "relationships": {
+        "complementary": ["Phosphorus", "Carbo Vegetabilis", "Pyrogenium"],
+        "compare": ["Cinchona", "Phosphorus", "Tuberculinum"],
+        "antidotes": ["Hepar Sulph", "Nux Vomica", "Tabacum", "Veratrum Album"],
+        "antidoteTo": ["Lead", "Phosphorus", "Quinine", "Tobacco"]
+      },
+      "dosage": "Third to thirtieth potency. Thirtieth and higher for chronic cases.",
+      "duration": "Deep acting, effects may persist for months"
+    }
+  },
+  "clinicalIndex": {
+    "Fever": ["Aconitum Napellus", "Belladonna", "Bryonia Alba", "Arsenicum Album"],
+    "Anxiety": ["Aconitum Napellus", "Arsenicum Album", "Gelsemium", "Lycopodium"],
+    "Headache": ["Belladonna", "Bryonia Alba", "Natrum Muriaticum", "Gelsemium"],
+    "Cough": ["Bryonia Alba", "Arsenicum Album", "Phosphorus", "Hepar Sulphuris"],
+    "Digestive_disorders": ["Arsenicum Album", "Nux Vomica", "Lycopodium", "Pulsatilla"],
+    "Skin_conditions": ["Arsenicum Album", "Sulphur", "Graphites", "Rhus Toxicodendron"],
+    "Acute_inflammation": ["Aconitum Napellus", "Belladonna", "Bryonia Alba", "Hepar Sulphuris"],
+    "Respiratory_conditions": ["Bryonia Alba", "Arsenicum Album", "Phosphorus", "Antimonium Tartaricum"]
+  },
+  "therapeuticTips": {
+    "acuteIllness": "Start with Aconitum for sudden onset, Belladonna for inflammation with heat",
+    "chronicDisease": "Consider constitutional remedies like Arsenicum, Lycopodium, Sulphur",
+    "prescriptionGuidance": "Match the totality of symptoms, not just the disease name",
+    "potencySelection": "Lower potencies (6C-30C) for acute, higher (200C-1M) for chronic and mental symptoms"
+  }
+}

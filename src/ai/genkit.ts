@@ -1,18 +1,23 @@
-/**
- * @fileOverview Initializes and exports the Genkit AI instance.
- * This instance is configured with the Google AI plugin.
- */
+import {genkit} from 'genkit';
+import {googleAI} from '@genkit-ai/googleai';
 
-import { genkit } from 'genkit';
-import { googleAI } from '@genkit-ai/googleai';
+if (!process.env.GEMINI_API_KEY) {
+  if (process.env.NODE_ENV === 'production') {
+    console.warn(
+      'GEMINI_API_KEY is not set. AI features will not be available.'
+    );
+  } else {
+    // In development, we can throw an error to make it obvious.
+    // throw new Error('GEMINI_API_KEY is not set. Please set it in your .env file.');
+    console.warn('GEMINI_API_KEY is not set. Please set it in your .env file.');
+  }
+}
 
-// Initialize Genkit with the Google AI plugin.
-// The plugin will automatically look for GOOGLE_API_KEY or GEMINI_API_KEY
-// in the environment variables.
 export const ai = genkit({
   plugins: [
-    googleAI(),
+    googleAI({
+      apiKey: process.env.GEMINI_API_KEY,
+    }),
   ],
-  // Note: `logLevel` and `enableTracingAndMetrics` are not configured directly in `genkit()` in v1.x.
-  // Telemetry and logging are typically handled by plugins or specific configurations.
+  model: 'googleai/gemini-1.5-flash',
 });

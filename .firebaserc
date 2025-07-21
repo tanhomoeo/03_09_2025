@@ -1,9 +1,16 @@
 {
   "projects": {
-    "default": "dr-nihar",
-    "staging": "dr-nihar",
-    "y": "dr-nihar"
+    "default": "dr-nihar"
   },
-  "targets": {},
-  "etags": {}
+  "hosting": [
+    {
+      "site": "dr-nihar",
+      "target": "live",
+      "appId": "1:721559945328:web:4e747e02632754eced74b5",
+      "backend": {
+        "id": "dr-nihar",
+        "region": "asia-east1"
+      }
+    }
+  ]
 }

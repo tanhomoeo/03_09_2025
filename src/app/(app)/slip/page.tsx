@@ -1,36 +1,27 @@
 
 'use client';
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import dynamic from 'next/dynamic';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { PageHeaderCard } from '@/components/shared/PageHeaderCard';
 import { getPaymentSlips, getPatients, formatDate, formatCurrency, PAYMENT_METHOD_LABELS, getPaymentMethodLabel } from '@/lib/firestoreService';
-import type { PaymentSlip, Patient, PaymentMethod } from '@/lib/types';
+import type { PaymentSlip, PaymentMethod } from '@/lib/types';
 import { Eye, Loader2, SearchIcon as SearchIconLucide, Filter, ScrollText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-
-const PaymentSlipModal = dynamic(() =>
-  import('@/components/slip/PaymentSlipModal').then((mod) => mod.PaymentSlipModal),
-  {
-    ssr: false, 
-    loading: () => <div className="flex justify-center items-center p-4"><Loader2 className="h-6 w-6 animate-spin text-primary" /> <span className="ml-2">স্লিপ মডাল লোড হচ্ছে...</span></div>,
-  }
-);
-
-interface EnrichedSlip extends PaymentSlip {
-  patientName?: string;
-}
+import { PaymentSlipModal } from '@/components/slip/PaymentSlipModal';
 
 const paymentMethodFilterOptions: { value: PaymentMethod | 'all'; label: string }[] = [
   { value: 'all', label: 'সকল মাধ্যম' },
   ...Object.entries(PAYMENT_METHOD_LABELS)
-    .filter(([key]) => key !== '')
-    .map(([value, label]) => ({ value: value as Exclude<PaymentMethod, '' | 'courier_medicine'>, label }))
+    .map(([value, label]) => ({ value: value as PaymentMethod, label }))
 ];
 
+
+interface EnrichedSlip extends PaymentSlip {
+  patientName?: string;
+}
 
 export default function SlipSearchPage() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -146,15 +137,15 @@ export default function SlipSearchPage() {
           <p className="ml-2 text-muted-foreground">স্লিপ লোড হচ্ছে...</p>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-lg border shadow-sm">
+        <div className="overflow-x-auto rounded-lg border shadow-sm bg-card/80 backdrop-blur-lg">
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>স্লিপ আইডি</TableHead>
                 <TableHead>তারিখ</TableHead>
                 <TableHead>রোগীর নাম</TableHead>
-                <TableHead>উদ্দেশ্য</TableHead>
-                <TableHead>পেমেন্ট মাধ্যম</TableHead>
+                <TableHead className="hidden sm:table-cell">উদ্দেশ্য</TableHead>
+                <TableHead className="hidden md:table-cell">পেমেন্ট মাধ্যম</TableHead>
                 <TableHead className="text-right">পরিমাণ</TableHead>
                 <TableHead className="text-right">কার্যক্রম</TableHead>
               </TableRow>
@@ -162,16 +153,16 @@ export default function SlipSearchPage() {
             <TableBody>
               {filteredSlips.length > 0 ? (
                 filteredSlips.map((slip) => (
-                  <TableRow key={slip.id} className="hover:bg-muted/50">
+                  <TableRow key={slip.id} className="hover:bg-muted/50 text-sm">
                     <TableCell className="font-mono">{slip.slipNumber}</TableCell>
                     <TableCell>{formatDate(slip.date)}</TableCell>
                     <TableCell className="font-medium">{slip.patientName}</TableCell>
-                    <TableCell>{slip.purpose}</TableCell>
-                    <TableCell>{getPaymentMethodLabel(slip.paymentMethod)}</TableCell>
+                    <TableCell className="hidden sm:table-cell">{slip.purpose}</TableCell>
+                    <TableCell className="hidden md:table-cell">{getPaymentMethodLabel(slip.paymentMethod)}</TableCell>
                     <TableCell className="text-right">{formatCurrency(slip.amount)}</TableCell>
                     <TableCell className="text-right">
                       <Button variant="ghost" size="icon" onClick={() => handleViewSlip(slip)} title="স্লিপ দেখুন">
-                        <Eye className="h-5 w-5 text-primary" />
+                        <Eye className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                       </Button>
                     </TableCell>
                   </TableRow>

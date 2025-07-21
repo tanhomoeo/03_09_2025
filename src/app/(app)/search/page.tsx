@@ -1,9 +1,12 @@
-import React from 'react';
+
+import React, { Suspense } from 'react';
 import SearchPageClient from './SearchPageClient';
+import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 
 export default function SearchPage() {
-  // This page now directly renders the client component.
-  // The client component handles its own loading state, which simplifies the server's job
-  // and resolves the rendering error.
-  return <SearchPageClient />;
+  return (
+    <Suspense fallback={<LoadingSpinner variant="page" label="অনুসন্ধান পৃষ্ঠা লোড হচ্ছে..." showLogo />}>
+        <SearchPageClient />
+    </Suspense>
+  );
 }

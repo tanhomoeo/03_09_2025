@@ -1,0 +1,15 @@
+This is a placeholder for Boericke's Materia Medica. The content of the book should be placed here.
+
+Example Entry:
+
+ACONITUM NAPELLUS
+(Aconite)
+
+Mind and Head
+Great fear, anxiety, and worry accompany every ailment, however trivial. Delirium is characterized by unhappiness, worry, fear, raving, rarely unconsciousness. Forehead feels hot, or as if a band is around it.
+
+Fever
+High fever with a full, hard, tense pulse. Skin is dry and hot. Patient is restless and anxious. Thirst for large quantities of cold water.
+
+Modalities
+Worse, in warm room, in evening and night; from lying on affected side, from music, from tobacco-smoke, dry, cold winds. Better, in the open air.
