@@ -1,4 +1,3 @@
-
 'use server';
 /**
  * @fileOverview A Genkit flow to analyze patient complaints in Bengali,
@@ -47,8 +46,8 @@ const complaintAnalysisPrompt = ai.definePrompt({
   name: 'complaintAnalysisPrompt',
   input: { schema: ComplaintAnalyzerInputSchema },
   output: { schema: ComplaintAnalyzerOutputSchema },
-  model: 'gemini-1.5-flash', 
   config: {
+    model: 'gemini-1.5-flash',
     safetySettings: [
       { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' },
       { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_NONE' },
