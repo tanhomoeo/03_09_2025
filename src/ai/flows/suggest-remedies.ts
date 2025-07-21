@@ -10,10 +10,8 @@
 import {ai} from '../genkit';
 import {z} from 'zod';
 import type {SuggestRemediesOutput as SuggestRemediesOutputType} from '@/lib/types';
-
-import hahnemannsMateriaMedica from 'public/data/hahnemann-materia-medica.txt';
-import boerickesMateriaMedica from 'public/data/boericke-materia-medica.txt';
-import kentsMateriaMedica from 'public/data/kent-repertory.txt';
+import fs from 'fs';
+import path from 'path';
 
 
 const SuggestRemediesInputSchema = z.object({
@@ -71,6 +69,19 @@ const SuggestRemediesOutputSchema = z.object({
 });
 
 export type SuggestRemediesOutput = z.infer<typeof SuggestRemediesOutputSchema>;
+
+function loadMateriaMedica(): { hahnemannsMateriaMedica: string; boerickesMateriaMedica: string; kentsMateriaMedica: string; } {
+    try {
+        const dataPath = path.join(process.cwd(), 'public', 'data');
+        const hahnemannsMateriaMedica = fs.readFileSync(path.join(dataPath, 'hahnemann-materia-medica.txt'), 'utf-8');
+        const boerickesMateriaMedica = fs.readFileSync(path.join(dataPath, 'boericke-materia-medica.txt'), 'utf-8');
+        const kentsMateriaMedica = fs.readFileSync(path.join(dataPath, 'kent-repertory.txt'), 'utf-8');
+        return { hahnemannsMateriaMedica, boerickesMateriaMedica, kentsMateriaMedica };
+    } catch (error) {
+        console.error("Failed to load Materia Medica files:", error);
+        throw new Error("AI জ্ঞান ভান্ডারের ফাইল লোড করা সম্ভব হয়নি।");
+    }
+}
 
 export async function suggestRemedies(
   input: SuggestRemediesInput
@@ -137,6 +148,9 @@ const suggestRemediesFlow = ai.defineFlow(
           'অপর্যাপ্ত তথ্য। বিশ্লেষণ করার জন্য অনুগ্রহ করে রোগীর সমস্যা ও ইতিহাস সম্পর্কে আরও বিস্তারিত লিখুন (কমপক্ষে ২০ অক্ষর)।'
         );
       }
+      
+      const { hahnemannsMateriaMedica, boerickesMateriaMedica, kentsMateriaMedica } = loadMateriaMedica();
+
       const {output} = await prompt({
         ...input,
         hahnemannsMateriaMedica,
@@ -159,7 +173,7 @@ const suggestRemediesFlow = ai.defineFlow(
       console.error('Error in suggestRemediesFlow:', error);
       let errorMessage = 'AI বিশ্লেষণ ব্যর্থ হয়েছে। মডেল একটি সমস্যার সম্মুখীন হয়েছে।';
       if (error instanceof Error) {
-        if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+        if ((error as NodeJS.ErrnoException).code === 'ENOENT' || error.message.includes('AI জ্ঞান ভান্ডারের ফাইল')) {
           errorMessage =
             'AI জ্ঞান ভান্ডারের ফাইল খুঁজে পাওয়া যায়নি। অনুগ্রহ করে সিস্টেম অ্যাডমিনের সাথে যোগাযোগ করুন।';
         } else {

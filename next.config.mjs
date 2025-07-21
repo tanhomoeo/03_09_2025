@@ -1,43 +1,18 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'placehold.co',
-      },
-    ],
-  },
-  experimental: {
-    serverComponentsExternalPackages: [
-      '@genkit-ai/google-cloud',
-      '@google-cloud/functions-framework',
-    ],
-  },
-  webpack: (config, { isServer }) => {
-    // Correctly configure raw-loader for .txt files
-    config.module.rules.push({
-      test: /\.txt$/,
-      use: 'raw-loader',
-    });
+    reactStrictMode: true,
+    // Note: This webpack config is no longer needed with the fs.readFileSync approach.
+    // Keeping it commented out for reference in case of future needs.
+    // webpack: (config, { isServer }) => {
+    //     // Add a rule to handle .txt files with raw-loader
+    //     config.module.rules.push({
+    //         test: /\.txt$/,
+    //         use: 'raw-loader',
+    //     });
 
-    if (isServer) {
-      // These are required by Genkit but can be ignored for the client build
-      // as they are not used in the browser.
-      config.externals.push('@opentelemetry/exporter-jaeger');
-      config.externals.push('@opentelemetry/instrumentation-grpc');
-      config.externals.push('require-in-the-middle');
-      config.externals.push('handlebars');
-    }
-    
-    return config;
-  },
-  devIndicators: {
-    allowedDevOrigins: ['*.cloudworkstations.dev'],
-  },
-  typescript: {
-    ignoreBuildErrors: false,
-  },
+    //     // Important: return the modified config
+    //     return config;
+    // },
 };
 
 export default nextConfig;
