@@ -1,4 +1,3 @@
-
 'use server';
 /**
  * @fileOverview A Genkit flow to analyze patient complaints in Bengali,
@@ -97,7 +96,7 @@ const complaintAnalyzerFlow = ai.defineFlow(
         }
 
         return validation.data;
-      } catch (error: unknown) {
+      } catch (error) {
         console.error(`Full error in complaintAnalyzerFlow (attempt ${4 - retries}):`, error);
 
         if (error instanceof Error && error.message.includes('AI মডেল একটি ভুল উত্তর দিয়েছে') && retries > 1) {

@@ -91,7 +91,7 @@ export default function AiRepertoryPage() {
       <div className="space-y-6 px-4 md:px-6 lg:px-8 max-w-[1600px] mx-auto">
         <PageHeaderCard
           title="রেপার্টরি"
-          description="রোগীর লক্ষণসমূহের বিস্তারিত বিবরণ দিন এবং জেমিনি AI-এ�� মা��্য��ে সম্ভাব্য প্রতিকারগুলো সম্পর্কে জানুন।"
+          description="রোগীর লক্ষণসমূহের বিস্তারিত বিবরণ দিন এবং জেমিনি AI-এর মাধ্যমে সম্ভাব্য প্রতিকারগুলো সম্পর্কে জানুন।"
           actions={<Wand2 className="h-8 w-8 text-primary" />}
         />
         <div className="grid grid-cols-1 xl:grid-cols-5 gap-6 lg:gap-8">
