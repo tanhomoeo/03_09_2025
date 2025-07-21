@@ -11,9 +11,10 @@ import {ai} from '../genkit';
 import {z} from 'zod';
 import type {SuggestRemediesOutput as SuggestRemediesOutputType} from '@/lib/types';
 
-import hahnemannsMateriaMedica from 'raw-loader!../../../public/data/materia-medica.txt';
-import boerickesMateriaMedica from 'raw-loader!../../../public/data/Boerickes_Materia_Medica.txt';
-import kentsMateriaMedica from 'raw-loader!../../../public/data/Kents_Lectures_On_Materia_Medica.txt';
+import hahnemannsMateriaMedica from 'public/data/hahnemann-materia-medica.txt';
+import boerickesMateriaMedica from 'public/data/boericke-materia-medica.txt';
+import kentsMateriaMedica from 'public/data/kent-repertory.txt';
+
 
 const SuggestRemediesInputSchema = z.object({
   symptoms: z
@@ -146,7 +147,14 @@ const suggestRemediesFlow = ai.defineFlow(
       if (!output) {
         throw new Error('AI সহকারী কোনো উত্তর দেয়নি।');
       }
-      return output;
+      
+      const validationResult = SuggestRemediesOutputSchema.safeParse(output);
+      if (!validationResult.success) {
+        console.error("AI output validation failed in suggestRemediesFlow:", validationResult.error.format());
+        throw new Error('AI একটি ভুল উত্তর দিয়েছে যা প্রসেস করা সম্ভব হচ্ছে না। অনুগ্রহ করে আবার চেষ্টা করুন।');
+      }
+
+      return validationResult.data;
     } catch (error: unknown) {
       console.error('Error in suggestRemediesFlow:', error);
       let errorMessage = 'AI বিশ্লেষণ ব্যর্থ হয়েছে। মডেল একটি সমস্যার সম্মুখীন হয়েছে।';
@@ -164,7 +172,7 @@ const suggestRemediesFlow = ai.defineFlow(
           ) {
             errorMessage =
               'AI পরিষেবা কনফিগার করা যায়নি। অনুগ্রহ করে আপনার GEMINI_API_KEY এবং বিলিং সেটিংস যাচাই করুন।';
-          } else if (msg.includes('json')) {
+          } else if (msg.includes('json') || msg.includes('zod') || msg.includes('প্রসেস করা সম্ভব হচ্ছে না')) {
             errorMessage =
               'AI মডেল একটি ভুল উত্তর দিয়েছে যা প্রসেস করা সম্ভব হচ্ছে না। অনুগ্রহ করে আবার চেষ্টা করুন।';
           } else if (

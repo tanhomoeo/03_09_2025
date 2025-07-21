@@ -1,61 +1,42 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  async redirects() {
-    return [
-      {
-        source: '/',
-        destination: '/login',
-        permanent: true,
-      },
-    ]
-  },
-  typescript: {
-    ignoreBuildErrors: true, // Allow build with TypeScript errors for production
-  },
-  eslint: {
-    ignoreDuringBuilds: true, // Allow build with ESLint warnings
-  },
   images: {
     remotePatterns: [
       {
-        protocol: "https",
-        hostname: "placehold.co",
-        port: "",
-        pathname: "/**",
+        protocol: 'https',
+        hostname: 'placehold.co',
       },
     ],
   },
-  // Ensure all AI flows and data files are included in the build
-  webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-    // Include all AI flow files
-    config.resolve.alias = {
-      ...config.resolve.alias,
-    };
-
-    // Handle JSON files properly
-    config.module.rules.push({
-      test: /\.json$/,
-      type: 'json',
-    });
-
-    // Ensure raw-loader works for text files
+  experimental: {
+    serverComponentsExternalPackages: [
+      '@genkit-ai/google-cloud',
+      '@google-cloud/functions-framework',
+    ],
+  },
+  webpack: (config, { isServer }) => {
+    // Correctly configure raw-loader for .txt files
     config.module.rules.push({
       test: /\.txt$/,
       use: 'raw-loader',
     });
 
+    if (isServer) {
+      // These are required by Genkit but can be ignored for the client build
+      // as they are not used in the browser.
+      config.externals.push('@opentelemetry/exporter-jaeger');
+      config.externals.push('@opentelemetry/instrumentation-grpc');
+      config.externals.push('require-in-the-middle');
+      config.externals.push('handlebars');
+    }
+    
     return config;
   },
-  // Optimize for production builds
-  swcMinify: true,
-  compress: true,
-  // Ensure proper static file handling
-  trailingSlash: false,
-  // Include all necessary directories in build
-  experimental: {
-    outputFileTracingIncludes: {
-      '/**/*': ['./public/data/**/*', './src/ai/**/*'],
-    },
+  devIndicators: {
+    allowedDevOrigins: ['*.cloudworkstations.dev'],
+  },
+  typescript: {
+    ignoreBuildErrors: false,
   },
 };
 

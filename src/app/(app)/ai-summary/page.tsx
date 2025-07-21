@@ -74,7 +74,7 @@ export default function AiRepertoryPage() {
             ? e.message
             : 'সাজেশন আনতে একটি ত্রুটি ঘটেছে। অনুগ্রহ করে আপনার সংযোগ বা API কী পরীক্ষা করে আবার চেষ্টা করুন।';
         setError(errorMessage);
-        console.error(e);
+        console.error("AI Summary Page Error:", e);
       } finally {
         setIsLoading(false);
       }
