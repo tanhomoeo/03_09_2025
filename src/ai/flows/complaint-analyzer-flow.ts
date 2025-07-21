@@ -47,7 +47,7 @@ const complaintAnalysisPrompt = ai.definePrompt({
   input: { schema: ComplaintAnalyzerInputSchema },
   output: { schema: ComplaintAnalyzerOutputSchema },
   config: {
-    model: 'gemini-1.5-flash',
+    model: 'googleai/gemini-1.5-flash',
     safetySettings: [
       { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' },
       { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_NONE' },
