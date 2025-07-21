@@ -11,6 +11,7 @@ interface PhilosopherData {
     philosophy: string;
   };
   remedies: Record<string, any>;
+  rubrics?: Record<string, any>; // Optional for Kent's repertory
 }
 
 interface RemedySuggestion {
@@ -26,33 +27,35 @@ interface RemedySuggestion {
 class PhilosopherDatabase {
   private cache = new Map<string, PhilosopherData>();
   private readonly philosophers = ['kent', 'boericke', 'hahnemann'];
+  private readonly maxAge = 30 * 60 * 1000; // 30 minutes
 
   async loadPhilosopherData(philosopher: string): Promise<PhilosopherData> {
     const cacheKey = `${philosopher}-data`;
-    
-    if (this.cache.has(cacheKey)) {
-      return this.cache.get(cacheKey)!;
+    const cached = this.cache.get(cacheKey);
+
+    if (cached && Date.now() - cached.timestamp < this.maxAge) {
+      return cached.data;
     }
 
     try {
       let data: PhilosopherData;
-      
+      const filename = philosopher === 'kent' ? 'kent-repertory' : `${philosopher}-materia-medica`;
+
       if (typeof window !== 'undefined') {
         // Client-side loading
-        const response = await fetch(`/data/philosophers/${philosopher}-${philosopher === 'kent' ? 'repertory' : 'materia-medica'}.json`);
+        const response = await fetch(`/data/philosophers/${filename}.json`);
         if (!response.ok) throw new Error(`Failed to fetch ${philosopher} data`);
         data = await response.json();
       } else {
         // Server-side loading
         const fs = await import('fs/promises');
         const path = await import('path');
-        const filename = philosopher === 'kent' ? 'repertory' : 'materia-medica';
-        const filePath = path.join(process.cwd(), `public/data/philosophers/${philosopher}-${filename}.json`);
+        const filePath = path.join(process.cwd(), `public/data/philosophers/${filename}.json`);
         const fileContent = await fs.readFile(filePath, 'utf-8');
         data = JSON.parse(fileContent);
       }
 
-      this.cache.set(cacheKey, data);
+      this.cache.set(cacheKey, { data, timestamp: Date.now() });
       return data;
     } catch (error) {
       console.error(`Error loading ${philosopher} data:`, error);
