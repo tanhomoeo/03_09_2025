@@ -12,6 +12,7 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
+  CardFooter
 } from '@/components/ui/card';
 import {
   Form,
@@ -30,6 +31,8 @@ import {
   Loader2,
   CalendarIcon,
   Camera,
+  Sparkles,
+  AlertCircle
 } from 'lucide-react';
 import {
   Popover,
@@ -52,6 +55,12 @@ import {Textarea} from '@/components/ui/textarea';
 import dynamic from 'next/dynamic';
 import type {HandwrittenFormOutput} from '@/ai/flows/handwritten-patient-form-parser-flow';
 import {LoadingSpinner} from '@/components/shared/LoadingSpinner';
+import {
+  categorizeCaseNotes,
+  type CategorizedCaseNotesOutput,
+} from '@/ai/flows/categorize-case-notes-flow';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { CategorizedSymptomsDisplay, LABELS as CATEGORY_LABELS } from '@/components/categorized-symptoms-display';
 
 const patientFormSchema = z.object({
   registrationDate: z.date({required_error: 'নিবন্ধনের তারিখ আবশ্যক।'}),
@@ -99,6 +108,8 @@ function PatientEntryPageContent() {
   const {toast} = useToast();
   const searchParams = useSearchParams();
   const [isCameraModalOpen, setIsCameraModalOpen] = useState(false);
+  const [isAiCategorizing, setIsAiCategorizing] = useState(false);
+  const [aiCategorizeError, setAiCategorizeError] = useState<string | null>(null);
 
   const form = useForm<PatientFormValues>({
     resolver: zodResolver(patientFormSchema),
@@ -186,6 +197,36 @@ function PatientEntryPageContent() {
     });
   };
 
+  const handleCategorizeNotes = async () => {
+    const caseNotesText = form.getValues('caseNotes');
+    if (!caseNotesText || caseNotesText.trim().length < 20) {
+      toast({
+        title: 'অপর্যাপ্ত তথ্য',
+        description: 'বিশ্লেষণ করার জন্য অনুগ্রহ করে রোগীর সমস্যা ও ইতিহাস সম্পর্কে আরও বিস্তারিত লিখুন (কমপক্ষে ২০ অক্ষর)।',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setIsAiCategorizing(true);
+    setAiCategorizeError(null);
+
+    try {
+      const result: CategorizedCaseNotesOutput = await categorizeCaseNotes({ caseNotesText });
+      form.setValue('categorizedCaseNotes', result, { shouldDirty: true });
+      toast({
+        title: 'সফলভাবে ক্যাটাগরি করা হয়েছে',
+        description: 'AI দ্বারা রোগীর লক্ষণগুলি ৭টি বিভাগে ভাগ করা হয়েছে।',
+      });
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'একটি অজানা ত্রুটি ঘটেছে।';
+      setAiCategorizeError(errorMessage);
+      console.error("AI categorization error:", error);
+    } finally {
+      setIsAiCategorizing(false);
+    }
+  };
+
   const onSubmit: SubmitHandler<PatientFormValues> = async data => {
     try {
       const newPatientData: Partial<Patient> = {
@@ -229,6 +270,8 @@ function PatientEntryPageContent() {
       });
     }
   };
+  
+  const categorizedNotes = form.watch('categorizedCaseNotes');
 
   return (
     <>
@@ -559,7 +602,7 @@ function PatientEntryPageContent() {
             <Card className="shadow-md bg-card/80 backdrop-blur-lg">
               <CardHeader>
                 <CardTitle className="font-headline text-lg">
-                  রোগীর সমস্যা ও বিশ্লেষণ
+                  রোগীর সমস্যা ও ইতিহাস
                 </CardTitle>
                 <CardDescription>
                   এখানে রোগীর সকল সমস্যা, মানসিক অবস্থা, রোগের কারণ, পূর্ব ও
@@ -589,6 +632,58 @@ function PatientEntryPageContent() {
                   )}
                 />
               </CardContent>
+            </Card>
+
+            <Card className="shadow-md bg-card/80 backdrop-blur-lg">
+              <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle className="font-headline text-lg">
+                    AI দ্বারা লক্ষণ বিশ্লেষণ
+                  </CardTitle>
+                  <CardDescription>
+                    উপরে লেখা বিবরণ থেকে AI দ্বারা লক্ষণগুলো ৭টি ক্যাটাগরিতে সাজান।
+                  </CardDescription>
+                </div>
+                 <Button type="button" onClick={handleCategorizeNotes} disabled={isAiCategorizing}>
+                  {isAiCategorizing ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      বিশ্লেষণ চলছে...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="mr-2 h-4 w-4" />
+                      এখন বিশ্লেষণ করুন
+                    </>
+                  )}
+                </Button>
+              </CardHeader>
+              <CardContent>
+                {isAiCategorizing && (
+                    <div className="flex items-center justify-center p-4">
+                        <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                        <p className="ml-2">AI লক্ষণগুলো বিশ্লেষণ করছে...</p>
+                    </div>
+                )}
+                {aiCategorizeError && (
+                  <Alert variant="destructive">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle>একটি ত্রুটি ঘটেছে</AlertTitle>
+                    <AlertDescription>{aiCategorizeError}</AlertDescription>
+                  </Alert>
+                )}
+                {categorizedNotes && !isAiCategorizing && (
+                   <CategorizedSymptomsDisplay symptoms={categorizedNotes} labels={CATEGORY_LABELS} />
+                )}
+                {!categorizedNotes && !isAiCategorizing && !aiCategorizeError && (
+                    <div className="text-center text-sm text-muted-foreground py-6">
+                        AI বিশ্লেষণের ফলাফল এখানে দেখানো হবে।
+                    </div>
+                )}
+              </CardContent>
+              <CardFooter className="text-xs text-muted-foreground border-t pt-4">
+                সতর্কতা: AI দ্বারা তৈরি এই বিশ্লেষণ শুধুমাত্র তথ্য সাজানোর জন্য, এটি কোনো চূড়ান্ত রোগ নির্ণয় বা প্রেসক্রিপশন নয়। সর্বদা নিজের জ্ঞান ও অভিজ্ঞতার উপর নির্ভর করুন।
+              </CardFooter>
             </Card>
 
             <div className="flex justify-end pt-2">
