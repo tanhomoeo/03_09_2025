@@ -1,15 +1,91 @@
-This is a placeholder for Boericke's Materia Medica. The content of the book should be placed here.
-
-Example Entry:
-
-ACONITUM NAPELLUS
+Aconitum Napellus
 (Aconite)
+A state of fear, anxiety; anguish of mind and body. Physical and mental restlessness, fright, is the most characteristic manifestation of Aconite. Acute, sudden, and violent invasion, with fever, call for it. Does not want to be touched. Sudden and great sinking of strength. Complaints and tension caused by exposure to dry, cold weather, draught of cold air, checked perspiration, also from very hot weather, especially gastro-intestinal disturbances. The well-known storming of the fortress of the organism is not repeated; now we have a besieging of the parts, which, if not repulsed, may become destructive. Infiltration of the various parts with an inflammatory exudate, which may go on to suppuration, and we have the symptoms of the second stage of inflammation, and Aconite is no longer the remedy. Serous membranes and muscular tissues are affected markedly. Burning in internal parts; tingling, coldness and numbness. Influenza. Tension of arteries; emotional and physical tensions. It is a vasoconstrictor, it contracts the arterioles. Venous stasis. Forgetful, clairvoyant. Red, hot, flushed, swollen face. Sensation as if parts were of abnormal size. Neuralgic pains, intolerable, driving to despair. Formication, tingling and numbness. Restlessness, tossing about.
 
-Mind and Head
-Great fear, anxiety, and worry accompany every ailment, however trivial. Delirium is characterized by unhappiness, worry, fear, raving, rarely unconsciousness. Forehead feels hot, or as if a band is around it.
+Mind
+Great fear, anxiety, and worry accompany every ailment, however trivial. Delirium is characterized by unhappiness, worry, fear, raving, rarely unconsciousness. Forebodings and fears. Fears death but believes that he will soon die; predicts the day. Fears the future, a crowd, crossing the street. Restlessness, tossing about. Tendency to start. Imagination acute, clairvoyance. Pains are intolerable; they drive him crazy. Music is unbearable, makes him sad (Ambra). Thinks his thoughts come from the stomach. His thoughts are fixed on one subject. Has no affection.
+
+Head
+Fullness; heavy, pulsating, hot, burning, bursting sensation, as if it would be moved by boiling water (Indigo). Intercranial pressure. Sensation as of a band around head (Carbol. ac; Sulph). Vertigo; worse on rising (Nux; Op), shaking head. Sensation as if hair were standing on end. Nocturnal furious delirium.
+
+Eyes
+Red, inflamed. Feel dry and hot, as if sand in them. Lids swollen, hard and red. Aversion to light. Profuse watering after exposure to dry, cold winds, after extraction of cinders or other foreign bodies.
+
+Ears
+Very sensitive to noises. External ear hot, swollen, red, painful. Earache (Chamom). Sensation of a drop of water in left ear. Roaring in ears.
+
+Nose
+Smell acutely sensitive. Pain at root of nose. Coryza; much sneezing; throbbing in nostrils. Hæmorrhage of bright red blood. Mucous membrane dry, nose stopped up; dry or with but scanty watery coryza.
+
+Face
+Red, hot, flushed, swollen. One cheek red, the other pale (Chamom, Ipec). On rising the red face becomes deathly pale, or he becomes dizzy. Tingling in cheeks and numbness. Neuralgia, especially of left side, with restlessness, tingling, and numbness. Pain in jaws.
+
+Mouth
+Numb, dry and tingling. Tongue swollen; tip tingles. Teeth sensitive to cold. Constantly moves lower jaw as if chewing. Gums hot and inflamed. Tongue coated white (Antim. crud).
+
+Throat
+Red, dry, constricted, numb, prickling, burning, stinging. Tonsils swollen and dry.
+
+Stomach
+Vomiting, with fear, heat, profuse sweat and increased urination. Thirst for cold water. Bitter taste of everything except water. Drinks, eats, and is sick. Burning from stomach to œsophagus. Hiccough.
+
+Abdomen
+Hot, tense, tympanitic. Sensitive to touch. Colic, no position relieves.
+
+Stool
+Watery, and white, with red urine. Choleraic discharge with collapse, anxiety, and restlessness. Bleeding hæmorrhoids (Hamam). Watery stools in children. They cry and complain much, are sleepless and restless.
+
+Urine
+Scanty, red, hot, painful. Tenesmus and burning at neck of bladder. Burning in urethra. Urine suppressed, bloody. Anxiety always on beginning to urinate. Retention, with screaming and restlessness, and handling of genitals. Renal region sensitive. Profuse urination with profuse perspiration and diarrhœa.
+
+Male
+Crawling and tingling in testicles. Pains in testicles, swollen, hard. Frequent erections and emissions. Bruised pain in testicles.
+
+Female
+Vagina dry, hot, sensitive. Menses too profuse, with nosebleed; too protracted, late. Frenzy on appearance of menses. Suppression from fright, cold. Ovaries congested and painful. Sharp, shooting pains in uterus. After-pains, with fear and restlessness.
+
+Respiratory
+Constant pressure in left chest; oppressed breathing on least motion. Hoarse, dry, croupy cough; loud, labored breathing. Child grasps at throat every time he coughs. Very sensitive to inspired air. Shortness of breath. Larynx sensitive to touch. Tingling in chest after cough. Cough, dry, short, hacking; worse at night and after midnight. Hot feeling in lungs. Blood comes up with hawking. Tachycardia. Stitches in chest.
+
+Heart
+Tachycardia. Affections of the heart with pain in left shoulder. Stitching pain. Palpitation, with anxiety, fainting, and tingling in fingers. Pulse full, hard, tense and bounding; sometimes intermittent. Temporal and carotid arteries felt.
+
+Back
+Numb, stiff, painful. Crawling and tingling, as if bruised. Stiffness in nape of neck.
+
+Extremities
+Numbness and tingling; shooting pains; icy coldness and insensibility of hands and feet. Arms feel lame, bruised, heavy, numb. Pain down left arm (Cact, Crotal, Kalmia, Tabac). Hot hands and cold feet. Rheumatism of joints; worse at night; red, shining swelling, very sensitive. Hips and thighs feel lame, with numb, tingling pains. Knees unsteady; slip, with cracking sound. Weak and loose feeling of all joints.
+
+Skin
+Red, hot, swollen, dry, burning. Purpura miliaris. Rash, like measles. Formication and numbness. Chilliness and formication down the back. Pruritus relieved by stimulants.
 
 Fever
-High fever with a full, hard, tense pulse. Skin is dry and hot. Patient is restless and anxious. Thirst for large quantities of cold water.
+Cold stage most marked. Cold sweat and icy coldness of face. Coldness and heat alternate. Evening chilliness, soon after going to bed. Thirst and restlessness always present. Chilly if uncovered or touched. Dry heat, red face. Most valuable febrifuge.
+
+Sleep
+Nightmare. Nocturnal sleeplessness, with restlessness and tossing about (Use 30th). Anxious dreams. Starts up in sleep. Long dreams, with anxiety in chest. Sleeps in a sitting posture, with head thrown back.
 
 Modalities
-Worse, in warm room, in evening and night; from lying on affected side, from music, from tobacco-smoke, dry, cold winds. Better, in the open air.
+Worse, in warm room, in evening and at night; from lying on affected side, from music, from tobacco-smoke, dry, cold winds. Better, in open air.
+
+Relationship
+Complementary: Coffea; Sulph.
+Sulphur may be considered a chronic Aconite. Often completes a cure begun with Aconite.
+Compare: Bellad; Chamom; Coffea; Ferr phos.
+Antidote: Acet ac; Paris.
+
+Dose
+Sixth potency for sensory affections; first to third for congestive conditions. Must be repeated frequently in acute diseases. Acon. should not be given simply to control the fever, but for the fever, in which the mental condition is characteristic of the drug. Its range is not limited to the febrile state; neuralgia; rheumatism, etc. Is a valuable "pourpointer" in many diseases; should not be continued after the sweating stage has been reached. Aconite is not indicated in malarial or septic fevers. Aconite is a rapid worker. In cases of doubt between Aconite and Belladonna, if the patient is of a plethoric or lymphatic habit, Belladonna should be preferred. If the patient is of a rigid muscular habit, dark hair and eyes, Aconite should be chosen. (Boenninghausen). Aconite and Opium often follow each other. (Hering). Never give A-c-o-n-i-t-e to a patient who is perspiring freely. (A. L. Monroe, M. D).
+
+Aconitum Lycoctonum
+(Wolf's-bane)
+Great-flowered wolf's-bane is a very poisonous species, especially the root. Swelling of glands, Hodgkin's disease. Diarrhœa after eating pork. Itching of nose, eyes, anus and vulva. Skin of nose cracked; taste of blood. A specific for the bites of serpents, scorpions, etc. Aethusa.
+
+Aconitum Ferox
+Indian Aconite
+Is a most poisonous plant. It is a more violent poison in all its actions than Aconite napellus. Its most marked feature is the dyspnœa in all affections. Great heat and excitement. Neuralgia of the most violent character, especially in the face. Heat and tingling in the face with enormous swelling. Violent, burning, throbbing pains. Great anxiety. More arterial excitement and more fever than in Aconite nap. Least touch is unbearable. Dyspnœa seems to be due to a cardiac spasm. Chewing motion. Chill spreads from feet to chest. Least motion brings on shortness of breath.
+
+Aconitum Cammarum
+(Goat's-bane)
+Tingling in different parts. Similar to A. Nap. in its febrile states, but pains and symptoms generally are worse from motion; better from rest. Useful for the stings of insects.
+It is better to err in giving Aconite in a case where it is not indicated than to neglect it when it is. E. A. F.

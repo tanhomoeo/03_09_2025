@@ -3,354 +3,51 @@
     "author": "Samuel Hahnemann",
     "title": "Materia Medica Pura",
     "version": "1.0",
-    "totalRemedies": 65,
-    "description": "Original proving symptoms and observations by the founder of homeopathy",
-    "created": "2024-12-23",
-    "philosophy": "Pure symptomatology from provings, foundation of homeopathic prescribing"
-  },
-  "provingData": {
-    "methodology": "Symptoms observed during systematic proving of substances on healthy individuals",
-    "principle": "Similia similibus curentur - let likes be cured by likes",
-    "approach": "Totality of symptoms with emphasis on characteristic and peculiar symptoms"
+    "totalRemedies": 67,
+    "description": "Hahnemann's original provings, forming the foundation of homeopathic practice.",
+    "created": "1810-01-01",
+    "philosophy": "Pure Provings and Totality of Symptoms"
   },
   "remedies": {
-    "Nux Vomica": {
-      "botanicalName": "Strychnos Nux Vomica",
-      "commonName": "Poison Nut",
-      "naturalOrder": "Loganiaceae",
-      "provedBy": "Hahnemann and colleagues",
-      "provingDate": "1805-1821",
-      "sourceOfSymptoms": "Pure proving and clinical observation",
-      "totalSymptoms": 1320,
-      "characteristics": [
-        "Irritability and hypersensitivity",
-        "Effects of sedentary habits and stimulants",
-        "Chilly constitution",
-        "Digestive complaints from overindulgence",
-        "Spasmodic and cramping pains"
+    "Aconitum Napellus": {
+      "keynotes": [
+        "Unquenchable thirst for cold water.",
+        "Anxious impatience, tossing about in agony.",
+        "Mental anguish and fear of death.",
+        "Tingling and numbness in various parts."
       ],
       "mindSymptoms": {
-        "predominant": "Irritable, impatient, fault-finding, spiteful",
+        "description": "Fear is the most prominent feature, with great anxiety and restlessness.",
         "symptoms": [
-          "Very irritable; sensitive to all impressions",
-          "Cannot bear noises, odors, light, etc.",
-          "Does not want to be touched",
-          "Quarrelsome, spiteful, malicious",
-          "Nervous and melancholic",
-          "Zealous fiery temperament",
-          "Cannot tolerate contradiction",
-          "Hasty, hurried disposition",
-          "Hypersensitive to all external impressions"
-        ]
-      },
-      "headSymptoms": {
-        "description": "Headaches from mental exertion, debauchery, or in the open air",
-        "symptoms": [
-          "Headache in occiput or over eyes",
-          "Head feels large and heavy",
-          "Headache from mental strain",
-          "Vertigo with momentary loss of consciousness",
-          "Scalp sensitive to touch",
-          "Hair falls out",
-          "Headache worse morning, mental exertion"
-        ]
-      },
-      "stomachSymptoms": {
-        "description": "Region of stomach very sensitive to touch and pressure of clothes",
-        "symptoms": [
-          "Nausea in the morning, after eating",
-          "Sour taste, and nausea in the morning",
-          "Weight and pain in stomach; worse, eating",
-          "Stomach very sensitive to pressure",
-          "Hiccough with spasms of stomach",
-          "Desires stimulants, spices, wine",
-          "Aversion to coffee, which disagrees"
-        ]
-      },
-      "abdominalSymptoms": {
-        "description": "Constipation with frequent ineffectual urging",
-        "symptoms": [
-          "Constipation with frequent ineffectual urging",
-          "Alternate constipation and diarrhea",
-          "Hemorrhoids, blind and bleeding",
-          "Portal congestion and hepatic disorders",
-          "Colic with cramping and spasms",
-          "Flatulent distension after eating"
-        ]
-      },
-      "backSymptoms": {
-        "description": "Backache in lumbar region, must sit up or turn over to get relief",
-        "symptoms": [
-          "Backache in lumbar region",
-          "Must sit up or turn over in bed to get relief",
-          "Bruised pain in small of back",
-          "Back stiff on rising",
-          "Cannot turn in bed without sitting up first"
-        ]
-      },
-      "sleepSymptoms": {
-        "description": "Cannot sleep after 3 AM; lies awake thinking",
-        "symptoms": [
-          "Cannot sleep after 3 AM",
-          "Lies awake for hours; mind full of ideas",
-          "Wakes tired and weak",
-          "Dreams full of bustle and hurry",
-          "Sleepy after meals and in early evening",
-          "Awakes feeling wretched"
-        ]
-      },
-      "feverSymptoms": {
-        "description": "Chilly stage predominant with thirst",
-        "symptoms": [
-          "Chilliness and shivering",
-          "Cannot get warm",
-          "Thirst during chilly stage",
-          "Heat with sleep and sweat",
-          "Intermittent fever with gastric symptoms"
+          "Predicts the day of death.",
+          "Music is unbearable, makes him sad.",
+          "Forebodings and clairvoyance."
         ]
       },
       "modalities": {
-        "aggravation": [
-          "Morning",
-          "Mental exertion", 
-          "After eating",
-          "Touch",
-          "Spices, stimulants",
-          "Dry weather",
-          "Cold",
-          "Slight causes"
-        ],
-        "amelioration": [
-          "Evening",
-          "While at rest",
-          "Lying down",
-          "In damp, wet weather",
-          "Strong pressure",
-          "Hot drinks",
-          "Milk"
-        ]
-      },
-      "relationshipToRemedies": {
-        "complementary": ["Sepia", "Sulphur"],
-        "inimical": ["Zincum"],
-        "compare": ["Ignatia", "Bryonia", "Lycopodium"],
-        "antidotes": ["Aconitum", "Belladonna", "Chamomilla", "Coffea", "Cocculus"]
-      },
-      "dosage": "From lowest to highest potencies according to sensitiveness of patient",
-      "duration": "Acts 1-7 days"
+        "worse": ["In a warm room", "At night", "From dry, cold winds"],
+        "better": ["In the open air"]
+      }
     },
-    "Pulsatilla Nigricans": {
-      "botanicalName": "Pulsatilla Nigricans",
-      "commonName": "Wind Flower, Pasque Flower",
-      "naturalOrder": "Ranunculaceae",
-      "provedBy": "Hahnemann",
-      "provingDate": "1805-1819",
-      "sourceOfSymptoms": "Pure proving symptoms",
-      "totalSymptoms": 1155,
-      "characteristics": [
-        "Mild, gentle, yielding disposition",
-        "Changeable symptoms",
-        "Thirstlessness",
-        "Better in open air",
-        "Weeps easily"
+    "Belladonna": {
+      "keynotes": [
+        "Violent delirium, desire to bite and strike.",
+        "Burning heat, redness, and throbbing.",
+        "Dilated pupils and intolerance to light.",
+        "Pains appear and disappear suddenly."
       ],
       "mindSymptoms": {
-        "predominant": "Mild, gentle, weeping, yielding disposition",
+        "description": "Furious delirium, with hallucinations and a desire to escape or hide.",
         "symptoms": [
-          "Weeps easily; tears with almost all symptoms",
-          "Mild, gentle, yielding disposition",
-          "Changeable, contradictory mood",
-          "Seeks sympathy and consolation",
-          "Timid, irresolute, submissive",
-          "Religious melancholy",
-          "Fears ghosts in the dark",
-          "Child wants to be carried slowly"
-        ]
-      },
-      "headSymptoms": {
-        "description": "Headache from overheating, worse evening",
-        "symptoms": [
-          "Headache from overheating",
-          "Pain as if head would burst",
-          "Headache worse evening",
-          "Vertigo on rising from stooping",
-          "Hair falls out",
-          "One-sided headache"
-        ]
-      },
-      "eyeSymptoms": {
-        "description": "Thick, profuse, yellow discharge",
-        "symptoms": [
-          "Profuse lachrymation in open air",
-          "Thick, yellow, bland discharge",
-          "Styes, especially on upper lid",
-          "Itching and burning in eyes",
-          "Agglutination in morning"
-        ]
-      },
-      "stomachSymptoms": {
-        "description": "Thirstlessness with nearly all complaints",
-        "symptoms": [
-          "Thirstlessness with nearly all complaints",
-          "Averse to fat food, warm food and drink",
-          "Greasy taste in mouth",
-          "Bad taste in morning",
-          "Food tastes too salty",
-          "Heartburn with tasteless eructations"
-        ]
-      },
-      "femaleSymptoms": {
-        "description": "Menses delayed, scanty, changeable",
-        "symptoms": [
-          "Menses too late, scanty, thick, dark, changeable",
-          "Intermittent flow, stops and starts",
-          "Chilliness during menses",
-          "Pain in back and down thighs",
-          "Leucorrhea thick, bland, yellowish"
-        ]
-      },
-      "respiratorySymptoms": {
-        "description": "Dry cough in evening and at night",
-        "symptoms": [
-          "Dry cough in evening and night",
-          "Loose cough with thick, yellow expectoration",
-          "Dyspnea worse lying down",
-          "Oppression and anxiety in chest",
-          "Smothering sensation in warm room"
+          "Sees ghosts, hideous faces, and various insects.",
+          "Starts in sleep in fright.",
+          "Aversion to company."
         ]
       },
       "modalities": {
-        "aggravation": [
-          "Heat, warm room",
-          "Evening",
-          "Rich fat food",
-          "After eating",
-          "Lying on left or painful side",
-          "Allowing feet to hang down"
-        ],
-        "amelioration": [
-          "Open air",
-          "Motion, walking slowly",
-          "Cold applications",
-          "Cold food and drinks",
-          "Sympathy and attention",
-          "Gentle motion"
-        ]
-      },
-      "relationshipToRemedies": {
-        "complementary": ["Coffea", "Kali Muriaticum", "Lycopodium"],
-        "compare": ["Kali Sulphuricum", "Natrum Sulphuricum", "Cyclamen"],
-        "antidotes": ["Chamomilla", "Coffea", "Ignatia", "Nux Vomica"]
-      },
-      "dosage": "From third to thirtieth potency",
-      "duration": "Acts 40-50 days"
-    },
-    "Sulphur": {
-      "botanicalName": "Sulphur",
-      "commonName": "Brimstone",
-      "naturalOrder": "Mineral",
-      "provedBy": "Hahnemann",
-      "provingDate": "1828-1830",
-      "sourceOfSymptoms": "Extensive provings and clinical experience",
-      "totalSymptoms": 2436,
-      "characteristics": [
-        "Great remedy for chronic diseases",
-        "Burning sensations",
-        "Offensive discharges",
-        "Philosophical nature",
-        "Dirty, unwashed appearance"
-      ],
-      "mindSymptoms": {
-        "predominant": "Philosophical, theoretical, selfish",
-        "symptoms": [
-          "Philosophical and theoretical turn of mind",
-          "Delusions of grandeur, thinks rags are beautiful",
-          "Selfish, no regard for others",
-          "Irritable, depressed, thin and weak",
-          "Lazy, averse to business",
-          "Religious melancholy",
-          "Child cross on waking"
-        ]
-      },
-      "skinSymptoms": {
-        "description": "Dirty, unhealthy skin; every injury suppurates",
-        "symptoms": [
-          "Skin dirty, unhealthy; every injury suppurates",
-          "Itching, burning; worse scratching and washing",
-          "Dry, scaly, unhealthy skin",
-          "Boils, carbuncles, abscesses",
-          "Cannot bear soap",
-          "Skin affections after suppressed eruptions"
-        ]
-      },
-      "headSymptoms": {
-        "description": "Chronic headaches, vertex hot",
-        "symptoms": [
-          "Vertex feels hot and burning",
-          "Chronic headaches with heat on vertex",
-          "Scalp dry, falling hair",
-          "Dirty, greasy hair",
-          "Much heat escaping from head"
-        ]
-      },
-      "digestiveSymptoms": {
-        "description": "Sinking, all-gone sensation at 11 AM",
-        "symptoms": [
-          "Sinking, all-gone sensation at 11 AM",
-          "Aversion to meat",
-          "Desires sweets, spicy things",
-          "Drinks much, eats little",
-          "Very red lips",
-          "Chronic gastric catarrh"
-        ]
-      },
-      "generalitiesSymptoms": {
-        "description": "Burning pains, offensive discharges, periodicity",
-        "symptoms": [
-          "All secretions offensive",
-          "Burning pains in many parts",
-          "Great weakness and prostration",
-          "Tendency to recurrent infections",
-          "Complaints return in spring",
-          "Night sweats"
-        ]
-      },
-      "modalities": {
-        "aggravation": [
-          "Heat of bed",
-          "Washing, bathing",
-          "11 AM",
-          "Atmospheric changes",
-          "Rest",
-          "Suppressions"
-        ],
-        "amelioration": [
-          "Dry, warm weather",
-          "Open air",
-          "Motion, walking",
-          "Drawing up affected limbs"
-        ]
-      },
-      "relationshipToRemedies": {
-        "complementary": ["Aesculus", "Aloe", "Nux Vomica", "Pulsatilla"],
-        "compare": ["Lycopodium", "Sepia", "Calcarea"],
-        "antidotes": ["Aconitum", "Camphora", "China", "Mercurius", "Sepia"]
-      },
-      "dosage": "All potencies from 30th to CM",
-      "duration": "Very long acting, effects may last months"
+        "worse": ["From touch, jar, or motion", "From light and noise", "In the afternoon"],
+        "better": ["From rest", "In a semi-erect posture"]
+      }
     }
-  },
-  "provingPrinciples": {
-    "lawOfSimilars": "Substances that produce symptoms in healthy individuals can cure similar symptoms in sick individuals",
-    "provingMethod": "Systematic testing of substances on healthy volunteers",
-    "symptomHierarchy": "Mental symptoms highest, then general, then particular symptoms",
-    "characteristicSymptoms": "Strange, rare, and peculiar symptoms are most valuable for remedy selection",
-    "totality": "Consider the whole person and complete symptom picture, not just the disease"
-  },
-  "originalAphorisms": {
-    "aphorism2": "The highest ideal of cure is rapid, gentle and permanent restoration of the health",
-    "aphorism3": "If the physician clearly perceives what is to be cured, what is curative in each medicine, and how to adapt what is curative to what is diseased",
-    "aphorism26": "This depends on the following homeopathic law of nature... a weaker dynamic affection is permanently extinguished in the living organism by a stronger one",
-    "aphorism153": "In order to be convinced of this, every intelligent physician should undertake such an experiment with all possible care and attention"
   }
 }

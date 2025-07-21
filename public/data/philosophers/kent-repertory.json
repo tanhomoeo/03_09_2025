@@ -1,234 +1,48 @@
 {
   "metadata": {
     "author": "James Tyler Kent",
-    "title": "Kent's Repertory of the Homeopathic Materia Medica",
+    "title": "Repertory of the Homoeopathic Materia Medica",
     "version": "1.0",
-    "totalRemedies": 100,
-    "description": "Based on Kent's classical repertory with comprehensive symptom rubrics and remedy gradations",
-    "created": "2024-12-23",
-    "philosophy": "Constitutional prescribing based on totality of symptoms, with emphasis on mental and general symptoms"
+    "totalRubrics": 50000,
+    "description": "Kent's Repertory is a cornerstone of classical homeopathy, organizing symptoms for remedy selection.",
+    "created": "1897-01-01",
+    "philosophy": "Hierarchical and Constitutional"
   },
   "rubrics": {
     "Mind": {
       "Anxiety": {
+        "description": "A state of uneasiness and apprehension.",
         "general": {
-          "grade3": ["Aconitum Napellus", "Arsenicum Album", "Lycopodium"],
-          "grade2": ["Gelsemium", "Phosphorus", "Calcarea Carbonica", "Ignatia"],
-          "grade1": ["Natrum Muriaticum", "Pulsatilla", "Sulphur", "Nux Vomica"]
-        },
-        "evening": {
-          "grade3": ["Lycopodium", "Phosphorus"],
-          "grade2": ["Arsenicum Album", "Calcarea Carbonica"],
-          "grade1": ["Pulsatilla", "Sulphur"]
-        },
-        "about_future": {
-          "grade3": ["Calcarea Carbonica", "Lycopodium"],
-          "grade2": ["Arsenicum Album", "Phosphorus"],
-          "grade1": ["Natrum Muriaticum", "Sulphur"]
-        },
-        "about_health": {
-          "grade3": ["Arsenicum Album", "Lycopodium", "Phosphorus"],
-          "grade2": ["Calcarea Carbonica", "Natrum Muriaticum"],
-          "grade1": ["Gelsemium", "Nux Vomica"]
+          "grade3": ["Acon", "Ars", "Phos"],
+          "grade2": ["Bell", "Calc", "Lyc"],
+          "grade1": ["Ign", "Puls", "Sulph"]
         }
       },
-      "Fear": {
-        "death": {
-          "grade3": ["Aconitum Napellus", "Arsenicum Album"],
-          "grade2": ["Calcarea Carbonica", "Phosphorus"],
-          "grade1": ["Lycopodium", "Natrum Muriaticum"]
-        },
-        "disease": {
-          "grade3": ["Arsenicum Album", "Phosphorus"],
-          "grade2": ["Calcarea Carbonica", "Lycopodium"],
-          "grade1": ["Gelsemium", "Natrum Muriaticum"]
-        },
-        "dark": {
-          "grade3": ["Phosphorus", "Calcarea Carbonica"],
-          "grade2": ["Arsenicum Album", "Lycopodium"],
-          "grade1": ["Pulsatilla", "Sulphur"]
-        },
-        "being_alone": {
-          "grade3": ["Arsenicum Album", "Phosphorus"],
-          "grade2": ["Lycopodium", "Pulsatilla"],
-          "grade1": ["Calcarea Carbonica", "Gelsemium"]
-        },
-        "thunderstorms": {
-          "grade3": ["Phosphorus"],
-          "grade2": ["Natrum Carbonica", "Gelsemium"],
-          "grade1": ["Calcarea Carbonica", "Lycopodium"]
-        }
-      },
-      "Irritability": {
+      "Fear of death": {
+        "description": "Strong apprehension of dying.",
         "general": {
-          "grade3": ["Nux Vomica", "Chamomilla", "Hepar Sulphuris"],
-          "grade2": ["Lycopodium", "Sepia", "Bryonia"],
-          "grade1": ["Sulphur", "Calcarea Carbonica", "Phosphorus"]
-        },
-        "morning": {
-          "grade3": ["Nux Vomica", "Bryonia"],
-          "grade2": ["Lycopodium", "Sulphur"],
-          "grade1": ["Calcarea Carbonica", "Sepia"]
-        },
-        "evening": {
-          "grade3": ["Lycopodium", "Hepar Sulphuris"],
-          "grade2": ["Nux Vomica", "Sulphur"],
-          "grade1": ["Sepia", "Phosphorus"]
-        }
-      },
-      "Sadness": {
-        "general": {
-          "grade3": ["Ignatia", "Natrum Muriaticum", "Sepia"],
-          "grade2": ["Pulsatilla", "Phosphorus", "Aurum"],
-          "grade1": ["Calcarea Carbonica", "Lycopodium", "Sulphur"]
-        },
-        "from_grief": {
-          "grade3": ["Ignatia", "Natrum Muriaticum"],
-          "grade2": ["Phosphorus", "Pulsatilla"],
-          "grade1": ["Aurum", "Calcarea Carbonica"]
+          "grade3": ["Acon", "Ars", "Calc"],
+          "grade2": ["Phos", "Plat", "Sec"],
+          "grade1": ["Bell", "Lyc", "Nit-ac"]
         }
       }
     },
     "Head": {
-      "Pain": {
+      "Pain, throbbing": {
+        "description": "Pulsating or beating pain in the head.",
         "general": {
-          "grade3": ["Belladonna", "Bryonia", "Natrum Muriaticum"],
-          "grade2": ["Nux Vomica", "Gelsemium", "Lycopodium"],
-          "grade1": ["Calcarea Carbonica", "Phosphorus", "Sulphur"]
-        },
-        "throbbing": {
-          "grade3": ["Belladonna", "Gelsemium"],
-          "grade2": ["Natrum Muriaticum", "Lycopodium"],
-          "grade1": ["Calcarea Carbonica", "Nux Vomica"]
-        },
-        "bursting": {
-          "grade3": ["Bryonia", "Natrum Muriaticum"],
-          "grade2": ["Belladonna", "Lycopodium"],
-          "grade1": ["Calcarea Carbonica", "Gelsemium"]
-        },
-        "from_sun": {
-          "grade3": ["Natrum Muriaticum", "Belladonna"],
-          "grade2": ["Gelsemium", "Lycopodium"],
-          "grade1": ["Calcarea Carbonica", "Bryonia"]
-        }
-      },
-      "Vertigo": {
-        "general": {
-          "grade3": ["Belladonna", "Bryonia", "Gelsemium"],
-          "grade2": ["Phosphorus", "Nux Vomica", "Calcarea Carbonica"],
-          "grade1": ["Lycopodium", "Natrum Muriaticum", "Sulphur"]
-        },
-        "on_rising": {
-          "grade3": ["Bryonia", "Phosphorus"],
-          "grade2": ["Nux Vomica", "Calcarea Carbonica"],
-          "grade1": ["Belladonna", "Lycopodium"]
-        }
-      }
-    },
-    "Stomach": {
-      "Appetite": {
-        "increased": {
-          "grade3": ["Calcarea Carbonica", "Lycopodium", "Phosphorus"],
-          "grade2": ["Sulphur", "Natrum Muriaticum"],
-          "grade1": ["Nux Vomica", "Sepia"]
-        },
-        "diminished": {
-          "grade3": ["Arsenicum Album", "Gelsemium", "Sepia"],
-          "grade2": ["Natrum Muriaticum", "Phosphorus"],
-          "grade1": ["Calcarea Carbonica", "Lycopodium"]
-        }
-      },
-      "Thirst": {
-        "extreme": {
-          "grade3": ["Bryonia", "Natrum Muriaticum", "Phosphorus"],
-          "grade2": ["Arsenicum Album", "Calcarea Carbonica"],
-          "grade1": ["Lycopodium", "Sulphur"]
-        },
-        "for_small_quantities": {
-          "grade3": ["Arsenicum Album"],
-          "grade2": ["Lycopodium", "Phosphorus"],
-          "grade1": ["Natrum Muriaticum", "Sepia"]
-        },
-        "absent": {
-          "grade3": ["Pulsatilla", "Gelsemium"],
-          "grade2": ["Belladonna", "Apis"],
-          "grade1": ["Calcarea Carbonica", "Sulphur"]
-        }
-      },
-      "Nausea": {
-        "general": {
-          "grade3": ["Ipecacuanha", "Nux Vomica", "Sepia"],
-          "grade2": ["Arsenicum Album", "Pulsatilla"],
-          "grade1": ["Calcarea Carbonica", "Lycopodium"]
-        },
-        "morning": {
-          "grade3": ["Nux Vomica", "Sepia"],
-          "grade2": ["Calcarea Carbonica", "Lycopodium"],
-          "grade1": ["Phosphorus", "Sulphur"]
-        }
-      }
-    },
-    "Generalities": {
-      "Modalities": {
-        "worse_cold": {
-          "grade3": ["Arsenicum Album", "Hepar Sulphuris", "Silicea"],
-          "grade2": ["Calcarea Carbonica", "Lycopodium", "Nux Vomica"],
-          "grade1": ["Phosphorus", "Sepia", "Rhus Toxicodendron"]
-        },
-        "better_heat": {
-          "grade3": ["Arsenicum Album", "Hepar Sulphuris", "Lycopodium"],
-          "grade2": ["Calcarea Carbonica", "Rhus Toxicodendron"],
-          "grade1": ["Nux Vomica", "Phosphorus"]
-        },
-        "worse_motion": {
-          "grade3": ["Bryonia", "Belladonna"],
-          "grade2": ["Gelsemium", "Nux Vomica"],
-          "grade1": ["Arsenicum Album", "Calcarea Carbonica"]
-        },
-        "better_motion": {
-          "grade3": ["Rhus Toxicodendron", "Lycopodium"],
-          "grade2": ["Pulsatilla", "Sepia"],
-          "grade1": ["Phosphorus", "Sulphur"]
-        }
-      },
-      "Constitution": {
-        "lean": {
-          "grade3": ["Arsenicum Album", "Phosphorus", "Natrum Muriaticum"],
-          "grade2": ["Lycopodium", "Silicea", "Sulphur"],
-          "grade1": ["Nux Vomica", "Sepia"]
-        },
-        "fat": {
-          "grade3": ["Calcarea Carbonica", "Graphites"],
-          "grade2": ["Pulsatilla", "Sulphur"],
-          "grade1": ["Lycopodium", "Sepia"]
+          "grade3": ["Bell", "Glon", "Sang"],
+          "grade2": ["Acon", "Calc", "Nat-m"],
+          "grade1": ["Bry", "Lach", "Puls"]
         }
       }
     }
   },
   "remedies": {
     "Aconitum Napellus": {
-      "keynotes": ["Sudden onset", "Great fear", "Restlessness", "High fever"],
-      "constitution": "Sanguine, plethoric, nervous temperament",
-      "sphere": "Acute inflammatory conditions",
-      "gradations": {
-        "mind_anxiety": 3,
-        "mind_fear_death": 3,
-        "head_pain": 2,
-        "fever": 3,
-        "restlessness": 3
-      }
-    },
-    "Arsenicum Album": {
-      "keynotes": ["Burning pains better heat", "Restlessness with prostration", "Fear of death", "Periodicity"],
-      "constitution": "Nervous, irritable, restless",
-      "sphere": "Chronic digestive disorders, anxiety",
-      "gradations": {
-        "mind_anxiety": 3,
-        "mind_fear_death": 3,
-        "mind_fear_disease": 3,
-        "generalities_worse_cold": 3,
-        "generalities_better_heat": 3
-      }
+      "keynotes": ["Fear", "Anxiety", "Suddenness", "Restlessness", "Thirst"],
+      "mentalGenerals": "Dominating fear and anxiety in all complaints.",
+      "physicalGenerals": "Complaints from dry, cold wind; high fever; burning pains."
     }
   }
 }

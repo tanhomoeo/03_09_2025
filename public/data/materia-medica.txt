@@ -1,18 +1,55 @@
-This is a placeholder for Hahnemann's Materia Medica Pura. The content of the book should be placed here.
+Aconitum napellus
+Fear, anxiety, and restlessness are the main characteristics of Aconite. It is indicated in acute, sudden, and violent inflammations with high fever. The patient does not want to be touched. There is a sudden and great sinking of strength. Complaints are often caused by exposure to dry, cold weather.
 
-Example Entry:
+Mind: Great fear and anxiety. Fear of death. Predicts the day he will die. Restlessness.
 
-NUX VOMICA
-(Poison-nut)
+Head: Fullness and heaviness, as if the head would burst.
 
-Mind
-Very irritable; sensitive to all impressions. Cannot bear noises, odors, light, etc. Does not want to be touched. Quarrelsome, spiteful, malicious; nervous and melancholic.
+Eyes: Red, inflamed, and sensitive to light.
 
-Stomach
-Nausea in the morning, after eating. Sour taste, and nausea in the morning. Weight and pain in stomach; worse, eating, some time after.
+Ears: Very sensitive to noises.
 
-Back
-Backache in lumbar region. Must sit up or turn over in bed to get relief.
+Nose: Smell is acutely sensitive. Coryza with much sneezing.
 
-Sleep
-Cannot sleep after 3 am; lies awake for hours; mind full of ideas; wakes up tired and weak.
+Face: Red, hot, and flushed.
+
+Mouth: Dry and thirsty for cold water.
+
+Stomach: Vomiting with fear and heat.
+
+Abdomen: Hot, tense, and sensitive to touch.
+
+Stool: Watery and white.
+
+Urine: Scanty, red, and hot.
+
+Respiratory: Dry, hoarse, croupy cough.
+
+Heart: Palpitation with anxiety and fainting.
+
+Extremities: Numbness and tingling.
+
+Fever: High fever with dry, hot skin and restlessness.
+
+Modalities: Worse in a warm room, in the evening, and at night. Better in the open air.
+
+Belladonna
+Great intensity of symptoms. Sudden and violent onset. The patient is hot, red, and burning. The pains are throbbing. There is a great deal of delirium, with visions and a desire to escape.
+
+Mind: Delirium with wild imaginings. Wants to bite, strike, and tear things.
+
+Head: Throbbing headache, worse from light, noise, and motion.
+
+Eyes: Pupils are dilated. Eyes are red, hot, and sparkling.
+
+Face: Red, hot, and swollen.
+
+Throat: Dry, red, and constricted.
+
+Stomach: Great thirst for cold water, but dreads drinking.
+
+Abdomen: Tender and distended.
+
+Fever: High fever with a hot, red skin, and a bounding pulse.
+
+Modalities: Worse from touch, motion, noise, and light. Better from rest.
