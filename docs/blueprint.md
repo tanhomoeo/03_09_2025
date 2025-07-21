@@ -1,18 +1,23 @@
-# **App Name**: AcknowledgeMint
+# **App Name**: ত্রিফুল আরোগ্য নিকেতন
 
 ## Core Features:
 
-- Positive Statement Detection: Accept user input. Use the LLM as a tool to identify positive statements from this input. Ignore all other inputs.
-- NFT Minting: Use the LLM as a tool to convert user inputted positive statements into minted NFTs.
-- Input field: Display user input field
-- Display NFTs: Show the NFTs on the screen after minting.
+- লগইন: ব্যবহারকারী ইমেইল/পাসওয়ার্ড বা Google অ্যাকাউন্ট দিয়ে লগইন করতে পারেন। AuthContext ব্যবহারকারীর লগইন অবস্থা যাচাই করে।
+- ড্যাশবোর্ড: লগইন করার পর এটিই প্রথম পেজ। এখানে Quick Actions, দৈনিক ও মাসিক কার্যকলাপের সারাংশ এবং আজকের সাক্ষাতের তালিকা দেখা যায়।
+- নতুন রোগী ভর্তি: নতুন রোগীর তথ্য (নাম, ফোন, ঠিকানা ইত্যাদি) এখানে নিবন্ধন করা হয় এবং addPatient ফাংশনের মাধ্যমে Firestore-এ সেভ করা হয়।
+- রোগী অনুসন্ধান: নাম, ডায়েরি নম্বর বা ফোন নম্বর দিয়ে যেকোনো রোগীকে দ্রুত খুঁজে বের করা যায়। এখান থেকে রোগীর বিস্তারিত তথ্য দেখা, নতুন ভিজিট যুক্ত করা বা প্রেসক্রিপশন তৈরির কাজ শুরু করা যায়।
+- রোগীর তালিকা: বাংলা বর্ণমালা অনুযায়ী সকল নিবন্ধিত রোগীদের তালিকা দেখা যায়।
+- প্রেসক্রিপশন তৈরি: রোগীর ভিজিটের উপর ভিত্তি করে প্রেসক্রিপশন তৈরি করা হয়। এখানে ঔষধের নাম, মাত্রা, সময়কাল ইত্যাদি যুক্ত করে প্রিন্ট করা যায়।
+- ঔষধের নিয়মাবলী: প্রেসক্রিপশনের পাশাপাশি শুধু ঔষধ খাওয়ার নিয়মাবলী আলাদাভাবে প্রিন্ট করার জন্য এই পেজটি ব্যবহৃত হয়। এখানে দুটি ভিন্ন টেমপ্লেট রয়েছে।
+- AI রেপার্টরি: এখানে রোগীর লক্ষণ বিস্তারিতভাবে লিখে দিলে, suggest-remedies.ts-এ থাকা AI ফ্লো সেটি বিশ্লেষণ করে। এটি লক্ষণগুলোকে মানসিক, শারীরিক ও পূর্ব ইতিহাসে ভাগ করে এবং বিভিন্ন Materia Medica-এর উপর ভিত্তি করে সেরা ঔষধগুলোর একটি তুলনামূলক তালিকা প্রদান করে, যা সিদ্ধান্ত গ্রহণে ডাক্তারকে সাহায্য করে।This feature uses generative AI.
+- ভাসমান ভয়েস বাটন: এটি একটি গ্লোবাল কম্পোনেন্ট যা সব পেজের উপরে ভেসে থাকে। কীবোর্ডের `V` কী চাপলে যেকোনো ইনপুট ফিল্ডে স্বয়ংক্রিয়ভাবে বাংলা টাইপ হয়ে যায়। এটি Web Speech API ব্যবহার করে কাজ করে।
+- প্রতিবেদন: দৈনিক, সাপ্তাহিক, মাসিক বা নির্দিষ্ট তারিখের পরিসরে মোট ভিজিট এবং আয়ের রিপোর্ট তৈরি করা যায়।
+- পেমেন্ট স্লিপ: সকল পেমেন্টের রেকর্ড বা স্লিপ এখানে খোঁজা যায় এবং বিস্তারিত দেখা যায়।
+- ক্লিনিকের তথ্য: প্রেসক্রিপশন এবং রিপোর্টে প্রদর্শনের জন্য ক্লিনিকের নাম, ডাক্তারের নাম, ঠিকানা ইত্যাদি এখানে সেট করা হয়, যা getClinicSettings ও saveClinicSettings ফাংশনের মাধ্যমে Firestore-এ সংরক্ষিত হয়।
+- অ্যাপ সেটিংস: অ্যাপ্লিকেশনের থিম (Light/Dark) পরিবর্তন এবং সকল ডেটা JSON ফরম্যাটে এক্সপোর্ট করার সুবিধা এখানে রয়েছে।
 
 ## Style Guidelines:
 
-- Primary color: Light violet (#D09CFF) to symbolize spirituality.
-- Background color: Light gray (#F0F0F5) to avoid distraction.
-- Accent color: Soft lavender (#C6D4FF) for interactive elements.
-- Body and headline font: 'Inter', a grotesque-style sans-serif.
-- Minimal, geometric icons related to NFT creation and positive reinforcement.
-- Clean, grid-based layout for displaying input, NFTs, and controls.
-- Subtle, celebratory animation when a new positive statement is successfully minted as an NFT.
+- Body and headline font: Bangla font
+- Clean, grid-based layout for displaying input, and other information
+- color combination must be suitable.
