@@ -69,7 +69,7 @@ const complaintAnalysisPrompt = ai.definePrompt({
 রোগীর অভিযোগ:
 {{{complaintText}}}
 
-আপনার উত্তর JSON ফরম্যাটে দিন।
+Your response must be a valid JSON object matching the provided schema. Do not add any extra explanations.
 `,
 });
 
@@ -91,10 +91,10 @@ const complaintAnalyzerFlow = ai.defineFlow(
       const validation = ComplaintAnalyzerOutputSchema.safeParse(output);
       if (!validation.success) {
           console.error('LLM output validation failed:', validation.error.format());
-          throw new Error('AI মডেল থেকে প্রাপ্ত উত্তরটি সঠিক ফরম্যাটে নেই। অনুগ্রহ করে আবার চেষ্টা করুন।');
+          throw new Error('AI মডেল একটি ভুল উত্তর দিয়েছে যা প্রসেস করা সম্ভব হচ্ছে না। অনুগ্রহ করে আবার চেষ্টা করুন।');
       }
 
-      return output;
+      return validation.data;
     } catch (error: any) {
       console.error("Full error in complaintAnalyzerFlow:", error);
 
@@ -109,7 +109,7 @@ const complaintAnalyzerFlow = ai.defineFlow(
            errorMessage = 'AI পরিষেবা ব্যবহারের জন্য আপনার অনুমতি নেই। অনুগ্রহ করে নিশ্চিত করুন যে আপনার Google Cloud প্রজেক্টে "Vertex AI API" চালু আছে এবং বিলিং অ্যাকাউন্ট সঠিকভাবে সংযুক্ত আছে।';
         } else if (msg.includes('quota') || msg.includes('limit')) {
            errorMessage = 'AI পরিষেবা ব্যবহারের দৈনিক সীমা অতিক্রম করেছে। কিছুক্ষণ পর আবার চেষ্টা করুন।';
-        } else if (error.message.startsWith('ইনপুট ডেটা সঠিক নয়:') || error.message.startsWith('AI মডেল থেকে প্রাপ্ত উত্তরটি সঠিক ফরম্যাটে নেই') || error.message.startsWith('AI বিশ্লেষণ থেকে কোনো উত্তর পাওয়া যায়নি')) {
+        } else if (error.message.startsWith('ইনপুট ডেটা সঠিক নয়:') || error.message.startsWith('AI মডেল একটি ভুল উত্তর দিয়েছে যা প্রসেস করা সম্ভব হচ্ছে না।') || error.message.startsWith('AI বিশ্লেষণ থেকে কোনো উত্তর পাওয়া যায়নি')) {
            errorMessage = error.message; 
         } else if (error.message.startsWith('AI পরিষেবা কনফিগার করা নেই')) {
            errorMessage = error.message;
