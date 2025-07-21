@@ -30,8 +30,6 @@ import {
   Loader2,
   CalendarIcon,
   Camera,
-  Brain,
-  ClipboardEdit,
 } from 'lucide-react';
 import {
   Popover,
@@ -53,9 +51,6 @@ import {cn} from '@/lib/utils';
 import {Textarea} from '@/components/ui/textarea';
 import dynamic from 'next/dynamic';
 import type {HandwrittenFormOutput} from '@/ai/flows/handwritten-patient-form-parser-flow';
-import {categorizeCaseNotes} from '@/ai/flows/categorize-case-notes-flow';
-import {Alert, AlertTitle, AlertDescription} from '@/components/ui/alert';
-import {CategorizedSymptomsDisplay} from '@/components/categorized-symptoms-display';
 import {LoadingSpinner} from '@/components/shared/LoadingSpinner';
 
 const patientFormSchema = z.object({
@@ -104,10 +99,6 @@ function PatientEntryPageContent() {
   const {toast} = useToast();
   const searchParams = useSearchParams();
   const [isCameraModalOpen, setIsCameraModalOpen] = useState(false);
-  const [isCategorizing, setIsCategorizing] = useState(false);
-  const [categorizationError, setCategorizationError] = useState<string | null>(
-    null
-  );
 
   const form = useForm<PatientFormValues>({
     resolver: zodResolver(patientFormSchema),
@@ -195,39 +186,6 @@ function PatientEntryPageContent() {
     });
   };
 
-  const handleCategorizeNotes = async () => {
-    const caseNotesText = form.getValues('caseNotes');
-    if (!caseNotesText || caseNotesText.trim().length < 20) {
-      toast({
-        title: 'অপর্যাপ্ত তথ্য',
-        description:
-          'বিশ্লেষণ করার জন্য অনুগ্রহ করে রোগীর সমস্যা ও ইতিহাস সম্পর্কে আরও বিস্তারিত লিখুন (কমপক্ষে ২০ অক্ষর)।',
-        variant: 'destructive',
-      });
-      return;
-    }
-
-    setIsCategorizing(true);
-    setCategorizationError(null);
-    form.setValue('categorizedCaseNotes', undefined);
-
-    try {
-      const result = await categorizeCaseNotes({caseNotesText});
-      form.setValue('categorizedCaseNotes', result, {shouldDirty: true});
-      toast({
-        title: 'লক্ষণ শ্রেণীবিভাগ সফল হয়েছে',
-        description:
-          'AI দ্বারা রোগীর লক্ষণগুলো সফলভাবে ৭টি ক্যাটাগরিতে ভাগ করা হয়েছে।',
-      });
-    } catch (error: unknown) {
-      const errorMessage =
-        error instanceof Error ? error.message : 'একটি অজানা ত্রুটি ঘটেছে।';
-      setCategorizationError(errorMessage);
-    } finally {
-      setIsCategorizing(false);
-    }
-  };
-
   const onSubmit: SubmitHandler<PatientFormValues> = async data => {
     try {
       const newPatientData: Partial<Patient> = {
@@ -271,8 +229,6 @@ function PatientEntryPageContent() {
       });
     }
   };
-
-  const categorizedResult = form.watch('categorizedCaseNotes');
 
   return (
     <>
@@ -632,51 +588,6 @@ function PatientEntryPageContent() {
                     </FormItem>
                   )}
                 />
-
-                <div className="space-y-4 rounded-lg border bg-card p-4">
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                    <div>
-                      <h3 className="font-semibold text-base text-primary flex items-center">
-                        <Brain className="w-5 h-5 mr-2" />
-                        AI দ্বারা লক্ষণ বিশ্লেষণ
-                      </h3>
-                      <p className="text-xs text-muted-foreground">
-                        উপরের টেক্সটবক্সে লেখা বিবরণ থেকে স্বয়ংক্রিয়ভাবে
-                        লক্ষণগুলো ৭টি ক্যাটাগরিতে ভাগ করুন।
-                      </p>
-                    </div>
-                    <Button
-                      type="button"
-                      onClick={handleCategorizeNotes}
-                      disabled={isCategorizing}
-                    >
-                      {isCategorizing ? (
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      ) : (
-                        <ClipboardEdit className="mr-2 h-4 w-4" />
-                      )}
-                      {isCategorizing
-                        ? 'বিশ্লেষণ চলছে...'
-                        : 'নোট বিশ্লেষণ করুন'}
-                    </Button>
-                  </div>
-
-                  {categorizationError && (
-                    <Alert variant="destructive">
-                      <AlertTitle>ত্রুটি</AlertTitle>
-                      <AlertDescription>{categorizationError}</AlertDescription>
-                    </Alert>
-                  )}
-
-                  {categorizedResult && (
-                    <div className="space-y-3 pt-3 mt-3 border-t">
-                      <CategorizedSymptomsDisplay
-                        symptoms={categorizedResult}
-                        showNumbers={true}
-                      />
-                    </div>
-                  )}
-                </div>
               </CardContent>
             </Card>
 
