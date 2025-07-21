@@ -76,23 +76,10 @@ export async function suggestRemedies(
 ): Promise<SuggestRemediesOutputType> {
   if (!process.env.GEMINI_API_KEY) {
     throw new Error(
-      'AI পরিষেবা কনফিগার করা যায়নি। GEMINI_API_KEY ���েট করা নেই।'
+      'AI পরিষেবা কনফিগার করা যায়নি। GEMINI_API_KEY সেট করা নেই।'
     );
   }
-  // Try philosopher-enhanced system first, then enhanced, then original
-  try {
-    const { philosopherEnhancedSuggestion } = await import('./philosopher-enhanced-suggestion');
-    return await philosopherEnhancedSuggestion({ symptoms: input.symptoms });
-  } catch (philosopherError) {
-    console.warn('Philosopher-enhanced system failed, trying enhanced system:', philosopherError);
-    try {
-      const { enhancedRemedySuggestion } = await import('./enhanced-remedy-suggestion');
-      return await enhancedRemedySuggestion({ symptoms: input.symptoms });
-    } catch (enhancedError) {
-      console.warn('Enhanced system failed, falling back to original:', enhancedError);
-      return suggestRemediesFlow(input);
-    }
-  }
+  return suggestRemediesFlow(input);
 }
 
 const prompt = ai.definePrompt({
@@ -179,7 +166,7 @@ const suggestRemediesFlow = ai.defineFlow(
               'AI পরিষেবা কনফিগার করা যায়নি। অনুগ্রহ করে আপনার GEMINI_API_KEY এবং বিলিং সেটিংস যাচাই করুন।';
           } else if (msg.includes('json')) {
             errorMessage =
-              'AI মডেল একটি ভুল উত্��র দিয়েছে যা প্রসেস করা সম্ভব হচ্ছে না। অনুগ্রহ করে আবার চেষ্টা করুন।';
+              'AI মডেল একটি ভুল উত্তর দিয়েছে যা প্রসেস করা সম্ভব হচ্ছে না। অনুগ্রহ করে আবার চেষ্টা করুন।';
           } else if (
             msg.includes('503') ||
             msg.includes('unavailable') ||

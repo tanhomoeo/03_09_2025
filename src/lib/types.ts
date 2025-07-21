@@ -1,4 +1,3 @@
-
 export type CategorizedCaseNotes = {
   physicalSymptoms?: string;
   mentalAndEmotionalSymptoms?: string;
