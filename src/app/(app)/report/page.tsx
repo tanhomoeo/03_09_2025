@@ -12,7 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PageHeaderCard } from '@/components/shared/PageHeaderCard';
 import { getVisits, getPatients, getPaymentSlips, formatDate, formatCurrency, getClinicSettings, PAYMENT_METHOD_LABELS, getPaymentMethodLabel, getWeekRange, getMonthRange } from '@/lib/firestoreService';
 import type { Visit, Patient, PaymentSlip, ClinicSettings, PaymentMethod } from '@/lib/types';
-import { CalendarIcon, Printer, Loader2, Filter } from 'lucide-react';
+import { CalendarIcon, Printer, Loader2, Filter, FileText } from 'lucide-react';
 import { format, startOfDay, endOfDay, isValid } from 'date-fns';
 import { bn } from 'date-fns/locale';
 import { APP_NAME } from '@/lib/constants';
@@ -248,9 +248,12 @@ export default function EnhancedReportPage() {
         <PageHeaderCard
           title={pageTitle}
           description={reportPageDescriptionText}
-          className="hide-on-print"
+          className="hide-on-print bg-gradient-to-br from-green-100 to-lime-200 dark:from-green-900/30 dark:to-lime-900/30"
           actions={
-            <Button onClick={handlePrintReport} variant="outline" disabled={isLoading}><Printer className="mr-2 h-4 w-4" /> প্রিন্ট করুন</Button>
+            <div className='flex items-center gap-2'>
+              <FileText className="h-8 w-8 text-primary" />
+              <Button onClick={handlePrintReport} variant="outline" disabled={isLoading}><Printer className="mr-2 h-4 w-4" /> প্রিন্ট করুন</Button>
+            </div>
           }
         >
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">

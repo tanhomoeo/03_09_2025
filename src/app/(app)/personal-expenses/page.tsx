@@ -12,6 +12,7 @@ export default function PersonalExpensesPage() {
         title="ব্যক্তিগত খরচ"
         description="আপনার ব্যক্তিগত খরচ এবং হিসাব পরিচালনা করুন।"
         actions={<DollarSign className="h-8 w-8 text-primary" />}
+        className="bg-gradient-to-br from-rose-100 to-pink-200 dark:from-rose-900/30 dark:to-pink-900/30"
       />
       <Card className="shadow-md bg-card/80 backdrop-blur-lg">
         <CardHeader>

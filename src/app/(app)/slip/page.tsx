@@ -96,6 +96,7 @@ export default function SlipSearchPage() {
         title="পেমেন্ট স্লিপ অনুসন্ধান"
         description="রোগীর নাম, স্লিপ আইডি, বা উদ্দেশ্য দ্বারা পেমেন্ট স্লিপ খুঁজুন।"
         actions={<ScrollText className="h-8 w-8 text-primary" />}
+        className="bg-gradient-to-br from-lime-100 to-yellow-200 dark:from-lime-900/30 dark:to-yellow-900/30"
       >
         <div className="flex flex-col md:flex-row gap-3 items-center pt-4">
             <div className="flex h-10 items-center w-full rounded-md border border-input bg-card shadow-inner overflow-hidden focus-within:ring-1 focus-within:ring-ring focus-within:border-primary flex-1">

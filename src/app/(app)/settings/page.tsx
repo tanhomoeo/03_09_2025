@@ -46,7 +46,6 @@ export default function AppSettingsPage() {
   const isDarkMode = currentTheme === 'dark';
 
   const toggleDarkMode = (checked: boolean) => {
-    const newTheme = checked ? 'dark' : 'light';
     const selectedBaseTheme = THEME_OPTIONS.find(t => t.value === (theme?.replace('-dark', '') || 'default'))?.value || 'default';
     
     if (checked) {
@@ -145,6 +144,7 @@ export default function AppSettingsPage() {
         title="সেটিংস"
         description="অ্যাপ্লিকেশন কাস্টমাইজ করুন এবং ডেটা পরিচালনা করুন।"
         actions={<SettingsIcon className="h-8 w-8 text-primary" />}
+        className="bg-gradient-to-br from-slate-100 to-gray-200 dark:from-slate-900/30 dark:to-gray-900/30"
       />
 
       <Card className="bg-card/80 backdrop-blur-lg">

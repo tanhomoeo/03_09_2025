@@ -96,6 +96,7 @@ function ClinicInformationContent() {
         title="ক্লিনিকের তথ্য"
         description="প্রিন্ট করা ডকুমেন্টে ব্যবহারের জন্য আপনার ক্লিনিকের বিবরণ পরিচালনা করুন।"
         actions={<Building className="h-8 w-8 text-primary" />}
+        className="bg-gradient-to-br from-amber-100 to-orange-200 dark:from-amber-900/30 dark:to-orange-900/30"
       />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>

@@ -265,7 +265,7 @@ function MedicineInstructionsPageContent() {
         <PageHeaderCard
           title="ঔষধ খাওয়ার নিয়মাবলী"
           description={pageHeaderDescriptionText}
-          className="hide-on-print"
+          className="hide-on-print bg-gradient-to-br from-indigo-100 to-blue-200 dark:from-indigo-900/30 dark:to-blue-900/30"
           actions={<ClipboardList className="h-8 w-8 text-primary" />}
         />
 

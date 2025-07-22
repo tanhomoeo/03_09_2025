@@ -8,7 +8,7 @@ import { PageHeaderCard } from '@/components/shared/PageHeaderCard';
 import { getPatients } from '@/lib/firestoreService';
 import type { Patient } from '@/lib/types';
 import { BENGALI_VOWELS_FOR_FILTER, BENGALI_CONSONANTS_FOR_FILTER } from '@/lib/constants';
-import { Loader2, ExternalLink } from 'lucide-react';
+import { Loader2, ExternalLink, ListChecks } from 'lucide-react';
 import Link from 'next/link';
 import { ROUTES } from '@/lib/constants';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -62,6 +62,8 @@ export default function DictionaryPage() {
       <PageHeaderCard
         title="রোগীর তালিকা"
         description="রোগীর রেকর্ড ব্রাউজ, অনুসন্ধান এবং ফিল্টার করুন।"
+        actions={<ListChecks className="h-8 w-8 text-primary" />}
+        className="bg-gradient-to-br from-teal-100 to-green-200 dark:from-teal-900/30 dark:to-green-900/30"
       />
 
       <Card className="shadow-sm bg-blue-500/10 backdrop-blur-lg">

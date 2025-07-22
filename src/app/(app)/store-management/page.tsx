@@ -12,6 +12,7 @@ export default function StoreManagementPage() {
         title="ঔষধ ব্যবস্থাপনা"
         description="আপনার ক্লিনিকের ঔষধপত্র এবং স্টক পরিচালনা করুন।"
         actions={<Store className="h-8 w-8 text-primary" />}
+        className="bg-gradient-to-br from-amber-100 to-orange-200 dark:from-amber-900/30 dark:to-orange-900/30"
       />
       <Card className="shadow-md bg-card/80 backdrop-blur-lg">
         <CardHeader>
