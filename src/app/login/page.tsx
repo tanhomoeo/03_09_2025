@@ -128,12 +128,12 @@ export default function LoginPage() {
 
   // While checking auth state or if user is already logged in, show a loader
   if (loading || user) {
-    return <LoadingSpinner variant="page" showLogo={true} label="অ প্রমাণীকরণ করা হচ্ছে..." />;
+    return <LoadingSpinner variant="page" showLogo={true} label="অ্যাকাউন্ট লোড হচ্ছে..." />;
   }
 
   // Render the login page if not loading and no user is found
   return (
-    <main className="flex min-h-screen w-full flex-col items-center justify-center p-4">
+    <main className="flex min-h-screen w-full flex-col items-center justify-center p-4 sm:p-6 md:p-8">
       <Card className={cn(
           "w-full max-w-sm",
           "bg-white/30 dark:bg-black/20",

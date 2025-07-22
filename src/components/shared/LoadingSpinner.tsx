@@ -29,7 +29,7 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
         <div className="flex flex-col items-center gap-6">
           <div className="relative flex items-center justify-center">
             {showLogo && (
-              <div className="absolute h-[100px] w-[100px] rounded-full border-4 border-primary/20 border-t-primary animate-spin"></div>
+              <div className="absolute h-[100px] w-[100px] rounded-full border-4 border-primary/10 border-t-primary animate-spin"></div>
             )}
             {showLogo ? (
               <div className="relative h-16 w-16">
