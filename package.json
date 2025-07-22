@@ -14,7 +14,6 @@
     "lint:fix": "eslint . --ext .ts,.tsx --fix"
   },
   "dependencies": {
-    "@ducanh2912/next-pwa": "^10.2.7",
     "@genkit-ai/core": "^1.14.1",
     "@genkit-ai/firebase": "^1.14.1",
     "@genkit-ai/googleai": "^1.14.1",
