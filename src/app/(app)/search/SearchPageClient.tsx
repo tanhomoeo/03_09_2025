@@ -128,18 +128,33 @@ export default function SearchPageClient() {
       return;
     }
     const lowerSearchTerm = searchTerm.toLowerCase();
+    
+    // Check if the search term is a likely diary number or phone number for exact matching
+    const isExactSearch = /^[0-9/+-]+$/.test(searchTerm.replace('f', '').replace('c', '').replace('h', ''));
+
     const results = allPatients.filter(patient => {
       const diaryNumString = (patient.diaryNumber || '').toString().toLowerCase();
+      const phoneString = patient.phone.toLowerCase();
+
+      if (isExactSearch) {
+        // Exact match for diary number or phone
+        if (diaryNumString === lowerSearchTerm || phoneString === lowerSearchTerm) {
+          return true;
+        }
+      }
+      
+      // Broader, "contains" search for general text
       return (
         patient.name.toLowerCase().includes(lowerSearchTerm) ||
         (patient.id && patient.id.toLowerCase().includes(lowerSearchTerm)) ||
-        patient.phone.toLowerCase().includes(lowerSearchTerm) ||
+        phoneString.includes(lowerSearchTerm) ||
         diaryNumString.includes(lowerSearchTerm) ||
         (patient.villageUnion || '').toLowerCase().includes(lowerSearchTerm) ||
         (patient.district || '').toLowerCase().includes(lowerSearchTerm) ||
         (patient.guardianName || '').toLowerCase().includes(lowerSearchTerm)
       );
     });
+    
     setFilteredPatients(results);
 
     const tabParam = searchParams.get('tab');
