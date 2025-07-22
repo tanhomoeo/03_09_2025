@@ -1,6 +1,6 @@
 
 'use client';
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Mic, Loader2, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -19,6 +19,40 @@ export function FloatingVoiceInput() {
     stop,
     activeElement,
   } = useVoiceContext();
+  const [isVisible, setIsVisible] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const hideButton = () => {
+    setIsVisible(false);
+  };
+
+  const showAndAutoHideButton = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    setIsVisible(true);
+    timeoutRef.current = setTimeout(hideButton, 5000);
+  };
+  
+  useEffect(() => {
+    if (isListening) {
+      showAndAutoHideButton();
+    } else {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+       // Keep it visible for a moment after stopping, then hide
+      timeoutRef.current = setTimeout(hideButton, 1000);
+    }
+
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isListening]);
+
 
   const handleButtonClick = () => {
     if (isListening) {
@@ -40,13 +74,13 @@ export function FloatingVoiceInput() {
     }
   };
   
-  React.useEffect(() => {
+  useEffect(() => {
      if (isListening && !activeElement) {
         stop();
      }
   }, [isListening, activeElement, stop]);
 
-  if (!isSupported || isMobile) {
+  if (!isSupported || isMobile || !isVisible) {
     return null;
   }
 
@@ -67,11 +101,13 @@ export function FloatingVoiceInput() {
         error &&
           !isListening &&
           'bg-yellow-400 text-yellow-900 border-yellow-500 hover:bg-yellow-500',
+        'data-[state=visible]:animate-in data-[state=visible]:fade-in data-[state=hidden]:animate-out data-[state=hidden]:fade-out'
       )}
       title={buttonTitle}
       aria-label={
         isListening ? 'ভয়েস ইনপুট বন্ধ করুন' : 'ভয়েস ইনপুট শুরু করুন'
       }
+      data-state={isVisible ? 'visible' : 'hidden'}
     >
       {isListening ? (
         <Loader2 className="h-7 w-7 animate-spin" />
