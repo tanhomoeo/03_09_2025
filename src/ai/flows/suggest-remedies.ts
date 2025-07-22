@@ -10,11 +10,8 @@
  */
 import {ai} from '../genkit';
 import {z} from 'zod';
-// Use raw-loader to import text files directly as strings
-// This ensures the content is bundled with the serverless function
-import hahnemannsMateriaMedica from 'raw-loader!../../../public/data/materia-medica.txt';
-import boerickesMateriaMedica from 'raw-loader!../../../public/data/Boerickes_Materia_Medica.txt';
-import kentsMateriaMedica from 'raw-loader!../../../public/data/Kents_Lectures_On_Materia_Medica.txt';
+import fs from 'fs';
+import path from 'path';
 
 const SuggestRemediesInputSchema = z.object({
   symptoms: z
@@ -90,6 +87,16 @@ const SuggestRemediesOutputSchema = z.object({
 });
 export type SuggestRemediesOutput = z.infer<typeof SuggestRemediesOutputSchema>;
 
+const loadKnowledgeBase = (fileName: string): string => {
+    try {
+        const fullPath = path.join(process.cwd(), 'public', 'data', fileName);
+        return fs.readFileSync(fullPath, 'utf-8');
+    } catch (error) {
+        console.error(`Error reading knowledge base file ${fileName}:`, error);
+        return `Error: Could not load ${fileName}.`;
+    }
+};
+
 export async function suggestRemedies(input: SuggestRemediesInput): Promise<SuggestRemediesOutput> {
   if (!process.env.GEMINI_API_KEY) {
     throw new Error('AI পরিষেবা কনফিগার করা যায়নি। GEMINI_API_KEY সেট করা নেই।');
@@ -147,6 +154,10 @@ const suggestRemediesFlow = ai.defineFlow(
   },
   async (input: SuggestRemediesInput) => {
     try {
+      const hahnemannsMateriaMedica = loadKnowledgeBase('materia-medica.txt');
+      const boerickesMateriaMedica = loadKnowledgeBase('Boerickes_Materia_Medica.txt');
+      const kentsMateriaMedica = loadKnowledgeBase('Kents_Lectures_On_Materia_Medica.txt');
+
       const {output} = await prompt({
           ...input,
           hahnemannsMateriaMedica,
