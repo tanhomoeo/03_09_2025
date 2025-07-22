@@ -8,11 +8,15 @@ const nextConfig = {
       },
     ],
   },
-  webpack: (config) => {
+  webpack: (config, { isServer }) => {
     config.module.rules.push({
       test: /\.txt$/,
       use: 'raw-loader',
     });
+
+    if (isServer) {
+        config.externals.push('@opentelemetry/exporter-jaeger');
+    }
 
     return config;
   },
