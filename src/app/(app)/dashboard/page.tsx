@@ -18,6 +18,7 @@ import { bn } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import QuickActionCard from '@/components/dashboard/QuickActionCard';
 import ActivityCard from '@/components/dashboard/ActivityCard';
+import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 
 interface AppointmentDisplayItem {
   visitId: string;
@@ -45,7 +46,7 @@ interface ClinicStats {
 }
 
 const DashboardSkeleton = () => (
-  <div className="space-y-8 animate-pulse max-w-6xl mx-auto">
+  <div className="space-y-8 animate-pulse">
     <div className="mb-6">
       <div className="h-10 bg-muted rounded w-3/4 mb-2"></div>
       <div className="h-6 bg-muted rounded w-1/2 mb-6"></div>
@@ -259,7 +260,7 @@ export default function DashboardPage() {
 
   return (
     <TooltipProvider>
-    <div className="max-w-6xl mx-auto space-y-6 md:space-y-8">
+    <div className="space-y-6 md:space-y-8">
       <div className="mb-6 hide-on-print hidden md:block">
         <h1 className="text-2xl md:text-3xl font-bold font-headline text-blue-900 dark:text-blue-300 drop-shadow-sm">ড্যাশবোর্ড</h1>
         <p className="text-muted-foreground mt-1 text-sm md:text-base">আপনার ক্লিনিকের কার্যক্রমের একটি সারসংক্ষেপ।</p>
@@ -560,3 +561,5 @@ export default function DashboardPage() {
     </TooltipProvider>
   );
 }
+
+    

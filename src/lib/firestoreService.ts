@@ -39,8 +39,8 @@ const convertDocument = <T extends { id: string }>(docSnap: {id: string, data: (
   if (data && data.categorizedCaseNotes && typeof data.categorizedCaseNotes === 'string') {
     try {
       data.categorizedCaseNotes = JSON.parse(data.categorizedCaseNotes);
-    } catch (_e) {
-      console.error('Failed to parse categorizedCaseNotes:', _e);
+    } catch {
+      console.error('Failed to parse categorizedCaseNotes');
       // If parsing fails, set it to a default/empty object to prevent crashes downstream
       data.categorizedCaseNotes = {} as CategorizedCaseNotes; 
     }
@@ -136,9 +136,11 @@ export const updatePatient = async (patientId: string, patientData: Partial<Pati
                      if (key === 'categorizedCaseNotes' && typeof value === 'string') {
                         try {
                             firestoreUpdateData[key] = JSON.parse(value);
-                        } catch (_e) {
+                        } catch {
                              console.error('Skipping invalid JSON in categorizedCaseNotes during update');
                         }
+                    } else if (key === 'categorizedCaseNotes' && typeof value === 'object') {
+                        firestoreUpdateData[key] = value;
                     } else {
                         firestoreUpdateData[key] = value;
                     }
@@ -222,15 +224,15 @@ export const updateVisit = async (visitId: string, visitData: Partial<Visit>): P
 
 export const createVisitForPrescription = async (
   patientId: string,
-  symptoms?: string,
-  medicineDeliveryMethod?: 'direct' | 'courier'
+  symptoms: string = "পুনরায় সাক্ষাৎ / Follow-up",
+  medicineDeliveryMethod: 'direct' | 'courier' = 'direct'
 ): Promise<string | null> => {
   try {
     const visitData: Omit<Visit, 'id' | 'createdAt'> = {
       patientId,
       visitDate: new Date().toISOString(), 
-      symptoms: symptoms || "পুনরায় সাক্ষাৎ / Follow-up",
-      medicineDeliveryMethod: medicineDeliveryMethod || 'direct',
+      symptoms,
+      medicineDeliveryMethod,
     };
     const docRef = await addDoc(visitsCollectionRef(), prepareDataForFirestore(visitData as Record<string, unknown>));
     return docRef.id;
@@ -484,3 +486,5 @@ export const getMonthRange = (date: Date): { start: Date; end: Date } => {
   const end = endOfMonth(validDate);
   return { start, end };
 };
+
+    

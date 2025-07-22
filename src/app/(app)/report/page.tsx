@@ -17,6 +17,7 @@ import { format, startOfDay, endOfDay, isValid } from 'date-fns';
 import { bn } from 'date-fns/locale';
 import { APP_NAME } from '@/lib/constants';
 import { useToast } from '@/hooks/use-toast';
+import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 
 interface ReportData {
   visit: Visit;
@@ -241,6 +242,10 @@ export default function EnhancedReportPage() {
     const courierStr = courierDeliveryOnly ? ' | শুধু কুরিয়ার' : '';
     return `তারিখ/পরিসীমা: ${dateStr}${paymentStr}${courierStr}`;
   }, [isLoading, getReportDateRangeString, paymentMethodFilter, courierDeliveryOnly]);
+
+  if (isLoading && !clinicSettings) {
+    return <LoadingSpinner variant='page' label='প্রতিবেদন লোড হচ্ছে...' />
+  }
 
   return (
     <React.Fragment>
@@ -531,3 +536,5 @@ export default function EnhancedReportPage() {
     </React.Fragment>
   );
 }
+
+    

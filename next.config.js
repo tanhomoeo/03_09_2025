@@ -14,16 +14,7 @@ const nextConfig = {
       '@google-cloud/functions-framework',
     ],
   },
-  webpack: (config, { isServer }) => {
-    if (isServer) {
-        config.externals.push(
-            '@opentelemetry/exporter-jaeger',
-            '@opentelemetry/instrumentation-grpc',
-            'require-in-the-middle',
-            'handlebars'
-        );
-    }
-    
+  webpack: (config) => {
     config.module.rules.push({
       test: /\.txt$/,
       use: 'raw-loader',

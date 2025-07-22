@@ -187,7 +187,7 @@ export default function SearchPageClient() {
   const handleAddPatientToTodaysQueue = async (patient: Patient) => {
     setIsCreatingVisit(patient.id);
     try {
-      const newVisitId = await createVisitForPrescription(patient.id, "পুনরায় সাক্ষাৎ / Follow-up", 'direct');
+      const newVisitId = await createVisitForPrescription(patient.id);
       if (newVisitId) {
         toast({
           title: "রোগী তালিকায় যুক্ত হয়েছে",
@@ -325,3 +325,5 @@ export default function SearchPageClient() {
     </div>
   );
 }
+
+    

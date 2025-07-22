@@ -1,6 +1,6 @@
 
 'use client';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -56,18 +56,17 @@ type PaymentSlipFormValues = z.infer<typeof paymentSlipSchema>;
 
 export function CreatePaymentSlipModal({ patient, isOpen, onClose, onSlipCreated, visitId }: CreatePaymentSlipModalProps) {
   const { toast } = useToast();
-
   const form = useForm<PaymentSlipFormValues>({
     resolver: zodResolver(paymentSlipSchema),
-    defaultValues: {
-      purpose: visitId ? 'প্রেসক্রিপশন ফি' : 'সাধারণ পেমেন্ট',
-      amount: 0,
-      paymentMethod: 'cash',
-      receivedBy: '',
-      medicineDeliveryMethod: 'direct',
-    },
   });
 
+  const amountValue = form.watch('amount');
+  const [isAmountPositive, setIsAmountPositive] = useState(false);
+
+  useEffect(() => {
+    setIsAmountPositive(amountValue > 0);
+  }, [amountValue]);
+  
   useEffect(() => {
     if (isOpen) {
       form.reset({
@@ -171,7 +170,7 @@ export function CreatePaymentSlipModal({ patient, isOpen, onClose, onSlipCreated
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>পেমেন্ট মাধ্যম</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value || ''} defaultValue="cash">
+                  <Select onValueChange={field.onChange} value={field.value || ''} defaultValue="cash" disabled={!isAmountPositive}>
                     <FormControl>
                       <SelectTrigger><SelectValue placeholder="পেমেন্ট মাধ্যম নির্বাচন করুন" /></SelectTrigger>
                     </FormControl>
@@ -241,3 +240,5 @@ export function CreatePaymentSlipModal({ patient, isOpen, onClose, onSlipCreated
     </Dialog>
   );
 }
+
+    

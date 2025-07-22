@@ -100,4 +100,3 @@ export function MobileBottomNav() {
     </>
   );
 }
-export interface MobileBottomNavProps {}
