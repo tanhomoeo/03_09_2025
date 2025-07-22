@@ -261,7 +261,7 @@ export default function DashboardPage() {
     <TooltipProvider>
     <div className="max-w-6xl mx-auto space-y-6 md:space-y-8">
       <div className="mb-6 hide-on-print hidden md:block">
-        <h1 className="text-2xl md:text-3xl font-bold font-headline">ড্যাশবোর্ড</h1>
+        <h1 className="text-2xl md:text-3xl font-bold font-headline text-blue-900 dark:text-blue-300 drop-shadow-sm">ড্যাশবোর্ড</h1>
         <p className="text-muted-foreground mt-1 text-sm md:text-base">আপনার ক্লিনিকের কার্যক্রমের একটি সারসংক্ষেপ।</p>
       </div>
 
@@ -310,7 +310,7 @@ export default function DashboardPage() {
                 <Button 
                     type="submit" 
                     size="icon" 
-                    className="absolute right-1.5 top-1/2 -translate-y-1/2 h-8 w-8 md:h-9 md:w-9 rounded-full"
+                    className="absolute right-1.5 top-1/2 -translate-y-1/2 h-8 w-8 md:h-9 md:w-9 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-md hover:shadow-lg hover:brightness-110 active:scale-95 transition-all"
                     aria-label="Search"
                 >
                     <SearchIcon className="h-4 w-4 md:h-5" />
