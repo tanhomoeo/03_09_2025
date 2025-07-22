@@ -656,7 +656,7 @@ function PatientEntryPageContent() {
                 </div>
               </CardContent>
                <CardFooter className="flex justify-end border-t pt-6">
-                 <Button type="button" onClick={handleSaveBasicInfo} disabled={isSubmitting} className="min-w-[180px]">
+                 <Button type="button" onClick={handleSaveBasicInfo} disabled={isSubmitting} className="min-w-[180px] bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-md hover:shadow-lg hover:brightness-105 transition-all">
                     {isSubmitting ? <LoadingSpinner variant="button" /> : <Save className="mr-2 h-4 w-4" />}
                     সাধারণ তথ্য সংরক্ষণ করুন
                  </Button>
