@@ -12,6 +12,7 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
+  CardFooter,
 } from "@/components/ui/card";
 import {
   Form,
@@ -22,7 +23,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
-import { addPatient } from "@/lib/firestoreService";
+import { addPatient, updatePatient } from "@/lib/firestoreService";
 import type { Patient, CategorizedCaseNotes } from "@/lib/types";
 import { PageHeaderCard } from "@/components/shared/PageHeaderCard";
 import { useSearchParams } from "next/navigation";
@@ -33,6 +34,7 @@ import {
   Brain,
   ClipboardEdit,
   Lightbulb,
+  Save,
 } from "lucide-react";
 import {
   Popover,
@@ -111,6 +113,9 @@ function PatientEntryPageContent() {
     null,
   );
   const [categorizationResult, setCategorizationResult] = useState<CategorizedCaseNotesOutput | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmittingFinal, setIsSubmittingFinal] = useState(false);
+  const [savedPatientId, setSavedPatientId] = useState<string | null>(null);
 
   const form = useForm<PatientFormValues>({
     resolver: zodResolver(patientFormSchema),
@@ -238,43 +243,91 @@ function PatientEntryPageContent() {
     }
   }; 
 
-  const onSubmit: SubmitHandler<PatientFormValues> = async (data) => {
+  const handleSaveBasicInfo = async () => {
+    const basicInfoFields: (keyof PatientFormValues)[] = [
+        "registrationDate", "diaryNumber", "name", "age", "gender", "occupation", 
+        "phone", "guardianRelation", "guardianName", "district", "thanaUpazila", "villageUnion"
+    ];
+    const triggerResult = await form.trigger(basicInfoFields);
+
+    if (!triggerResult) {
+        toast({ title: "ফর্ম যাচাইকরণ ব্যর্থ", description: "অনুগ্রহ করে সকল আবশ্যক তথ্য পূরণ করুন।", variant: "destructive" });
+        return;
+    }
+
+    setIsSubmitting(true);
+    const data = form.getValues();
+
     try {
-      const newPatientData: Partial<Patient> = {
-        name: data.name as string,
-        phone: data.phone as string,
-        registrationDate: (data.registrationDate as Date).toISOString(),
-        age: (data.age as string) || undefined,
-        gender: (data.gender as Patient['gender']) || undefined,
-        occupation: (data.occupation as string) || undefined,
-        guardianRelation: (data.guardianRelation as Patient['guardianRelation']) || undefined,
-        guardianName: (data.guardianName as string) || undefined,
-        district: (data.district as string) || undefined,
-        thanaUpazila: (data.thanaUpazila as string) || undefined,
-        villageUnion: (data.villageUnion as string) || undefined,
-        diaryNumber: (data.diaryNumber as string) || undefined,
-        caseNotes: (data.caseNotes as string) || undefined,
-        categorizedCaseNotes: (data.categorizedCaseNotes as CategorizedCaseNotes) || undefined,
-      };
+        const patientDataPayload: Partial<Patient> = {
+            name: data.name, phone: data.phone, registrationDate: data.registrationDate.toISOString(),
+            age: data.age || undefined, gender: (data.gender as Patient['gender']) || undefined, 
+            occupation: data.occupation || undefined, guardianRelation: (data.guardianRelation as Patient['guardianRelation']) || undefined,
+            guardianName: data.guardianName || undefined, district: data.district || undefined, 
+            thanaUpazila: data.thanaUpazila || undefined, villageUnion: data.villageUnion || undefined,
+            diaryNumber: data.diaryNumber || undefined,
+        };
 
-      const newPatientId = await addPatient(newPatientData);
+        let patientId = savedPatientId;
+        if (patientId) {
+            await updatePatient(patientId, patientDataPayload);
+        } else {
+            const newPatientId = await addPatient(patientDataPayload);
+            setSavedPatientId(newPatientId);
+            patientId = newPatientId;
+        }
 
-      toast({
-        title: "রোগী নিবন্ধিত",
-        description: `${data.name} সফলভাবে নিবন্ধিত হয়েছেন। আইডি: ${newPatientId}`,
-      });
+        toast({
+            title: "সাধারণ তথ্য সংরক্ষিত হয়েছে",
+            description: `${data.name}-এর প্রাথমিক তথ্য সফলভাবে সেভ করা হয়েছে। এখন আপনি কেস হিস্ট্রি যোগ করতে পারেন।`,
+        });
+        window.dispatchEvent(new CustomEvent('firestoreDataChange'));
 
-      form.reset(); 
-      setCategorizationResult(null);
-      window.dispatchEvent(new CustomEvent('firestoreDataChange'));
     } catch (error) {
-      console.error("Failed to register patient:", error);
-      const errorMessage = error instanceof Error ? error.message : "An unknown error occurred during patient registration.";
-      toast({
-        title: "নিবন্ধন ব্যর্থ হয়েছে",
-        description: `রোগী নিবন্ধন করার সময় একটি ত্রুটি ঘটেছে: ${errorMessage}`,
-        variant: "destructive",
-      });
+        console.error("Failed to save basic patient info:", error);
+        toast({ title: "সংরক্ষণ ব্যর্থ", description: `সাধারণ তথ্য সেভ করার সময় একটি ত্রুটি ঘটেছে।`, variant: "destructive" });
+    } finally {
+        setIsSubmitting(false);
+    }
+  };
+
+  const onSubmit: SubmitHandler<PatientFormValues> = async (data) => {
+    setIsSubmittingFinal(true);
+    try {
+        let patientId = savedPatientId;
+        
+        const fullPatientData: Partial<Patient> = {
+            name: data.name, phone: data.phone, registrationDate: data.registrationDate.toISOString(),
+            age: data.age || undefined, gender: (data.gender as Patient['gender']) || undefined,
+            occupation: data.occupation || undefined, guardianRelation: (data.guardianRelation as Patient['guardianRelation']) || undefined,
+            guardianName: data.guardianName || undefined, district: data.district || undefined,
+            thanaUpazila: data.thanaUpazila || undefined, villageUnion: data.villageUnion || undefined,
+            diaryNumber: data.diaryNumber || undefined, caseNotes: data.caseNotes || undefined,
+            categorizedCaseNotes: data.categorizedCaseNotes || undefined,
+        };
+
+        if (patientId) {
+            await updatePatient(patientId, fullPatientData);
+        } else {
+            patientId = await addPatient(fullPatientData);
+        }
+        
+        toast({
+            title: "রোগী নিবন্ধিত",
+            description: `${data.name} সফলভাবে নিবন্ধিত হয়েছেন। আইডি: ${patientId}`,
+        });
+        
+        form.reset(); 
+        setCategorizationResult(null);
+        setSavedPatientId(null);
+        window.dispatchEvent(new CustomEvent('firestoreDataChange'));
+
+    } catch (error) {
+        console.error("Failed to register patient:", error);
+        const errorMessage = error instanceof Error ? error.message : "An unknown error occurred.";
+        toast({ title: "নিবন্ধন ব্যর্থ হয়েছে", description: `রোগী নিবন্ধন করার সময় একটি ত্রুটি ঘটেছে: ${errorMessage}`, variant: "destructive" });
+    } finally {
+        setIsSubmittingFinal(false);
     }
   };
 
@@ -602,6 +655,12 @@ function PatientEntryPageContent() {
                   />
                 </div>
               </CardContent>
+               <CardFooter className="flex justify-end border-t pt-6">
+                 <Button type="button" onClick={handleSaveBasicInfo} disabled={isSubmitting} className="min-w-[180px]">
+                    {isSubmitting ? <LoadingSpinner variant="button" /> : <Save className="mr-2 h-4 w-4" />}
+                    সাধারণ তথ্য সংরক্ষণ করুন
+                 </Button>
+               </CardFooter>
             </Card>
 
             <Card className="shadow-lg border-border/30 bg-card/60 backdrop-blur-xl">
@@ -699,24 +758,22 @@ function PatientEntryPageContent() {
                   )}
                 </div>
               </CardContent>
+               <CardFooter className="flex justify-end border-t pt-6">
+                 <Button
+                    type="submit"
+                    disabled={isSubmittingFinal || isSubmitting}
+                    className="min-w-[180px] bg-gradient-to-r from-green-500 to-teal-500 text-white font-bold tracking-wider hover:brightness-110 active:brightness-90 transition-all duration-200 shadow-lg"
+                  >
+                    {isSubmittingFinal ? (
+                      <LoadingSpinner variant="button" />
+                    ) : (
+                      <Save className="mr-2 h-4 w-4" />
+                    )}
+                    বিশ্লেষণসহ নিবন্ধন করুন
+                  </Button>
+               </CardFooter>
             </Card>
 
-            <div className="flex justify-end pt-2">
-              <Button
-                type="submit"
-                disabled={form.formState.isSubmitting}
-                className="min-w-[150px] bg-gradient-to-r from-green-500 to-teal-500 text-white font-bold tracking-wider hover:brightness-110 active:brightness-90 transition-all duration-200 shadow-lg"
-              >
-                {form.formState.isSubmitting ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" /> সংরক্ষণ
-                    করা হচ্ছে...
-                  </>
-                ) : (
-                  "নিবন্ধন করুন"
-                )}
-              </Button>
-            </div>
           </form>
         </Form>
       </div>
@@ -739,5 +796,3 @@ export default function PatientEntryPage() {
         </Suspense>
     )
 }
-
-    
