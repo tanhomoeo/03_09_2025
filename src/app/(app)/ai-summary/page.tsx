@@ -102,6 +102,8 @@ export default function AiRepertoryPage() {
           title="রেপার্টরি"
           description="রোগীর লক্ষণসমূহের বিস্তারিত বিবরণ দিন এবং জেমিনি AI-এর মাধ্যমে সম্ভাব্য প্রতিকারগুলো সম্পর্কে জানুন।"
           actions={<Wand2 className="h-8 w-8 text-primary" />}
+          className="bg-gradient-to-br from-purple-100 to-indigo-200 dark:from-purple-900/30 dark:to-indigo-900/30"
+          titleClassName="text-blue-900 dark:text-blue-300 drop-shadow-sm"
         />
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
           <div className="lg:col-span-1 space-y-6">
