@@ -14,7 +14,6 @@
  */
 import { ai } from '../genkit';
 import { z } from 'genkit';
-import type { CategorizedCaseNotes as CategorizedCaseNotesType } from '@/lib/types';
 
 // Input Schema: A single string containing all the case notes.
 const CaseNotesInputSchema = z.object({
@@ -151,5 +150,3 @@ const categorizeCaseNotesFlow = ai.defineFlow(
     }
   }
 );
-
-    

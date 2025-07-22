@@ -1,3 +1,4 @@
+
 import { getDbInstance } from './firebase';
 import {
   collection,
@@ -38,8 +39,8 @@ const convertDocument = <T extends { id: string }>(docSnap: {id: string, data: (
   if (data && data.categorizedCaseNotes && typeof data.categorizedCaseNotes === 'string') {
     try {
       data.categorizedCaseNotes = JSON.parse(data.categorizedCaseNotes);
-    } catch (e) {
-      console.error('Failed to parse categorizedCaseNotes:', e);
+    } catch (_e) {
+      console.error('Failed to parse categorizedCaseNotes:', _e);
       // If parsing fails, set it to a default/empty object to prevent crashes downstream
       data.categorizedCaseNotes = {} as CategorizedCaseNotes; 
     }
@@ -135,7 +136,7 @@ export const updatePatient = async (patientId: string, patientData: Partial<Pati
                      if (key === 'categorizedCaseNotes' && typeof value === 'string') {
                         try {
                             firestoreUpdateData[key] = JSON.parse(value);
-                        } catch (e) {
+                        } catch (_e) {
                              console.error('Skipping invalid JSON in categorizedCaseNotes during update');
                         }
                     } else {
