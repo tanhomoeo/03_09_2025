@@ -8,7 +8,7 @@ import { PageHeaderCard } from '@/components/shared/PageHeaderCard';
 import { getPatients } from '@/lib/firestoreService';
 import type { Patient } from '@/lib/types';
 import { BENGALI_VOWELS_FOR_FILTER, BENGALI_CONSONANTS_FOR_FILTER } from '@/lib/constants';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import { ROUTES } from '@/lib/constants';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -145,8 +145,11 @@ export default function DictionaryPage() {
                         <TableCell>{patient.phone}</TableCell>
                         <TableCell>{patient.villageUnion}{patient.district ? `, ${patient.district}` : ''}</TableCell>
                         <TableCell className="text-right">
-                          <Button variant="link" asChild size="sm" className="text-primary font-medium">
-                            <Link href={`${ROUTES.PATIENT_SEARCH}?q=${patient.phone}&tab=history`}>বিস্তারিত দেখুন</Link>
+                          <Button asChild variant="link" size="sm" className="text-primary font-semibold">
+                            <Link href={`${ROUTES.PATIENT_SEARCH}?q=${patient.diaryNumber || patient.phone}&tab=history`}>
+                              বিস্তারিত দেখুন
+                              <ExternalLink className="ml-2 h-4 w-4" />
+                            </Link>
                           </Button>
                         </TableCell>
                       </TableRow>
