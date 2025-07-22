@@ -82,9 +82,10 @@ interface CategorizedSymptomsDisplayProps {
   symptoms: CategorizedCaseNotes;
   labels: typeof LABELS;
   showNumbers?: boolean;
+  highlightedSymptoms?: string[];
 }
 
-export const CategorizedSymptomsDisplay: React.FC<CategorizedSymptomsDisplayProps> = ({ symptoms, labels, showNumbers = false }) => {
+export const CategorizedSymptomsDisplay: React.FC<CategorizedSymptomsDisplayProps> = ({ symptoms, labels, showNumbers = false, highlightedSymptoms = [] }) => {
   const categoryGradients = [
     'from-sky-100 to-blue-100 dark:from-sky-900/40 dark:to-blue-900/40',
     'from-violet-100 to-indigo-100 dark:from-violet-900/40 dark:to-indigo-900/40',
@@ -94,6 +95,11 @@ export const CategorizedSymptomsDisplay: React.FC<CategorizedSymptomsDisplayProp
     'from-amber-100 to-orange-100 dark:from-amber-900/40 dark:to-orange-900/40',
     'from-rose-100 to-pink-100 dark:from-rose-900/40 dark:to-pink-900/40',
   ];
+
+  const isHighlighted = (text: string) => {
+    if (!text) return false;
+    return highlightedSymptoms.some(highlight => text.includes(highlight) || highlight.includes(text));
+  };
 
   return (
     <div className="space-y-4">
@@ -117,8 +123,9 @@ export const CategorizedSymptomsDisplay: React.FC<CategorizedSymptomsDisplayProp
             <div className="p-4 space-y-2 text-sm">
               {Object.entries(subcategories!).map(([subKey, value]) => {
                 if (typeof value === 'string' && value.trim() !== '') {
+                  const highlight = isHighlighted(value);
                   return (
-                    <div key={subKey} className="grid grid-cols-3 gap-2">
+                    <div key={subKey} className={cn("grid grid-cols-3 gap-2 p-1 rounded-md", highlight && "bg-yellow-200/50 dark:bg-yellow-800/30")}>
                       <strong className="font-semibold text-foreground/80 col-span-1">{categoryInfo.subs[subKey] || subKey}:</strong> 
                       <p className="text-foreground/90 col-span-2">{value}</p>
                     </div>
@@ -133,3 +140,5 @@ export const CategorizedSymptomsDisplay: React.FC<CategorizedSymptomsDisplayProp
     </div>
   );
 };
+
+    

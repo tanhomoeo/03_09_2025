@@ -32,6 +32,7 @@ import {
   Camera,
   Brain,
   ClipboardEdit,
+  Lightbulb,
 } from "lucide-react";
 import {
   Popover,
@@ -53,7 +54,7 @@ import { cn } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
 import dynamic from "next/dynamic";
 import type { HandwrittenFormOutput } from "@/ai/flows/handwritten-patient-form-parser-flow";
-import { categorizeCaseNotes } from "@/ai/flows/categorize-case-notes-flow";
+import { categorizeCaseNotes, CategorizedCaseNotesOutput } from "@/ai/flows/categorize-case-notes-flow";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import {
   CategorizedSymptomsDisplay,
@@ -87,6 +88,7 @@ const patientFormSchema = z.object({
   villageUnion: z.string().optional(),
   caseNotes: z.string().optional(),
   categorizedCaseNotes: z.custom<CategorizedCaseNotes>().optional(),
+  keySymptoms: z.array(z.string()).optional(),
 });
 
 type PatientFormValues = z.infer<typeof patientFormSchema>;
@@ -108,6 +110,7 @@ function PatientEntryPageContent() {
   const [categorizationError, setCategorizationError] = useState<string | null>(
     null,
   );
+  const [categorizationResult, setCategorizationResult] = useState<CategorizedCaseNotesOutput | null>(null);
 
   const form = useForm<PatientFormValues>({
     resolver: zodResolver(patientFormSchema),
@@ -126,6 +129,7 @@ function PatientEntryPageContent() {
       villageUnion: "",
       caseNotes: "",
       categorizedCaseNotes: undefined,
+      keySymptoms: [],
     },
   });
 
@@ -209,14 +213,17 @@ function PatientEntryPageContent() {
 
     setIsCategorizing(true);
     setCategorizationError(null);
+    setCategorizationResult(null);
 
     try {
       const result = await categorizeCaseNotes({ caseNotesText });
-      form.setValue("categorizedCaseNotes", result, { shouldDirty: true });
+      setCategorizationResult(result);
+      form.setValue("categorizedCaseNotes", result.categorizedNotes, { shouldDirty: true });
+      form.setValue("keySymptoms", result.keySymptoms, { shouldDirty: true });
       toast({
         title: "লক্ষণ শ্রেণীবিভাগ সফল হয়েছে",
         description:
-          "AI দ্বারা রোগীর লক্ষণগুলো সফলভাবে ৭টি ক্যাটাগরিতে ভাগ করা হয়েছে।",
+          "AI দ্বারা রোগীর লক্ষণগুলো সফলভাবে ৭টি ক্যাটাগরিতে ভাগ করা হয়েছে এবং গুরুত্বপূর্ণ লক্ষণগুলো চিহ্নিত করা হয়েছে।",
       });
     } catch (error: unknown) {
         const errorMessage = error instanceof Error ? error.message : "একটি অজানা ত্রুটি ঘটেছে।";
@@ -258,6 +265,7 @@ function PatientEntryPageContent() {
       });
 
       form.reset(); 
+      setCategorizationResult(null);
       window.dispatchEvent(new CustomEvent('firestoreDataChange'));
     } catch (error) {
       console.error("Failed to register patient:", error);
@@ -269,8 +277,6 @@ function PatientEntryPageContent() {
       });
     }
   };
-
-  const categorizedResult = form.watch("categorizedCaseNotes");
 
   return (
     <>
@@ -667,12 +673,27 @@ function PatientEntryPageContent() {
                     </Alert>
                   )}
 
-                  {categorizedResult && (
-                    <div className="space-y-3 pt-3 mt-3 border-t">
+                  {categorizationResult && categorizationResult.categorizedNotes && (
+                    <div className="space-y-4 pt-4 mt-4 border-t">
+                      {categorizationResult.keySymptoms && categorizationResult.keySymptoms.length > 0 && (
+                        <Alert className="bg-yellow-100/70 border-yellow-300/80 text-yellow-900 dark:bg-yellow-900/20 dark:border-yellow-800/50 dark:text-yellow-200">
+                          <Lightbulb className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
+                          <AlertTitle className="font-bold text-yellow-800 dark:text-yellow-300">মূল লক্ষণসমূহ</AlertTitle>
+                          <AlertDescription className="text-yellow-700 dark:text-yellow-300/90">
+                            AI দ্বারা চিহ্নিত প্রধান লক্ষণগুলো নিচে দেওয়া হলো:
+                            <ul className="list-disc pl-5 mt-1">
+                              {categorizationResult.keySymptoms.map((symptom, i) => (
+                                <li key={i}>{symptom}</li>
+                              ))}
+                            </ul>
+                          </AlertDescription>
+                        </Alert>
+                      )}
                       <CategorizedSymptomsDisplay
-                        symptoms={categorizedResult}
+                        symptoms={categorizationResult.categorizedNotes}
                         labels={CATEGORY_LABELS}
                         showNumbers={true}
+                        highlightedSymptoms={categorizationResult.keySymptoms}
                       />
                     </div>
                   )}
@@ -718,3 +739,5 @@ export default function PatientEntryPage() {
         </Suspense>
     )
 }
+
+    

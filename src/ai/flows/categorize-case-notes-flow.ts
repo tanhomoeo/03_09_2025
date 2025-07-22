@@ -1,14 +1,16 @@
+
 'use server';
 /**
- * @fileOverview A Genkit flow to categorize unstructured homeopathic case notes into a structured format.
+ * @fileOverview A Genkit flow to categorize unstructured homeopathic case notes into a structured format
+ * and identify key symptoms for highlighting.
  *
  * This flow takes a block of text describing a patient's case and uses Gemini to
- * extract and organize the information into a predefined set of categories and sub-categories,
- * making it easier for practitioners to review and analyze.
+ * extract and organize the information into a predefined set of categories and sub-categories.
+ * It also identifies the most important guiding symptoms from the text.
  *
  * - categorizeCaseNotes - The main function to call the flow.
  * - CaseNotesInput - The input type for the flow.
- * - CategorizedCaseNotesOutput - The output type for the flow (the structured notes).
+ * - CategorizedCaseNotesOutput - The output type for the flow (the structured notes and key symptoms).
  */
 import { ai } from '../genkit';
 import { z } from 'genkit';
@@ -21,9 +23,7 @@ const CaseNotesInputSchema = z.object({
 export type CaseNotesInput = z.infer<typeof CaseNotesInputSchema>;
 
 // Output Schema: A structured object representing the categorized notes.
-// This Zod schema dynamically creates fields based on the CategorizedCaseNotesType interface
-// to ensure validation matches the TypeScript type.
-const CategorizedCaseNotesOutputSchema = z.object({
+const CategorizedCaseNotesSchema = z.object({
   physicalSymptoms: z.object({
     general: z.string().optional().describe("সাধারণ উপসর্গ যেমন মাথাব্যথা, জ্বর, দুর্বলতা।"),
     gastrointestinal: z.string().optional().describe("পায়খানা সংক্রান্ত সমস্যা যেমন কোষ্ঠকাঠিন্য, পাতলা পায়খানা, মলে রক্ত।"),
@@ -72,15 +72,20 @@ const CategorizedCaseNotesOutputSchema = z.object({
     otherTreatments: z.string().optional().describe("অন্য কোনো চিকিৎসা পদ্ধতি গ্রহণ করে থাকলে তার বিবরণ।")
   }).describe("ওষুধের/চিকিৎসার ইতিহাস").optional()
 });
+
+const CategorizedCaseNotesOutputSchema = z.object({
+    categorizedNotes: CategorizedCaseNotesSchema.describe("The patient's case notes, organized into 7 categories."),
+    keySymptoms: z.array(z.string()).describe("A list of 3-5 of the most important 'Strange, Rare, and Peculiar' (SRP) symptoms extracted from the full case text. These are the guiding symptoms for remedy selection and should be highlighted.")
+});
 export type CategorizedCaseNotesOutput = z.infer<typeof CategorizedCaseNotesOutputSchema>;
 
 // Exported wrapper function for the UI to call.
-export async function categorizeCaseNotes(input: { caseNotesText: string }): Promise<CategorizedCaseNotesType> {
+export async function categorizeCaseNotes(input: { caseNotesText: string }): Promise<CategorizedCaseNotesOutput> {
   if (!process.env.GEMINI_API_KEY) {
     throw new Error('AI পরিষেবা কনফিগার করা যায়নি। GEMINI_API_KEY সেট করা নেই।');
   }
   const result = await categorizeCaseNotesFlow(input);
-  return result as CategorizedCaseNotesType;
+  return result;
 }
 
 // Define the Genkit prompt for the AI model.
@@ -97,14 +102,18 @@ const caseNotesCategorizerPrompt = ai.definePrompt({
         { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_NONE' },
     ],
   },
-  prompt: `You are an expert homeopathic assistant. Your task is to read the following unstructured case notes written in Bengali and categorize the information into a structured JSON format. 
-Carefully analyze the text and extract relevant details for each category and sub-category defined in the output schema. 
-If no information is found for a specific field, leave it as an empty string. The title of each main category should NOT be prefixed with a number.
+  prompt: `You are an expert homeopathic assistant. Your task is to analyze the following unstructured case notes written in Bengali.
+  
+Two-Step Process:
+1.  **Categorize**: First, read the entire text and categorize all the information into the structured JSON format defined in the \`categorizedNotes\` field of the output schema. If no information is found for a specific field, leave it as an empty string.
+2.  **Identify Key Symptoms**: After categorizing, review the entire case again and identify the 3 to 5 most important, guiding symptoms. These should be the 'Strange, Rare, and Peculiar' (SRP) symptoms that are most crucial for selecting a remedy. Put these exact symptom phrases into the \`keySymptoms\` array.
+
+The title of each main category should NOT be prefixed with a number.
 
 Case Notes Text:
 {{{caseNotesText}}}
 
-Your response must be a valid JSON object matching the provided schema.`,
+Your response must be a valid JSON object matching the provided schema, containing both the categorized notes and the list of key symptoms.`,
 });
 
 // Define the Genkit flow that orchestrates the process.
@@ -142,3 +151,5 @@ const categorizeCaseNotesFlow = ai.defineFlow(
     }
   }
 );
+
+    
