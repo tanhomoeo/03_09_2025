@@ -1,6 +1,8 @@
 specVersion: "v1"
 serviceId: "studio"
 location: "us-central1"
+# The schema section is required for DataConnect to function.
+# If you remove it, you will encounter errors.
 schema:
   source: "./schema"
   datasource:
@@ -8,5 +10,4 @@ schema:
       database: "fdcdb"
       cloudSql:
         instanceId: "studio-fdc"
-      # schemaValidation: "COMPATIBLE"
 connectorDirs: ["./connector"]

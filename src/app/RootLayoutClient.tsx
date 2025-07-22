@@ -19,9 +19,9 @@ export default function RootLayoutClient({
 }>) {
   return (
     <ThemeProvider
-        attribute="data-theme"
-        defaultTheme="default"
-        enableSystem={false}
+        attribute="class"
+        defaultTheme="system"
+        enableSystem
         disableTransitionOnChange
       >
       <AuthProvider>

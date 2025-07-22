@@ -8,25 +8,19 @@ body {
 }
 
 @layer base {
-  :root {
+  :root, [data-theme="default"] {
     --background: 145 50% 96%;
-    
-    /* === Text Color Hierarchy === */
-    --text-title: 222.2 84% 4.9%;   /* Deep, saturated blue for main page titles */
-    --text-heading: 222.2 47.4% 11.2%;   /* Almost-black blue for card titles and sub-headings */
-    --text-body: 215.4 16.3% 30%;   /* Dark grayish-blue for body text, ensuring high contrast */
-
-    --foreground: hsl(var(--text-heading));
+    --foreground: 222.2 47.4% 11.2%;
     --card: 0 0% 100%;
-    --card-foreground: hsl(var(--text-heading));
+    --card-foreground: 222.2 47.4% 11.2%;
     --popover: 0 0% 100%;
-    --popover-foreground: hsl(var(--text-heading));
+    --popover-foreground: 222.2 47.4% 11.2%;
     --primary: 222.2 47.4% 11.2%;
     --primary-foreground: 210 40% 98%;
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
     --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%; /* Lighter, for descriptions and less important text */
+    --muted-foreground: 215.4 16.3% 46.9%;
     --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
     --destructive: 0 84.2% 60.2%;
@@ -35,21 +29,18 @@ body {
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
     --radius: 0.5rem;
+    --text-title: 222.2 84% 4.9%;
+    --text-heading: 222.2 47.4% 11.2%;
+    --text-body: 215.4 16.3% 30%;
   }
  
-  .dark {
+  .dark, [data-theme="default-dark"] {
     --background: 222.2 84% 4.9%;
-    
-    /* === Text Color Hierarchy for Dark Mode === */
-    --text-title: 210 40% 98%;   /* Bright white for main titles */
-    --text-heading: 210 40% 92%;  /* Slightly off-white for headings */
-    --text-body: 215 20.2% 75%;  /* Lighter gray for body text */
-    
-    --foreground: hsl(var(--text-heading));
+    --foreground: 210 40% 98%;
     --card: 222.2 84% 4.9%;
-    --card-foreground: hsl(var(--text-heading));
+    --card-foreground: 210 40% 98%;
     --popover: 222.2 84% 4.9%;
-    --popover-foreground: hsl(var(--text-heading));
+    --popover-foreground: 210 40% 98%;
     --primary: 210 40% 98%;
     --primary-foreground: 222.2 47.4% 11.2%;
     --secondary: 217.2 32.6% 17.5%;
@@ -63,8 +54,51 @@ body {
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 215 20.2% 65.1%;
+    --text-title: 210 40% 98%;
+    --text-heading: 210 40% 92%;
+    --text-body: 215 20.2% 75%;
   }
 
+  [data-theme="serene"] {
+    --background: 180 25% 96%;
+    --primary: 175 66% 30%;
+    --primary-foreground: 180 25% 98%;
+    --text-title: 175 66% 25%;
+    --text-heading: 175 66% 30%;
+    --text-body: 180 15% 30%;
+    --ring: 175 66% 30%;
+  }
+
+  [data-theme="serene-dark"] {
+    --background: 180 15% 7%;
+    --primary: 170 70% 70%;
+    --primary-foreground: 180 15% 5%;
+    --text-title: 170 70% 80%;
+    --text-heading: 170 70% 70%;
+    --text-body: 180 10% 75%;
+    --ring: 170 70% 70%;
+  }
+  
+  [data-theme="vibrant"] {
+    --background: 30 80% 95%;
+    --primary: 25 85% 55%;
+    --primary-foreground: 30 80% 98%;
+    --text-title: 25 85% 45%;
+    --text-heading: 25 85% 55%;
+    --text-body: 30 50% 30%;
+    --ring: 25 85% 55%;
+  }
+  
+  [data-theme="vibrant-dark"] {
+    --background: 20 20% 8%;
+    --primary: 30 90% 70%;
+    --primary-foreground: 20 20% 5%;
+    --text-title: 30 90% 80%;
+    --text-heading: 30 90% 70%;
+    --text-body: 30 30% 75%;
+    --ring: 30 90% 70%;
+  }
+  
   * {
     @apply border-border;
   }
@@ -74,7 +108,7 @@ body {
   }
   
   body:not(.login-page-active) {
-    background-image: radial-gradient(circle at 15% 25%, hsl(145 60% 95% / 0.1), transparent 40%), radial-gradient(circle at 85% 75%, hsl(145 40% 90% / 0.15), transparent 40%);
+    background-image: radial-gradient(circle at 15% 25%, hsl(var(--primary) / 0.05), transparent 40%), radial-gradient(circle at 85% 75%, hsl(var(--primary) / 0.08), transparent 40%);
     background-attachment: fixed;
     background-color: hsl(var(--background));
   }
@@ -92,7 +126,6 @@ body {
   h1, .text-title {
       @apply text-xl sm:text-2xl md:text-3xl;
       color: hsl(var(--text-title));
-      text-shadow: 1px 1px 3px hsl(var(--primary) / 0.1);
   }
   
   h2, .text-heading {
@@ -112,8 +145,8 @@ body {
   }
   /* For IE, Edge and Firefox */
   [data-sidebar="content"] {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }
 

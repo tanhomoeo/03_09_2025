@@ -32,7 +32,7 @@ const THEME_OPTIONS = [
 ];
 
 export default function AppSettingsPage() {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, systemTheme } = useTheme();
   const { isAdmin, signOutUser } = useAuth();
   const [mounted, setMounted] = useState(false);
   const { toast } = useToast();
@@ -41,6 +41,21 @@ export default function AppSettingsPage() {
   const [fileToImport, setFileToImport] = useState<File | null>(null);
 
   useEffect(() => setMounted(true), []);
+  
+  const currentTheme = theme === 'system' ? systemTheme : theme;
+  const isDarkMode = currentTheme === 'dark';
+
+  const toggleDarkMode = (checked: boolean) => {
+    const newTheme = checked ? 'dark' : 'light';
+    const selectedBaseTheme = THEME_OPTIONS.find(t => t.value === (theme?.replace('-dark', '') || 'default'))?.value || 'default';
+    
+    if (checked) {
+      setTheme(`${selectedBaseTheme}-dark`);
+    } else {
+      setTheme(selectedBaseTheme.replace('-dark',''));
+    }
+  };
+
 
   const handleLogout = async () => {
     try {
@@ -116,6 +131,14 @@ export default function AppSettingsPage() {
     </div>
   );
 
+  const handleThemeChange = (baseTheme: string) => {
+    if(isDarkMode) {
+      setTheme(`${baseTheme}-dark`);
+    } else {
+      setTheme(baseTheme);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <PageHeaderCard
@@ -133,39 +156,35 @@ export default function AppSettingsPage() {
           <div>
             <Label className="font-semibold">অ্যাপ থিম</Label>
             <div className="flex flex-wrap gap-3 mt-2">
-              {THEME_OPTIONS.map((option) => (
-                <button
-                  key={option.value}
-                  onClick={() => setTheme(option.value)}
-                  className={cn(
-                    "flex items-center gap-3 p-2 rounded-lg border-2 transition-all duration-200 w-full sm:w-auto sm:flex-1",
-                    theme === option.value ? "border-primary bg-primary/10" : "border-transparent bg-muted/60 hover:bg-muted"
-                  )}
-                  aria-pressed={theme === option.value}
-                >
-                  <span className={cn("h-6 w-6 rounded-full", option.color)} />
-                  <span className="font-medium text-sm">{option.label}</span>
-                  {theme === option.value && <Check className="h-5 w-5 text-primary ml-auto" />}
-                </button>
-              ))}
+              {THEME_OPTIONS.map((option) => {
+                 const currentBaseTheme = theme?.replace('-dark', '');
+                 const isActive = currentBaseTheme === option.value;
+                 return (
+                    <button
+                      key={option.value}
+                      onClick={() => handleThemeChange(option.value)}
+                      className={cn(
+                        "flex items-center gap-3 p-2 rounded-lg border-2 transition-all duration-200 w-full sm:w-auto sm:flex-1",
+                        isActive ? "border-primary bg-primary/10" : "border-transparent bg-muted/60 hover:bg-muted"
+                      )}
+                      aria-pressed={isActive}
+                    >
+                      <span className={cn("h-6 w-6 rounded-full", option.color)} />
+                      <span className="font-medium text-sm">{option.label}</span>
+                      {isActive && <Check className="h-5 w-5 text-primary ml-auto" />}
+                    </button>
+                 )
+              })}
             </div>
           </div>
           <div className="flex items-center space-x-2 pt-4 border-t mt-4">
             <Switch
               id="dark-mode"
-              checked={document.documentElement.classList.contains('dark')}
-              onCheckedChange={(checked) => {
-                if (checked) {
-                  document.documentElement.classList.add('dark');
-                  localStorage.setItem('dark-mode', 'true');
-                } else {
-                  document.documentElement.classList.remove('dark');
-                  localStorage.setItem('dark-mode', 'false');
-                }
-              }}
+              checked={isDarkMode}
+              onCheckedChange={toggleDarkMode}
               aria-label="Dark mode toggle"
             />
-            <Label htmlFor="dark-mode">ডার্ক মোড (পরীক্ষামূলক)</Label>
+            <Label htmlFor="dark-mode">ডার্ক মোড</Label>
           </div>
         </CardContent>
       </Card>
