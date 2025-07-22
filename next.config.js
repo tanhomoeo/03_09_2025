@@ -16,14 +16,14 @@ const nextConfig = {
   },
   webpack: (config, { isServer }) => {
     if (isServer) {
-        // These are required by Genkit but can be ignored for the client build
-        // as they are not used in the browser.
-        config.externals.push('@opentelemetry/exporter-jaeger');
-        config.externals.push('@opentelemetry/instrumentation-grpc');
-        config.externals.push('require-in-the-middle');
-        config.externals.push('handlebars');
+        config.externals.push(
+            '@opentelemetry/exporter-jaeger',
+            '@opentelemetry/instrumentation-grpc',
+            'require-in-the-middle',
+            'handlebars'
+        );
     }
-
+    
     config.module.rules.push({
       test: /\.txt$/,
       use: 'raw-loader',
