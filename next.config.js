@@ -8,12 +8,6 @@ const nextConfig = {
       },
     ],
   },
-  experimental: {
-    serverComponentsExternalPackages: [
-      '@genkit-ai/google-cloud',
-      '@google-cloud/functions-framework',
-    ],
-  },
   webpack: (config) => {
     config.module.rules.push({
       test: /\.txt$/,
