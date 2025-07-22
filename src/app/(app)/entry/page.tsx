@@ -292,7 +292,7 @@ function PatientEntryPageContent() {
             }
           />
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <Card className="shadow-md bg-card/80 backdrop-blur-lg">
+            <Card className="shadow-lg border-border/30 bg-card/60 backdrop-blur-xl">
               <CardHeader>
                 <CardTitle className="font-headline text-lg">
                   রোগীর সাধারণ তথ্য
@@ -598,7 +598,7 @@ function PatientEntryPageContent() {
               </CardContent>
             </Card>
 
-            <Card className="shadow-md bg-card/80 backdrop-blur-lg">
+            <Card className="shadow-lg border-border/30 bg-card/60 backdrop-blur-xl">
               <CardHeader>
                 <CardTitle className="font-headline text-lg">
                   রোগীর সমস্যা ও বিশ্লেষণ
@@ -631,7 +631,7 @@ function PatientEntryPageContent() {
                   )}
                 />
 
-                <div className="space-y-4 rounded-lg border bg-card p-4">
+                <div className="space-y-4 rounded-lg border bg-card/80 p-4 shadow-inner">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                     <div>
                       <h3 className="font-semibold text-base text-primary flex items-center">
@@ -647,6 +647,7 @@ function PatientEntryPageContent() {
                       type="button"
                       onClick={handleCategorizeNotes}
                       disabled={isCategorizing}
+                      className="bg-gradient-to-r from-teal-400 to-cyan-500 text-white shadow-md hover:shadow-lg hover:brightness-105 transition-all"
                     >
                       {isCategorizing ? (
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -683,7 +684,7 @@ function PatientEntryPageContent() {
               <Button
                 type="submit"
                 disabled={form.formState.isSubmitting}
-                className="min-w-[150px] bg-gradient-to-r from-green-500 to-teal-500 text-white font-bold tracking-wider hover:brightness-110 active:brightness-90 transition-all duration-200"
+                className="min-w-[150px] bg-gradient-to-r from-green-500 to-teal-500 text-white font-bold tracking-wider hover:brightness-110 active:brightness-90 transition-all duration-200 shadow-lg"
               >
                 {form.formState.isSubmitting ? (
                   <>
