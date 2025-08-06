@@ -1,6 +1,6 @@
 
 'use client';
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -168,15 +168,22 @@ const searchInRubrics = (rubrics: Rubric[], searchTerm: string, lang: Language):
 
 
 export const RepertoryBrowser: React.FC<RepertoryBrowserProps> = ({ chapters }) => {
-  const [selectedChapter, setSelectedChapter] = useState<Chapter | null>(chapters[0] || null);
+  const [selectedChapter, setSelectedChapter] = useState<Chapter | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [language, setLanguage] = useState<Language>('bn');
+  
+  useEffect(() => {
+    if (chapters && chapters.length > 0 && !selectedChapter) {
+        setSelectedChapter(chapters[0]);
+    }
+  }, [chapters, selectedChapter]);
 
   const filteredRubrics = useMemo(() => {
+    if (!selectedChapter) return [];
     if (searchTerm) {
-      return searchInRubrics(selectedChapter?.rubrics || [], searchTerm, language);
+      return searchInRubrics(selectedChapter.rubrics || [], searchTerm, language);
     }
-    return selectedChapter?.rubrics || [];
+    return selectedChapter.rubrics || [];
   }, [searchTerm, selectedChapter, language]);
 
   const handleChapterSelect = useCallback((chapter: Chapter) => {
@@ -222,6 +229,7 @@ export const RepertoryBrowser: React.FC<RepertoryBrowserProps> = ({ chapters }) 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10 h-10"
+              disabled={!selectedChapter}
             />
           </div>
           <Button variant="outline" size="icon" onClick={toggleLanguage} title={language === 'bn' ? 'Switch to English' : 'বাংলাতে পরিবর্তন করুন'}>
