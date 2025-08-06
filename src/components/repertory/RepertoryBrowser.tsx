@@ -5,7 +5,10 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
-import { Search, ChevronDown, ChevronRight, Dot, PlusCircle, Languages } from 'lucide-react';
+import { 
+    Search, ChevronDown, ChevronRight, Dot, PlusCircle, Languages,
+    Brain, User, Star, Eye, Ear, Smile, MicVocal, Droplet, Lung, Heart, Hand, Moon, Snowflake, Thermometer, Wind, Droplets, Bone
+} from 'lucide-react';
 import type { Chapter, Rubric } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { Badge } from '../ui/badge';
@@ -21,6 +24,61 @@ const gradeColorClasses = {
   2: 'bg-blue-500 text-white',
   1: 'bg-gray-500 text-white',
 };
+
+const getChapterIcon = (chapterNameEn: string): React.ReactNode => {
+    const lowerCaseName = chapterNameEn.toLowerCase();
+    
+    const iconMap: { [key: string]: React.ElementType } = {
+        mind: Brain,
+        head: User,
+        vertigo: Star,
+        eyes: Eye,
+        vision: Eye,
+        ears: Ear,
+        hearing: Ear,
+        nose: Wind,
+        face: Smile,
+        mouth: Smile,
+        teeth: Bone,
+        throat: MicVocal,
+        'external throat': MicVocal,
+        stomach: Droplet,
+        abdomen: Droplet,
+        rectum: Dot,
+        stool: Dot,
+        'urinary organs': Droplet,
+        bladder: Droplet,
+        kidneys: Droplet,
+        prostate: Droplet,
+        urethra: Droplet,
+        urine: Droplets,
+        'male genitalia': User,
+        'female genitalia': User,
+        'larynx and trachea': AirVent,
+        respiration: Lung,
+        cough: MicVocal,
+        expectoration: MicVocal,
+        chest: Heart,
+        back: User,
+        extremities: Hand,
+        sleep: Moon,
+        chill: Snowflake,
+        fever: Thermometer,
+        perspiration: Droplets,
+        skin: User,
+        generalities: User,
+    };
+
+    for (const key in iconMap) {
+        if (lowerCaseName.includes(key)) {
+            const IconComponent = iconMap[key];
+            return <IconComponent className="h-4 w-4 mr-2 flex-shrink-0" />;
+        }
+    }
+
+    return <Dot className="h-4 w-4 mr-2 flex-shrink-0" />;
+};
+
 
 const RubricItem: React.FC<{ rubric: Rubric; level?: number; lang: Language }> = ({ rubric, level = 0, lang }) => {
   const [isOpen, setIsOpen] = useState(level < 1); // Auto-open first few levels
@@ -136,6 +194,7 @@ export const RepertoryBrowser: React.FC<RepertoryBrowserProps> = ({ chapters }) 
                     className="w-full justify-start mb-1 text-left h-auto py-2"
                     onClick={() => handleChapterSelect(chapter)}
                     >
+                    {getChapterIcon(chapter.name.en)}
                     {chapter.name[language] || chapter.name.en}
                     </Button>
                 ))}
