@@ -15,7 +15,8 @@ const nextConfig = {
     });
 
     if (isServer) {
-        config.externals.push('@opentelemetry/exporter-jaeger');
+        // Exclude problematic modules from server bundle if they cause issues.
+        // config.externals.push('@opentelemetry/exporter-jaeger');
     }
 
     return config;

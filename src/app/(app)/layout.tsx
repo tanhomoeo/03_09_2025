@@ -29,7 +29,8 @@ export default function AppLayout({
     return <LoadingSpinner variant="page" showLogo={true} label="অ্যাকাউন্ট লোড হচ্ছে..." />;
   }
 
-  if (pathname === ROUTES.LOGIN) {
+  // This check might be redundant due to the effect above, but serves as a safeguard.
+  if (pathname.startsWith('/auth')) {
     return <>{children}</>;
   }
 

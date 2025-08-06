@@ -13,7 +13,7 @@ export const ROUTES = {
   MEDICINE_INSTRUCTIONS: '/medicine-instructions',
   STORE_MANAGEMENT: '/store-management',
   PERSONAL_EXPENSES: '/personal-expenses',
-  LOGIN: '/login',
+  LOGIN: '/auth/login',
 };
 
 export const APP_NAME = 'ত্রিফুল আরোগ্য নিকেতন';
