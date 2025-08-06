@@ -145,6 +145,10 @@ const RubricItem: React.FC<{ rubric: Rubric; level?: number; lang: Language }> =
   );
 };
 
+interface RepertoryBrowserProps {
+  chapters: Chapter[];
+}
+
 const searchInRubrics = (rubrics: Rubric[], searchTerm: string, lang: Language): Rubric[] => {
   const lowerCaseSearchTerm = searchTerm.toLowerCase();
   const results: Rubric[] = [];
@@ -242,5 +246,3 @@ export const RepertoryBrowser: React.FC<RepertoryBrowserProps> = ({ chapters }) 
     </Card>
   );
 };
-
-    
