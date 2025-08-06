@@ -7,7 +7,8 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { 
     Search, ChevronDown, ChevronRight, Dot, PlusCircle, Languages,
-    Brain, User, Star, Eye, Ear, Smile, MicVocal, Droplet, Lung, Heart, Hand, Moon, Snowflake, Thermometer, Wind, Droplets, Bone
+    Brain, User, Star, Eye, Ear, Smile, MicVocal, Droplet, Lung, Heart, Hand, Moon, Snowflake, Thermometer, Wind, Droplets, Bone,
+    AirVent, Stethoscope, Syringe, UserRound, Dna, Activity, Sparkle, HeartPulse
 } from 'lucide-react';
 import type { Chapter, Rubric } from '@/lib/types';
 import { cn } from '@/lib/utils';
