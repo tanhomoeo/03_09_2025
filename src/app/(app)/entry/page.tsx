@@ -553,7 +553,7 @@ function PatientEntryPageContent() {
                     name="guardianRelation"
                     render={({ field }) => (
                       <FormItem className="space-y-1">
-                        <FormLabel>অভিভাবকের সম্পর্ক</FormLabel>
+                        <FormLabel>পিতা/স্বামী</FormLabel>
                         <FormControl>
                           <RadioGroup
                             onValueChange={field.onChange}
