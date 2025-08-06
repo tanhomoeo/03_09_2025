@@ -177,7 +177,7 @@ export const RepertoryBrowser: React.FC<RepertoryBrowserProps> = ({ chapters = [
   const [language, setLanguage] = useState<Language>('bn');
   
   useEffect(() => {
-    if (chapters && chapters.length > 0 && !selectedChapter) {
+    if (Array.isArray(chapters) && chapters.length > 0 && !selectedChapter) {
         setSelectedChapter(chapters[0]);
     }
   }, [chapters, selectedChapter]);
