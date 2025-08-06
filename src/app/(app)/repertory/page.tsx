@@ -20,7 +20,7 @@ export default function RepertoryBrowserPage() {
         }
         const data = await response.json();
         // The new data file is an array at its root, not an object with a 'chapters' property.
-        setRepertoryData(data);
+        setRepertoryData(Array.isArray(data) ? data : []);
       } catch (err: unknown) {
         const message = err instanceof Error ? err.message : 'An unknown error occurred.';
         console.error(err);

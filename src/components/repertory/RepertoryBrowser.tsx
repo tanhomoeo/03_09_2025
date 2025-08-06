@@ -7,8 +7,8 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { 
     Search, ChevronDown, ChevronRight, Dot, PlusCircle, Languages,
-    Brain, User, Star, Eye, Ear, Smile, Wind, Droplet, Lung, Heart, Hand, Moon, Snowflake, Thermometer, Droplets, Bone,
-    AirVent, MicVocal, UserRound
+    Brain, User, Star, Eye, Ear, Wind, Smile, Bone, MicVocal, Droplet, Lung, Heart, Hand, Moon, Snowflake, Thermometer, Droplets,
+    AirVent, UserRound
 } from 'lucide-react';
 import type { Chapter, Rubric, Remedy } from '@/lib/types';
 import { cn } from '@/lib/utils';
@@ -56,7 +56,7 @@ const getChapterIcon = (chapterNameEn: string): React.ReactNode => {
         urethra: Droplet,
         urine: Droplets,
         'male genitalia': User,
-        'female genitalia': User,
+        'female genitalia': UserRound,
         'larynx and trachea': AirVent,
         respiration: Lung,
         cough: MicVocal,
@@ -152,12 +152,13 @@ interface RepertoryBrowserProps {
   chapters: Chapter[];
 }
 
-const searchInRubrics = (rubrics: Rubric[], searchTerm: string, lang: Language): Rubric[] => {
+const searchInRubrics = (rubrics: Rubric[] | undefined, searchTerm: string, lang: Language): Rubric[] => {
+  if (!rubrics) return [];
   const lowerCaseSearchTerm = searchTerm.toLowerCase();
   const results: Rubric[] = [];
 
   const search = (rubric: Rubric) => {
-    const matchedChildren = searchInRubrics(rubric.children || [], searchTerm, lang);
+    const matchedChildren = searchInRubrics(rubric.children, searchTerm, lang);
     const rubricName = rubric.name[lang] || rubric.name.en;
     
     if (rubricName.toLowerCase().includes(lowerCaseSearchTerm) || matchedChildren.length > 0) {
@@ -184,7 +185,7 @@ export const RepertoryBrowser: React.FC<RepertoryBrowserProps> = ({ chapters = [
   const filteredRubrics = useMemo(() => {
     if (!selectedChapter) return [];
     if (searchTerm) {
-      return searchInRubrics(selectedChapter.rubrics || [], searchTerm, language);
+      return searchInRubrics(selectedChapter.rubrics, searchTerm, language);
     }
     return selectedChapter.rubrics || [];
   }, [searchTerm, selectedChapter, language]);
