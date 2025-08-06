@@ -30,7 +30,7 @@ export default function AppLayout({
   }
 
   // This check might be redundant due to the effect above, but serves as a safeguard.
-  if (pathname.startsWith('/auth')) {
+  if (pathname === '/') {
     return <>{children}</>;
   }
 
