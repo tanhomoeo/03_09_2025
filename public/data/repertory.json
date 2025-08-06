@@ -11,198 +11,827 @@
         {
           "id": "1-1",
           "name": {
-            "en": "Anxiety",
-            "bn": "উদ্বেগ"
+            "en": "Abandonment",
+            "bn": "পরিত্যক্ত"
           },
           "remedies": [],
           "children": [
             {
               "id": "1-1-1",
               "name": {
-                "en": "Future, about the",
-                "bn": "ভবিষ্যৎ সম্পর্কে"
+                "en": "Feeling of abandonment",
+                "bn": "পরিত্যক্ত হওয়ার অনুভূতি"
               },
               "remedies": [
-                { "name": "Acon", "grade": 3 },
-                { "name": "Ars", "grade": 3 },
-                { "name": "Calc", "grade": 2 }
+                { "name": "Aur", "grade": 3 },
+                { "name": "Puls", "grade": 3 },
+                { "name": "Plat", "grade": 2 },
+                { "name": "Stram", "grade": 2 }
               ],
               "children": []
             }
           ]
+        },
+        {
+          "id": "1-2",
+          "name": {
+            "en": "Abrupt",
+            "bn": "আকস্মিক"
+          },
+          "remedies": [
+            { "name": "Tarent", "grade": 2 }
+          ],
+          "children": []
+        },
+        {
+          "id": "1-3",
+          "name": {
+            "en": "Absence of mind",
+            "bn": "অন্যমনস্কতা"
+          },
+          "remedies": [
+            { "name": "Anac", "grade": 2 },
+            { "name": "Nux-m", "grade": 2 },
+            { "name": "Lach", "grade": 2 },
+            { "name": "Nat-m", "grade": 1 }
+          ],
+          "children": []
+        },
+        {
+          "id": "1-4",
+          "name": {
+            "en": "Absent-minded",
+            "bn": "উদাসীন"
+          },
+          "remedies": [
+            { "name": "Apis", "grade": 2 },
+            { "name": "Caust", "grade": 2 },
+            { "name": "Mez", "grade": 2 },
+            { "name": "Sep", "grade": 2 }
+          ],
+          "children": []
+        },
+        {
+            "id": "1-5",
+            "name": {
+                "en": "Absorbed, buried in thought",
+                "bn": "চিন্তামগ্ন"
+            },
+            "remedies": [
+                { "name": "Sulph", "grade": 3 },
+                { "name": "Nux-v", "grade": 2 },
+                { "name": "Cocc", "grade": 2 }
+            ],
+            "children": []
+        },
+        {
+            "id": "1-6",
+            "name": {
+                "en": "Abusive",
+                "bn": "গালাগালি পূর্ণ"
+            },
+            "remedies": [
+                { "name": "Hyos", "grade": 3 },
+                { "name": "Stram", "grade": 3 },
+                { "name": "Anac", "grade": 2 },
+                { "name": "Nux-v", "grade": 2 }
+            ],
+            "children": [
+                {
+                    "id": "1-6-1",
+                    "name": {
+                        "en": "Cursing and swearing",
+                        "bn": "অভিশাপ ও শপথ"
+                    },
+                    "remedies": [
+                        { "name": "Anac", "grade": 2 },
+                        { "name": "Hyos", "grade": 2 },
+                        { "name": "Nux-v", "grade": 2 }
+                    ],
+                    "children": []
+                }
+            ]
+        },
+        {
+            "id": "1-7",
+            "name": {
+                "en": "Activity",
+                "bn": "কর্মকাণ্ড"
+            },
+            "remedies": [],
+            "children": [
+                {
+                    "id": "1-7-1",
+                    "name": {
+                        "en": "Fruitless",
+                        "bn": "অফলপ্রসূ"
+                    },
+                    "remedies": [
+                        { "name": "Tarent", "grade": 2 }
+                    ],
+                    "children": []
+                },
+                {
+                    "id": "1-7-2",
+                    "name": {
+                        "en": "Mental",
+                        "bn": "মানসিক"
+                    },
+                    "remedies": [
+                        { "name": "Coff", "grade": 2 },
+                        { "name": "Lach", "grade": 2 }
+                    ],
+                    "children": []
+                }
+            ]
+        },
+        {
+            "id": "1-8",
+            "name": {
+                "en": "Admiration",
+                "bn": "প্রশংসা"
+            },
+            "remedies": [
+                { "name": "Stram", "grade": 1 }
+            ],
+            "children": []
+        },
+        {
+            "id": "1-9",
+            "name": {
+                "en": "Admonition, agg.",
+                "bn": "সতর্কবাণী, বৃদ্ধি"
+            },
+            "remedies": [
+                { "name": "Ign", "grade": 2 },
+                { "name": "Plat", "grade": 2 },
+                { "name": "Nux-v", "grade": 1 }
+            ],
+            "children": []
+        },
+        {
+            "id": "1-10",
+            "name": {
+                "en": "Adultery",
+                "bn": "ব্যভিচার"
+            },
+            "remedies": [
+                { "name": "Hyos", "grade": 1 }
+            ],
+            "children": []
+        },
+        {
+            "id": "1-11",
+            "name": {
+                "en": "Affectionate",
+                "bn": "স্নেহপ্রবণ"
+            },
+            "remedies": [
+                { "name": "Phos", "grade": 2 },
+                { "name": "Puls", "grade": 2 }
+            ],
+            "children": []
+        },
+        {
+            "id": "1-12",
+            "name": {
+                "en": "Afraid",
+                "bn": "ভীত"
+            },
+            "remedies": [],
+            "children": [
+                {
+                    "id": "1-12-1",
+                    "name": {
+                        "en": "of being alone",
+                        "bn": "একা থাকার ভয়"
+                    },
+                    "remedies": [
+                        { "name": "Ars", "grade": 3 },
+                        { "name": "Lyc", "grade": 2 }
+                    ],
+                    "children": []
+                }
+            ]
+        },
+        {
+          "id": "1-13",
+          "name": {
+            "en": "Agitation",
+            "bn": "উত্তেজনা"
+          },
+          "remedies": [
+            { "name": "Acon", "grade": 3 },
+            { "name": "Ars", "grade": 3 },
+            { "name": "Rhus-t", "grade": 2 }
+          ],
+          "children": []
+        },
+        {
+          "id": "1-14",
+          "name": {
+            "en": "Agony",
+            "bn": "তীব্র যন্ত্রণা"
+          },
+          "remedies": [
+            { "name": "Ars", "grade": 3 },
+            { "name": "Acon", "grade": 2 }
+          ],
+          "children": []
+        },
+        {
+            "id": "1-15",
+            "name": {
+                "en": "Amorous",
+                "bn": "কামুক"
+            },
+            "remedies": [
+                { "name": "Hyos", "grade": 3 },
+                { "name": "Phos", "grade": 3 },
+                { "name": "Stram", "grade": 3 },
+                { "name": "Verat", "grade": 3 }
+            ],
+            "children": []
+        },
+        {
+            "id": "1-16",
+            "name": {
+                "en": "Amusement, aversion to",
+                "bn": "বিনোদন, বিতৃষ্ণা"
+            },
+            "remedies": [
+                { "name": "Nat-m", "grade": 2 },
+                { "name": "Sep", "grade": 2 }
+            ],
+            "children": []
+        },
+        {
+            "id": "1-17",
+            "name": {
+                "en": "Anger",
+                "bn": "রাগ"
+            },
+            "remedies": [
+                { "name": "Cham", "grade": 3 },
+                { "name": "Nux-v", "grade": 3 },
+                { "name": "Staph", "grade": 3 },
+                { "name": "Acon", "grade": 2 },
+                { "name": "Aur", "grade": 2 },
+                { "name": "Hep", "grade": 2 }
+            ],
+            "children": [
+                {
+                    "id": "1-17-1",
+                    "name": {
+                        "en": "from contradiction",
+                        "bn": "বিরোধিতা থেকে"
+                    },
+                    "remedies": [
+                        { "name": "Aur", "grade": 2 },
+                        { "name": "Cham", "grade": 2 },
+                        { "name": "Ign", "grade": 2 },
+                        { "name": "Nux-v", "grade": 2 }
+                    ],
+                    "children": []
+                },
+                {
+                    "id": "1-17-2",
+                    "name": {
+                        "en": "violent",
+                        "bn": "প্রচণ্ড"
+                    },
+                    "remedies": [
+                        { "name": "Cham", "grade": 3 },
+                        { "name": "Hep", "grade": 2 }
+                    ],
+                    "children": []
+                }
+            ]
+        },
+        {
+          "id": "1-18",
+          "name": {
+            "en": "Anguish",
+            "bn": "মনস্তাপ"
+          },
+          "remedies": [
+            { "name": "Acon", "grade": 3 },
+            { "name": "Ars", "grade": 3 },
+            { "name": "Aur", "grade": 2 },
+            { "name": "Rhus-t", "grade": 2 }
+          ],
+          "children": []
+        },
+        {
+          "id": "1-19",
+          "name": {
+            "en": "Answering",
+            "bn": "উত্তর দেওয়া"
+          },
+          "remedies": [],
+          "children": [
+            {
+              "id": "1-19-1",
+              "name": {
+                "en": "aversion to",
+                "bn": "উত্তর দিতে অনিচ্ছা"
+              },
+              "remedies": [
+                { "name": "Phos-ac", "grade": 2 },
+                { "name": "Hell", "grade": 2 }
+              ],
+              "children": []
+            },
+            {
+              "id": "1-19-2",
+              "name": {
+                "en": "hastily",
+                "bn": "দ্রুত উত্তর দেওয়া"
+              },
+              "remedies": [
+                { "name": "Rhus-t", "grade": 1 }
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "1-20",
+          "name": {
+            "en": "Anticipation",
+            "bn": "প্রত্যাশা"
+          },
+          "remedies": [
+            { "name": "Gels", "grade": 2 },
+            { "name": "Arg-n", "grade": 2 }
+          ],
+          "children": []
+        },
+        {
+          "id": "1-21",
+          "name": {
+            "en": "Anxiety",
+            "bn": "উদ্বেগ"
+          },
+          "remedies": [
+            { "name": "Acon", "grade": 3 },
+            { "name": "Arg-n", "grade": 3 },
+            { "name": "Ars", "grade": 3 },
+            { "name": "Calc", "grade": 3 },
+            { "name": "Lyc", "grade": 3 },
+            { "name": "Phos", "grade": 3 }
+          ],
+          "children": [
+            {
+              "id": "1-21-1",
+              "name": {
+                "en": "about health",
+                "bn": "স্বাস্থ্য নিয়ে"
+              },
+              "remedies": [
+                { "name": "Ars", "grade": 3 },
+                { "name": "Calc", "grade": 2 },
+                { "name": "Phos", "grade": 2 }
+              ],
+              "children": []
+            },
+            {
+              "id": "1-21-2",
+              "name": {
+                "en": "Future, about the",
+                "bn": "ভবিষ্যৎ নিয়ে"
+              },
+              "remedies": [
+                { "name": "Bry", "grade": 2 },
+                { "name": "Phos", "grade": 2 },
+                { "name": "Lyc", "grade": 2 }
+              ],
+              "children": []
+            },
+            {
+              "id": "1-21-3",
+              "name": {
+                "en": "conscience, of",
+                "bn": "বিবেকের দংশন"
+              },
+              "remedies": [
+                { "name": "Ars", "grade": 2 },
+                { "name": "Aur", "grade": 2 }
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "1-22",
+          "name": {
+            "en": "Apathy",
+            "bn": "উদাসীনতা"
+          },
+          "remedies": [
+            { "name": "Phos-ac", "grade": 3 },
+            { "name": "Sep", "grade": 3 },
+            { "name": "Hell", "grade": 2 },
+            { "name": "Phos", "grade": 2 }
+          ],
+          "children": []
+        },
+        {
+          "id": "1-23",
+          "name": {
+            "en": "Arrogance",
+            "bn": "অহংকার"
+          },
+          "remedies": [
+            { "name": "Plat", "grade": 3 },
+            { "name": "Stram", "grade": 2 },
+            { "name": "Lyc", "grade": 2 }
+          ],
+          "children": []
+        },
+        {
+            "id": "1-24",
+            "name": {
+                "en": "Aversion",
+                "bn": "বিতৃষ্ণা"
+            },
+            "remedies": [],
+            "children": [
+                {
+                    "id": "1-24-1",
+                    "name": {
+                        "en": "to business",
+                        "bn": "কাজে"
+                    },
+                    "remedies": [
+                        { "name": "Sep", "grade": 2 },
+                        { "name": "Sulph", "grade": 2 },
+                        { "name": "Phos-ac", "grade": 2 }
+                    ],
+                    "children": []
+                },
+                {
+                    "id": "1-24-2",
+                    "name": {
+                        "en": "to company",
+                        "bn": "সঙ্গ লাভে"
+                    },
+                    "remedies": [
+                        { "name": "Ign", "grade": 2 },
+                        { "name": "Nat-m", "grade": 2 }
+                    ],
+                    "children": []
+                }
+            ]
+        },
+        {
+            "id": "1-25",
+            "name": {
+                "en": "Awkward",
+                "bn": "বেমানান"
+            },
+            "remedies": [
+                { "name": "Apis", "grade": 2 },
+                { "name": "Bov", "grade": 2 },
+                { "name": "Ign", "grade": 2 },
+                { "name": "Nat-m", "grade": 2 }
+            ],
+            "children": []
         }
       ]
     },
     {
       "id": "2",
       "name": {
-        "en": "Head",
-        "bn": "মাথা"
+        "en": "Vertigo",
+        "bn": "মাথা ঘোরা"
       },
       "rubrics": [
         {
           "id": "2-1",
           "name": {
-            "en": "Pain",
-            "bn": "ব্যথা"
+            "en": "General",
+            "bn": "সাধারণ"
           },
-          "remedies": [],
-          "children": [
-            {
-              "id": "2-1-1",
-              "name": {
-                "en": "Throbbing",
-                "bn": "দপদপানি ব্যথা"
-              },
-              "remedies": [
-                { "name": "Bell", "grade": 3 },
-                { "name": "Glon", "grade": 3 },
-                { "name": "Lach", "grade": 2 }
-              ],
-              "children": []
-            }
-          ]
+          "remedies": [
+            { "name": "Con", "grade": 3 },
+            { "name": "Phos", "grade": 3 },
+            { "name": "Nux-v", "grade": 2 },
+            { "name": "Puls", "grade": 2 }
+          ],
+          "children": []
+        },
+        {
+          "id": "2-2",
+          "name": {
+            "en": "morning",
+            "bn": "সকালে"
+          },
+          "remedies": [
+            { "name": "Bry", "grade": 2 },
+            { "name": "Lach", "grade": 2 }
+          ],
+          "children": []
         }
       ]
     },
     {
       "id": "3",
-      "name": { "en": "Vertigo", "bn": "মাথা ঘোরা" },
-      "rubrics": []
+      "name": {
+        "en": "Head",
+        "bn": "মাথা"
+      },
+      "rubrics": [
+        {
+          "id": "3-1",
+          "name": {
+            "en": "Pain",
+            "bn": "ব্যথা"
+          },
+          "remedies": [
+            { "name": "Bell", "grade": 3 },
+            { "name": "Bry", "grade": 3 },
+            { "name": "Glon", "grade": 3 },
+            { "name": "Nux-v", "grade": 3 },
+            { "name": "Puls", "grade": 3 },
+            { "name": "Spig", "grade": 3 }
+          ],
+          "children": [
+            {
+              "id": "3-1-1",
+              "name": {
+                "en": "Forehead",
+                "bn": "কপাল"
+              },
+              "remedies": [
+                { "name": "Bell", "grade": 3 },
+                { "name": "Bry", "grade": 2 }
+              ],
+              "children": []
+            },
+            {
+              "id": "3-1-2",
+              "name": {
+                "en": "Temples",
+                "bn": "রগ"
+              },
+              "remedies": [
+                { "name": "Bell", "grade": 2 },
+                { "name": "Glon", "grade": 2 }
+              ],
+              "children": []
+            },
+            {
+              "id": "3-1-3",
+              "name": {
+                "en": "Vertex",
+                "bn": "মাথার তালু"
+              },
+              "remedies": [
+                { "name": "Cact", "grade": 2 },
+                { "name": "Glon", "grade": 2 },
+                { "name": "Sulph", "grade": 2 }
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "3-2",
+          "name": {
+            "en": "Congestion",
+            "bn": "রক্তাধিক্য"
+          },
+          "remedies": [
+            { "name": "Bell", "grade": 3 },
+            { "name": "Glon", "grade": 3 }
+          ],
+          "children": []
+        }
+      ]
     },
     {
       "id": "4",
-      "name": { "en": "Eyes", "bn": "চোখ" },
+      "name": {
+        "en": "Eyes",
+        "bn": "চোখ"
+      },
       "rubrics": []
     },
     {
       "id": "5",
-      "name": { "en": "Ears", "bn": "কান" },
+      "name": {
+        "en": "Ears",
+        "bn": "কান"
+      },
       "rubrics": []
     },
     {
       "id": "6",
-      "name": { "en": "Nose", "bn": "নাক" },
+      "name": {
+        "en": "Nose",
+        "bn": "নাক"
+      },
       "rubrics": []
     },
     {
       "id": "7",
-      "name": { "en": "Face", "bn": "মুখমণ্ডল" },
+      "name": {
+        "en": "Face",
+        "bn": "মুখমণ্ডল"
+      },
       "rubrics": []
     },
     {
       "id": "8",
-      "name": { "en": "Mouth", "bn": "মুখ" },
+      "name": {
+        "en": "Mouth",
+        "bn": "মুখ"
+      },
       "rubrics": []
     },
     {
       "id": "9",
-      "name": { "en": "Teeth", "bn": "দাঁত" },
+      "name": {
+        "en": "Teeth",
+        "bn": "দাঁত"
+      },
       "rubrics": []
     },
     {
       "id": "10",
-      "name": { "en": "Throat", "bn": "গলা" },
+      "name": {
+        "en": "Throat",
+        "bn": "গলা"
+      },
       "rubrics": []
     },
     {
       "id": "11",
-      "name": { "en": "Stomach", "bn": "পাকস্থলী" },
+      "name": {
+        "en": "External Throat",
+        "bn": "গলার বাহির"
+      },
       "rubrics": []
     },
     {
       "id": "12",
-      "name": { "en": "Abdomen", "bn": "তলপেট" },
+      "name": {
+        "en": "Stomach",
+        "bn": "পাকস্থলী"
+      },
       "rubrics": []
     },
     {
       "id": "13",
-      "name": { "en": "Rectum", "bn": "মলদ্বার" },
+      "name": {
+        "en": "Abdomen",
+        "bn": "পেট"
+      },
       "rubrics": []
     },
     {
       "id": "14",
-      "name": { "en": "Stool", "bn": "মল" },
+      "name": {
+        "en": "Rectum",
+        "bn": "মলদ্বার"
+      },
       "rubrics": []
     },
     {
       "id": "15",
-      "name": { "en": "Urinary Organs", "bn": "মূত্রযন্ত্র" },
+      "name": {
+        "en": "Stool",
+        "bn": "মল"
+      },
       "rubrics": []
     },
     {
       "id": "16",
-      "name": { "en": "Urine", "bn": "প্রস্রাব" },
+      "name": {
+        "en": "Urinary Organs",
+        "bn": "মূত্রযন্ত্র"
+      },
       "rubrics": []
     },
     {
       "id": "17",
-      "name": { "en": "Male Genitalia", "bn": "পুরুষ জননেন্দ্রিয়" },
+      "name": {
+        "en": "Genitalia Male",
+        "bn": "পুরুষ জননেন্দ্রিয়"
+      },
       "rubrics": []
     },
     {
       "id": "18",
-      "name": { "en": "Female Genitalia", "bn": "মহিলা জননেন্দ্রিয়" },
+      "name": {
+        "en": "Genitalia Female",
+        "bn": "মহিলা জননেন্দ্রিয়"
+      },
       "rubrics": []
     },
     {
       "id": "19",
-      "name": { "en": "Larynx and Trachea", "bn": "স্বরযন্ত্র ও শ্বাসনালী" },
+      "name": {
+        "en": "Larynx and Trachea",
+        "bn": "স্বরযন্ত্র ও শ্বাসনালী"
+      },
       "rubrics": []
     },
     {
       "id": "20",
-      "name": { "en": "Respiration", "bn": "শ্বাস-প্রশ্বাস" },
+      "name": {
+        "en": "Respiration",
+        "bn": "শ্বাস-প্রশ্বাস"
+      },
       "rubrics": []
     },
     {
       "id": "21",
-      "name": { "en": "Cough", "bn": "কাশি" },
+      "name": {
+        "en": "Cough",
+        "bn": "কাশি"
+      },
       "rubrics": []
     },
     {
       "id": "22",
-      "name": { "en": "Chest", "bn": "বুক" },
+      "name": {
+        "en": "Expectoration",
+        "bn": "গয়ের"
+      },
       "rubrics": []
     },
     {
       "id": "23",
-      "name": { "en": "Back", "bn": "পিঠ" },
+      "name": {
+        "en": "Chest",
+        "bn": "বুক"
+      },
       "rubrics": []
     },
     {
       "id": "24",
-      "name": { "en": "Extremities", "bn": "অঙ্গপ্রত্যঙ্গ" },
+      "name": {
+        "en": "Back",
+        "bn": "পিঠ"
+      },
       "rubrics": []
     },
     {
       "id": "25",
-      "name": { "en": "Sleep", "bn": "ঘুম" },
+      "name": {
+        "en": "Extremities",
+        "bn": "অঙ্গ-প্রত্যঙ্গ"
+      },
       "rubrics": []
     },
     {
       "id": "26",
-      "name": { "en": "Chill", "bn": "শীত" },
+      "name": {
+        "en": "Sleep",
+        "bn": "ঘুম"
+      },
       "rubrics": []
     },
     {
       "id": "27",
-      "name": { "en": "Fever", "bn": "জ্বর" },
+      "name": {
+        "en": "Chill",
+        "bn": "শীত"
+      },
       "rubrics": []
     },
     {
       "id": "28",
-      "name": { "en": "Perspiration", "bn": "ঘাম" },
+      "name": {
+        "en": "Fever",
+        "bn": "জ্বর"
+      },
       "rubrics": []
     },
     {
       "id": "29",
-      "name": { "en": "Skin", "bn": "ত্বক" },
+      "name": {
+        "en": "Perspiration",
+        "bn": "ঘাম"
+      },
       "rubrics": []
     },
     {
       "id": "30",
-      "name": { "en": "Generalities", "bn": "সাধারণ লক্ষণ" },
+      "name": {
+        "en": "Skin",
+        "bn": "চামড়া"
+      },
+      "rubrics": []
+    },
+    {
+      "id": "31",
+      "name": {
+        "en": "Generalities",
+        "bn": "সাধারণ লক্ষণ"
+      },
       "rubrics": []
     }
   ]
