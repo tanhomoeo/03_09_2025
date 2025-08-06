@@ -26,6 +26,9 @@ const gradeColorClasses: { [key: number]: string } = {
 };
 
 const getChapterIcon = (chapterNameEn: string): React.ReactNode => {
+    if (!chapterNameEn) {
+        return <Dot className="h-4 w-4 mr-2 flex-shrink-0" />;
+    }
     const lowerCaseName = chapterNameEn.toLowerCase();
     
     const iconMap: { [key: string]: React.ElementType } = {
@@ -195,7 +198,7 @@ export const RepertoryBrowser: React.FC<RepertoryBrowserProps> = ({ chapters = [
     setLanguage(prev => prev === 'bn' ? 'en' : 'bn');
   };
 
-  const chapterName = selectedChapter?.name[language] || selectedChapter?.name.en;
+  const chapterName = selectedChapter?.name?.[language] || selectedChapter?.name?.en;
 
   return (
     <Card className="h-full w-full grid grid-cols-12 overflow-hidden shadow-lg bg-card/70 backdrop-blur-lg">
@@ -205,17 +208,20 @@ export const RepertoryBrowser: React.FC<RepertoryBrowserProps> = ({ chapters = [
         </div>
         <ScrollArea className="flex-grow">
             <div className="p-2">
-                {(chapters || []).map(chapter => (
-                    <Button
-                    key={chapter.id}
-                    variant={selectedChapter?.id === chapter.id ? "secondary" : "ghost"}
-                    className="w-full justify-start mb-1 text-left h-auto py-2"
-                    onClick={() => handleChapterSelect(chapter)}
-                    >
-                    {getChapterIcon(chapter.name.en)}
-                    {chapter.name[language] || chapter.name.en}
-                    </Button>
-                ))}
+                {(chapters || []).map(chapter => {
+                    if (!chapter.name) return null;
+                    return (
+                        <Button
+                        key={chapter.id}
+                        variant={selectedChapter?.id === chapter.id ? "secondary" : "ghost"}
+                        className="w-full justify-start mb-1 text-left h-auto py-2"
+                        onClick={() => handleChapterSelect(chapter)}
+                        >
+                        {getChapterIcon(chapter.name.en)}
+                        {chapter.name[language] || chapter.name.en}
+                        </Button>
+                    );
+                })}
             </div>
         </ScrollArea>
       </div>
