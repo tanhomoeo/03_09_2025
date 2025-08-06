@@ -16,7 +16,7 @@ const nextConfig = {
 
     if (isServer) {
         // Exclude problematic modules from server bundle if they cause issues.
-        // config.externals.push('@opentelemetry/exporter-jaeger');
+        config.externals = [...(config.externals || []), '@opentelemetry/winston-transport'];
     }
 
     return config;
