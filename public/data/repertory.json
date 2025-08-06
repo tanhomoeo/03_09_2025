@@ -2,592 +2,208 @@
 {
   "chapters": [
     {
-      "id": "mind",
-      "name": "Mind",
+      "id": "1",
+      "name": {
+        "en": "Mind",
+        "bn": "মন"
+      },
       "rubrics": [
         {
-          "id": "mind-abandoned",
-          "name": "ABANDONED",
-          "remedies": [
-            { "name": "Aur", "grade": 2 },
-            { "name": "Puls", "grade": 2 },
-            { "name": "Plat", "grade": 1 }
-          ],
+          "id": "1-1",
+          "name": {
+            "en": "Anxiety",
+            "bn": "উদ্বেগ"
+          },
+          "remedies": [],
           "children": [
             {
-              "id": "mind-abandoned-forsaken-feeling",
-              "name": "Forsaken feeling",
+              "id": "1-1-1",
+              "name": {
+                "en": "Future, about the",
+                "bn": "ভবিষ্যৎ সম্পর্কে"
+              },
               "remedies": [
-                { "name": "Arg-n", "grade": 3 },
-                { "name": "Aur", "grade": 3 },
-                { "name": "Camph", "grade": 2 },
-                { "name": "Cycl", "grade": 2 },
-                { "name": "Hyos", "grade": 2 },
-                { "name": "Kali-br", "grade": 2 },
-                { "name": "Lyc", "grade": 2 },
-                { "name": "Nat-m", "grade": 3 },
-                { "name": "Plat", "grade": 2 },
-                { "name": "Psor", "grade": 3 },
-                { "name": "Puls", "grade": 3 },
-                { "name": "Stram", "grade": 2 }
-              ],
-              "children": []
-            }
-          ]
-        },
-        {
-          "id": "mind-abrupt",
-          "name": "ABRUPT",
-          "remedies": [
-            { "name": "Tarent", "grade": 2 },
-            { "name": "Ip", "grade": 1 }
-          ],
-          "children": []
-        },
-        {
-          "id": "mind-absent-minded",
-          "name": "ABSENT-MINDED",
-          "remedies": [
-            { "name": "Anac", "grade": 3 },
-            { "name": "Apis", "grade": 2 },
-            { "name": "Caust", "grade": 2 },
-            { "name": "Cham", "grade": 2 },
-            { "name": "Lach", "grade": 3 },
-            { "name": "Nux-m", "grade": 3 },
-            { "name": "Sep", "grade": 2 },
-            { "name": "Sulph", "grade": 2 }
-          ],
-          "children": []
-        },
-        {
-          "id": "mind-abusive",
-          "name": "ABUSIVE",
-          "remedies": [
-            { "name": "Hyos", "grade": 3 },
-            { "name": "Lyc", "grade": 2 },
-            { "name": "Nux-v", "grade": 2 },
-            { "name": "Stram", "grade": 2 }
-          ],
-          "children": [
-            {
-              "id": "mind-abusive-insulting",
-              "name": "Insulting",
-              "remedies": [
-                { "name": "Bell", "grade": 2 },
-                { "name": "Hyos", "grade": 3 },
-                { "name": "Lyc", "grade": 2 }
-              ],
-              "children": []
-            }
-          ]
-        },
-        {
-          "id": "mind-activity",
-          "name": "ACTIVITY",
-          "remedies": [
-            { "name": "Acon", "grade": 2 },
-            { "name": "Agar", "grade": 2 },
-            { "name": "Bell", "grade": 2 },
-            { "name": "Bry", "grade": 1 },
-            { "name": "Calc", "grade": 1 },
-            { "name": "Coff", "grade": 3 },
-            { "name": "Tarent", "grade": 3 }
-          ],
-          "children": []
-        },
-        {
-          "id": "mind-agitation",
-          "name": "AGITATION",
-          "remedies": [
-            { "name": "Acon", "grade": 3 },
-            { "name": "Apis", "grade": 2 },
-            { "name": "Ars", "grade": 3 },
-            { "name": "Bell", "grade": 3 },
-            { "name": "Hyos", "grade": 2 },
-            { "name": "Stram", "grade": 2 }
-          ],
-          "children": []
-        },
-        {
-          "id": "mind-anguish",
-          "name": "ANGUISH",
-          "remedies": [
-            { "name": "Acon", "grade": 3 },
-            { "name": "Arg-n", "grade": 2 },
-            { "name": "Ars", "grade": 3 },
-            { "name": "Aur", "grade": 3 },
-            { "name": "Bism", "grade": 2 },
-            { "name": "Cact", "grade": 2 },
-            { "name": "Calc", "grade": 2 },
-            { "name": "Camph", "grade": 2 },
-            { "name": "Coff", "grade": 2 },
-            { "name": "Cupr", "grade": 2 },
-            { "name": "Graph", "grade": 2 },
-            { "name": "Ign", "grade": 3 },
-            { "name": "Nux-v", "grade": 2 },
-            { "name": "Puls", "grade": 2 },
-            { "name": "Rhus-t", "grade": 2 },
-            { "name": "Sec", "grade": 2 },
-            { "name": "Spong", "grade": 2 },
-            { "name": "Verat", "grade": 3 }
-          ],
-          "children": []
-        },
-        {
-          "id": "mind-anxiety",
-          "name": "ANXIETY",
-          "remedies": [
-            { "name": "Acon", "grade": 3 },
-            { "name": "Arg-n", "grade": 3 },
-            { "name": "Ars", "grade": 3 },
-            { "name": "Aur", "grade": 2 },
-            { "name": "Bell", "grade": 2 },
-            { "name": "Bry", "grade": 2 },
-            { "name": "Calc", "grade": 3 },
-            { "name": "Carb-v", "grade": 2 },
-            { "name": "Caust", "grade": 2 },
-            { "name": "Cham", "grade": 2 },
-            { "name": "Coff", "grade": 2 },
-            { "name": "Graph", "grade": 2 },
-            { "name": "Ign", "grade": 2 },
-            { "name": "Kali-ars", "grade": 2 },
-            { "name": "Kali-c", "grade": 2 },
-            { "name": "Lyc", "grade": 2 },
-            { "name": "Nat-c", "grade": 2 },
-            { "name": "Nat-m", "grade": 2 },
-            { "name": "Nux-v", "grade": 2 },
-            { "name": "Phos", "grade": 3 },
-            { "name": "Puls", "grade": 2 },
-            { "name": "Rhus-t", "grade": 2 },
-            { "name": "Sep", "grade": 2 },
-            { "name": "Sil", "grade": 2 },
-            { "name": "Sulph", "grade": 2 },
-            { "name": "Verat", "grade": 2 }
-          ],
-          "children": [
-            {
-              "id": "mind-anxiety-conscience",
-              "name": "Conscience, as if guilty of a crime",
-              "remedies": [
-                { "name": "Ars", "grade": 3 },
-                { "name": "Coc-c", "grade": 2 },
-                { "name": "Cycl", "grade": 2 },
-                { "name": "Dig", "grade": 2 },
-                { "name": "Ign", "grade": 2 },
-                { "name": "Med", "grade": 2 },
-                { "name": "Merc", "grade": 2 },
-                { "name": "Psor", "grade": 2 },
-                { "name": "Puls", "grade": 2 },
-                { "name": "Sil", "grade": 2 },
-                { "name": "Verat", "grade": 2 },
-                { "name": "Zinc", "grade": 2 }
-              ],
-              "children": []
-            },
-            {
-              "id": "mind-anxiety-future",
-              "name": "Future, about the",
-              "remedies": [
-                { "name": "Anac", "grade": 2 },
-                { "name": "Ant-t", "grade": 2 },
-                { "name": "Bry", "grade": 3 },
-                { "name": "Calc", "grade": 2 },
-                { "name": "Caust", "grade": 2 },
-                { "name": "Chin", "grade": 2 },
-                { "name": "Cic", "grade": 2 },
-                { "name": "Dig", "grade": 2 },
-                { "name": "Dros", "grade": 2 },
-                { "name": "Graph", "grade": 2 },
-                { "name": "Lyc", "grade": 2 },
-                { "name": "Nat-c", "grade": 2 },
-                { "name": "Nux-v", "grade": 2 },
-                { "name": "Ph-ac", "grade": 2 },
-                { "name": "Phos", "grade": 2 },
-                { "name": "Puls", "grade": 2 },
-                { "name": "Spong", "grade": 2 },
-                { "name": "Sulph", "grade": 2 }
-              ],
-              "children": []
-            },
-            {
-              "id": "mind-anxiety-health",
-              "name": "Health, about",
-              "remedies": [
-                { "name": "Arg-n", "grade": 2 },
-                { "name": "Ars", "grade": 3 },
-                { "name": "Calc", "grade": 2 },
-                { "name": "Kali-ars", "grade": 3 },
-                { "name": "Kali-c", "grade": 2 },
-                { "name": "Lach", "grade": 2 },
-                { "name": "Nux-v", "grade": 2 },
-                { "name": "Ph-ac", "grade": 2 },
-                { "name": "Phos", "grade": 2 }
-              ],
-              "children": []
-            }
-          ]
-        },
-        {
-            "id": "mind-fear",
-            "name": "FEAR",
-            "remedies": [
                 { "name": "Acon", "grade": 3 },
-                { "name": "Arg-n", "grade": 3 },
-                { "name": "Ars", "grade": 2 },
-                { "name": "Bell", "grade": 3 },
-                { "name": "Bor", "grade": 2 },
-                { "name": "Bry", "grade": 1 },
-                { "name": "Calc", "grade": 2 },
-                { "name": "Carb-v", "grade": 2 },
-                { "name": "Caust", "grade": 1 },
-                { "name": "Gels", "grade": 3 },
-                { "name": "Graph", "grade": 2 },
-                { "name": "Hyos", "grade": 2 },
-                { "name": "Ign", "grade": 2 },
-                { "name": "Kali-c", "grade": 2 },
-                { "name": "Lyc", "grade": 3 },
-                { "name": "Nat-m", "grade": 2 },
-                { "name": "Op", "grade": 2 },
-                { "name": "Phos", "grade": 3 },
-                { "name": "Puls", "grade": 2 },
-                { "name": "Stram", "grade": 3 }
-            ],
-            "children": [
-                {
-                    "id": "mind-fear-death",
-                    "name": "Death, of",
-                    "remedies": [
-                        { "name": "Acon", "grade": 3 },
-                        { "name": "Agn", "grade": 1 },
-                        { "name": "Apis", "grade": 2 },
-                        { "name": "Arg-n", "grade": 2 },
-                        { "name": "Ars", "grade": 3 },
-                        { "name": "Bell", "grade": 1 },
-                        { "name": "Bry", "grade": 1 },
-                        { "name": "Cact", "grade": 1 },
-                        { "name": "Calc", "grade": 2 },
-                        { "name": "Cimic", "grade": 2 },
-                        { "name": "Coff", "grade": 1 },
-                        { "name": "Crot-h", "grade": 1 },
-                        { "name": "Cupr", "grade": 1 },
-                        { "name": "Dig", "grade": 1 },
-                        { "name": "Gels", "grade": 2 },
-                        { "name": "Graph", "grade": 1 },
-                        { "name": "Hell", "grade": 1 },
-                        { "name": "Kali-ars", "grade": 2 },
-                        { "name": "Kali-c", "grade": 1 },
-                        { "name": "Kali-n", "grade": 1 },
-                        { "name": "Lach", "grade": 2 },
-                        { "name": "Lyc", "grade": 1 },
-                        { "name": "Mosch", "grade": 2 },
-                        { "name": "Nit-ac", "grade": 2 },
-                        { "name": "Nux-v", "grade": 1 },
-                        { "name": "Phos", "grade": 2 },
-                        { "name": "Plat", "grade": 1 },
-                        { "name": "Psor", "grade": 2 },
-                        { "name": "Puls", "grade": 1 },
-                        { "name": "Rhus-t", "grade": 1 },
-                        { "name": "Sec", "grade": 1 },
-                        { "name": "Stram", "grade": 1 },
-                        { "name": "Tarent", "grade": 1 },
-                        { "name": "Verat", "grade": 2 },
-                        { "name": "Zinc", "grade": 1 }
-                    ],
-                    "children": []
-                },
-                {
-                    "id": "mind-fear-disease",
-                    "name": "Disease, of",
-                    "remedies": [
-                        { "name": "Arg-n", "grade": 2 },
-                        { "name": "Ars", "grade": 2 },
-                        { "name": "Calc", "grade": 2 },
-                        { "name": "Kali-ars", "grade": 3 },
-                        { "name": "Kali-c", "grade": 1 },
-                        { "name": "Lach", "grade": 1 },
-                        { "name": "Lil-t", "grade": 2 },
-                        { "name": "Nux-v", "grade": 1 },
-                        { "name": "Ph-ac", "grade": 1 },
-                        { "name": "Phos", "grade": 2 },
-                        { "name": "Puls", "grade": 1 },
-                        { "name": "Syph", "grade": 2 }
-                    ],
-                    "children": []
-                },
-                {
-                    "id": "mind-fear-evil",
-                    "name": "Evil, of",
-                    "remedies": [
-                        { "name": "Calc", "grade": 1 },
-                        { "name": "Dros", "grade": 1 },
-                        { "name": "Graph", "grade": 1 },
-                        { "name": "Lach", "grade": 1 },
-                        { "name": "Manc", "grade": 2 },
-                        { "name": "Puls", "grade": 1 },
-                        { "name": "Ran-b", "grade": 1 },
-                        { "name": "Sulph", "grade": 1 },
-                        { "name": "Zinc", "grade": 1 }
-                    ],
-                    "children": []
-                }
-            ]
+                { "name": "Ars", "grade": 3 },
+                { "name": "Calc", "grade": 2 }
+              ],
+              "children": []
+            }
+          ]
         }
       ]
     },
     {
-        "id": "head",
-        "name": "Head",
-        "rubrics": [
+      "id": "2",
+      "name": {
+        "en": "Head",
+        "bn": "মাথা"
+      },
+      "rubrics": [
+        {
+          "id": "2-1",
+          "name": {
+            "en": "Pain",
+            "bn": "ব্যথা"
+          },
+          "remedies": [],
+          "children": [
             {
-                "id": "head-pain",
-                "name": "PAIN",
-                "remedies": [
-                    { "name": "Acon", "grade": 1 },
-                    { "name": "Bell", "grade": 3 },
-                    { "name": "Bry", "grade": 3 },
-                    { "name": "Calc", "grade": 2 },
-                    { "name": "Cimic", "grade": 2 },
-                    { "name": "Gels", "grade": 2 },
-                    { "name": "Glon", "grade": 3 },
-                    { "name": "Ign", "grade": 1 },
-                    { "name": "Iris", "grade": 2 },
-                    { "name": "Kali-bi", "grade": 2 },
-                    { "name": "Lach", "grade": 2 },
-                    { "name": "Nux-v", "grade": 3 },
-                    { "name": "Puls", "grade": 2 },
-                    { "name": "Sang", "grade": 3 },
-                    { "name": "Sep", "grade": 2 },
-                    { "name": "Sil", "grade": 2 },
-                    { "name": "Spig", "grade": 3 },
-                    { "name": "Sulph", "grade": 1 }
-                ],
-                "children": [
-                    {
-                        "id": "head-pain-morning",
-                        "name": "Morning",
-                        "remedies": [
-                            { "name": "Bry", "grade": 2 },
-                            { "name": "Calc", "grade": 1 },
-                            { "name": "Kali-bi", "grade": 1 },
-                            { "name": "Nat-m", "grade": 3 },
-                            { "name": "Nux-v", "grade": 3 },
-                            { "name": "Phos", "grade": 1 },
-                            { "name": "Puls", "grade": 1 },
-                            { "name": "Sep", "grade": 1 }
-                        ],
-                        "children": []
-                    },
-                    {
-                        "id": "head-pain-afternoon",
-                        "name": "Afternoon",
-                        "remedies": [
-                            { "name": "Bell", "grade": 2 },
-                            { "name": "Lyc", "grade": 2 },
-                            { "name": "Puls", "grade": 1 },
-                            { "name": "Sil", "grade": 1 }
-                        ],
-                        "children": []
-                    },
-                    {
-                        "id": "head-pain-air",
-                        "name": "Air, in open",
-                        "remedies": [
-                           { "name": "Acon", "grade": 1 },
-                           { "name": "Bell", "grade": 1 },
-                           { "name": "Puls", "grade": 2 },
-                           { "name": "Sulph", "grade": 1 }
-                        ],
-                        "children": []
-                    }
-                ]
-            },
-            {
-                "id": "head-heaviness",
-                "name": "HEAVINESS",
-                "remedies": [
-                    { "name": "Bell", "grade": 2 },
-                    { "name": "Bry", "grade": 2 },
-                    { "name": "Calc", "grade": 1 },
-                    { "name": "Carb-v", "grade": 1 },
-                    { "name": "Gels", "grade": 2 },
-                    { "name": "Nat-m", "grade": 1 },
-                    { "name": "Nux-v", "grade": 2 },
-                    { "name": "Phos", "grade": 2 },
-                    { "name": "Puls", "grade": 1 },
-                    { "name": "Rhus-t", "grade": 1 },
-                    { "name": "Sep", "grade": 1 },
-                    { "name": "Sulph", "grade": 1 }
-                ],
-                "children": []
+              "id": "2-1-1",
+              "name": {
+                "en": "Throbbing",
+                "bn": "দপদপানি ব্যথা"
+              },
+              "remedies": [
+                { "name": "Bell", "grade": 3 },
+                { "name": "Glon", "grade": 3 },
+                { "name": "Lach", "grade": 2 }
+              ],
+              "children": []
             }
-        ]
+          ]
+        }
+      ]
     },
     {
-        "id": "eye",
-        "name": "Eye",
-        "rubrics": []
+      "id": "3",
+      "name": { "en": "Vertigo", "bn": "মাথা ঘোরা" },
+      "rubrics": []
     },
     {
-        "id": "ear",
-        "name": "Ear",
-        "rubrics": []
+      "id": "4",
+      "name": { "en": "Eyes", "bn": "চোখ" },
+      "rubrics": []
     },
     {
-        "id": "nose",
-        "name": "Nose",
-        "rubrics": []
+      "id": "5",
+      "name": { "en": "Ears", "bn": "কান" },
+      "rubrics": []
     },
     {
-        "id": "face",
-        "name": "Face",
-        "rubrics": []
+      "id": "6",
+      "name": { "en": "Nose", "bn": "নাক" },
+      "rubrics": []
     },
     {
-        "id": "mouth",
-        "name": "Mouth",
-        "rubrics": []
+      "id": "7",
+      "name": { "en": "Face", "bn": "মুখমণ্ডল" },
+      "rubrics": []
     },
     {
-        "id": "throat",
-        "name": "Throat",
-        "rubrics": []
+      "id": "8",
+      "name": { "en": "Mouth", "bn": "মুখ" },
+      "rubrics": []
     },
     {
-        "id": "stomach",
-        "name": "Stomach",
-        "rubrics": [
-            {
-                "id": "stomach-appetite",
-                "name": "APPETITE",
-                "remedies": [],
-                "children": [
-                    {
-                        "id": "stomach-appetite-increased",
-                        "name": "Increased",
-                        "remedies": [
-                            { "name": "Chin", "grade": 2 },
-                            { "name": "Cina", "grade": 2 },
-                            { "name": "Iod", "grade": 2 },
-                            { "name": "Lyc", "grade": 3 },
-                            { "name": "Phos", "grade": 2 },
-                            { "name": "Sulph", "grade": 1 }
-                        ],
-                        "children": []
-                    },
-                    {
-                        "id": "stomach-appetite-wanting",
-                        "name": "Wanting (loss of)",
-                        "remedies": [
-                            { "name": "Ant-c", "grade": 2 },
-                            { "name": "Ars", "grade": 2 },
-                            { "name": "Chin", "grade": 3 },
-                            { "name": "Cycl", "grade": 2 },
-                            { "name": "Ip", "grade": 2 },
-                            { "name": "Lyc", "grade": 2 },
-                            { "name": "Nux-v", "grade": 2 },
-                            { "name": "Puls", "grade": 3 },
-                            { "name": "Sulph", "grade": 2 }
-                        ],
-                        "children": []
-                    }
-                ]
-            }
-        ]
+      "id": "9",
+      "name": { "en": "Teeth", "bn": "দাঁত" },
+      "rubrics": []
     },
     {
-        "id": "abdomen",
-        "name": "Abdomen",
-        "rubrics": []
+      "id": "10",
+      "name": { "en": "Throat", "bn": "গলা" },
+      "rubrics": []
     },
     {
-        "id": "rectum",
-        "name": "Rectum",
-        "rubrics": []
+      "id": "11",
+      "name": { "en": "Stomach", "bn": "পাকস্থলী" },
+      "rubrics": []
     },
     {
-        "id": "stool",
-        "name": "Stool",
-        "rubrics": []
+      "id": "12",
+      "name": { "en": "Abdomen", "bn": "তলপেট" },
+      "rubrics": []
     },
     {
-        "id": "urinary",
-        "name": "Urinary Organs",
-        "rubrics": []
+      "id": "13",
+      "name": { "en": "Rectum", "bn": "মলদ্বার" },
+      "rubrics": []
     },
     {
-        "id": "genitalia-male",
-        "name": "Genitalia - Male",
-        "rubrics": []
+      "id": "14",
+      "name": { "en": "Stool", "bn": "মল" },
+      "rubrics": []
     },
     {
-        "id": "genitalia-female",
-        "name": "Genitalia - Female",
-        "rubrics": []
+      "id": "15",
+      "name": { "en": "Urinary Organs", "bn": "মূত্রযন্ত্র" },
+      "rubrics": []
     },
     {
-        "id": "larynx",
-        "name": "Larynx and Trachea",
-        "rubrics": []
+      "id": "16",
+      "name": { "en": "Urine", "bn": "প্রস্রাব" },
+      "rubrics": []
     },
     {
-        "id": "respiration",
-        "name": "Respiration",
-        "rubrics": []
+      "id": "17",
+      "name": { "en": "Male Genitalia", "bn": "পুরুষ জননেন্দ্রিয়" },
+      "rubrics": []
     },
     {
-        "id": "cough",
-        "name": "Cough",
-        "rubrics": []
+      "id": "18",
+      "name": { "en": "Female Genitalia", "bn": "মহিলা জননেন্দ্রিয়" },
+      "rubrics": []
     },
     {
-        "id": "expectoration",
-        "name": "Expectoration",
-        "rubrics": []
+      "id": "19",
+      "name": { "en": "Larynx and Trachea", "bn": "স্বরযন্ত্র ও শ্বাসনালী" },
+      "rubrics": []
     },
     {
-        "id": "chest",
-        "name": "Chest",
-        "rubrics": []
+      "id": "20",
+      "name": { "en": "Respiration", "bn": "শ্বাস-প্রশ্বাস" },
+      "rubrics": []
     },
     {
-        "id": "back",
-        "name": "Back",
-        "rubrics": []
+      "id": "21",
+      "name": { "en": "Cough", "bn": "কাশি" },
+      "rubrics": []
     },
     {
-        "id": "extremities",
-        "name": "Extremities",
-        "rubrics": []
+      "id": "22",
+      "name": { "en": "Chest", "bn": "বুক" },
+      "rubrics": []
     },
     {
-        "id": "sleep",
-        "name": "Sleep",
-        "rubrics": []
+      "id": "23",
+      "name": { "en": "Back", "bn": "পিঠ" },
+      "rubrics": []
     },
     {
-        "id": "chill",
-        "name": "Chill",
-        "rubrics": []
+      "id": "24",
+      "name": { "en": "Extremities", "bn": "অঙ্গপ্রত্যঙ্গ" },
+      "rubrics": []
     },
     {
-        "id": "fever",
-        "name": "Fever",
-        "rubrics": []
+      "id": "25",
+      "name": { "en": "Sleep", "bn": "ঘুম" },
+      "rubrics": []
     },
     {
-        "id": "perspiration",
-        "name": "Perspiration",
-        "rubrics": []
+      "id": "26",
+      "name": { "en": "Chill", "bn": "শীত" },
+      "rubrics": []
     },
     {
-        "id": "skin",
-        "name": "Skin",
-        "rubrics": []
+      "id": "27",
+      "name": { "en": "Fever", "bn": "জ্বর" },
+      "rubrics": []
     },
     {
-        "id": "generalities",
-        "name": "Generalities",
-        "rubrics": []
+      "id": "28",
+      "name": { "en": "Perspiration", "bn": "ঘাম" },
+      "rubrics": []
+    },
+    {
+      "id": "29",
+      "name": { "en": "Skin", "bn": "ত্বক" },
+      "rubrics": []
+    },
+    {
+      "id": "30",
+      "name": { "en": "Generalities", "bn": "সাধারণ লক্ষণ" },
+      "rubrics": []
     }
   ]
 }
