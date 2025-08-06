@@ -2,32 +2,25 @@
 {
   "chapters": [
     {
-      "id": "mind",
-      "name": "Mind",
+      "id": "ch_mind",
+      "name": "মন (Mind)",
       "rubrics": [
         {
           "id": "mind_anxiety",
-          "name": "Anxiety",
-          "remedies": [],
+          "name": " উদ্বেগ (Anxiety)",
+          "remedies": [
+            { "name": "Acon", "grade": 3 },
+            { "name": "Arg-n", "grade": 3 },
+            { "name": "Ars", "grade": 3 },
+            { "name": "Phos", "grade": 2 }
+          ],
           "children": [
             {
-              "id": "mind_anxiety_conscience",
-              "name": "conscience of, as if guilty of a crime",
-              "remedies": [
-                { "name": "Ars.", "grade": 3 },
-                { "name": "Aur.", "grade": 2 },
-                { "name": "Cocc.", "grade": 1 }
-              ],
-              "children": []
-            },
-            {
               "id": "mind_anxiety_night",
-              "name": "night",
+              "name": "রাত্রে (Night)",
               "remedies": [
-                { "name": "Acon.", "grade": 3 },
-                { "name": "Ars.", "grade": 3 },
-                { "name": "Calc.", "grade": 2 },
-                { "name": "Puls.", "grade": 1 }
+                { "name": "Ars", "grade": 3 },
+                { "name": "Kali-ar", "grade": 2 }
               ],
               "children": []
             }
@@ -35,26 +28,16 @@
         },
         {
           "id": "mind_fear",
-          "name": "Fear",
+          "name": "ভয় (Fear)",
           "remedies": [],
           "children": [
             {
               "id": "mind_fear_death",
-              "name": "death, of",
+              "name": "মৃত্যুর (of death)",
               "remedies": [
-                { "name": "Acon.", "grade": 3 },
-                { "name": "Ars.", "grade": 3 },
-                { "name": "Gels.", "grade": 2 },
-                { "name": "Phos.", "grade": 1 }
-              ],
-              "children": []
-            },
-            {
-              "id": "mind_fear_crowds",
-              "name": "crowds, in a",
-              "remedies": [
-                { "name": "Arg-n.", "grade": 2 },
-                { "name": "Lyc.", "grade": 2 }
+                { "name": "Acon", "grade": 3 },
+                { "name": "Ars", "grade": 2 },
+                { "name": "Gels", "grade": 1 }
               ],
               "children": []
             }
@@ -63,31 +46,39 @@
       ]
     },
     {
-      "id": "head",
-      "name": "Head",
+      "id": "ch_vertigo",
+      "name": "মাথা ঘোরা (Vertigo)",
+      "rubrics": [
+        {
+          "id": "vertigo_closing_eyes",
+          "name": "চোখ বন্ধ করলে (on closing eyes)",
+          "remedies": [
+            { "name": "Lach", "grade": 2 },
+            { "name": "Ther", "grade": 1 }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "ch_head",
+      "name": "মাথা (Head)",
       "rubrics": [
         {
           "id": "head_pain",
-          "name": "Pain",
-          "remedies": [],
+          "name": "ব্যথা (Pain)",
+          "remedies": [
+            { "name": "Bell", "grade": 3 },
+            { "name": "Bry", "grade": 2 },
+            { "name": "Glon", "grade": 3 }
+          ],
           "children": [
             {
-              "id": "head_pain_forehead",
-              "name": "forehead",
+              "id": "head_pain_sun",
+              "name": "সূর্যালোক থেকে (from sun)",
               "remedies": [
-                { "name": "Bell.", "grade": 3 },
-                { "name": "Bry.", "grade": 2 },
-                { "name": "Nux-v.", "grade": 1 }
-              ],
-              "children": []
-            },
-            {
-              "id": "head_pain_bursting",
-              "name": "bursting",
-              "remedies": [
-                { "name": "Bry.", "grade": 3 },
-                { "name": "Glon.", "grade": 3 },
-                { "name": "Nat-m.", "grade": 2 }
+                { "name": "Glon", "grade": 3 },
+                { "name": "Nat-c", "grade": 2 }
               ],
               "children": []
             }
@@ -96,30 +87,185 @@
       ]
     },
     {
-        "id": "stool",
-        "name": "Stool",
-        "rubrics": [
-          {
-            "id": "stool_constipation",
-            "name": "Constipation",
-            "remedies": [
-              { "name": "Nux-v.", "grade": 3 },
-              { "name": "Bry.", "grade": 2 },
-              { "name": "Op.", "grade": 1 }
-            ],
-            "children": []
-          },
-          {
-            "id": "stool_diarrhea",
-            "name": "Diarrhea",
-            "remedies": [
-              { "name": "Ars.", "grade": 3 },
-              { "name": "Phos-ac.", "grade": 2 },
-              { "name": "Podo.", "grade": 1 }
-            ],
-            "children": []
-          }
-        ]
+      "id": "ch_eye",
+      "name": "চোখ (Eye)",
+      "rubrics": []
+    },
+    {
+      "id": "ch_vision",
+      "name": "দৃষ্টি (Vision)",
+      "rubrics": []
+    },
+    {
+      "id": "ch_ear",
+      "name": "কান (Ear)",
+      "rubrics": []
+    },
+    {
+      "id": "ch_hearing",
+      "name": "শ্রবণ (Hearing)",
+      "rubrics": []
+    },
+    {
+      "id": "ch_nose",
+      "name": "নাক (Nose)",
+      "rubrics": []
+    },
+    {
+      "id": "ch_face",
+      "name": "মুখমণ্ডল (Face)",
+      "rubrics": []
+    },
+    {
+      "id": "ch_mouth",
+      "name": "মুখ (Mouth)",
+      "rubrics": []
+    },
+    {
+      "id": "ch_teeth",
+      "name": "দাঁত (Teeth)",
+      "rubrics": []
+    },
+    {
+      "id": "ch_throat",
+      "name": "গলা (Throat)",
+      "rubrics": []
+    },
+    {
+      "id": "ch_ext_throat",
+      "name": "বহিঃগলা (External Throat)",
+      "rubrics": []
+    },
+    {
+      "id": "ch_stomach",
+      "name": "পাকস্থলী (Stomach)",
+      "rubrics": []
+    },
+    {
+      "id": "ch_abdomen",
+      "name": "পেট (Abdomen)",
+      "rubrics": []
+    },
+    {
+      "id": "ch_rectum",
+      "name": "মলদ্বার (Rectum)",
+      "rubrics": []
+    },
+    {
+      "id": "ch_stool",
+      "name": "মল (Stool)",
+      "rubrics": [
+        {
+          "id": "stool_constipation",
+          "name": "কোষ্ঠকাঠিন্য (Constipation)",
+          "remedies": [
+            { "name": "Nux-v", "grade": 3 },
+            { "name": "Bry", "grade": 2 },
+            { "name": "Op", "grade": 3 }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "ch_bladder",
+      "name": "মূত্রথলি (Bladder)",
+      "rubrics": []
+    },
+    {
+      "id": "ch_kidneys",
+      "name": "কিডনি (Kidneys)",
+      "rubrics": []
+    },
+    {
+      "id": "ch_prostate",
+      "name": "প্রোস্টেট গ্রন্থি (Prostate Gland)",
+      "rubrics": []
+    },
+    {
+      "id": "ch_urethra",
+      "name": "মূত্রনালী (Urethra)",
+      "rubrics": []
+    },
+    {
+      "id": "ch_urine",
+      "name": "মূত্র (Urine)",
+      "rubrics": []
+    },
+    {
+      "id": "ch_male_genitalia",
+      "name": "পুরুষ জননেন্দ্রিয় (Male Genitalia)",
+      "rubrics": []
+    },
+    {
+      "id": "ch_female_genitalia",
+      "name": "মহিলা জননেন্দ্রিয় (Female Genitalia)",
+      "rubrics": []
+    },
+    {
+      "id": "ch_larynx",
+      "name": "স্বরযন্ত্র (Larynx & Trachea)",
+      "rubrics": []
+    },
+    {
+      "id": "ch_respiration",
+      "name": "শ্বাস-প্রশ্বাস (Respiration)",
+      "rubrics": []
+    },
+    {
+      "id": "ch_cough",
+      "name": "কাশি (Cough)",
+      "rubrics": []
+    },
+    {
+      "id": "ch_expectoration",
+      "name": "গয়ের (Expectoration)",
+      "rubrics": []
+    },
+    {
+      "id": "ch_chest",
+      "name": "বুক (Chest)",
+      "rubrics": []
+    },
+    {
+      "id": "ch_back",
+      "name": "পিঠ (Back)",
+      "rubrics": []
+    },
+    {
+      "id": "ch_extremities",
+      "name": "হাত ও পা (Extremities)",
+      "rubrics": []
+    },
+    {
+      "id": "ch_sleep",
+      "name": "ঘুম (Sleep)",
+      "rubrics": []
+    },
+    {
+      "id": "ch_chill",
+      "name": "শীত (Chill)",
+      "rubrics": []
+    },
+    {
+      "id": "ch_fever",
+      "name": "জ্বর (Fever)",
+      "rubrics": []
+    },
+    {
+      "id": "ch_perspiration",
+      "name": "ঘাম (Perspiration)",
+      "rubrics": []
+    },
+    {
+      "id": "ch_skin",
+      "name": "চর্ম (Skin)",
+      "rubrics": []
+    },
+    {
+      "id": "ch_generalities",
+      "name": "সাধারণ লক্ষণ (Generalities)",
+      "rubrics": []
     }
   ]
 }
