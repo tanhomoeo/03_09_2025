@@ -13,6 +13,7 @@ export const ROUTES = {
   MEDICINE_INSTRUCTIONS: '/medicine-instructions',
   STORE_MANAGEMENT: '/store-management',
   PERSONAL_EXPENSES: '/personal-expenses',
+  REPERTORY_BROWSER: '/repertory',
   LOGIN: '/',
 };
 
