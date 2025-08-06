@@ -17,7 +17,7 @@ export const ROUTES = {
 };
 
 export const APP_NAME = 'ত্রিফুল আরোগ্য নিকেতন';
-export const APP_VERSION = '1.10.1';
+export const APP_VERSION = '1.11.0';
 
 // To grant admin privileges, add Firebase Authentication UIDs to this array.
 // You can find the UID in the Firebase Console > Authentication > Users table.
@@ -31,6 +31,5 @@ export const BENGALI_CONSONANTS_FOR_FILTER = [
   'ট', 'ঠ', 'ড', 'ঢ', 'ণ',
   'ত', 'থ', 'দ', 'ধ', 'ন',
   'প', 'ফ', 'ব', 'ভ', 'ম',
-  'য', 'র', 'ল', 'শ', 'ষ', 'স', 'হ',
-  'ড়', 'ঢ়', 'য়'
+  'য', 'র', 'ল', 'শ', 'ষ', 'স', 'হ', 'ড়', 'ঢ়', 'য়', 'ৎ', 'ং', 'ঃ', 'ঁ'
 ];
