@@ -1,0 +1,125 @@
+
+{
+  "chapters": [
+    {
+      "id": "mind",
+      "name": "Mind",
+      "rubrics": [
+        {
+          "id": "mind_anxiety",
+          "name": "Anxiety",
+          "remedies": [],
+          "children": [
+            {
+              "id": "mind_anxiety_conscience",
+              "name": "conscience of, as if guilty of a crime",
+              "remedies": [
+                { "name": "Ars.", "grade": 3 },
+                { "name": "Aur.", "grade": 2 },
+                { "name": "Cocc.", "grade": 1 }
+              ],
+              "children": []
+            },
+            {
+              "id": "mind_anxiety_night",
+              "name": "night",
+              "remedies": [
+                { "name": "Acon.", "grade": 3 },
+                { "name": "Ars.", "grade": 3 },
+                { "name": "Calc.", "grade": 2 },
+                { "name": "Puls.", "grade": 1 }
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "mind_fear",
+          "name": "Fear",
+          "remedies": [],
+          "children": [
+            {
+              "id": "mind_fear_death",
+              "name": "death, of",
+              "remedies": [
+                { "name": "Acon.", "grade": 3 },
+                { "name": "Ars.", "grade": 3 },
+                { "name": "Gels.", "grade": 2 },
+                { "name": "Phos.", "grade": 1 }
+              ],
+              "children": []
+            },
+            {
+              "id": "mind_fear_crowds",
+              "name": "crowds, in a",
+              "remedies": [
+                { "name": "Arg-n.", "grade": 2 },
+                { "name": "Lyc.", "grade": 2 }
+              ],
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "head",
+      "name": "Head",
+      "rubrics": [
+        {
+          "id": "head_pain",
+          "name": "Pain",
+          "remedies": [],
+          "children": [
+            {
+              "id": "head_pain_forehead",
+              "name": "forehead",
+              "remedies": [
+                { "name": "Bell.", "grade": 3 },
+                { "name": "Bry.", "grade": 2 },
+                { "name": "Nux-v.", "grade": 1 }
+              ],
+              "children": []
+            },
+            {
+              "id": "head_pain_bursting",
+              "name": "bursting",
+              "remedies": [
+                { "name": "Bry.", "grade": 3 },
+                { "name": "Glon.", "grade": 3 },
+                { "name": "Nat-m.", "grade": 2 }
+              ],
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+        "id": "stool",
+        "name": "Stool",
+        "rubrics": [
+          {
+            "id": "stool_constipation",
+            "name": "Constipation",
+            "remedies": [
+              { "name": "Nux-v.", "grade": 3 },
+              { "name": "Bry.", "grade": 2 },
+              { "name": "Op.", "grade": 1 }
+            ],
+            "children": []
+          },
+          {
+            "id": "stool_diarrhea",
+            "name": "Diarrhea",
+            "remedies": [
+              { "name": "Ars.", "grade": 3 },
+              { "name": "Phos-ac.", "grade": 2 },
+              { "name": "Podo.", "grade": 1 }
+            ],
+            "children": []
+          }
+        ]
+    }
+  ]
+}

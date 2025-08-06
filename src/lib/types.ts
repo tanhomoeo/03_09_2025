@@ -1,3 +1,4 @@
+
 export interface CategorizedCaseNotes {
   physicalSymptoms?: {
     general?: string;
@@ -129,4 +130,23 @@ export interface ClinicSettings {
 export interface EnrichedVisit extends Visit {
   prescription: Prescription | null;
   slips: PaymentSlip[];
+}
+
+// Types for Repertory Browser
+export interface Remedy {
+  name: string;
+  grade: 1 | 2 | 3;
+}
+
+export interface Rubric {
+  id: string;
+  name: string;
+  remedies: Remedy[];
+  children: Rubric[];
+}
+
+export interface Chapter {
+  id: string;
+  name: string;
+  rubrics: Rubric[];
 }
