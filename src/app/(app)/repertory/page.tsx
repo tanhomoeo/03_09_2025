@@ -19,7 +19,8 @@ export default function RepertoryBrowserPage() {
           throw new Error(`Failed to load repertory data: ${response.statusText}`);
         }
         const data = await response.json();
-        setRepertoryData(data.chapters);
+        // The new data file is an array at its root, not an object with a 'chapters' property.
+        setRepertoryData(data);
       } catch (err: unknown) {
         const message = err instanceof Error ? err.message : 'An unknown error occurred.';
         console.error(err);

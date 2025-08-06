@@ -7,8 +7,8 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { 
     Search, ChevronDown, ChevronRight, Dot, PlusCircle, Languages,
-    Brain, User, Star, Eye, Ear, Smile, MicVocal, Droplet, Lung, Heart, Hand, Moon, Snowflake, Thermometer, Wind, Droplets, Bone,
-    AirVent, Stethoscope, Syringe, UserRound, Dna, Activity, Sparkle, HeartPulse
+    Brain, User, Star, Eye, Ear, Smile, Wind, Droplet, Lung, Heart, Hand, Moon, Snowflake, Thermometer, Droplets, Bone,
+    AirVent, MicVocal, UserRound
 } from 'lucide-react';
 import type { Chapter, Rubric, Remedy } from '@/lib/types';
 import { cn } from '@/lib/utils';
@@ -205,7 +205,7 @@ export const RepertoryBrowser: React.FC<RepertoryBrowserProps> = ({ chapters = [
         </div>
         <ScrollArea className="flex-grow">
             <div className="p-2">
-                {chapters.map(chapter => (
+                {(chapters || []).map(chapter => (
                     <Button
                     key={chapter.id}
                     variant={selectedChapter?.id === chapter.id ? "secondary" : "ghost"}
