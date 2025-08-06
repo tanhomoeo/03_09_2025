@@ -140,5 +140,3 @@ export const CategorizedSymptomsDisplay: React.FC<CategorizedSymptomsDisplayProp
     </div>
   );
 };
-
-    
