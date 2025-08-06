@@ -14,7 +14,7 @@ export default function RepertoryBrowserPage() {
   useEffect(() => {
     const fetchRepertoryData = async () => {
       try {
-        const response = await fetch('/data/philosophers/homeopathy_rubrics_500k.json');
+        const response = await fetch('/data/repertory.json');
         if (!response.ok) {
           throw new Error(`Failed to load repertory data: ${response.statusText}`);
         }
