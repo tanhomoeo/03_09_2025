@@ -106,8 +106,8 @@ export async function suggestRemedies(input: SuggestRemediesInput): Promise<Sugg
 
 const prompt = ai.definePrompt({
   name: 'suggestRemediesPrompt',
-  input: {schema: SuggestRemediesPromptInputSchema},
-  output: {schema: SuggestRemediesOutputSchema},
+  input: { schema: SuggestRemediesPromptInputSchema },
+  output: { schema: SuggestRemediesOutputSchema },
   config: {
     temperature: 0.1,
     safetySettings: [

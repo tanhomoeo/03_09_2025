@@ -13,15 +13,14 @@ import {
   Wand2,
   FileText,
   Brain,
+  Lightbulb,
 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
-  suggestRemedies,
-  type SuggestRemediesOutput,
-} from "@/ai/flows/suggest-remedies";
+  categorizeCaseNotes,
+  type CategorizedCaseNotesOutput,
+} from "@/ai/flows/categorize-case-notes-flow";
 import { SymptomForm, type SymptomFormValues } from "@/components/symptom-form";
-import { ResultsDisplay } from "@/components/results-display";
-import { RemedyDetailsDialogContent } from "@/components/remedy-details-dialog-content";
 import { PageHeaderCard } from "@/components/shared/PageHeaderCard";
 import {
   Card,
@@ -30,7 +29,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { RepertorySuggestionDisplay } from "@/components/repertory-suggestion-display";
 import {
   CategorizedSymptomsDisplay,
   LABELS as CATEGORY_LABELS,
@@ -43,11 +41,11 @@ const formSchema = z.object({
 });
 
 export default function AiRepertoryPage() {
-  const [results, setResults] = useState<SuggestRemediesOutput | null>(null);
+  const [results, setResults] = useState<CategorizedCaseNotesOutput | null>(
+    null,
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedRemedy, setSelectedRemedy] = useState<string | null>(null);
-  const [isRemedyDetailOpen, setIsRemedyDetailOpen] = useState(false);
 
   const form = useForm<SymptomFormValues>({
     resolver: zodResolver(formSchema),
@@ -70,18 +68,22 @@ export default function AiRepertoryPage() {
     setIsLoading(true);
     setResults(null);
     setError(null);
-    setSelectedRemedy(null);
 
     startTransition(async () => {
       try {
-        const result = await suggestRemedies({ symptoms: values.symptoms });
+        const result = await categorizeCaseNotes({
+          caseNotesText: values.symptoms,
+        });
 
         if (!result) {
-          throw new Error("AI কোনো সাজেশন দিতে পারেনি।");
+          throw new Error("AI কোনো বিশ্লেষণ দিতে পারেনি।");
         }
         setResults(result);
       } catch (e: unknown) {
-        const errorMessage = e instanceof Error ? e.message : "সাজেশন আনতে একটি ত্রুটি ঘটেছে। অনুগ্রহ করে আপনার সংযোগ বা API কী পরীক্ষা করে আবার চেষ্টা করুন।";
+        const errorMessage =
+          e instanceof Error
+            ? e.message
+            : "বিশ্লেষণ আনতে একটি ত্রুটি ঘটেছে। অনুগ্রহ করে আপনার সংযোগ বা API কী পরীক্ষা করে আবার চেষ্টা করুন।";
         setError(errorMessage);
         console.error(e);
       } finally {
@@ -90,17 +92,12 @@ export default function AiRepertoryPage() {
     });
   }
 
-  const handleRemedyClick = (remedyName: string) => {
-    setSelectedRemedy(remedyName);
-    setIsRemedyDetailOpen(true);
-  };
-
   return (
-    <Dialog open={isRemedyDetailOpen} onOpenChange={setIsRemedyDetailOpen}>
+    <Dialog>
       <div className="space-y-6">
         <PageHeaderCard
-          title="রেপার্টরি"
-          description="রোগীর লক্ষণসমূহের বিস্তারিত বিবরণ দিন এবং জেমিনি AI-এর মাধ্যমে সম্ভাব্য প্রতিকারগুলো সম্পর্কে জানুন।"
+          title="AI রেপার্টরি ও কেস বিশ্লেষণ"
+          description="রোগীর লক্ষণসমূহের বিস্তারিত বিবরণ দিন এবং Gemini AI-এর মাধ্যমে সেগুলোকে শ্রেণীবদ্ধ করুন ও প্রধান লক্ষণগুলো চিহ্নিত করুন।"
           actions={<Wand2 className="h-8 w-8 text-primary" />}
           className="bg-gradient-to-br from-purple-100 to-indigo-200 dark:from-purple-900/30 dark:to-indigo-900/30"
           titleClassName="text-blue-900 dark:text-blue-300 drop-shadow-sm"
@@ -114,7 +111,8 @@ export default function AiRepertoryPage() {
                   <span>রোগীর লক্ষণ বিবরণ</span>
                 </CardTitle>
                 <CardDescription className="pt-1 pl-9 text-sm">
-                  এখানে রোগীর পূর্ণাঙ্গ বিবরণ লিখুন।
+                  এখানে রোগীর পূর্ণাঙ্গ বিবরণ লিখুন। AI স্বয়ংক্রিয়ভাবে বিশ্লেষণ
+                  করবে।
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-2 pt-0">
@@ -125,31 +123,12 @@ export default function AiRepertoryPage() {
                 />
               </CardContent>
             </Card>
-
-            {results && !isLoading && !error && (
-              <div className="space-y-6">
-                {results.bestRepertorySuggestion && (
-                  <RepertorySuggestionDisplay
-                    suggestion={results.bestRepertorySuggestion}
-                  />
-                )}
-                {results.categorizedSymptoms && (
-                  <>
-                    <h3 className="font-semibold text-foreground/90 mt-4 mb-2">
-                      শ্রেণীবদ্ধ লক্ষণসমূহ:
-                    </h3>
-                    <CategorizedSymptomsDisplay
-                      symptoms={results.categorizedSymptoms}
-                      labels={CATEGORY_LABELS}
-                      showNumbers={true}
-                    />
-                  </>
-                )}
-              </div>
-            )}
           </div>
 
           <div className="lg:col-span-1 shadow-lg border-border/20 bg-card/50 backdrop-blur-lg p-6 md:p-8 rounded-2xl min-h-[500px]">
+            <h3 className="font-semibold text-foreground/90 text-xl mb-4">
+              AI দ্বারা লক্ষণ বিশ্লেষণ
+            </h3>
             {isLoading && (
               <div className="flex flex-col items-center justify-center text-center h-full">
                 <LoaderCircle className="w-12 h-12 animate-spin text-primary mb-4" />
@@ -178,32 +157,55 @@ export default function AiRepertoryPage() {
                   AI বিশ্লেষণের ফলাফল
                 </p>
                 <p className="text-muted-foreground/80 text-sm text-center mt-1">
-                  ঔষধের পরামর্শ এখানে প্রদর্শিত হবে।
+                  বিশ্লেষণের ফলাফল এখানে প্রদর্শিত হবে।
                 </p>
               </div>
             )}
 
             {results && !isLoading && !error && (
               <div className="space-y-6">
-                 <h3 className="font-semibold text-foreground/90 text-xl">
-                  ঔষধের পরামর্শ:
-                </h3>
-                <ResultsDisplay
-                  results={results}
-                  onRemedyClick={handleRemedyClick}
-                />
+                {results.keySymptoms && results.keySymptoms.length > 0 && (
+                  <Alert className="bg-yellow-100/70 border-yellow-300/80 text-yellow-900 dark:bg-yellow-900/20 dark:border-yellow-800/50 dark:text-yellow-200">
+                    <Lightbulb className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
+                    <AlertTitle className="font-bold text-yellow-800 dark:text-yellow-300">
+                      মূল লক্ষণসমূহ (Key Symptoms)
+                    </AlertTitle>
+                    <AlertDescription className="text-yellow-700 dark:text-yellow-300/90">
+                      AI দ্বারা চিহ্নিত প্রধান লক্ষণগুলো নিচে দেওয়া হলো:
+                      <ul className="list-disc pl-5 mt-1">
+                        {results.keySymptoms.map((symptom, i) => (
+                          <li key={i}>{symptom}</li>
+                        ))}
+                      </ul>
+                    </AlertDescription>
+                  </Alert>
+                )}
+
+                {results.categorizedNotes && (
+                  <>
+                    <h3 className="font-semibold text-foreground/90 mt-4 mb-2">
+                      শ্রেণীবদ্ধ লক্ষণসমূহ:
+                    </h3>
+                    <CategorizedSymptomsDisplay
+                      symptoms={results.categorizedNotes}
+                      labels={CATEGORY_LABELS}
+                      showNumbers={true}
+                      highlightedSymptoms={results.keySymptoms}
+                    />
+                  </>
+                )}
               </div>
             )}
-             {!isLoading &&
+            {!isLoading &&
               !error &&
               results &&
-              results.remedies.length === 0 && (
+              !results.categorizedNotes && (
                 <div className="flex flex-col items-center justify-center h-full min-h-[400px]">
                   <Alert className="w-full">
                     <Bot className="h-4 w-4" />
-                    <AlertTitle>কোনো সাজেশন পাওয়া যায়নি</AlertTitle>
+                    <AlertTitle>কোনো তথ্য পাওয়া যায়নি</AlertTitle>
                     <AlertDescription>
-                      বর্ণিত লক্ষণগুলির জন্য আমরা কোনও নির্দিষ্ট প্রতিকার খুঁজে
+                      বর্ণিত লক্ষণগুলির জন্য আমরা কোনও শ্রেণীবদ্ধ তথ্য খুঁজে
                       পাইনি। অনুগ্রহ করে বাক্যটি পুনর্গঠন করে বা আরও বিশদ বিবরণ
                       যোগ করে আবার চেষ্টা করুন।
                     </AlertDescription>
@@ -213,10 +215,6 @@ export default function AiRepertoryPage() {
           </div>
         </div>
       </div>
-
-      {selectedRemedy && (
-        <RemedyDetailsDialogContent remedyName={selectedRemedy} />
-      )}
     </Dialog>
   );
 }
