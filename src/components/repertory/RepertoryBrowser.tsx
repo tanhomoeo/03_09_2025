@@ -167,7 +167,7 @@ const searchInRubrics = (rubrics: Rubric[], searchTerm: string, lang: Language):
 };
 
 
-export const RepertoryBrowser: React.FC<RepertoryBrowserProps> = ({ chapters }) => {
+export const RepertoryBrowser: React.FC<RepertoryBrowserProps> = ({ chapters = [] }) => {
   const [selectedChapter, setSelectedChapter] = useState<Chapter | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [language, setLanguage] = useState<Language>('bn');
