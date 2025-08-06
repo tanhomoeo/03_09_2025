@@ -10,20 +10,19 @@ import {
     Brain, User, Star, Eye, Ear, Smile, MicVocal, Droplet, Lung, Heart, Hand, Moon, Snowflake, Thermometer, Wind, Droplets, Bone,
     AirVent, Stethoscope, Syringe, UserRound, Dna, Activity, Sparkle, HeartPulse
 } from 'lucide-react';
-import type { Chapter, Rubric } from '@/lib/types';
+import type { Chapter, Rubric, Remedy } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { Badge } from '../ui/badge';
+import { Dialog, DialogTrigger } from '../ui/dialog';
+import { RemedyDetailsDialogContent } from './RemedyDetailsDialogContent';
 
-interface RepertoryBrowserProps {
-  chapters: Chapter[];
-}
 
 type Language = 'bn' | 'en';
 
-const gradeColorClasses = {
-  3: 'bg-red-500 text-white',
-  2: 'bg-blue-500 text-white',
-  1: 'bg-gray-500 text-white',
+const gradeColorClasses: { [key: number]: string } = {
+  3: 'bg-red-600 hover:bg-red-700 text-white border-red-700',
+  2: 'bg-blue-600 hover:bg-blue-700 text-white border-blue-700',
+  1: 'bg-gray-700 hover:bg-gray-800 text-white border-gray-800',
 };
 
 const getChapterIcon = (chapterNameEn: string): React.ReactNode => {
@@ -80,6 +79,18 @@ const getChapterIcon = (chapterNameEn: string): React.ReactNode => {
     return <Dot className="h-4 w-4 mr-2 flex-shrink-0" />;
 };
 
+const RemedyItem: React.FC<{ remedy: Remedy }> = ({ remedy }) => (
+    <Dialog>
+        <DialogTrigger asChild>
+             <button className={cn("flex items-center gap-1.5 text-xs bg-card p-1 px-2.5 rounded-full border shadow-sm transition-transform hover:scale-105", gradeColorClasses[remedy.grade] || 'bg-gray-500 text-white')}>
+                <span>{remedy.name}</span>
+                <span className="font-bold">{remedy.grade}</span>
+            </button>
+        </DialogTrigger>
+        <RemedyDetailsDialogContent remedyName={remedy.name} />
+    </Dialog>
+);
+
 
 const RubricItem: React.FC<{ rubric: Rubric; level?: number; lang: Language }> = ({ rubric, level = 0, lang }) => {
   const [isOpen, setIsOpen] = useState(level < 1); // Auto-open first few levels
@@ -122,14 +133,9 @@ const RubricItem: React.FC<{ rubric: Rubric; level?: number; lang: Language }> =
             <RubricItem key={child.id} rubric={child} level={level + 1} lang={lang} />
           ))}
           {rubric.remedies && rubric.remedies.length > 0 && (
-             <div className="flex flex-wrap gap-1 p-2 border-l-2 ml-3 mt-1">
+             <div className="flex flex-wrap gap-1.5 p-2 border-l-2 ml-3 mt-1">
                  {rubric.remedies.map(remedy => (
-                     <div key={remedy.name} className="flex items-center gap-1.5 text-xs bg-card p-1 px-2 rounded-full border shadow-sm">
-                         <span>{remedy.name}</span>
-                         <span className={cn("flex items-center justify-center h-4 w-4 rounded-full text-xs font-bold", gradeColorClasses[remedy.grade])}>
-                             {remedy.grade}
-                         </span>
-                     </div>
+                    <RemedyItem key={remedy.name} remedy={remedy} />
                  ))}
              </div>
           )}
@@ -236,3 +242,5 @@ export const RepertoryBrowser: React.FC<RepertoryBrowserProps> = ({ chapters }) 
     </Card>
   );
 };
+
+    

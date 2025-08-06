@@ -5,7 +5,7 @@ import { useState, useEffect, useCallback, startTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Dialog } from "@/components/ui/dialog";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import {
   Bot,
   AlertTriangle,
@@ -32,7 +32,11 @@ import {
 import {
   CategorizedSymptomsDisplay,
   LABELS as CATEGORY_LABELS,
-} from "@/components/categorized-symptoms-display";
+} from "@/components/repertory/CategorizedSymptomsDisplay";
+import { ResultsDisplay } from "@/components/repertory/ResultsDisplay";
+import { RepertorySuggestionDisplay } from "@/components/repertory/RepertorySuggestionDisplay";
+import type { SuggestRemediesOutput } from "@/ai/flows/suggest-remedies";
+import { RemedyDetailsDialogContent } from "@/components/repertory/RemedyDetailsDialogContent";
 
 const formSchema = z.object({
   symptoms: z.string().min(10, {
@@ -91,6 +95,14 @@ export default function AiRepertoryPage() {
       }
     });
   }
+
+  const handleRemedyClick = (remedyName: string) => {
+    // This function will be called from ResultsDisplay
+    // The DialogTrigger inside ResultsDisplay will handle opening the modal
+    // This function could be used for logging or other side effects if needed
+    console.log(`Remedy clicked: ${remedyName}`);
+  };
+
 
   return (
     <Dialog>
@@ -218,3 +230,5 @@ export default function AiRepertoryPage() {
     </Dialog>
   );
 }
+
+    

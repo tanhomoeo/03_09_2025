@@ -69,7 +69,7 @@ import { isValid, format as formatDateFns } from "date-fns";
 import {
   CategorizedSymptomsDisplay,
   LABELS as CATEGORY_LABELS,
-} from "@/components/categorized-symptoms-display";
+} from "@/components/repertory/CategorizedSymptomsDisplay";
 
 export interface PatientDetailsModalProps {
   patient: Patient;
@@ -612,3 +612,5 @@ export function PatientDetailsModal({
     </Dialog>
   );
 }
+
+    
