@@ -171,3 +171,24 @@ export interface Chapter {
   name: LanguageMap;
   rubrics: Rubric[];
 }
+
+export type ExpenseCategory =
+  | 'household'
+  | 'transport'
+  | 'food'
+  | 'utilities'
+  | 'personal'
+  | 'health'
+  | 'education'
+  | 'entertainment'
+  | 'other';
+
+export interface PersonalExpense {
+  id: string;
+  date: string; // ISO string
+  category: ExpenseCategory;
+  description: string;
+  amount: number;
+  createdAt: string; // ISO string
+  updatedAt: string; // ISO string
+}

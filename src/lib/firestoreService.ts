@@ -14,7 +14,7 @@ import {
   Timestamp,
   setDoc,
 } from 'firebase/firestore';
-import type { Patient, Visit, Prescription, PaymentSlip, ClinicSettings, PaymentMethod, CategorizedCaseNotes, Medicine } from './types';
+import type { Patient, Visit, Prescription, PaymentSlip, ClinicSettings, PaymentMethod, CategorizedCaseNotes, Medicine, PersonalExpense } from './types';
 import { startOfWeek, endOfWeek, startOfMonth, endOfMonth, isValid } from 'date-fns';
 
 const convertTimestampsToISO = <T>(data: unknown): T => {
@@ -86,6 +86,7 @@ const visitsCollectionRef = () => collection(getDbInstance(), 'visits');
 const prescriptionsCollectionRef = () => collection(getDbInstance(), 'prescriptions');
 const paymentSlipsCollectionRef = () => collection(getDbInstance(), 'paymentSlips');
 const medicinesCollectionRef = () => collection(getDbInstance(), 'medicines');
+const personalExpensesCollectionRef = () => collection(getDbInstance(), 'personalExpenses');
 const settingsDocRef = () => doc(getDbInstance(), 'settings', 'clinic');
 
 export const getPatients = async (): Promise<Patient[]> => {
@@ -475,6 +476,59 @@ export const saveClinicSettings = async (settings: ClinicSettings): Promise<bool
     return false;
   }
 };
+
+// Personal Expense Functions
+export const getExpenses = async (): Promise<PersonalExpense[]> => {
+  try {
+    const q = query(personalExpensesCollectionRef(), orderBy('date', 'desc'));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(docSnap => convertDocument<PersonalExpense>(docSnap));
+  } catch (error) {
+    console.error("Error getting personal expenses: ", error);
+    return [];
+  }
+};
+
+export const addExpense = async (expenseData: Omit<PersonalExpense, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> => {
+  try {
+    const now = new Date().toISOString();
+    const newExpense = {
+      ...expenseData,
+      createdAt: now,
+      updatedAt: now,
+    };
+    const docRef = await addDoc(personalExpensesCollectionRef(), prepareDataForFirestore(newExpense as Record<string, unknown>));
+    return docRef.id;
+  } catch (error) {
+    console.error("Error adding personal expense: ", error);
+    throw error;
+  }
+};
+
+export const updateExpense = async (expenseId: string, expenseData: Partial<Omit<PersonalExpense, 'id' | 'createdAt'>>): Promise<void> => {
+  try {
+    const expenseRef = doc(getDbInstance(), 'personalExpenses', expenseId);
+    const updatedData = {
+      ...expenseData,
+      updatedAt: new Date().toISOString(),
+    };
+    await updateDoc(expenseRef, prepareDataForFirestore(updatedData as Record<string, unknown>));
+  } catch (error) {
+    console.error("Error updating personal expense: ", error);
+    throw error;
+  }
+};
+
+export const deleteExpense = async (expenseId: string): Promise<void> => {
+  try {
+    const expenseRef = doc(getDbInstance(), 'personalExpenses', expenseId);
+    await deleteDoc(expenseRef);
+  } catch (error) {
+    console.error("Error deleting personal expense: ", error);
+    throw error;
+  }
+};
+
 
 export const isToday = (dateStringOrDate: string | Date): boolean => {
     if (!dateStringOrDate) return false;
