@@ -8,7 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Dialog, DialogTrigger } from "../ui/dialog";
-import { RemedyDetailsDialogContent } from "./RemedyDetailsDialogContent";
+import RemedyDetailsDialogContent from "../remedy-details-dialog-content";
 
 type Remedy = SuggestRemediesOutput['remedies'][number];
 
@@ -131,5 +131,3 @@ export function ResultsDisplay({ results, onRemedyClick }: ResultsDisplayProps) 
     </div>
   );
 }
-
-    

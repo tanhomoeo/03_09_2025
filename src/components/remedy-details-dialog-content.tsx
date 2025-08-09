@@ -13,7 +13,7 @@ interface RemedyDetailsDialogContentProps {
   remedyName: string;
 }
 
-export function RemedyDetailsDialogContent({ remedyName }: RemedyDetailsDialogContentProps) {
+function RemedyDetailsDialogContent({ remedyName }: RemedyDetailsDialogContentProps) {
   const [details, setDetails] = useState<RemedyDetailsOutput | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

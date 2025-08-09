@@ -8,13 +8,13 @@ import { Button } from '@/components/ui/button';
 import { 
     Search, ChevronDown, ChevronRight, Dot, PlusCircle, Languages,
     Brain, User, Star, Eye, Ear, Wind, Smile, Bone, Droplet, Lung, Heart, Hand, Moon, Snowflake, Thermometer,
-    AirVent, UserRound, Mic2 as MicVocal, Droplets
+    AirVent, UserRound, Mic, Droplets
 } from 'lucide-react';
 import type { Chapter, Rubric, Remedy } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { Badge } from '../ui/badge';
 import { Dialog, DialogTrigger } from '../ui/dialog';
-import { RemedyDetailsDialogContent } from '@/components/remedy-details-dialog-content';
+import RemedyDetailsDialogContent from '@/components/remedy-details-dialog-content';
 
 
 type Language = 'bn' | 'en';
@@ -43,8 +43,8 @@ const getChapterIcon = (chapterNameEn: string): React.ReactNode => {
         face: Smile,
         mouth: Smile,
         teeth: Bone,
-        throat: MicVocal,
-        'external throat': MicVocal,
+        throat: Mic,
+        'external throat': Mic,
         stomach: Droplet,
         abdomen: Droplet,
         rectum: Dot,
@@ -59,8 +59,8 @@ const getChapterIcon = (chapterNameEn: string): React.ReactNode => {
         'female genitalia': UserRound,
         'larynx and trachea': AirVent,
         respiration: Lung,
-        cough: MicVocal,
-        expectoration: MicVocal,
+        cough: Mic,
+        expectoration: Mic,
         chest: Heart,
         back: User,
         extremities: Hand,
