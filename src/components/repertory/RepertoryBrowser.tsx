@@ -1,4 +1,3 @@
-
 'use client';
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -7,8 +6,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { 
     Search, ChevronDown, ChevronRight, Dot, PlusCircle, Languages,
-    Brain, User, Star, Eye, Ear, Wind, Smile, Bone, Droplet, Lung, Heart, Hand, Moon, Snowflake, Thermometer,
-    AirVent, UserRound, Mic, Droplets
+    BrainCircuit, Star, User, Eye, Ear, Wind, Smile, Bone, Mic, Droplet, Droplets, UserRound, AirVent, Lung, Heart, Hand, Moon, Snowflake, Thermometer
 } from 'lucide-react';
 import type { Chapter, Rubric, Remedy } from '@/lib/types';
 import { cn } from '@/lib/utils';
@@ -27,17 +25,17 @@ const gradeColorClasses: { [key: number]: string } = {
 
 const getChapterIcon = (chapterNameEn: string): React.ReactNode => {
     if (!chapterNameEn) {
-        return <Dot className="h-4 w-4 mr-2 flex-shrink-0" />;
+        return <Dot className="h-5 w-5 mr-3 flex-shrink-0" />;
     }
     const lowerCaseName = chapterNameEn.toLowerCase();
     
     const iconMap: { [key: string]: React.ElementType } = {
-        mind: Brain,
-        head: User,
+        mind: BrainCircuit,
         vertigo: Star,
-        eyes: Eye,
+        head: User,
+        eye: Eye,
         vision: Eye,
-        ears: Ear,
+        ear: Ear,
         hearing: Ear,
         nose: Wind,
         face: Smile,
@@ -57,7 +55,8 @@ const getChapterIcon = (chapterNameEn: string): React.ReactNode => {
         urine: Droplets,
         'male genitalia': User,
         'female genitalia': UserRound,
-        'larynx and trachea': AirVent,
+        larynx: AirVent,
+        trachea: AirVent,
         respiration: Lung,
         cough: Mic,
         expectoration: Mic,
@@ -69,17 +68,18 @@ const getChapterIcon = (chapterNameEn: string): React.ReactNode => {
         fever: Thermometer,
         perspiration: Droplets,
         skin: User,
+        generals: User,
         generalities: User,
     };
 
     for (const key in iconMap) {
         if (lowerCaseName.includes(key)) {
             const IconComponent = iconMap[key];
-            return <IconComponent className="h-4 w-4 mr-2 flex-shrink-0" />;
+            return <IconComponent className="h-5 w-5 mr-3 flex-shrink-0" />;
         }
     }
 
-    return <Dot className="h-4 w-4 mr-2 flex-shrink-0" />;
+    return <Dot className="h-5 w-5 mr-3 flex-shrink-0" />;
 };
 
 const RemedyItem: React.FC<{ remedy: Remedy }> = ({ remedy }) => (
@@ -203,9 +203,9 @@ export const RepertoryBrowser: React.FC<RepertoryBrowserProps> = ({ chapters = [
 
   return (
     <Card className="h-full w-full grid grid-cols-12 overflow-hidden shadow-lg bg-card/70 backdrop-blur-lg">
-      <div className="col-span-3 border-r h-full flex flex-col">
+      <div className="col-span-12 md:col-span-4 lg:col-span-3 border-r h-full flex flex-col">
         <div className="p-3 border-b">
-            <h3 className="font-headline text-lg text-foreground">{language === 'bn' ? 'অধ্যায়' : 'Chapters'}</h3>
+            <h3 className="font-headline text-lg text-foreground">{language === 'bn' ? 'অধ্যায়সমূহ' : 'Chapters'}</h3>
         </div>
         <ScrollArea className="flex-grow">
             <div className="p-2">
@@ -215,11 +215,17 @@ export const RepertoryBrowser: React.FC<RepertoryBrowserProps> = ({ chapters = [
                         <Button
                         key={chapter.id}
                         variant={selectedChapter?.id === chapter.id ? "secondary" : "ghost"}
-                        className="w-full justify-start mb-1 text-left h-auto py-2"
+                        className={cn(
+                          "w-full justify-start mb-1 text-left h-auto py-2.5 text-base",
+                          selectedChapter?.id === chapter.id && "bg-primary/10 text-primary"
+                        )}
                         onClick={() => handleChapterSelect(chapter)}
                         >
-                        {getChapterIcon(chapter.name.en)}
-                        {chapter.name[language] || chapter.name.en}
+                          <div className={cn("transition-colors", selectedChapter?.id === chapter.id ? "text-primary" : "text-muted-foreground")}>
+                            {getChapterIcon(chapter.name.en)}
+                          </div>
+                          <span className="font-medium">{chapter.name[language] || chapter.name.en}</span>
+                          <ChevronRight className="ml-auto h-5 w-5 text-muted-foreground/50"/>
                         </Button>
                     );
                 })}
@@ -227,7 +233,7 @@ export const RepertoryBrowser: React.FC<RepertoryBrowserProps> = ({ chapters = [
         </ScrollArea>
       </div>
 
-      <div className="col-span-9 h-full flex flex-col">
+      <div className="col-span-12 md:col-span-8 lg:col-span-9 h-full flex flex-col">
         <div className="p-3 border-b flex items-center gap-3">
           <div className="relative flex-grow">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
