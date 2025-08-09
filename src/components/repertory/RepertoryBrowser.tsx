@@ -14,7 +14,7 @@ import type { Chapter, Rubric, Remedy } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { Badge } from '../ui/badge';
 import { Dialog, DialogTrigger } from '../ui/dialog';
-import { RemedyDetailsDialogContent } from '@/components/repertory/RemedyDetailsDialogContent';
+import { RemedyDetailsDialogContent } from '@/components/repertory/remedy-details-dialog-content';
 
 
 type Language = 'bn' | 'en';
