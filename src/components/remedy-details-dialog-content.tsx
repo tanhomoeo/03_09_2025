@@ -33,7 +33,8 @@ export function RemedyDetailsDialogContent({ remedyName }: RemedyDetailsDialogCo
         setDetails(result);
       } catch (e) {
         console.error('Failed to fetch remedy details:', e);
-        setError('An error occurred while fetching remedy details. Please try again.');
+        const errorMessage = e instanceof Error ? e.message : 'An error occurred while fetching remedy details. Please try again.';
+        setError(errorMessage);
       } finally {
         setIsLoading(false);
       }
@@ -70,3 +71,5 @@ export function RemedyDetailsDialogContent({ remedyName }: RemedyDetailsDialogCo
     </DialogContent>
   );
 }
+
+export default RemedyDetailsDialogContent;
