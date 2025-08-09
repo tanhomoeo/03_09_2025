@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { 
     Search, ChevronDown, ChevronRight, Dot, PlusCircle, Languages,
     Brain, User, Star, Eye, Ear, Wind, Smile, Bone, Droplet, Lung, Heart, Hand, Moon, Snowflake, Thermometer,
-    AirVent, UserRound
+    AirVent, UserRound, Mic2 as MicVocal, Droplets
 } from 'lucide-react';
 import type { Chapter, Rubric, Remedy } from '@/lib/types';
 import { cn } from '@/lib/utils';
