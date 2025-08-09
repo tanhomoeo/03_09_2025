@@ -1,18 +1,23 @@
 'use client';
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { 
     Search, ChevronDown, ChevronRight, Dot, PlusCircle, Languages,
-    BrainCircuit, Star, User, Eye, Ear, Wind, Smile, Bone, Mic, Droplet, Droplets, UserRound, AirVent, Lung, Heart, Hand, Moon, Snowflake, Thermometer
+    BrainCircuit, Star, User, Eye, Ear, Wind, Smile, Bone, Mic, Droplet, Droplets, UserRound, AirVent, Lung, Heart, Hand, Moon, Snowflake, Thermometer, Loader2
 } from 'lucide-react';
 import type { Chapter, Rubric, Remedy } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { Badge } from '../ui/badge';
 import { Dialog, DialogTrigger } from '../ui/dialog';
-import { RemedyDetailsDialogContent } from '@/components/remedy-details-dialog-content';
+
+const RemedyDetailsDialogContent = dynamic(() => import('@/components/remedy-details-dialog-content').then(mod => mod.RemedyDetailsDialogContent), {
+  loading: () => <div className="p-10 text-center"><Loader2 className="mx-auto h-8 w-8 animate-spin" /></div>,
+  ssr: false,
+});
 
 
 type Language = 'bn' | 'en';
