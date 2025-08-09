@@ -7,14 +7,14 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { 
     Search, ChevronDown, ChevronRight, Dot, PlusCircle, Languages,
-    Brain, User, Star, Eye, Ear, Wind, Smile, Bone, MicVocal, Droplet, Lung, Heart, Hand, Moon, Snowflake, Thermometer, Droplets,
+    Brain, User, Star, Eye, Ear, Wind, Smile, Bone, Droplet, Lung, Heart, Hand, Moon, Snowflake, Thermometer,
     AirVent, UserRound
 } from 'lucide-react';
 import type { Chapter, Rubric, Remedy } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { Badge } from '../ui/badge';
 import { Dialog, DialogTrigger } from '../ui/dialog';
-import { RemedyDetailsDialogContent } from '@/components/repertory/remedy-details-dialog-content';
+import { RemedyDetailsDialogContent } from '@/components/remedy-details-dialog-content';
 
 
 type Language = 'bn' | 'en';
