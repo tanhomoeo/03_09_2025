@@ -13,11 +13,7 @@ import type { Chapter, Rubric, Remedy } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { Badge } from '../ui/badge';
 import { Dialog, DialogTrigger } from '../ui/dialog';
-
-const RemedyDetailsDialogContent = dynamic(() => import('@/components/remedy-details-dialog-content').then(mod => mod.RemedyDetailsDialogContent), {
-  loading: () => <div className="p-10 text-center"><Loader2 className="mx-auto h-8 w-8 animate-spin" /></div>,
-  ssr: false,
-});
+import { RemedyDetailsDialogContent } from '@/components/remedy-details-dialog-content';
 
 
 type Language = 'bn' | 'en';
