@@ -133,6 +133,21 @@ export interface EnrichedVisit extends Visit {
   slips: PaymentSlip[];
 }
 
+export type MedicineUnit = 'dram' | 'ml' | 'pcs' | 'gm' | 'other';
+
+export interface Medicine {
+  id: string;
+  name: string;
+  potency: string;
+  quantity: number;
+  unit: MedicineUnit;
+  supplier?: string;
+  purchaseDate?: string;
+  expiryDate?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 // Types for Repertory Browser
 export interface LanguageMap {
   en: string;

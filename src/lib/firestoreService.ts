@@ -7,13 +7,14 @@ import {
   doc,
   getDoc,
   updateDoc,
+  deleteDoc,
   query,
   where,
   orderBy,
   Timestamp,
   setDoc,
 } from 'firebase/firestore';
-import type { Patient, Visit, Prescription, PaymentSlip, ClinicSettings, PaymentMethod, CategorizedCaseNotes } from './types';
+import type { Patient, Visit, Prescription, PaymentSlip, ClinicSettings, PaymentMethod, CategorizedCaseNotes, Medicine } from './types';
 import { startOfWeek, endOfWeek, startOfMonth, endOfMonth, isValid } from 'date-fns';
 
 const convertTimestampsToISO = <T>(data: unknown): T => {
@@ -84,6 +85,7 @@ const patientsCollectionRef = () => collection(getDbInstance(), 'patients');
 const visitsCollectionRef = () => collection(getDbInstance(), 'visits');
 const prescriptionsCollectionRef = () => collection(getDbInstance(), 'prescriptions');
 const paymentSlipsCollectionRef = () => collection(getDbInstance(), 'paymentSlips');
+const medicinesCollectionRef = () => collection(getDbInstance(), 'medicines');
 const settingsDocRef = () => doc(getDbInstance(), 'settings', 'clinic');
 
 export const getPatients = async (): Promise<Patient[]> => {
@@ -392,6 +394,58 @@ export const getPaymentSlipsWithinDateRange = async (startDate: Date, endDate: D
   }
 };
 
+export const getMedicines = async (): Promise<Medicine[]> => {
+  try {
+    const q = query(medicinesCollectionRef(), orderBy('createdAt', 'desc'));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(docSnap => convertDocument<Medicine>(docSnap));
+  } catch (error) {
+    console.error("Error getting medicines: ", error);
+    return [];
+  }
+};
+
+export const addMedicine = async (medicineData: Omit<Medicine, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> => {
+  try {
+    const now = new Date().toISOString();
+    const newMedicine = {
+      ...medicineData,
+      createdAt: now,
+      updatedAt: now,
+    };
+    const docRef = await addDoc(medicinesCollectionRef(), prepareDataForFirestore(newMedicine as Record<string, unknown>));
+    return docRef.id;
+  } catch (error) {
+    console.error("Error adding medicine: ", error);
+    throw error;
+  }
+};
+
+export const updateMedicine = async (medicineId: string, medicineData: Partial<Omit<Medicine, 'id' | 'createdAt'>>): Promise<void> => {
+  try {
+    const medicineRef = doc(getDbInstance(), 'medicines', medicineId);
+    const updatedData = {
+        ...medicineData,
+        updatedAt: new Date().toISOString(),
+    }
+    await updateDoc(medicineRef, prepareDataForFirestore(updatedData as Record<string, unknown>));
+  } catch (error) {
+    console.error("Error updating medicine: ", error);
+    throw error;
+  }
+};
+
+export const deleteMedicine = async (medicineId: string): Promise<void> => {
+    try {
+        const medicineRef = doc(getDbInstance(), 'medicines', medicineId);
+        await deleteDoc(medicineRef);
+    } catch (error) {
+        console.error("Error deleting medicine: ", error);
+        throw error;
+    }
+}
+
+
 export const getClinicSettings = async (): Promise<ClinicSettings> => {
   const defaultSettings: ClinicSettings = {
     clinicName: 'ত্রিফুল আরোগ্য নিকেতন',
@@ -486,5 +540,3 @@ export const getMonthRange = (date: Date): { start: Date; end: Date } => {
   const end = endOfMonth(validDate);
   return { start, end };
 };
-
-    
