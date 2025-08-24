@@ -21,7 +21,7 @@ export function useVoiceInput() {
   const [activeElement, setActiveElement] = useState<HTMLInputElement | HTMLTextAreaElement | null>(null);
   
   const recognitionRef = useRef<SpeechRecognition | null>(null);
-  const finalTranscriptRef = useRef<string>('');
+  const transcriptRef = useRef<string>('');
   
   const stopRecognition = useCallback(() => {
     if (recognitionRef.current) {
@@ -42,7 +42,8 @@ export function useVoiceInput() {
     setActiveElement(currentActiveElement);
     
     if (recognitionRef.current) {
-        finalTranscriptRef.current = currentActiveElement.value ? currentActiveElement.value + ' ' : '';
+        // Initialize transcriptRef with current value of the input field
+        transcriptRef.current = currentActiveElement.value;
         try {
           recognitionRef.current.start();
         } catch(e) {
@@ -64,12 +65,7 @@ export function useVoiceInput() {
     const isInputFocused = target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement;
 
     if (
-      event.key &&
-      event.key.toLowerCase() === 'v' &&
-      !event.ctrlKey &&
-      !event.metaKey &&
-      !event.shiftKey &&
-      !event.altKey &&
+      event.key === 'Control' &&
       isInputFocused
     ) {
       event.preventDefault();
@@ -124,26 +120,33 @@ export function useVoiceInput() {
 
     recognition.onend = () => {
       setIsListening(false);
-      setActiveElement(null);
+      // Do not clear the active element here, it should persist
     };
 
     recognition.onresult = (event: SpeechRecognitionEvent) => {
-      const currentActiveElement = document.activeElement;
+      const currentActiveElement = activeElement || document.activeElement;
       if (!(currentActiveElement instanceof HTMLInputElement || currentActiveElement instanceof HTMLTextAreaElement)) {
         stopRecognition();
         return;
       }
       
+      let final_transcript_chunk = '';
       let interim_transcript = '';
+
       for (let i = event.resultIndex; i < event.results.length; ++i) {
         if (event.results[i].isFinal) {
-          finalTranscriptRef.current += event.results[i][0].transcript.trim() + ' ';
+          final_transcript_chunk += event.results[i][0].transcript.trim() + ' ';
         } else {
           interim_transcript += event.results[i][0].transcript;
         }
       }
 
-      const newText = (finalTranscriptRef.current + interim_transcript).trim();
+      // Append only the new final transcript part to our ref
+      if(final_transcript_chunk) {
+        transcriptRef.current = (transcriptRef.current ? transcriptRef.current + ' ' : '') + final_transcript_chunk;
+      }
+
+      const newText = transcriptRef.current + interim_transcript;
       if(currentActiveElement.value !== newText) {
           currentActiveElement.value = newText;
           const inputEvent = new Event('input', { bubbles: true, cancelable: true });
@@ -162,7 +165,7 @@ export function useVoiceInput() {
       }
       window.removeEventListener('stop-voice-input', handleStopEvent);
     };
-  }, [stopRecognition]);
+  }, [stopRecognition, activeElement]);
 
   return { isListening, error, isSupported, start: startRecognition, stop: stopRecognition, activeElement };
 }

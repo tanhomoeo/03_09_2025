@@ -1,6 +1,6 @@
 
 'use client';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Mic, Loader2, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -20,37 +20,32 @@ export function FloatingVoiceInput() {
     activeElement,
   } = useVoiceContext();
   const [isVisible, setIsVisible] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const hideButton = () => {
-    setIsVisible(false);
-  };
-
-  const showAndAutoHideButton = () => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-    setIsVisible(true);
-    timeoutRef.current = setTimeout(hideButton, 5000);
-  };
-  
   useEffect(() => {
-    if (isListening) {
-      showAndAutoHideButton();
-    } else {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-       // Keep it visible for a moment after stopping, then hide
-      timeoutRef.current = setTimeout(hideButton, 1000);
-    }
-
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
+    const handleFocusIn = (event: FocusEvent) => {
+      if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
+        setIsVisible(true);
       }
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    const handleFocusOut = (event: FocusEvent) => {
+      if (!isListening && (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement)) {
+        // Use a small delay to prevent the button from disappearing if the user clicks it
+        setTimeout(() => {
+          if (document.activeElement !== document.querySelector('.floating-voice-btn')) {
+            setIsVisible(false);
+          }
+        }, 200);
+      }
+    };
+    
+    document.body.addEventListener('focusin', handleFocusIn);
+    document.body.addEventListener('focusout', handleFocusOut);
+
+    return () => {
+      document.body.removeEventListener('focusin', handleFocusIn);
+      document.body.removeEventListener('focusout', handleFocusOut);
+    };
   }, [isListening]);
 
 
@@ -58,9 +53,10 @@ export function FloatingVoiceInput() {
     if (isListening) {
       stop();
     } else {
+      const currentActiveElement = document.activeElement;
       if (
-        document.activeElement instanceof HTMLInputElement ||
-        document.activeElement instanceof HTMLTextAreaElement
+        currentActiveElement instanceof HTMLInputElement ||
+        currentActiveElement instanceof HTMLTextAreaElement
       ) {
         start();
       } else {
@@ -80,13 +76,13 @@ export function FloatingVoiceInput() {
      }
   }, [isListening, activeElement, stop]);
 
-  if (!isSupported || isMobile || !isVisible) {
+  if (!isSupported || isMobile) {
     return null;
   }
 
   const buttonTitle = isListening
-    ? "শোনা বন্ধ করতে ক্লিক করুন অথবা 'V' চাপুন"
-    : "ভয়েস টাইপিং শুরু করতে ক্লিক করুন অথবা 'V' চাপুন";
+    ? "শোনা বন্ধ করতে ক্লিক করুন অথবা 'Control' চাপুন"
+    : "ভয়েস টাইপিং শুরু করতে ক্লিক করুন অথবা 'Control' চাপুন";
 
   return (
     <Button
@@ -101,13 +97,14 @@ export function FloatingVoiceInput() {
         error &&
           !isListening &&
           'bg-yellow-400 text-yellow-900 border-yellow-500 hover:bg-yellow-500',
-        'data-[state=visible]:animate-in data-[state=visible]:fade-in data-[state=hidden]:animate-out data-[state=hidden]:fade-out'
+        'data-[state=visible]:animate-in data-[state=visible]:fade-in data-[state=hidden]:animate-out data-[state=hidden]:fade-out',
+        'floating-voice-btn'
       )}
       title={buttonTitle}
       aria-label={
         isListening ? 'ভয়েস ইনপুট বন্ধ করুন' : 'ভয়েস ইনপুট শুরু করুন'
       }
-      data-state={isVisible ? 'visible' : 'hidden'}
+      data-state={isVisible || isListening ? 'visible' : 'hidden'}
     >
       {isListening ? (
         <Loader2 className="h-7 w-7 animate-spin" />
