@@ -27,6 +27,7 @@ export type HandwrittenFormInput = z.infer<typeof HandwrittenFormInputSchema>;
 // Output schema: The structured data extracted from the form.
 // All fields are optional, as they may not be present or legible in the image.
 const HandwrittenFormOutputSchema = z.object({
+  diaryNumber: z.string().optional().describe("রোগীর ডায়েরি নম্বর (Patient's diary number). যেমন: F/123"),
   name: z.string().optional().describe("রোগীর পুরো নাম (Patient's full name). যেমন: আঁখি মন্ডল"),
   phone: z.string().optional().describe("রোগীর ফোন নম্বর (Patient's phone number). যেমন: 01942606052"),
   guardianName: z.string().optional().describe("অভিভাবকের নাম (Guardian's name). যেমন: সুজন মন্ডল"),
@@ -63,6 +64,7 @@ const formParserPrompt = ai.definePrompt({
 Your task is to analyze the following image of a handwritten patient registration form. The text is in Bengali.
 
 Carefully read the handwritten text and extract ONLY the following information that matches the fields in our application:
+- Diary Number (ডায়েরি নং)
 - Patient's Name (রোগীর নাম)
 - Phone Number (মোবাঃ / ফোন)
 - Guardian's Name (পিতা / স্বামীর নাম)
