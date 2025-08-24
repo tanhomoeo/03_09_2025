@@ -65,7 +65,7 @@ export function useVoiceInput() {
     const isInputFocused = target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement;
 
     if (
-      event.key === 'Control' &&
+      event.key.toLowerCase() === 'v' &&
       isInputFocused
     ) {
       event.preventDefault();
@@ -143,10 +143,10 @@ export function useVoiceInput() {
 
       // Append only the new final transcript part to our ref
       if(final_transcript_chunk) {
-        transcriptRef.current = (transcriptRef.current ? transcriptRef.current + ' ' : '') + final_transcript_chunk;
+        transcriptRef.current = (transcriptRef.current ? transcriptRef.current.trim() + ' ' : '') + final_transcript_chunk.trim();
       }
 
-      const newText = transcriptRef.current + interim_transcript;
+      const newText = transcriptRef.current + (interim_transcript ? (transcriptRef.current ? ' ' : '') + interim_transcript.trim() : '');
       if(currentActiveElement.value !== newText) {
           currentActiveElement.value = newText;
           const inputEvent = new Event('input', { bubbles: true, cancelable: true });

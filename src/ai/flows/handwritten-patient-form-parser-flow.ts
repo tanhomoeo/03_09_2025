@@ -27,13 +27,13 @@ export type HandwrittenFormInput = z.infer<typeof HandwrittenFormInputSchema>;
 // Output schema: The structured data extracted from the form.
 // All fields are optional, as they may not be present or legible in the image.
 const HandwrittenFormOutputSchema = z.object({
-  name: z.string().optional().describe("রোগীর পুরো নাম (Patient's full name)."),
-  phone: z.string().optional().describe("রোগীর ফোন নম্বর (Patient's phone number)."),
-  guardianName: z.string().optional().describe("অভিভাবকের নাম (Guardian's name)."),
-  villageUnion: z.string().optional().describe("গ্রাম বা ইউনিয়ন (Village or Union)."),
-  thanaUpazila: z.string().optional().describe("থানা বা উপজেলা (Thana or Upazila)."),
-  district: z.string().optional().describe("জেলা (District)."),
-  age: z.string().optional().describe("রোগীর বয়স (Patient's age)."),
+  name: z.string().optional().describe("রোগীর পুরো নাম (Patient's full name). যেমন: আঁখি মন্ডল"),
+  phone: z.string().optional().describe("রোগীর ফোন নম্বর (Patient's phone number). যেমন: 01942606052"),
+  guardianName: z.string().optional().describe("অভিভাবকের নাম (Guardian's name). যেমন: সুজন মন্ডল"),
+  villageUnion: z.string().optional().describe("গ্রাম বা ইউনিয়ন (Village or Union). যেমন: শালরহম"),
+  thanaUpazila: z.string().optional().describe("থানা বা উপজেলা (Thana or Upazila). যেমন: উজিরপুর"),
+  district: z.string().optional().describe("জেলা (District). যেমন: বরিশাল"),
+  age: z.string().optional().describe("রোগীর বয়স (Patient's age). যেমন: ২৮ বছর"),
 });
 export type HandwrittenFormOutput = z.infer<typeof HandwrittenFormOutputSchema>;
 
@@ -71,7 +71,7 @@ Carefully read the handwritten text and extract ONLY the following information t
 - District (জেলা)
 - Age (বয়স)
 
-IGNORE all other fields like "পেশা", "শারীরিক গড়ন", "চুলের বর্ণ", "বৈবাহিক অবস্থা", "উচ্চতা", etc. Only extract data for the fields listed above.
+IGNORE all other fields like "তারিখ", "পেশা", "শারীরিক গড়ন", "চুলের বর্ণ", "বৈবাহিক অবস্থা", "উচ্চতা", etc. Only extract data for the fields listed above.
 
 Return the extracted information in a structured JSON format. If a piece of information is not present or is illegible, omit that field from the output. Pay close attention to correctly identifying and transcribing the phone number, removing any prefix like "মোবাঃ".
 

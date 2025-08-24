@@ -39,7 +39,7 @@ export function SymptomForm({ form, onSubmit, isLoading }: SymptomFormProps) {
               </FormControl>
               <p className="text-xs text-muted-foreground pt-1 flex items-center gap-1">
                 <Mic className="h-3 w-3" />
-                <span>টিপস: ভয়েস টাইপিংয়ের জন্য কীবোর্ডের 'Control' কী চাপুন।</span>
+                <span>টিপস: ভয়েস টাইপিংয়ের জন্য কীবোর্ডের 'V' কী চাপুন।</span>
               </p>
               <FormMessage />
             </FormItem>
