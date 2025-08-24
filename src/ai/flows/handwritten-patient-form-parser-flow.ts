@@ -51,7 +51,7 @@ const formParserPrompt = ai.definePrompt({
   input: { schema: HandwrittenFormInputSchema },
   output: { schema: HandwrittenFormOutputSchema },
   config: {
-    temperature: 0.2,
+    temperature: 0.1,
     safetySettings: [
       { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' },
       { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_NONE' },
@@ -62,16 +62,18 @@ const formParserPrompt = ai.definePrompt({
   prompt: `You are an expert data entry assistant for a clinic in Bangladesh. 
 Your task is to analyze the following image of a handwritten patient registration form. The text is in Bengali.
 
-Carefully read the handwritten text and extract the following information:
-- Patient's Name (নাম)
-- Phone Number (ফোন / মোবাইল)
-- Guardian's Name (পিতা / স্বামী / অভিভাবকের নাম)
-- Village/Union (গ্রাম/ইউনিয়ন)
-- Thana/Upazila (থানা/উপজেলা)
+Carefully read the handwritten text and extract ONLY the following information that matches the fields in our application:
+- Patient's Name (রোগীর নাম)
+- Phone Number (মোবাঃ / ফোন)
+- Guardian's Name (পিতা / স্বামীর নাম)
+- Village (গ্রাম)
+- Upazila (উপজেলা)
 - District (জেলা)
 - Age (বয়স)
 
-Return the extracted information in a structured JSON format. If a piece of information is not present or is illegible, omit that field from the output. Pay close attention to correctly identifying and transcribing the phone number.
+IGNORE all other fields like "পেশা", "শারীরিক গড়ন", "চুলের বর্ণ", "বৈবাহিক অবস্থা", "উচ্চতা", etc. Only extract data for the fields listed above.
+
+Return the extracted information in a structured JSON format. If a piece of information is not present or is illegible, omit that field from the output. Pay close attention to correctly identifying and transcribing the phone number, removing any prefix like "মোবাঃ".
 
 Image of the form:
 {{media url=photoDataUri}}`,
