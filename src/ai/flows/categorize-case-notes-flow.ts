@@ -1,4 +1,3 @@
-
 'use server';
 /**
  * @fileOverview A Genkit flow to categorize unstructured homeopathic case notes into a structured format

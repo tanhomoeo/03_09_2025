@@ -61,7 +61,7 @@ import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import {
   CategorizedSymptomsDisplay,
   LABELS as CATEGORY_LABELS,
-} from "@/components/categorized-symptoms-display";
+} from "@/components/repertory/CategorizedSymptomsDisplay";
 import { LoadingSpinner } from "@/components/shared/LoadingSpinner";
 
 
