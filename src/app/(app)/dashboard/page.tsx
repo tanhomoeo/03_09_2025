@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableFooter } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Users, UserPlus, FileText, BarChart3, TrendingUp, Search as SearchIcon, Printer, CalendarDays, MessageSquareText, PlayCircle } from 'lucide-react';
+import { Users, UserPlus, FileText, BarChart3, TrendingUp, Search as SearchIcon, Printer, CalendarDays, MessageSquareText, PlayCircle, Menu } from 'lucide-react';
 import { getPatients, getVisitsWithinDateRange, getPaymentSlipsWithinDateRange, getPatientsRegisteredWithinDateRange, formatCurrency, getPaymentMethodLabel, getClinicSettings } from '@/lib/firestoreService';
 import type { ClinicSettings, Patient, Visit, PaymentSlip, PaymentMethod } from '@/lib/types';
 import { ROUTES, APP_NAME } from '@/lib/constants';
@@ -18,6 +18,7 @@ import { bn } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import QuickActionCard from '@/components/dashboard/QuickActionCard';
 import ActivityCard from '@/components/dashboard/ActivityCard';
+import { useSidebar } from '@/components/ui/sidebar';
 
 interface AppointmentDisplayItem {
   visitId: string;
@@ -95,6 +96,8 @@ export default function DashboardPage() {
 
   const [showRevenue, setShowRevenue] = useState(false);
   const revenueTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const { toggleSidebar } = useSidebar();
+
 
   useEffect(() => {
     setClientRenderedTimestamp(new Date());
@@ -265,36 +268,35 @@ export default function DashboardPage() {
         <p className="text-muted-foreground mt-1 text-sm md:text-base">আপনার ক্লিনিকের কার্যক্রমের একটি সারসংক্ষেপ।</p>
       </div>
 
-       <Card className="md:hidden hide-on-print -mx-4 -mt-4 sm:-mx-6 rounded-none sm:rounded-b-2xl shadow-lg bg-card bg-gradient-to-r from-blue-100 to-violet-200 overflow-hidden">
-        <CardContent className="p-4 pt-3">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <Image src="/icons/icon.png" width={28} height={28} alt="Logo" data-ai-hint="clinic health logo" className="flex-shrink-0"/>
-              <div>
-                <p className="text-sm text-foreground font-semibold">{clientRenderedTimestamp ? format(clientRenderedTimestamp, "eeee, dd MMMM", { locale: bn }) : '...'}</p>
-                 <p className="text-xs text-muted-foreground">আজকের ভিজিট: {(stats.todayPatientCount || 0).toLocaleString('bn-BD')}</p>
-              </div>
-            </div>
-            <div className="text-center" onClick={handleRevenueClick} style={{ cursor: 'pointer' }}>
-                <p className="text-xs text-muted-foreground">আজকের আয়</p>
-                <div className="relative h-6">
-                    <p className={cn(
-                        "text-lg font-bold text-primary transition-opacity duration-300",
-                        showRevenue ? "opacity-100" : "opacity-0"
-                    )}>
-                        {formatCurrency(stats.todayRevenue || 0)}
-                    </p>
-                    <p className={cn(
-                        "absolute top-0 left-0 right-0 text-lg font-bold text-primary transition-opacity duration-300",
-                        showRevenue ? "opacity-0" : "opacity-100"
-                    )}>
-                        ব্যালেন্স দেখুন
-                    </p>
-                </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+       <div className="md:hidden hide-on-print -mx-4 -mt-4 sm:-mx-6">
+        <div className="bg-primary/90 backdrop-blur-lg text-primary-foreground p-3 shadow-lg flex items-center justify-between">
+           <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={toggleSidebar}>
+               <Menu className="h-6 w-6"/>
+           </Button>
+           <div className="flex items-center gap-2">
+              <Image src="/icons/icon.png" width={28} height={28} alt="Logo" data-ai-hint="clinic health logo" className="flex-shrink-0 invert brightness-0 "/>
+              <span className="font-bold text-lg">{APP_NAME}</span>
+           </div>
+           <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={() => router.push(ROUTES.PATIENT_SEARCH)}>
+               <SearchIcon className="h-6 w-6"/>
+           </Button>
+        </div>
+         <div className="bg-gradient-to-b from-primary/90 to-primary/80 p-4 pt-2 -mt-1 rounded-b-2xl shadow-inner">
+             <Button 
+                onClick={handleRevenueClick}
+                className="w-full h-12 bg-white/90 text-primary hover:bg-white shadow-lg rounded-full text-base font-bold backdrop-blur-lg transition-all duration-300 ease-in-out"
+              >
+                  <div className="relative h-6 w-full overflow-hidden">
+                      <div className={cn("absolute inset-0 flex items-center justify-center transition-transform duration-500", showRevenue ? '-translate-y-full' : 'translate-y-0')}>
+                          ব্যালেন্স দেখুন
+                      </div>
+                      <div className={cn("absolute inset-0 flex items-center justify-center transition-transform duration-500", showRevenue ? 'translate-y-0' : 'translate-y-full')}>
+                          {formatCurrency(stats.todayRevenue || 0)}
+                      </div>
+                  </div>
+              </Button>
+         </div>
+       </div>
       
       <div className="hide-on-print flex justify-center my-4 md:my-6 md:mt-0">
         <div className="relative w-full max-w-sm lg:max-w-md focus-within:max-w-xl transition-all duration-300 ease-in-out">
@@ -501,7 +503,7 @@ export default function DashboardPage() {
               </TableBody>
                <TableFooter>
                 <TableRow>
-                  <TableCell colSpan={6} className="text-right font-bold">মোট আয়:</TableCell>
+                  <TableCell colSpan={5} className="text-right font-bold">মোট আয়:</TableCell>
                   <TableCell className="text-right font-bold">{formatCurrency(todaysTotalRevenue)}</TableCell>
                 </TableRow>
               </TableFooter>

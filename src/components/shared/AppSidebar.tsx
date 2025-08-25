@@ -25,11 +25,13 @@ import {
   DollarSign,
   Wand2,
   BookMarked,
+  Menu
 } from 'lucide-react';
 import { ROUTES, APP_NAME } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Button } from '../ui/button';
 
 const mainNavItems = [
   { href: ROUTES.DASHBOARD, label: 'ড্যাশবোর্ড', icon: Home },
@@ -150,7 +152,9 @@ export function AppSidebar() {
               </p>
           </div>
         </button>
-        <SidebarTrigger className="absolute top-3 right-3 h-7 w-7 md:hidden" />
+         <Button variant="ghost" size="icon" className="absolute top-3 right-3 h-8 w-8 md:hidden" onClick={toggleSidebar}>
+            <Menu className="h-5 w-5" />
+         </Button>
       </SidebarHeader>
 
       <ScrollArea className="flex-grow">
