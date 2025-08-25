@@ -268,7 +268,7 @@ export default function DashboardPage() {
         <p className="text-muted-foreground mt-1 text-sm md:text-base">আপনার ক্লিনিকের কার্যক্রমের একটি সারসংক্ষেপ।</p>
       </div>
 
-       <div className="md:hidden hide-on-print -mx-4 -mt-4 sm:-mx-6">
+       <div className="md:hidden hide-on-print -mx-4 -mt-4 sm:-mx-6 sm:-mt-6">
         <div className="bg-primary/90 backdrop-blur-lg text-primary-foreground p-3 shadow-lg flex items-center justify-between">
            <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={toggleSidebar}>
                <Menu className="h-6 w-6"/>
@@ -401,33 +401,6 @@ export default function DashboardPage() {
             আজকের জন্য কোন সাক্ষাৎ নেই।
           </div>
         )}
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 hide-on-print">
-        <ActivityCard
-          title="মাসিক কার্যকলাপ"
-          icon={BarChart3}
-          iconColorClass="text-blue-500"
-          gradientClass="bg-gradient-to-br from-blue-100 to-violet-200"
-          stats={[
-            { label: 'এই মাসে নতুন রোগী', value: (stats.monthlyNewPatients || 0).toLocaleString('bn-BD'), icon: UserPlus },
-            { label: 'মোট নিবন্ধিত রোগী', value: (stats.totalPatients || 0).toLocaleString('bn-BD'), icon: Users },
-            { label: 'আনুমানিক মাসিক আয়', value: formatCurrency(stats.monthlyIncome || 0), icon: TrendingUp },
-          ]}
-          detailsLink={ROUTES.DAILY_REPORT}
-        />
-        <ActivityCard
-          title="দৈনিক কার্যকলাপ"
-          icon={CalendarDays}
-          iconColorClass="text-lime-600"
-          gradientClass="bg-gradient-to-br from-lime-100 to-amber-200"
-          stats={[
-            { label: 'আজ নতুন/সক্রিয় রোগী', value: (stats.dailyActivePatients || 0).toLocaleString('bn-BD'), icon: UserPlus },
-            { label: 'অন্যান্য নিবন্ধিত রোগী', value: (stats.dailyOtherRegistered || 0).toLocaleString('bn-BD'), icon: Users },
-            { label: 'আজকের আয়', value: formatCurrency(stats.todayRevenue || 0), icon: TrendingUp },
-          ]}
-          detailsLink={ROUTES.DAILY_REPORT}
-        />
       </div>
 
       <Card className="dashboard-appointments-card hide-on-print hidden md:block">
