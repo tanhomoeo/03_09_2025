@@ -29,7 +29,9 @@ export function FloatingVoiceInput() {
 
     const handleFocusOut = (event: FocusEvent) => {
       if (!isListening && (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement)) {
+        // Use a short delay to allow clicking on the button itself without it disappearing
         setTimeout(() => {
+          // Check if the new active element is the button itself
           if (document.activeElement?.closest('.floating-voice-btn') === null) {
              setIsVisible(false);
           }
@@ -47,6 +49,7 @@ export function FloatingVoiceInput() {
   }, [isListening]);
   
   useEffect(() => {
+     // If recognition is active but there is no focused text element, stop it.
      if (isListening && !activeElement) {
         toggle();
      }
