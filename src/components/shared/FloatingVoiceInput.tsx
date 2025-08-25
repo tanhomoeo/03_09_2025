@@ -15,8 +15,7 @@ export function FloatingVoiceInput() {
     isListening,
     error,
     isSupported,
-    start,
-    stop,
+    toggle,
     activeElement,
   } = useVoiceContext();
   const [isVisible, setIsVisible] = useState(false);
@@ -30,10 +29,9 @@ export function FloatingVoiceInput() {
 
     const handleFocusOut = (event: FocusEvent) => {
       if (!isListening && (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement)) {
-        // Use a small delay to prevent the button from disappearing if the user clicks it
         setTimeout(() => {
-          if (document.activeElement !== document.querySelector('.floating-voice-btn')) {
-            setIsVisible(false);
+          if (document.activeElement?.closest('.floating-voice-btn') === null) {
+             setIsVisible(false);
           }
         }, 200);
       }
@@ -47,34 +45,12 @@ export function FloatingVoiceInput() {
       document.body.removeEventListener('focusout', handleFocusOut);
     };
   }, [isListening]);
-
-
-  const handleButtonClick = () => {
-    if (isListening) {
-      stop();
-    } else {
-      const currentActiveElement = document.activeElement;
-      if (
-        currentActiveElement instanceof HTMLInputElement ||
-        currentActiveElement instanceof HTMLTextAreaElement
-      ) {
-        start();
-      } else {
-        toast({
-          title: 'ইনপুট ফিল্ড নির্বাচন করুন',
-          description:
-            'ভয়েস টাইপিং শুরু করার আগে অনুগ্রহ করে একটি লেখার জায়গায় ক্লিক করুন।',
-          variant: 'default',
-        });
-      }
-    }
-  };
   
   useEffect(() => {
      if (isListening && !activeElement) {
-        stop();
+        toggle();
      }
-  }, [isListening, activeElement, stop]);
+  }, [isListening, activeElement, toggle]);
 
   if (!isSupported || isMobile) {
     return null;
@@ -88,7 +64,7 @@ export function FloatingVoiceInput() {
     <Button
       variant="outline"
       size="icon"
-      onClick={handleButtonClick}
+      onClick={toggle}
       className={cn(
         'fixed bottom-5 right-5 z-50 h-14 w-14 rounded-full shadow-xl bg-gradient-to-br from-blue-100 to-indigo-200 text-blue-800 border-2 border-blue-300 dark:from-blue-900/50 dark:to-indigo-900/50 dark:text-blue-200 dark:border-blue-700',
         'transition-all duration-300 ease-in-out transform hover:-translate-y-px hover:shadow-2xl',

@@ -1,7 +1,7 @@
 
 "use client";
 
-import { UseFormReturn, ControllerRenderProps } from "react-hook-form";
+import { UseFormReturn } from "react-hook-form";
 import { Loader2, Mic } from "lucide-react";
 import * as z from "zod";
 
@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
  
-const symptomFormSchema = z.object({ // eslint-disable-line @typescript-eslint/no-unused-vars
+const symptomFormSchema = z.object({
   symptoms: z.string().min(10, { message: "অনুগ্রহ করে লক্ষণগুলি কমপক্ষে ১০টি অক্ষরে বর্ণনা করুন।" }),
 });
 
@@ -28,7 +28,7 @@ export function SymptomForm({ form, onSubmit, isLoading }: SymptomFormProps) {
         <FormField
           control={form.control}
           name="symptoms"
-          render={({ field }: { field: ControllerRenderProps<SymptomFormValues, "symptoms"> }) => (
+          render={({ field }) => (
             <FormItem>
               <FormControl>
                 <Textarea

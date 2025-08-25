@@ -42,13 +42,11 @@ export function useVoiceInput() {
     setActiveElement(currentActiveElement);
     
     if (recognitionRef.current) {
-        // Initialize transcriptRef with current value of the input field
         transcriptRef.current = currentActiveElement.value;
         try {
           recognitionRef.current.start();
         } catch(e) {
           console.error("Error starting recognition: ", e);
-          // Sometimes it's already started, we can try stopping and starting again.
           stopRecognition();
           try {
              recognitionRef.current.start();
@@ -60,6 +58,14 @@ export function useVoiceInput() {
     }
   }, [toast, stopRecognition]);
 
+  const toggleRecognition = useCallback(() => {
+     if (isListening) {
+        stopRecognition();
+      } else {
+        startRecognition();
+      }
+  }, [isListening, startRecognition, stopRecognition]);
+
   const handleKeyDown = useCallback((event: KeyboardEvent) => {
     const target = event.target as HTMLElement;
     const isInputFocused = target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement;
@@ -69,13 +75,9 @@ export function useVoiceInput() {
       isInputFocused
     ) {
       event.preventDefault();
-      if (isListening) {
-        stopRecognition();
-      } else {
-        startRecognition();
-      }
+      toggleRecognition();
     }
-  }, [isListening, startRecognition, stopRecognition]);
+  }, [toggleRecognition]);
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
@@ -85,7 +87,6 @@ export function useVoiceInput() {
   }, [handleKeyDown]);
 
   useEffect(() => {
-    // This effect should only run on the client
     if (typeof window === 'undefined') {
       return;
     }
@@ -120,7 +121,6 @@ export function useVoiceInput() {
 
     recognition.onend = () => {
       setIsListening(false);
-      // Do not clear the active element here, it should persist
     };
 
     recognition.onresult = (event: SpeechRecognitionEvent) => {
@@ -141,7 +141,6 @@ export function useVoiceInput() {
         }
       }
 
-      // Append only the new final transcript part to our ref
       if(final_transcript_chunk) {
         transcriptRef.current = (transcriptRef.current ? transcriptRef.current.trim() + ' ' : '') + final_transcript_chunk.trim();
       }
@@ -167,5 +166,5 @@ export function useVoiceInput() {
     };
   }, [stopRecognition, activeElement]);
 
-  return { isListening, error, isSupported, start: startRecognition, stop: stopRecognition, activeElement };
+  return { isListening, error, isSupported, start: startRecognition, stop: stopRecognition, toggle: toggleRecognition, activeElement };
 }
