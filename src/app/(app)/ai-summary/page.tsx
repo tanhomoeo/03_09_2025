@@ -32,7 +32,7 @@ import {
 import {
   CategorizedSymptomsDisplay,
   LABELS as CATEGORY_LABELS,
-} from "@/components/repertory/CategorizedSymptomsDisplay";
+} from "@/components/categorized-symptoms-display";
 import type { SuggestRemediesOutput } from "@/ai/flows/suggest-remedies";
 import { RemedyDetailsDialogContent } from "@/components/remedy-details-dialog-content";
 
