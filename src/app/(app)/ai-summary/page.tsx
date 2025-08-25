@@ -33,10 +33,8 @@ import {
   CategorizedSymptomsDisplay,
   LABELS as CATEGORY_LABELS,
 } from "@/components/repertory/CategorizedSymptomsDisplay";
-import { ResultsDisplay } from "@/components/repertory/ResultsDisplay";
-import { RepertorySuggestionDisplay } from "@/components/repertory/RepertorySuggestionDisplay";
 import type { SuggestRemediesOutput } from "@/ai/flows/suggest-remedies";
-import { RemedyDetailsDialogContent } from "@/components/repertory/RemedyDetailsDialogContent";
+import { RemedyDetailsDialogContent } from "@/components/remedy-details-dialog-content";
 
 const formSchema = z.object({
   symptoms: z.string().min(10, {
@@ -230,5 +228,3 @@ export default function AiRepertoryPage() {
     </Dialog>
   );
 }
-
-    
