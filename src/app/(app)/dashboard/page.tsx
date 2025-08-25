@@ -321,10 +321,10 @@ export default function DashboardPage() {
 
       <div className="hide-on-print">
         <h2 className="text-lg md:text-xl font-semibold font-headline mb-3">দ্রুত কার্যক্রম</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
            <QuickActionCard
             title="নতুন রোগী ভর্তি"
-            description="সিস্টেমে নতুন রোগীদের নিবন্ধন করুন।"
+            description="নতুন রোগীদের নিবন্ধন করুন"
             icon={UserPlus}
             iconColorClass="text-sky-500"
             href={ROUTES.PATIENT_ENTRY}
@@ -332,7 +332,7 @@ export default function DashboardPage() {
           />
           <QuickActionCard
             title="রোগীর তালিকা"
-            description="সকল নিবন্ধিত রোগীদের খুঁজুন।"
+            description="সকল রোগীদের খুঁজুন"
             icon={Users}
             iconColorClass="text-teal-500"
             href={ROUTES.DICTIONARY}
@@ -340,15 +340,15 @@ export default function DashboardPage() {
           />
           <QuickActionCard
             title="দৈনিক প্রতিবেদন"
-            description="দৈনিক কার্যক্রমের বিস্তারিত সারসংক্ষেপ।"
+            description="দৈনিক কার্যক্রম দেখুন"
             icon={FileText}
             iconColorClass="text-green-500"
             href={ROUTES.DAILY_REPORT}
             gradientClass="bg-gradient-to-br from-green-100 to-lime-200"
           />
           <QuickActionCard
-            title="অভিযোগ সারাংশ"
-            description="AI দ্বারা অভিযোগ বিশ্লেষণ করুন।"
+            title="AI সারাংশ"
+            description="অভিযোগ বিশ্লেষণ করুন"
             icon={MessageSquareText}
             iconColorClass="text-purple-500"
             href={ROUTES.AI_SUMMARY}
