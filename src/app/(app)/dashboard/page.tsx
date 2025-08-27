@@ -359,48 +359,30 @@ export default function DashboardPage() {
         </div>
       </div>
       
-       <div className="md:hidden">
-        <h2 className="text-lg font-semibold font-headline mb-3 mt-4">আজকের সাক্ষাৎকার</h2>
-        {todaysAppointments.length > 0 ? (
-          <div className="space-y-3">
-            {todaysAppointments.map((appt) => (
-              <Card key={appt.visitId} className="bg-card/80 backdrop-blur-lg shadow-md">
-                <CardContent className="p-3">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <p className="font-bold text-base text-foreground">{appt.patientName}</p>
-                      <p className="text-xs text-muted-foreground">ডায়েরি: {appt.diaryNumberDisplay} | সময়: {appt.time}</p>
-                    </div>
-                     <Badge variant={appt.status === 'Completed' ? 'default' : 'secondary'}
-                          className={
-                            `text-xs shrink-0 ${appt.status === 'Completed' ? 'bg-green-100 text-green-800 border-green-300' :
-                            'bg-yellow-100 text-yellow-800 border-yellow-300'}`
-                          }
-                    >
-                      {appt.status === 'Completed' ? 'সম্পন্ন' : 'অপেক্ষমান'}
-                    </Badge>
-                  </div>
-                  <div className="mt-2 pt-2 border-t flex justify-between items-center">
-                     <p className="text-sm font-semibold text-primary">{formatCurrency(appt.paymentAmount)}</p>
-                     <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleStartWorkflow(appt.patient.id, appt.visitId)}
-                        className="h-8 text-xs bg-primary/10 text-primary border-primary/20"
-                    >
-                        <PlayCircle className="mr-2 h-4 w-4" />
-                        কার্যক্রম
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-8 text-muted-foreground bg-card/50 rounded-lg">
-            আজকের জন্য কোন সাক্ষাৎ নেই।
-          </div>
-        )}
+       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 hide-on-print">
+        <ActivityCard
+          title="দৈনিক কার্যকলাপ"
+          icon={CalendarDays}
+          iconColorClass="text-blue-500"
+          gradientClass="bg-gradient-to-br from-blue-100 to-violet-200"
+          stats={[
+            { label: 'আজকের মোট আয়', value: formatCurrency(stats.todayRevenue || 0), icon: TrendingUp },
+            { label: 'আজকের সক্রিয় রোগী', value: stats.dailyActivePatients.toLocaleString('bn-BD'), icon: UserPlus },
+            { label: 'অন্যান্য নিবন্ধিত রোগী', value: stats.dailyOtherRegistered.toLocaleString('bn-BD'), icon: Users },
+          ]}
+          detailsLink={ROUTES.DAILY_REPORT}
+        />
+        <ActivityCard
+          title="মাসিক কার্যকলাপ"
+          icon={BarChart3}
+          iconColorClass="text-green-500"
+          gradientClass="bg-gradient-to-br from-green-100 to-lime-200"
+          stats={[
+            { label: 'চলতি মাসের মোট আয়', value: formatCurrency(stats.monthlyIncome || 0), icon: TrendingUp },
+            { label: 'এই মাসে নতুন রোগী', value: stats.monthlyNewPatients.toLocaleString('bn-BD'), icon: UserPlus },
+            { label: 'মোট নিবন্ধিত রোগী', value: stats.totalPatients.toLocaleString('bn-BD'), icon: Users },
+          ]}
+        />
       </div>
 
       <Card className="dashboard-appointments-card hide-on-print hidden md:block">
@@ -476,7 +458,7 @@ export default function DashboardPage() {
               </TableBody>
                <TableFooter>
                 <TableRow>
-                  <TableCell colSpan={5} className="text-right font-bold">মোট আয়:</TableCell>
+                  <TableCell colSpan={6} className="text-right font-bold">মোট আয়:</TableCell>
                   <TableCell className="text-right font-bold">{formatCurrency(todaysTotalRevenue)}</TableCell>
                 </TableRow>
               </TableFooter>
@@ -535,3 +517,5 @@ export default function DashboardPage() {
     </TooltipProvider>
   );
 }
+
+    
