@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableFooter } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Users, UserPlus, FileText, BarChart3, TrendingUp, Search as SearchIcon, Printer, CalendarDays, MessageSquareText, PlayCircle, Menu } from 'lucide-react';
+import { Users, UserPlus, FileText, BarChart3, TrendingUp, Search as SearchIcon, Printer, CalendarDays, MessageSquareText, PlayCircle } from 'lucide-react';
 import { getPatients, getVisitsWithinDateRange, getPaymentSlipsWithinDateRange, getPatientsRegisteredWithinDateRange, formatCurrency, getPaymentMethodLabel, getClinicSettings } from '@/lib/firestoreService';
 import type { ClinicSettings, Patient, Visit, PaymentSlip, PaymentMethod } from '@/lib/types';
 import { ROUTES, APP_NAME } from '@/lib/constants';
@@ -264,34 +264,27 @@ export default function DashboardPage() {
     <TooltipProvider>
     <div className="space-y-6 md:space-y-8">
       
-       <div className="md:hidden hide-on-print">
-        <div className="bg-card/80 backdrop-blur-lg p-3 shadow-md flex items-center justify-between border-b">
-           <Button variant="ghost" size="icon" className="text-foreground hover:bg-muted" onClick={toggleSidebar}>
-               <Menu className="h-6 w-6"/>
-           </Button>
-           <div className="flex items-center gap-2">
+       <div className="md:hidden hide-on-print p-2">
+        <div className="bg-card/80 backdrop-blur-lg p-2.5 shadow-md flex items-center justify-between border-b rounded-lg">
+           <button type="button" onClick={toggleSidebar} className="flex items-center gap-2 flex-shrink-0">
               <Image src="/icons/icon.png" width={28} height={28} alt="Logo" data-ai-hint="clinic health logo" className="flex-shrink-0"/>
-              <span className="font-bold text-lg">{APP_NAME}</span>
-           </div>
-           <Button variant="ghost" size="icon" className="text-foreground hover:bg-muted" onClick={() => router.push(ROUTES.PATIENT_SEARCH)}>
-               <SearchIcon className="h-6 w-6"/>
-           </Button>
+              <span className="font-bold text-md">{APP_NAME}</span>
+           </button>
+           
+           <Button 
+              onClick={handleRevenueClick}
+              className="h-8 rounded-full text-xs font-bold backdrop-blur-lg transition-all duration-300 ease-in-out px-3 bg-gradient-to-r from-blue-100 to-indigo-200 text-blue-800 dark:from-blue-900/40 dark:to-indigo-900/40 dark:text-blue-200 shadow-sm"
+            >
+                <div className="relative h-5 w-24 overflow-hidden">
+                    <div className={cn("absolute inset-0 flex items-center justify-center transition-transform duration-500", showRevenue ? '-translate-y-full' : 'translate-y-0')}>
+                        ব্যালেন্স দেখুন
+                    </div>
+                    <div className={cn("absolute inset-0 flex items-center justify-center transition-transform duration-500", showRevenue ? 'translate-y-0' : 'translate-y-full')}>
+                        {formatCurrency(stats.todayRevenue || 0)}
+                    </div>
+                </div>
+            </Button>
         </div>
-         <div className="p-4 pt-3">
-             <Button 
-                onClick={handleRevenueClick}
-                className="w-full h-10 bg-gradient-to-r from-blue-100 to-indigo-200 text-blue-800 dark:from-blue-900/40 dark:to-indigo-900/40 dark:text-blue-200 shadow-lg rounded-full text-sm font-bold backdrop-blur-lg transition-all duration-300 ease-in-out"
-              >
-                  <div className="relative h-6 w-full overflow-hidden">
-                      <div className={cn("absolute inset-0 flex items-center justify-center transition-transform duration-500", showRevenue ? '-translate-y-full' : 'translate-y-0')}>
-                          ব্যালেন্স দেখুন
-                      </div>
-                      <div className={cn("absolute inset-0 flex items-center justify-center transition-transform duration-500", showRevenue ? 'translate-y-0' : 'translate-y-full')}>
-                          {formatCurrency(stats.todayRevenue || 0)}
-                      </div>
-                  </div>
-              </Button>
-         </div>
        </div>
       
       <div className="hide-on-print flex justify-center my-4 md:my-0">

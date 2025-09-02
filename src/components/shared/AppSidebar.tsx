@@ -13,7 +13,6 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   useSidebar,
-  SidebarTrigger,
 } from '@/components/ui/sidebar';
 import {
   Home,
@@ -156,7 +155,7 @@ export function AppSidebar() {
               </p>
           </div>
         </button>
-         <Button variant="ghost" size="icon" className="absolute top-3 right-3 h-8 w-8 md:hidden" onClick={toggleSidebar}>
+         <Button variant="ghost" size="icon" className="absolute top-3 right-3 h-8 w-8 md:hidden" onClick={() => setOpenMobile(true)}>
             <Menu className="h-5 w-5" />
          </Button>
       </SidebarHeader>
