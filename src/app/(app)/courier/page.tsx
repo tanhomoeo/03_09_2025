@@ -126,11 +126,6 @@ export default function CourierPage() {
   
   useEffect(() => {
     fetchCourierData();
-    const handleFirestoreChange = () => fetchCourierData();
-    window.addEventListener('firestoreDataChange', handleFirestoreChange);
-    return () => {
-      window.removeEventListener('firestoreDataChange', handleFirestoreChange);
-    };
   }, [fetchCourierData]);
   
   const fetchBalance = useCallback(async () => {
@@ -321,12 +316,84 @@ export default function CourierPage() {
           </DialogHeader>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
-              <FormField control={form.control} name="invoice" render={({ field }) => ( <FormItem> <FormLabel>ইনভয়েস আইডি</FormLabel> <FormControl> <Input placeholder="ইউনিক ইনভয়েস আইডি" {...field} /> </FormControl> <FormMessage /> </FormItem> )}/>
-              <FormField control={form.control} name="recipient_name" render={({ field }) => ( <FormItem> <FormLabel>প্রাপকের নাম</FormLabel> <FormControl> <Input placeholder="প্রাপকের পুরো নাম" {...field} /> </FormControl> <FormMessage /> </FormItem> )}/>
-              <FormField control={form.control} name="recipient_phone" render={({ field }) => ( <FormItem> <FormLabel>প্রাপকের ফোন</FormLabel> <FormControl> <Input placeholder="01XXXXXXXXX" {...field} /> </FormControl> <FormMessage /> </FormItem> )}/>
-              <FormField control={form.control} name="recipient_address" render={({ field }) => ( <FormItem> <FormLabel>প্রাপকের ঠিকানা</FormLabel> <FormControl> <Textarea placeholder="সম্পূর্ণ ঠিকানা" {...field} /> </FormControl> <FormMessage /> </FormItem> )}/>
-              <FormField control={form.control} name="cod_amount" render={({ field }) => ( <FormItem> <FormLabel>ক্যাশ অন ডেলিভারি (COD)</FormLabel> <FormControl> <Input type="number" placeholder="0" {...field} /> </FormControl> <FormMessage /> </FormItem> )}/>
-              <FormField control={form.control} name="note" render={({ field }) => ( <FormItem> <FormLabel>বিশেষ নোট (ঐচ্ছিক)</FormLabel> <FormControl> <Textarea placeholder="ডেলিভারি সংক্রান্ত নোট" {...field} /> </FormControl> <FormMessage /> </FormItem> )}/>
+              <FormField
+                control={form.control}
+                name="invoice"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>ইনভয়েস আইডি</FormLabel>
+                    <FormControl>
+                      <Input placeholder="ইউনিক ইনভয়েস আইডি" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="recipient_name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>প্রাপকের নাম</FormLabel>
+                    <FormControl>
+                      <Input placeholder="প্রাপকের পুরো নাম" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="recipient_phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>প্রাপকের ফোন</FormLabel>
+                    <FormControl>
+                      <Input placeholder="01XXXXXXXXX" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="recipient_address"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>প্রাপকের ঠিকানা</FormLabel>
+                    <FormControl>
+                      <Textarea placeholder="সম্পূর্ণ ঠিকানা" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="cod_amount"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>ক্যাশ অন ডেলিভারি (COD)</FormLabel>
+                    <FormControl>
+                      <Input type="number" placeholder="0" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="note"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>বিশেষ নোট (ঐচ্ছিক)</FormLabel>
+                    <FormControl>
+                      <Textarea placeholder="ডেলিভারি সংক্রান্ত নোট" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <DialogFooter>
                 <DialogClose asChild><Button type="button" variant="outline">বাতিল</Button></DialogClose>
                 <Button type="submit" disabled={form.formState.isSubmitting}>
