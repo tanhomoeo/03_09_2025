@@ -124,9 +124,6 @@ const config = {
         'slide-in': 'slide-in 0.3s ease-out forwards',
         'slide-out': 'slide-out 0.3s ease-in forwards',
       },
-      transitionTimingFunction: {
-        'elastic': 'cubic-bezier(0.68, -0.55, 0.27, 1.55)',
-      }
     },
   },
   plugins: [tailwindcssAnimate],

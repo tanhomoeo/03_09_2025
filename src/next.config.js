@@ -1,4 +1,3 @@
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
@@ -9,16 +8,11 @@ const nextConfig = {
       },
     ],
   },
-  webpack: (config, { isServer }) => {
+  webpack: (config) => {
     config.module.rules.push({
       test: /\.txt$/,
       use: 'raw-loader',
     });
-
-    if (isServer) {
-        // Exclude problematic modules from server bundle if they cause issues.
-        config.externals = [...(config.externals || []), '@opentelemetry/instrumentation'];
-    }
 
     return config;
   },

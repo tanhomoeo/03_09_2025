@@ -26,7 +26,7 @@ function genId() {
   return count.toString()
 }
 
-type ActionType = "ADD_TOAST" | "UPDATE_TOAST" | "DISMISS_TOAST" | "REMOVE_TOAST";
+export type ActionType = "ADD_TOAST" | "UPDATE_TOAST" | "DISMISS_TOAST" | "REMOVE_TOAST";
 
 type Action =
   | {

@@ -1,6 +1,6 @@
 
 'use client';
-import React, { useState, useMemo, useCallback, useEffect, Fragment } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -199,10 +199,10 @@ export const RepertoryBrowser: React.FC<RepertoryBrowserProps> = ({ chapters = [
     return selectedChapter.rubrics || [];
   }, [searchTerm, selectedChapter, language]);
 
-  const handleChapterSelect = useCallback((chapter: Chapter) => {
+  const handleChapterSelect = (chapter: Chapter) => {
     setSelectedChapter(chapter);
     setSearchTerm('');
-  }, []);
+  };
 
   const toggleLanguage = () => {
     setLanguage(prev => prev === 'bn' ? 'en' : 'bn');
