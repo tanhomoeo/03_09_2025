@@ -394,7 +394,7 @@ export default function PersonalExpensesPage() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              {editingExpense ? 'খরচ সম্পাদনা করুন' : 'নতুন খরচ যোগ করুন'}
+              {editingMedicine ? 'খরচ সম্পাদনা করুন' : 'নতুন খরচ যোগ করুন'}
             </DialogTitle>
             <DialogDescription>
               খরচের বিবরণ পূরণ করে সংরক্ষণ করুন।

@@ -277,7 +277,7 @@ export default function EnhancedReportPage() {
     const dateStr = getReportDateRangeString();
     const paymentStr = paymentMethodFilter !== 'all' ? ` | পেমেন্ট: ${getPaymentMethodLabel(paymentMethodFilter as PaymentMethod)}` : '';
     const courierStr = courierDeliveryOnly ? ' | শুধু কুরিয়ার' : '';
-    return `তারিখ/পরিসীমা: ${dateStr}${paymentStr}${courierStr}`;
+    return `${dateStr}${paymentStr}${courierStr}`;
   }, [isLoading, getReportDateRangeString, paymentMethodFilter, courierDeliveryOnly]);
 
   if (isLoading && !clinicSettings) {

@@ -214,15 +214,11 @@ export default function SearchPageClient() {
     <div className="space-y-6">
       <PageHeaderCard
         title="রোগী অনুসন্ধান"
-        description="রোগীর রেকর্ড খুঁজুন"
+        description="রোগীর রেকর্ড খুঁজুন এবং পরিচালনা করুন।"
         actions={<SearchIconLucide className="h-8 w-8 text-primary" />}
         className="bg-gradient-to-br from-indigo-100 to-blue-200 dark:from-indigo-900/30 dark:to-blue-900/30"
         titleClassName="text-indigo-900 dark:text-indigo-300"
-      >
-        <p className="text-sm text-muted-foreground mt-1">
-          নাম, ডায়েরি নম্বর, ফোন, ঠিকানা বা অভিভাবকের নাম দ্বারা বিদ্যমান রোগীর রেকর্ড খুঁজতে নীচের অনুসন্ধান বার ব্যবহার করুন।
-        </p>
-      </PageHeaderCard>
+      />
 
       <div className="flex h-11 items-center w-full rounded-md border border-input bg-card shadow-inner overflow-hidden focus-within:ring-1 focus-within:ring-ring focus-within:border-primary">
         <div className="pl-3 pr-2 flex items-center pointer-events-none h-full">
@@ -325,5 +321,3 @@ export default function SearchPageClient() {
     </div>
   );
 }
-
-    

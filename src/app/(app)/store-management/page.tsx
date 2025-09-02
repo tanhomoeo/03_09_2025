@@ -212,7 +212,7 @@ export default function StoreManagementPage() {
     <div className="space-y-6">
       <PageHeaderCard
         title="ঔষধ ব্যবস্থাপনা"
-        description="আপনার ক্লিনিকের ঔষধপত্র এবং স্টক পরিচালনা করুন।"
+        description="ক্লিনিকের ঔষধ এবং স্টক পরিচালনা করুন।"
         actions={
           <div className="flex items-center gap-2">
             <Button
