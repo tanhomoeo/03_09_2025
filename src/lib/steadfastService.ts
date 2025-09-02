@@ -103,8 +103,10 @@ export const getCurrentBalance = async (): Promise<SteadfastBalance> => {
  * Note: This endpoint might be paginated. The current implementation fetches the first page.
  */
 export const getAllConsignments = async (): Promise<{data: SteadfastConsignment[]}> => {
-    return makeSteadfastRequest<{data: SteadfastConsignment[]}>('/get_all_orders');
+    const response = await makeSteadfastRequest<{data?: SteadfastConsignment[]}>('/consignment/get_all');
+    return { data: response.data || [] };
 };
+
 
 /**
  * Fetches consignments based on their status from Steadfast.
