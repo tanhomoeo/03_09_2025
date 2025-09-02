@@ -1,6 +1,5 @@
 
 
-
 export interface CategorizedCaseNotes {
   physicalSymptoms?: {
     general?: string;

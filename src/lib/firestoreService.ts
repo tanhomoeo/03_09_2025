@@ -14,7 +14,7 @@ import {
   Timestamp,
   setDoc,
 } from 'firebase/firestore';
-import type { Patient, Visit, Prescription, PaymentSlip, ClinicSettings, PaymentMethod, CategorizedCaseNotes, Medicine, PersonalExpense } from './types';
+import type { Patient, Visit, Prescription, PaymentSlip, ClinicSettings, PaymentMethod, CategorizedCaseNotes, Medicine, PersonalExpense, SteadfastConsignment } from './types';
 import { startOfWeek, endOfWeek, startOfMonth, endOfMonth, isValid } from 'date-fns';
 
 const convertTimestampsToISO = <T>(data: unknown): T => {
@@ -87,6 +87,7 @@ const prescriptionsCollectionRef = () => collection(getDbInstance(), 'prescripti
 const paymentSlipsCollectionRef = () => collection(getDbInstance(), 'paymentSlips');
 const medicinesCollectionRef = () => collection(getDbInstance(), 'medicines');
 const personalExpensesCollectionRef = () => collection(getDbInstance(), 'personalExpenses');
+const consignmentsCollectionRef = () => collection(getDbInstance(), 'consignments');
 const settingsDocRef = () => doc(getDbInstance(), 'settings', 'clinic');
 
 export const getPatients = async (): Promise<Patient[]> => {
@@ -473,6 +474,44 @@ export const saveClinicSettings = async (settings: ClinicSettings): Promise<bool
     return true;
   } catch (error) {
     console.error("Error saving clinic settings: ", error);
+    return false;
+  }
+};
+
+// Courier Consignment Functions
+export const getConsignments = async (): Promise<SteadfastConsignment[]> => {
+  try {
+    const q = query(consignmentsCollectionRef(), orderBy('created_at', 'desc'));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(docSnap => convertDocument<SteadfastConsignment>({ ...docSnap, id: docSnap.id }));
+  } catch (error) {
+    console.error("Error getting consignments: ", error);
+    return [];
+  }
+};
+
+export const addConsignment = async (consignmentData: SteadfastConsignment): Promise<string> => {
+  try {
+    // Use consignment_id as the document ID for easy lookup and to prevent duplicates
+    const consignmentRef = doc(getDbInstance(), 'consignments', String(consignmentData.consignment_id));
+    await setDoc(consignmentRef, prepareDataForFirestore(consignmentData as Record<string, unknown>));
+    return String(consignmentData.consignment_id);
+  } catch (error) {
+    console.error("Error adding consignment: ", error);
+    throw error;
+  }
+};
+
+export const updateConsignmentStatus = async (consignmentId: number, status: string): Promise<boolean> => {
+  try {
+    const consignmentRef = doc(getDbInstance(), 'consignments', String(consignmentId));
+    await updateDoc(consignmentRef, {
+      status: status,
+      updated_at: new Date().toISOString(),
+    });
+    return true;
+  } catch (error) {
+    console.error("Error updating consignment status: ", error);
     return false;
   }
 };

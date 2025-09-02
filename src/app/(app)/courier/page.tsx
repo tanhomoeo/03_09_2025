@@ -34,6 +34,7 @@ import {
 } from '@/components/ui/form';
 import { PageHeaderCard } from '@/components/shared/PageHeaderCard';
 import { placeSteadfastOrder, getCurrentBalance, getDeliveryStatusByInvoice } from '@/lib/steadfastService';
+import { addConsignment, getConsignments, updateConsignmentStatus, formatCurrency } from '@/lib/firestoreService';
 import type { SteadfastOrder, SteadfastConsignment, SteadfastBalance } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import {
@@ -49,8 +50,10 @@ import {
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { formatCurrency, formatDate } from '@/lib/firestoreService';
 import { cn } from '@/lib/utils';
+import { format, parseISO } from 'date-fns';
+import { bn } from 'date-fns/locale';
+
 
 const orderSchema = z.object({
   invoice: z.string().min(1, 'ইনভয়েস আইডি আবশ্যক।'),
@@ -85,7 +88,9 @@ export default function CourierPage() {
   const [consignments, setConsignments] = useState<SteadfastConsignment[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [balance, setBalance] = useState<SteadfastBalance | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [isLoadingBalance, setIsLoadingBalance] = useState(false);
+  const [isRefreshingStatus, setIsRefreshingStatus] = useState<number | null>(null);
 
   const form = useForm<OrderFormValues>({
     resolver: zodResolver(orderSchema),
@@ -99,6 +104,30 @@ export default function CourierPage() {
     },
   });
 
+  const fetchCourierData = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const [balanceData, consignmentsData] = await Promise.all([
+          getCurrentBalance(),
+          getConsignments()
+      ]);
+      setBalance(balanceData);
+      setConsignments(consignmentsData);
+    } catch (error) {
+      toast({
+        title: 'তথ্য লোড করতে সমস্যা',
+        description: error instanceof Error ? error.message : 'একটি অজানা ত্রুটি হয়েছে।',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }, [toast]);
+  
+  useEffect(() => {
+    fetchCourierData();
+  }, [fetchCourierData]);
+  
   const fetchBalance = useCallback(async () => {
     setIsLoadingBalance(true);
     try {
@@ -114,10 +143,7 @@ export default function CourierPage() {
       setIsLoadingBalance(false);
     }
   }, [toast]);
-  
-  useEffect(() => {
-    fetchBalance();
-  }, [fetchBalance]);
+
 
   const handleAddNew = () => {
     form.reset({
@@ -131,17 +157,19 @@ export default function CourierPage() {
     setIsModalOpen(true);
   };
   
-  const handleRefreshStatus = useCallback(async (invoiceId: string) => {
+  const handleRefreshStatus = useCallback(async (consignment: SteadfastConsignment) => {
+    setIsRefreshingStatus(consignment.consignment_id);
     try {
-      const statusData = await getDeliveryStatusByInvoice(invoiceId);
+      const statusData = await getDeliveryStatusByInvoice(consignment.invoice);
+      await updateConsignmentStatus(consignment.consignment_id, statusData.delivery_status);
       setConsignments(prev => 
         prev.map(c => 
-          c.invoice === invoiceId ? { ...c, status: statusData.delivery_status } : c
+          c.invoice === consignment.invoice ? { ...c, status: statusData.delivery_status } : c
         )
       );
       toast({
         title: 'স্ট্যাটাস আপডেট হয়েছে',
-        description: `ইনভয়েস ${invoiceId} এর স্ট্যাটাস এখন ${statusData.delivery_status}.`,
+        description: `ইনভয়েস ${consignment.invoice} এর স্ট্যাটাস এখন ${statusData.delivery_status}.`,
       });
     } catch (error) {
       toast({
@@ -149,6 +177,8 @@ export default function CourierPage() {
         description: error instanceof Error ? error.message : 'একটি অজানা ত্রুটি হয়েছে।',
         variant: 'destructive',
       });
+    } finally {
+      setIsRefreshingStatus(null);
     }
   }, [toast]);
 
@@ -157,13 +187,15 @@ export default function CourierPage() {
       const orderData: SteadfastOrder = data;
       const result = await placeSteadfastOrder(orderData);
 
-      if (result.status === 200) {
-        setConsignments(prev => [result.consignment, ...prev]);
+      if (result.status === 200 && result.consignment) {
+        await addConsignment(result.consignment);
+        setConsignments(prev => [result.consignment, ...prev].sort((a,b) => parseISO(b.created_at).getTime() - parseISO(a.created_at).getTime()));
         toast({
           title: 'অর্ডার সফল হয়েছে',
           description: result.message,
         });
         setIsModalOpen(false);
+        fetchBalance(); // Refresh balance after order
       } else {
         throw new Error(result.message || 'অর্ডার তৈরি করতে সমস্যা হয়েছে।');
       }
@@ -211,6 +243,7 @@ export default function CourierPage() {
           <TableHeader>
             <TableRow>
               <TableHead>ইনভয়েস/ট্র্যাকিং</TableHead>
+              <TableHead>তারিখ</TableHead>
               <TableHead>প্রাপক</TableHead>
               <TableHead>COD</TableHead>
               <TableHead>স্ট্যাটাস</TableHead>
@@ -218,7 +251,16 @@ export default function CourierPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {consignments.length > 0 ? (
+            {isLoading ? (
+                 <TableRow>
+                    <TableCell colSpan={6} className="h-24 text-center">
+                        <div className="flex justify-center items-center">
+                            <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                            <p className="ml-2">কুরিয়ারের তথ্য লোড হচ্ছে...</p>
+                        </div>
+                    </TableCell>
+                </TableRow>
+            ) : consignments.length > 0 ? (
               consignments.map((c) => {
                 const StatusIcon = statusIconMap[c.status] || BadgeHelp;
                 return (
@@ -228,19 +270,22 @@ export default function CourierPage() {
                             <p className="text-xs text-muted-foreground">{c.tracking_code}</p>
                         </TableCell>
                         <TableCell>
+                          {format(parseISO(c.created_at), "dd MMM, yy", { locale: bn })}
+                        </TableCell>
+                        <TableCell>
                             <p className="font-medium">{c.recipient_name}</p>
                             <p className="text-xs text-muted-foreground">{c.recipient_phone}</p>
                         </TableCell>
                         <TableCell>{formatCurrency(c.cod_amount)}</TableCell>
                         <TableCell>
-                            <Badge variant={statusVariantMap[c.status] || 'secondary'}>
+                            <Badge variant={statusVariantMap[c.status] || 'secondary'} className="capitalize">
                                 <StatusIcon className="h-3 w-3 mr-1.5" />
-                                {c.status}
+                                {c.status.replace(/_/g, ' ')}
                             </Badge>
                         </TableCell>
                         <TableCell className="text-right">
-                        <Button variant="ghost" size="icon" onClick={() => handleRefreshStatus(c.invoice)}>
-                            <RefreshCw className="h-4 w-4 text-blue-600" />
+                        <Button variant="ghost" size="icon" onClick={() => handleRefreshStatus(c)} disabled={isRefreshingStatus === c.consignment_id}>
+                            <RefreshCw className={cn("h-4 w-4 text-blue-600", isRefreshingStatus === c.consignment_id && 'animate-spin')} />
                         </Button>
                         </TableCell>
                     </TableRow>
@@ -248,7 +293,7 @@ export default function CourierPage() {
               })
             ) : (
               <TableRow>
-                <TableCell colSpan={5} className="h-24 text-center">
+                <TableCell colSpan={6} className="h-24 text-center">
                   এখনো কোনো অর্ডার তৈরি করা হয়নি।
                 </TableCell>
               </TableRow>
@@ -278,7 +323,7 @@ export default function CourierPage() {
                   <Button type="button" variant="outline">বাতিল</Button>
                 </DialogClose>
                 <Button type="submit" disabled={form.formState.isSubmitting}>
-                  {form.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  {form.formState.isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Truck className="mr-2 h-4 w-4" />}
                   অর্ডার তৈরি করুন
                 </Button>
               </DialogFooter>
