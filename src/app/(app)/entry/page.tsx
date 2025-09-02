@@ -30,11 +30,11 @@ import { useSearchParams } from "next/navigation";
 import {
   Loader2,
   CalendarIcon,
-  Camera,
   Brain,
   ClipboardEdit,
   Lightbulb,
   Save,
+  UserPlus,
 } from "lucide-react";
 import {
   Popover,
@@ -338,16 +338,9 @@ function PatientEntryPageContent() {
           <PageHeaderCard
             title="নতুন রোগী নিবন্ধন"
             description="নতুন রোগী নিবন্ধন করতে নিচের বিবরণগুলি পূরণ করুন।"
-            className="bg-gradient-to-br from-blue-100 to-violet-200 dark:from-blue-900/30 dark:to-violet-900/30"
+            className="bg-gradient-to-br from-violet-100 to-indigo-200 dark:from-violet-900/30 dark:to-indigo-900/30"
             actions={
-              <Button
-                type="button"
-                onClick={() => setIsCameraModalOpen(true)}
-                className="h-10 w-10 md:h-12 md:w-12 p-0 rounded-full bg-gradient-to-br from-green-400 to-teal-500 text-white shadow-lg transition-transform duration-300 hover:shadow-xl hover:-translate-y-0.5"
-                aria-label="ফর্ম স্ক্যান করুন"
-              >
-                <Camera className="h-4 w-4 md:h-5 md:w-5" />
-              </Button>
+              <UserPlus className="h-8 w-8 text-primary" />
             }
           />
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

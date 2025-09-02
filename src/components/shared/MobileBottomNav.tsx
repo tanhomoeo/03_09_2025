@@ -53,7 +53,7 @@ export function MobileBottomNav() {
 
   return (
     <>
-      <div className="md:hidden fixed bottom-0 left-0 z-50 w-full h-16 bg-background/70 border-t border-border/20 backdrop-blur-lg">
+      <div className="md:hidden fixed bottom-0 left-0 z-50 w-full h-16 bg-gradient-to-br from-green-100 to-lime-200 border-t border-border/20 backdrop-blur-lg">
         <div className="grid h-full max-w-lg grid-cols-5 mx-auto font-medium">
           {navItems.map((item) => {
             if (item.href === 'SCAN_ACTION') {
