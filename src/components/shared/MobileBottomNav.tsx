@@ -62,7 +62,7 @@ export function MobileBottomNav() {
                   <button
                     onClick={() => setIsCameraModalOpen(true)}
                     type="button"
-                    className="flex items-center justify-center w-16 h-16 bg-primary rounded-full text-primary-foreground shadow-lg hover:bg-primary/90 focus:ring-4 focus:outline-none focus:ring-primary/50"
+                    className="flex items-center justify-center w-16 h-16 bg-blue-600 rounded-full text-primary-foreground shadow-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800"
                     aria-label={item.label}
                   >
                     <Camera className="w-6 h-6" />
@@ -82,8 +82,8 @@ export function MobileBottomNav() {
                   isActive ? 'text-primary' : 'text-muted-foreground'
                 )}
               >
-                <item.icon className="w-5 h-5 mb-1" />
-                <span className="text-[11px]">{item.label}</span>
+                <item.icon className="w-6 h-6" />
+                <span className="sr-only">{item.label}</span>
               </Link>
             );
           })}
