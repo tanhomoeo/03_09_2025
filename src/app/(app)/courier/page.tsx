@@ -1,6 +1,6 @@
 
 'use client';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -34,8 +34,8 @@ import {
 } from '@/components/ui/form';
 import { PageHeaderCard } from '@/components/shared/PageHeaderCard';
 import { placeSteadfastOrder, getCurrentBalance, getDeliveryStatusByInvoice } from '@/lib/steadfastService';
-import { addConsignment, getConsignments, updateConsignmentStatus, formatCurrency } from '@/lib/firestoreService';
-import type { SteadfastOrder, SteadfastConsignment, SteadfastBalance } from '@/lib/types';
+import { addConsignment, getConsignments, updateConsignmentStatus, formatCurrency, getPatients } from '@/lib/firestoreService';
+import type { SteadfastOrder, SteadfastConsignment, SteadfastBalance, Patient } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import {
   Truck,
@@ -52,7 +52,9 @@ import {
   MapPin,
   FileText,
   MessageSquare,
+  Search,
 } from 'lucide-react';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
@@ -96,6 +98,9 @@ export default function CourierPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingBalance, setIsLoadingBalance] = useState(false);
   const [isRefreshingStatus, setIsRefreshingStatus] = useState<number | null>(null);
+  
+  const [allPatients, setAllPatients] = useState<Patient[]>([]);
+  const [patientSearchQuery, setPatientSearchQuery] = useState('');
 
   const form = useForm<OrderFormValues>({
     resolver: zodResolver(orderSchema),
@@ -112,12 +117,14 @@ export default function CourierPage() {
   const fetchCourierData = useCallback(async () => {
     setIsLoading(true);
     try {
-      const [balanceData, consignmentsData] = await Promise.all([
+      const [balanceData, consignmentsData, patientsData] = await Promise.all([
           getCurrentBalance(),
-          getConsignments()
+          getConsignments(),
+          getPatients()
       ]);
       setBalance(balanceData);
       setConsignments(consignmentsData);
+      setAllPatients(patientsData);
     } catch (error) {
       toast({
         title: 'তথ্য লোড করতে সমস্যা',
@@ -159,6 +166,7 @@ export default function CourierPage() {
       cod_amount: 0,
       note: '',
     });
+    setPatientSearchQuery('');
     setIsModalOpen(true);
   };
   
@@ -186,6 +194,28 @@ export default function CourierPage() {
       setIsRefreshingStatus(null);
     }
   }, [toast]);
+  
+  const searchedPatients = useMemo(() => {
+    if (!patientSearchQuery) return [];
+    const lowerCaseQuery = patientSearchQuery.toLowerCase();
+    return allPatients.filter(p => 
+      p.name.toLowerCase().includes(lowerCaseQuery) ||
+      p.phone.includes(patientSearchQuery) ||
+      (p.diaryNumber && p.diaryNumber.toLowerCase().includes(lowerCaseQuery))
+    );
+  }, [patientSearchQuery, allPatients]);
+  
+  const handleSelectPatient = (patient: Patient) => {
+    const fullAddress = [patient.villageUnion, patient.thanaUpazila, patient.district].filter(Boolean).join(', ');
+    form.setValue('recipient_name', patient.name);
+    form.setValue('recipient_phone', patient.phone);
+    form.setValue('recipient_address', fullAddress);
+    if (patient.diaryNumber) {
+        form.setValue('invoice', patient.diaryNumber);
+    }
+    setPatientSearchQuery('');
+  };
+
 
   const onSubmit: SubmitHandler<OrderFormValues> = async (data) => {
     try {
@@ -200,7 +230,6 @@ export default function CourierPage() {
         const newConsignment = result.consignment;
         await addConsignment(newConsignment);
         
-        // Add to local state instead of re-fetching everything
         setConsignments(prev => [newConsignment, ...prev].sort((a,b) => parseISO(b.created_at).getTime() - parseISO(a.created_at).getTime()));
         
         toast({
@@ -208,7 +237,7 @@ export default function CourierPage() {
           description: result.message,
         });
         setIsModalOpen(false);
-        fetchBalance(); // Refresh balance after order
+        fetchBalance();
       } else {
         throw new Error(result.message || 'অর্ডার তৈরি করতে সমস্যা হয়েছে।');
       }
@@ -326,16 +355,41 @@ export default function CourierPage() {
       </div>
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-2xl">
           <DialogHeader>
             <DialogTitle className="font-headline flex items-center gap-2">
               <Truck className="h-6 w-6 text-primary"/>
               নতুন কুরিয়ার অর্ডার
             </DialogTitle>
             <DialogDescription>
-              অনুগ্রহ করে পার্সেলের জন্য প্রয়োজনীয় তথ্য দিন। এই তথ্য Steadfast কুরিয়ারে পাঠানো হবে।
+              প্রথমে রোগী অনুসন্ধান করুন অথবা সরাসরি তথ্য পূরণ করুন।
             </DialogDescription>
           </DialogHeader>
+          
+           <Command className="rounded-lg border shadow-md bg-transparent">
+              <CommandInput 
+                placeholder="রোগী অনুসন্ধান করুন (নাম, ফোন, ডায়েরি নং...)" 
+                value={patientSearchQuery}
+                onValueChange={setPatientSearchQuery}
+              />
+              <CommandList>
+                {patientSearchQuery.length > 0 && searchedPatients.length === 0 && (
+                   <CommandEmpty>কোনো রোগী পাওয়া যায়নি।</CommandEmpty>
+                )}
+                {searchedPatients.length > 0 && (
+                  <CommandGroup heading="অনুসন্ধানের ফলাফল">
+                    {searchedPatients.map((p) => (
+                      <CommandItem key={p.id} onSelect={() => handleSelectPatient(p)} className="cursor-pointer">
+                        <User className="mr-2 h-4 w-4" />
+                        <span>{p.name} - {p.phone}</span>
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                )}
+              </CommandList>
+            </Command>
+
+
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
