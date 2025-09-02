@@ -215,7 +215,7 @@ export default function CourierPage() {
     return allPatients.filter(p => 
       p.name.toLowerCase().includes(lowerCaseQuery) ||
       p.phone.includes(patientSearchQuery) ||
-      (p.diaryNumber && p.diaryNumber.toLowerCase().includes(lowerCaseQuery))
+      (p.diaryNumber && p.diaryNumber.toString().toLowerCase().includes(lowerCaseQuery))
     );
   }, [patientSearchQuery, allPatients]);
   
