@@ -472,9 +472,7 @@ export default function PersonalExpensesPage() {
                 )}
               />
               <DialogFooter>
-                <DialogClose asChild>
-                  <Button type="button" variant="outline">বাতিল</Button>
-                </DialogClose>
+                <DialogClose asChild><Button type="button" variant="outline">বাতিল</Button></DialogClose>
                 <Button type="submit" disabled={form.formState.isSubmitting}>
                   {form.formState.isSubmitting && (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />

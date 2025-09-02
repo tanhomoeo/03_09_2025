@@ -169,9 +169,7 @@ export function PaymentSlipModal({ slip, isOpen, onClose }: PaymentSlipModalProp
 
         <DialogFooter className="mt-6 pt-4 border-t">
           <Button variant="outline" onClick={handlePrint}><Printer className="mr-2 h-4 w-4" /> Print Slip</Button>
-          <DialogClose asChild>
-            <Button variant="default">Close</Button>
-          </DialogClose>
+          <DialogClose asChild><Button variant="default">Close</Button></DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>

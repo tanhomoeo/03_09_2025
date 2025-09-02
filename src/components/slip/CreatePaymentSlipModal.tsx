@@ -221,9 +221,7 @@ export function CreatePaymentSlipModal({ patient, isOpen, onClose, onSlipCreated
               )}
             />
             <DialogFooter className="pt-4">
-              <DialogClose asChild>
-                <Button type="button" variant="outline" onClick={() => onClose(false)}>বাতিল</Button>
-              </DialogClose>
+              <DialogClose asChild><Button type="button" variant="outline" onClick={() => onClose(false)}>বাতিল</Button></DialogClose>
               <Button type="submit" disabled={form.formState.isSubmitting}>
                 {form.formState.isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Receipt className="mr-2 h-4 w-4" />}
                 স্লিপ তৈরি করুন
@@ -235,5 +233,3 @@ export function CreatePaymentSlipModal({ patient, isOpen, onClose, onSlipCreated
     </Dialog>
   );
 }
-
-    
