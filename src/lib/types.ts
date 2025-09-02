@@ -1,5 +1,6 @@
 
 
+
 export interface CategorizedCaseNotes {
   physicalSymptoms?: {
     general?: string;
@@ -230,4 +231,26 @@ export interface SteadfastStatus {
 export interface SteadfastBalance {
     status: number;
     current_balance: number;
+}
+
+// Types for Steadfast Webhook
+export type DeliveryStatus = 'pending' | 'delivered' | 'partial_delivered' | 'cancelled' | 'unknown' | 'in_review';
+
+export interface DeliveryStatusPayload {
+    notification_type: 'delivery_status';
+    consignment_id: number;
+    invoice: string;
+    cod_amount: number;
+    status: DeliveryStatus | string; // Use string as a fallback for other statuses from doc
+    delivery_charge: number;
+    tracking_message: string;
+    updated_at: string; // YYYY-MM-DD HH:MM:SS
+}
+
+export interface TrackingUpdatePayload {
+    notification_type: 'tracking_update';
+    consignment_id: number;
+    invoice: string;
+    tracking_message: string;
+    updated_at: string; // YYYY-MM-DD HH:MM:SS
 }
