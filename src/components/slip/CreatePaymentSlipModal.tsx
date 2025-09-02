@@ -90,6 +90,7 @@ export function CreatePaymentSlipModal({ patient, isOpen, onClose, onSlipCreated
         purpose: data.purpose,
         paymentMethod: data.amount > 0 ? data.paymentMethod : undefined,
         receivedBy: data.receivedBy,
+        medicineDeliveryMethod: data.medicineDeliveryMethod,
       };
 
       if (visitId && data.medicineDeliveryMethod) {
@@ -185,28 +186,26 @@ export function CreatePaymentSlipModal({ patient, isOpen, onClose, onSlipCreated
               )}
             />
             
-            {visitId && (
-              <FormField
-                control={form.control}
-                name="medicineDeliveryMethod"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>ঔষধ প্রদানের মাধ্যম</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value || 'direct'} defaultValue="direct">
-                      <FormControl>
-                        <SelectTrigger><SelectValue placeholder="মাধ্যম নির্বাচন করুন" /></SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {medicineDeliveryMethodOptions.map(option => (
-                          <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
+            <FormField
+              control={form.control}
+              name="medicineDeliveryMethod"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>ঔষধ প্রদানের মাধ্যম (ঐচ্ছিক)</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value || 'direct'} defaultValue="direct">
+                    <FormControl>
+                      <SelectTrigger><SelectValue placeholder="মাধ্যম নির্বাচন করুন" /></SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {medicineDeliveryMethodOptions.map(option => (
+                        <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <FormField
               control={form.control}
@@ -226,11 +225,7 @@ export function CreatePaymentSlipModal({ patient, isOpen, onClose, onSlipCreated
                 <Button type="button" variant="outline" onClick={() => onClose(false)}>বাতিল</Button>
               </DialogClose>
               <Button type="submit" disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : (
-                  <Receipt className="mr-2 h-4 w-4" />
-                )}
+                {form.formState.isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Receipt className="mr-2 h-4 w-4" />}
                 স্লিপ তৈরি করুন
               </Button>
             </DialogFooter>
@@ -240,3 +235,5 @@ export function CreatePaymentSlipModal({ patient, isOpen, onClose, onSlipCreated
     </Dialog>
   );
 }
+
+    

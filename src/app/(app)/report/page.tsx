@@ -20,10 +20,11 @@ import { useToast } from '@/hooks/use-toast';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 
 interface ReportData {
-  visit: Visit;
+  visit?: Visit;
   patient?: Patient;
   slips: PaymentSlip[];
   totalAmountFromSlips: number;
+  deliveryMethod?: 'direct' | 'courier';
 }
 
 type ReportType = 'daily' | 'weekly' | 'monthly' | 'custom';
@@ -94,6 +95,7 @@ export default function EnhancedReportPage() {
             getPatients(),
             getPaymentSlips()
         ]);
+        const patientsMap = new Map(allPatients.map(p => [p.id, p]));
 
         let currentReportStartDate: Date | null = null;
         let currentReportEndDate: Date | null = null;
@@ -132,40 +134,72 @@ export default function EnhancedReportPage() {
             return isValid(visitDate) && visitDate >= finalStartDate && visitDate <= finalEndDate;
         });
 
-        let processedVisits = dateFilteredVisits;
+        const dateFilteredSlips = allSlips.filter(slip => {
+          const slipDate = new Date(slip.date);
+          return isValid(slipDate) && slipDate >= finalStartDate && slipDate <= finalEndDate;
+        })
 
-        if (courierDeliveryOnly) {
-          processedVisits = processedVisits.filter(visit => visit.medicineDeliveryMethod === 'courier');
-        }
+        let itemsMap = new Map<string, ReportData>();
 
-        const data: ReportData[] = processedVisits.map(visit => {
-          const patient = allPatients.find(p => p.id === visit.patientId);
-          let visitSlips = allSlips.filter(s => {
-            const slipDate = new Date(s.date);
-            return s.visitId === visit.id && 
-                   isValid(slipDate) &&
-                   slipDate >= finalStartDate && 
-                   slipDate <= finalEndDate;
-          });
-
-          if (paymentMethodFilter !== 'all') {
-            visitSlips = visitSlips.filter(s => s.paymentMethod === paymentMethodFilter);
-          }
-
-          const totalAmountFromSlips = visitSlips.reduce((acc, slip) => acc + slip.amount, 0);
-
-          return { visit, patient, slips: visitSlips, totalAmountFromSlips };
-        }).filter(item => { 
-            if (paymentMethodFilter !== 'all') {
-                return item.slips.length > 0; 
-            }
-            return true; 
+        // Process visits
+        dateFilteredVisits.forEach(visit => {
+            itemsMap.set(visit.id, {
+                visit: visit,
+                patient: patientsMap.get(visit.patientId),
+                slips: [],
+                totalAmountFromSlips: 0,
+                deliveryMethod: visit.medicineDeliveryMethod
+            });
         });
 
-        setReportData(data.sort((a,b) => new Date(a.visit.visitDate).getTime() - new Date(b.visit.visitDate).getTime() || (a.patient?.name || '').localeCompare(b.patient?.name || '', 'bn')));
+        // Process slips and associate with visits or treat as standalone
+        dateFilteredSlips.forEach(slip => {
+            if (slip.visitId && itemsMap.has(slip.visitId)) {
+                itemsMap.get(slip.visitId)?.slips.push(slip);
+            } else {
+                 const key = `slip_${slip.id}`;
+                 if (!itemsMap.has(key)) {
+                     itemsMap.set(key, {
+                        slips: [],
+                        totalAmountFromSlips: 0,
+                        patient: patientsMap.get(slip.patientId),
+                        deliveryMethod: slip.medicineDeliveryMethod,
+                     });
+                 }
+                 itemsMap.get(key)?.slips.push(slip);
+            }
+        });
+        
+        let reportItems = Array.from(itemsMap.values());
+        
+        // Calculate total amounts and apply filters
+        reportItems.forEach(item => {
+            if (paymentMethodFilter !== 'all') {
+                item.slips = item.slips.filter(s => s.paymentMethod === paymentMethodFilter);
+            }
+            item.totalAmountFromSlips = item.slips.reduce((acc, slip) => acc + slip.amount, 0);
+        });
+        
+        // Filter out items that don't match after slip filtering
+        reportItems = reportItems.filter(item => {
+            // Keep if it has a visit or if it has slips (for slip-only entries)
+            return item.visit || item.slips.length > 0;
+        });
 
-        const totalRevenue = data.reduce((acc, item) => acc + item.totalAmountFromSlips, 0);
-        setSummary({ totalVisits: data.length, totalRevenue });
+        if (courierDeliveryOnly) {
+          reportItems = reportItems.filter(item => item.deliveryMethod === 'courier');
+        }
+
+        setReportData(reportItems.sort((a,b) => {
+            const dateA = a.visit?.visitDate || a.slips[0]?.date || 0;
+            const dateB = b.visit?.visitDate || b.slips[0]?.date || 0;
+            return new Date(dateA).getTime() - new Date(dateB).getTime() || (a.patient?.name || '').localeCompare(b.patient?.name || '', 'bn')
+        }));
+
+        const totalRevenue = reportItems.reduce((acc, item) => acc + item.totalAmountFromSlips, 0);
+        const totalVisits = reportItems.filter(item => item.visit).length;
+        setSummary({ totalVisits: totalVisits, totalRevenue });
+
     } catch (error) {
         console.error("Error generating report:", error);
         toast({ title: "রিপোর্ট তৈরি করতে সমস্যা", description: "ডেটা আনতে ত্রুটি হয়েছে।", variant: "destructive" });
@@ -387,13 +421,13 @@ export default function EnhancedReportPage() {
                 <TableBody>
                   {reportData.length > 0 ? (
                     reportData.map((item, index) => (
-                      <TableRow key={item.visit.id}>
+                      <TableRow key={item.visit?.id || item.slips[0].id}>
                         <TableCell className="text-center">{index + 1}</TableCell>
-                        <TableCell>{format(new Date(item.visit.visitDate), "dd/MM/yy", { locale: bn })}</TableCell>
+                        <TableCell>{format(new Date(item.visit?.visitDate || item.slips[0].date), "dd/MM/yy", { locale: bn })}</TableCell>
                         <TableCell className="font-medium">{item.patient?.name || 'N/A'}</TableCell>
                         <TableCell>{item.patient?.diaryNumber || 'N/A'}</TableCell>
                         <TableCell>{item.patient?.phone || 'N/A'}</TableCell>
-                        <TableCell className="print:max-w-[120px] print:whitespace-normal print:truncate">{item.visit.symptoms || item.slips.map(s => s.purpose).join(', ') || 'N/A'}</TableCell>
+                        <TableCell className="print:max-w-[120px] print:whitespace-normal print:truncate">{item.visit?.symptoms || item.slips.map(s => s.purpose).join(', ') || 'N/A'}</TableCell>
                         <TableCell className="print:max-w-[70px] print:whitespace-normal print:truncate">
                           {item.slips.length > 0 ? item.slips.map(s => getPaymentMethodLabel(s.paymentMethod)).filter((v, i, a) => a.indexOf(v) === i).join(', ') || '-' : '-'}
                         </TableCell>
@@ -457,13 +491,13 @@ export default function EnhancedReportPage() {
                 <TableBody>
                   {reportData.length > 0 ? (
                     reportData.map((item, index) => (
-                      <TableRow key={item.visit.id} className="hover:bg-muted/50">
+                      <TableRow key={item.visit?.id || item.slips[0].id} className="hover:bg-muted/50">
                         <TableCell className="text-center">{index + 1}</TableCell>
-                        <TableCell>{formatDate(item.visit.visitDate)}</TableCell>
+                        <TableCell>{formatDate(item.visit?.visitDate || item.slips[0].date)}</TableCell>
                         <TableCell className="font-medium">{item.patient?.name || 'N/A'}</TableCell>
                         <TableCell>{item.patient?.diaryNumber || 'N/A'}</TableCell>
                         <TableCell>{item.patient?.phone || 'N/A'}</TableCell>
-                        <TableCell className="max-w-[150px] truncate">{item.visit.symptoms || item.slips.map(s => s.purpose).join(', ') || 'N/A'}</TableCell>
+                        <TableCell className="max-w-[150px] truncate">{item.visit?.symptoms || item.slips.map(s => s.purpose).join(', ') || 'N/A'}</TableCell>
                          <TableCell className="max-w-[100px] truncate">
                            {item.slips.length > 0 ?
                               item.slips.map(s => getPaymentMethodLabel(s.paymentMethod)).filter((v, i, a) => a.indexOf(v) === i).join(', ') || '-' : '-'

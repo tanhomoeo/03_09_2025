@@ -126,6 +126,11 @@ export default function CourierPage() {
   
   useEffect(() => {
     fetchCourierData();
+    const handleFirestoreChange = () => fetchCourierData();
+    window.addEventListener('firestoreDataChange', handleFirestoreChange);
+    return () => {
+      window.removeEventListener('firestoreDataChange', handleFirestoreChange);
+    };
   }, [fetchCourierData]);
   
   const fetchBalance = useCallback(async () => {
@@ -196,6 +201,7 @@ export default function CourierPage() {
         });
         setIsModalOpen(false);
         fetchBalance(); // Refresh balance after order
+        window.dispatchEvent(new CustomEvent('firestoreDataChange'));
       } else {
         throw new Error(result.message || 'অর্ডার তৈরি করতে সমস্যা হয়েছে।');
       }
@@ -334,3 +340,5 @@ export default function CourierPage() {
     </div>
   );
 }
+
+    

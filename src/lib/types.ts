@@ -117,6 +117,7 @@ export interface PaymentSlip {
   purpose: string;
   receivedBy?: string;
   paymentMethod?: PaymentMethod;
+  medicineDeliveryMethod?: MedicineDeliveryMethod;
   createdAt: string;
 }
 
@@ -253,3 +254,5 @@ export interface TrackingUpdatePayload {
     tracking_message: string;
     updated_at: string; // YYYY-MM-DD HH:MM:SS
 }
+
+    
