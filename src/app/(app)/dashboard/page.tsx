@@ -275,7 +275,7 @@ export default function DashboardPage() {
               onClick={handleRevenueClick}
               className="h-8 rounded-full text-xs font-bold backdrop-blur-lg transition-all duration-300 ease-in-out px-3 bg-gradient-to-r from-blue-100 to-indigo-200 text-blue-800 dark:from-blue-900/40 dark:to-indigo-900/40 dark:text-blue-200 shadow-sm"
             >
-                <div className="relative h-5 w-24 overflow-hidden">
+                <div className="relative h-5 overflow-hidden">
                     <div className={cn("absolute inset-0 flex items-center justify-center transition-transform duration-500", showRevenue ? '-translate-y-full' : 'translate-y-0')}>
                         ব্যালেন্স দেখুন
                     </div>
