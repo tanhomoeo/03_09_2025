@@ -316,27 +316,28 @@ export default function DashboardPage() {
       <div className="hide-on-print flex justify-center my-4 md:my-0">
         <Popover open={isSearchOpen} onOpenChange={setIsSearchOpen}>
             <PopoverTrigger asChild>
-                <Button 
-                  variant="outline" 
-                  className="w-full max-w-sm lg:max-w-md h-11 md:h-12 text-sm md:text-base pl-4 pr-12 rounded-full bg-card/80 border-2 border-transparent shadow-lg backdrop-blur-sm hover:bg-muted focus-visible:ring-transparent focus-visible:ring-offset-0 justify-start"
+                <div 
+                  className="relative w-full max-w-sm lg:max-w-md"
                   onClick={() => setIsSearchOpen(true)}
                 >
-                  <SearchIcon className="mr-2 h-4 w-4 text-muted-foreground" />
-                  <span className="text-muted-foreground">রোগী অনুসন্ধান করুন (নাম, ডায়েরি নং, ফোন...)</span>
-                </Button>
+                  <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10" />
+                  <Input
+                    placeholder="রোগী অনুসন্ধান করুন (নাম, ডায়েরি নং, ফোন...)"
+                    className="w-full h-11 md:h-12 text-sm md:text-base pl-10 pr-4 rounded-full bg-card/80 border-2 border-transparent shadow-lg backdrop-blur-sm hover:bg-muted focus-visible:ring-primary focus-visible:ring-offset-2"
+                    value={dashboardSearchTerm}
+                    onChange={(e) => {
+                      if (!isSearchOpen) setIsSearchOpen(true);
+                      setDashboardSearchTerm(e.target.value);
+                    }}
+                  />
+                </div>
             </PopoverTrigger>
             <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
-              <Command>
-                <CommandInput 
-                  placeholder="রোগী খুঁজুন..."
-                  value={dashboardSearchTerm}
-                  onValueChange={setDashboardSearchTerm}
-                />
+              <Command shouldFilter={false}>
                 <CommandList>
-                  {dashboardSearchTerm.length > 0 && searchedPatients.length === 0 && (
+                  {searchedPatients.length === 0 && dashboardSearchTerm.length > 0 ? (
                     <CommandEmpty>কোনো রোগী পাওয়া যায়নি।</CommandEmpty>
-                  )}
-                  {searchedPatients.length > 0 && (
+                  ) : (
                     <CommandGroup heading="অনুসন্ধানের ফলাফল">
                       {searchedPatients.map((p) => (
                         <CommandItem key={p.id} onSelect={() => handlePatientSelect(p)} className="cursor-pointer">
