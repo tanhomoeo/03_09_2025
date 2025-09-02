@@ -264,7 +264,7 @@ export default function DashboardPage() {
     <TooltipProvider>
     <div className="space-y-6 md:space-y-8">
       
-       <div className="md:hidden hide-on-print py-3 px-4 bg-background/70 backdrop-blur-lg shadow-sm sticky top-0 z-40 -mx-4 sm:-mx-6">
+       <div className="md:hidden hide-on-print py-3 bg-background/70 backdrop-blur-lg shadow-sm sticky top-0 z-40">
         <div className="flex items-center justify-between">
            <button type="button" onClick={toggleSidebar} className="flex items-center gap-3 flex-shrink-0 -ml-1">
               <div className="p-1 bg-white/50 dark:bg-black/20 rounded-full shadow-md">
@@ -300,7 +300,7 @@ export default function DashboardPage() {
         </div>
        </div>
 
-      <div className="hide-on-print flex justify-center my-4 md:my-0 px-4">
+      <div className="hide-on-print flex justify-center my-4 md:my-0">
         <div className="relative w-full max-w-sm lg:max-w-md focus-within:max-w-xl transition-all duration-300 ease-in-out">
             <form onSubmit={handleDashboardSearch} className="relative w-full">
                 <Input
@@ -323,7 +323,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="hide-on-print px-4">
+      <div className="hide-on-print">
         <h2 className="text-lg md:text-xl font-semibold font-headline mb-3">দ্রুত কার্যক্রম</h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
            <QuickActionCard
@@ -361,7 +361,7 @@ export default function DashboardPage() {
         </div>
       </div>
       
-       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 hide-on-print px-4">
+       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 hide-on-print">
         <ActivityCard
           title="দৈনিক কার্যকলাপ"
           icon={CalendarDays}
@@ -387,7 +387,7 @@ export default function DashboardPage() {
         />
       </div>
 
-      <Card className="dashboard-appointments-card hide-on-print hidden md:block mx-4">
+      <Card className="dashboard-appointments-card hide-on-print hidden md:block">
         <CardHeader className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
           <div>
             <CardTitle className="font-headline text-lg md:text-xl">আজকের সাক্ষাৎকার</CardTitle>

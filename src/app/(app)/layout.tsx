@@ -39,7 +39,7 @@ export default function AppLayout({
     <SidebarProvider>
       <AppSidebar />
       <main className={cn(
-        "flex-1 max-w-6xl mx-auto w-full transition-all duration-300 ease-in-out",
+        "flex-1 w-full transition-all duration-300 ease-in-out px-4 sm:px-6",
         "peer-data-[state=open]:md:ml-[16rem] peer-data-[state=closed]:md:ml-[4.5rem]"
       )}>
         {children}
