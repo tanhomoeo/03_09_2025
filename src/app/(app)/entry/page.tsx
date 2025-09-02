@@ -34,6 +34,7 @@ import {
   ClipboardEdit,
   Lightbulb,
   Save,
+  UserPlus,
 } from "lucide-react";
 import {
   Popover,
@@ -697,8 +698,6 @@ function PatientEntryPageContent() {
                       <CategorizedSymptomsDisplay
                         symptoms={categorizationResult.categorizedNotes}
                         labels={CATEGORY_LABELS}
-                        showNumbers={true}
-                        highlightedSymptoms={categorizationResult.keySymptoms}
                       />
                     </div>
                   )}

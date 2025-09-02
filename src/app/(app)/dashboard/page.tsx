@@ -19,6 +19,7 @@ import { cn } from '@/lib/utils';
 import QuickActionCard from '@/components/dashboard/QuickActionCard';
 import ActivityCard from '@/components/dashboard/ActivityCard';
 import { useSidebar } from '@/components/ui/sidebar';
+import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 
 interface AppointmentDisplayItem {
   visitId: string;

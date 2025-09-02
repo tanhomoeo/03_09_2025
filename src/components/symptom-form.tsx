@@ -9,11 +9,11 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
  
-const _symptomFormSchema = z.object({
+const symptomFormSchema = z.object({
   symptoms: z.string().min(10, { message: "অনুগ্রহ করে লক্ষণগুলি কমপক্ষে ১০টি অক্ষরে বর্ণনা করুন।" }),
 });
 
-export type SymptomFormValues = z.infer<typeof _symptomFormSchema>;
+export type SymptomFormValues = z.infer<typeof symptomFormSchema>;
 
 interface SymptomFormProps {
   form: UseFormReturn<SymptomFormValues>;

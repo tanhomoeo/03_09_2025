@@ -59,6 +59,7 @@ export interface Patient {
   gender?: PatientGender;
   occupation?: string;
   guardianName?: string;
+  guardianRelation?: string;
   district?: string;
   thanaUpazila?: string;
   villageUnion?: string;
