@@ -306,21 +306,21 @@ export default function DashboardPage() {
             <form
                 onSubmit={handleSearchSubmit}
                 className={cn(
-                'relative w-full max-w-sm lg:max-w-md transition-all duration-300 ease-in-out',
-                isSearchFocused && 'max-w-lg lg:max-w-xl'
+                'relative w-full max-w-[280px] lg:max-w-xs transition-all duration-300 ease-in-out',
+                isSearchFocused && 'max-w-md lg:max-w-lg'
                 )}
             >
                 <Input
                     name="search"
                     type="search"
-                    placeholder="রোগী অনুসন্ধান করুন (নাম, ডায়েরি নং, ফোন...)"
-                    className="w-full h-12 text-sm pl-5 pr-14 rounded-full bg-card/80 border-2 border-transparent shadow-lg backdrop-blur-sm focus:outline-none"
+                    placeholder="রোগী অনুসন্ধান করুন (নাম, ডায়েরি নং...)"
+                    className="w-full h-11 text-sm pl-4 pr-12 rounded-full bg-card/80 border-2 border-transparent shadow-lg backdrop-blur-sm focus:outline-none"
                     onFocus={() => setIsSearchFocused(true)}
                     onBlur={() => setIsSearchFocused(false)}
                 />
                 <button
                 type="submit"
-                className="absolute inset-y-0 right-0 flex items-center justify-center w-12 h-12 rounded-full bg-blue-600 text-primary-foreground shadow-md transition-transform hover:bg-blue-700 active:scale-95"
+                className="absolute inset-y-0 right-0 flex items-center justify-center w-11 h-11 rounded-full bg-blue-600 text-primary-foreground shadow-md transition-transform hover:bg-blue-700 active:scale-95"
                 >
                 <SearchIcon className="h-5 w-5" />
                 </button>
@@ -365,7 +365,7 @@ export default function DashboardPage() {
         </div>
       </div>
       
-      <Card className="dashboard-appointments-card">
+       <Card className="dashboard-appointments-card">
         <CardHeader className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2 hide-on-print">
           <div>
             <CardTitle className="font-headline text-lg md:text-xl">আজকের সাক্ষাৎকার</CardTitle>
