@@ -4,7 +4,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Home, ScrollText, Settings, Camera, FileText } from 'lucide-react';
+import { Home, UserPlus, Wand2, Truck, Camera } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ROUTES } from '@/lib/constants';
 import { useToast } from '@/hooks/use-toast';
@@ -14,10 +14,10 @@ import type { ScanPatientFormModalProps } from '@/components/patient/ScanPatient
 
 const navItems = [
   { href: ROUTES.DASHBOARD, label: 'হোম', icon: Home },
-  { href: ROUTES.SLIP_SEARCH, label: 'স্লিপ', icon: ScrollText },
+  { href: ROUTES.PATIENT_ENTRY, label: 'নতুন রোগী', icon: UserPlus },
   { href: 'SCAN_ACTION', label: 'স্ক্যান', icon: Camera },
-  { href: ROUTES.DAILY_REPORT, label: 'রিপোর্ট', icon: FileText },
-  { href: ROUTES.APP_SETTINGS, label: 'সেটিংস', icon: Settings },
+  { href: ROUTES.AI_SUMMARY, label: 'AI রেপার্টরি', icon: Wand2 },
+  { href: ROUTES.COURIER, label: 'কুরিয়ার', icon: Truck },
 ];
 
 const ScanPatientFormModal = dynamic<ScanPatientFormModalProps>(

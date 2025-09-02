@@ -147,6 +147,11 @@ export default function CourierPage() {
   
   useEffect(() => {
     fetchCourierData();
+    const handleDataChange = () => fetchCourierData();
+    window.addEventListener('firestoreDataChange', handleDataChange);
+    return () => {
+      window.removeEventListener('firestoreDataChange', handleDataChange);
+    };
   }, [fetchCourierData]);
   
   const fetchBalance = useCallback(async () => {
@@ -411,11 +416,11 @@ export default function CourierPage() {
                     </Card>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <Card className="bg-muted/30 md:col-span-1">
+                        <Card className="bg-muted/30 md:col-span-2">
                              <CardHeader className="pb-4">
                                 <CardTitle className="text-base font-medium">অর্ডারের বিবরণ</CardTitle>
                             </CardHeader>
-                            <CardContent className="space-y-4">
+                            <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                <FormField control={form.control} name="invoice" render={({ field }) => (
                                     <FormItem>
                                     <FormLabel>ইনভয়েস আইডি</FormLabel>
@@ -436,11 +441,11 @@ export default function CourierPage() {
                                 )} />
                             </CardContent>
                         </Card>
-                        <Card className="bg-muted/30 md:col-span-1">
+                        <Card className="bg-muted/30 md:col-span-2">
                             <CardHeader className="pb-4">
                                 <CardTitle className="text-base font-medium">প্রাপকের বিবরণ</CardTitle>
                             </CardHeader>
-                            <CardContent className="space-y-4">
+                            <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <FormField control={form.control} name="recipient_name" render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>প্রাপকের নাম</FormLabel>

@@ -604,7 +604,7 @@ export const formatDate = (dateString?: string | Date, options?: Intl.DateTimeFo
 };
 
 export const formatCurrency = (amount: number): string => {
-  return new Intl.NumberFormat('bn-BD', { style: 'currency', currency: 'BDT' }).format(amount);
+  return new Intl.NumberFormat('bn-BD', { style: 'currency', currency: 'BDT', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(amount);
 };
 
 export const PAYMENT_METHOD_LABELS: Record<Exclude<PaymentMethod, ''>, string> = {
