@@ -39,8 +39,7 @@ const reportTypeOptions: { value: ReportType; label: string }[] = [
 const paymentMethodFilterOptions: { value: PaymentMethod | 'all'; label: string }[] = [
   { value: 'all', label: 'সকল পেমেন্ট মাধ্যম' },
   ...Object.entries(PAYMENT_METHOD_LABELS)
-    .filter(([key]) => key !== '')
-    .map(([value, label]) => ({ value: value as Exclude<PaymentMethod, '' | 'courier_medicine'>, label }))
+    .map(([value, label]) => ({ value: value as Exclude<PaymentMethod, ''>, label }))
 ];
 
 export default function EnhancedReportPage() {
@@ -574,5 +573,3 @@ export default function EnhancedReportPage() {
     </React.Fragment>
   );
 }
-
-    
