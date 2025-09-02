@@ -60,6 +60,7 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { format, parseISO } from 'date-fns';
 import { bn } from 'date-fns/locale';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 
 const orderSchema = z.object({
@@ -355,108 +356,131 @@ export default function CourierPage() {
       </div>
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="sm:max-w-2xl">
-          <DialogHeader>
-            <DialogTitle className="font-headline flex items-center gap-2">
+        <DialogContent className="sm:max-w-3xl p-0">
+          <DialogHeader className="p-6 pb-4">
+            <DialogTitle className="font-headline flex items-center gap-2 text-xl">
               <Truck className="h-6 w-6 text-primary"/>
               নতুন কুরিয়ার অর্ডার
             </DialogTitle>
             <DialogDescription>
-              প্রথমে রোগী অনুসন্ধান করুন অথবা সরাসরি তথ্য পূরণ করুন।
+              বিদ্যমান রোগী অনুসন্ধান করুন অথবা সরাসরি প্রাপকের তথ্য পূরণ করে অর্ডার তৈরি করুন।
             </DialogDescription>
           </DialogHeader>
-          
-           <Command className="rounded-lg border shadow-md bg-transparent">
-              <CommandInput 
-                placeholder="রোগী অনুসন্ধান করুন (নাম, ফোন, ডায়েরি নং...)" 
-                value={patientSearchQuery}
-                onValueChange={setPatientSearchQuery}
-              />
-              <CommandList>
-                {patientSearchQuery.length > 0 && searchedPatients.length === 0 && (
-                   <CommandEmpty>কোনো রোগী পাওয়া যায়নি।</CommandEmpty>
-                )}
-                {searchedPatients.length > 0 && (
-                  <CommandGroup heading="অনুসন্ধানের ফলাফল">
-                    {searchedPatients.map((p) => (
-                      <CommandItem key={p.id} onSelect={() => handleSelectPatient(p)} className="cursor-pointer">
-                        <User className="mr-2 h-4 w-4" />
-                        <span>{p.name} - {p.phone}</span>
-                      </CommandItem>
-                    ))}
-                  </CommandGroup>
-                )}
-              </CommandList>
-            </Command>
+          <ScrollArea className="max-h-[70vh]">
+            <div className="px-6 pb-6">
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    <Card className="bg-muted/30">
+                        <CardHeader className="pb-4">
+                            <CardTitle className="text-base font-medium">রোগী অনুসন্ধান</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <Command className="rounded-lg border shadow-sm bg-background">
+                            <CommandInput 
+                              placeholder="রোগী খুঁজুন (নাম, ফোন, ডায়েরি নং...)" 
+                              value={patientSearchQuery}
+                              onValueChange={setPatientSearchQuery}
+                            />
+                            <CommandList>
+                              {patientSearchQuery.length > 0 && searchedPatients.length === 0 && (
+                                <CommandEmpty>কোনো রোগী পাওয়া যায়নি।</CommandEmpty>
+                              )}
+                              {searchedPatients.length > 0 && (
+                                <CommandGroup heading="অনুসন্ধানের ফলাফল">
+                                  {searchedPatients.map((p) => (
+                                    <CommandItem key={p.id} onSelect={() => handleSelectPatient(p)} className="cursor-pointer">
+                                      <User className="mr-2 h-4 w-4" />
+                                      <span>{p.name} - {p.phone}</span>
+                                    </CommandItem>
+                                  ))}
+                                </CommandGroup>
+                              )}
+                            </CommandList>
+                          </Command>
+                        </CardContent>
+                    </Card>
 
-
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                 <FormField control={form.control} name="recipient_name" render={({ field }) => (
-                    <FormItem className="md:col-span-2">
-                      <FormLabel>প্রাপকের নাম</FormLabel>
-                      <InputWithIcon icon={<User className="h-4 w-4 text-muted-foreground" />}>
-                        <FormControl><Input placeholder="প্রাপকের পুরো নাম" {...field} className="pl-10" /></FormControl>
-                      </InputWithIcon>
-                      <FormMessage />
-                    </FormItem>
-                  )} />
-                  <FormField control={form.control} name="recipient_phone" render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>প্রাপকের ফোন</FormLabel>
-                       <InputWithIcon icon={<Phone className="h-4 w-4 text-muted-foreground" />}>
-                         <FormControl><Input placeholder="01XXXXXXXXX" {...field} className="pl-10" /></FormControl>
-                       </InputWithIcon>
-                      <FormMessage />
-                    </FormItem>
-                  )} />
-                   <FormField control={form.control} name="invoice" render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>ইনভয়েস আইডি</FormLabel>
-                      <InputWithIcon icon={<FileText className="h-4 w-4 text-muted-foreground" />}>
-                        <FormControl><Input placeholder="ইউনিক ইনভয়েস আইডি" {...field} className="pl-10" /></FormControl>
-                      </InputWithIcon>
-                      <FormMessage />
-                    </FormItem>
-                  )} />
-                  <FormField control={form.control} name="recipient_address" render={({ field }) => (
-                    <FormItem className="md:col-span-2">
-                      <FormLabel>প্রাপকের ঠিকানা</FormLabel>
-                       <InputWithIcon icon={<MapPin className="h-4 w-4 text-muted-foreground" />}>
-                        <FormControl><Textarea placeholder="সম্পূর্ণ ঠিকানা" {...field} className="pl-10" /></FormControl>
-                       </InputWithIcon>
-                      <FormMessage />
-                    </FormItem>
-                  )} />
-                  <FormField control={form.control} name="cod_amount" render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>ক্যাশ অন ডেলিভারি (COD)</FormLabel>
-                      <InputWithIcon icon={<span className="text-muted-foreground font-bold text-sm">৳</span>}>
-                        <FormControl><Input type="number" placeholder="0" {...field} className="pl-10" /></FormControl>
-                      </InputWithIcon>
-                      <FormMessage />
-                    </FormItem>
-                  )} />
-                   <FormField control={form.control} name="note" render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>বিশেষ নোট (ঐচ্ছিক)</FormLabel>
-                       <InputWithIcon icon={<MessageSquare className="h-4 w-4 text-muted-foreground" />}>
-                         <FormControl><Input placeholder="ডেলিভারি সংক্রান্ত নোট" {...field} className="pl-10" /></FormControl>
-                       </InputWithIcon>
-                      <FormMessage />
-                    </FormItem>
-                  )} />
-              </div>
-              <DialogFooter className="pt-4">
-                <DialogClose asChild><Button type="button" variant="outline">বাতিল</Button></DialogClose>
-                <Button type="submit" disabled={form.formState.isSubmitting} className="min-w-[150px]">
-                  {form.formState.isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Truck className="mr-2 h-4 w-4" />}
-                  অর্ডার তৈরি করুন
-                </Button>
-              </DialogFooter>
-            </form>
-          </Form>
+                  <Card className="bg-muted/30">
+                    <CardHeader className="pb-4">
+                        <CardTitle className="text-base font-medium">প্রাপকের বিবরণ</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <FormField control={form.control} name="recipient_name" render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>প্রাপকের নাম</FormLabel>
+                                <InputWithIcon icon={<User className="h-4 w-4 text-muted-foreground" />}>
+                                <FormControl><Input placeholder="প্রাপকের পুরো নাম" {...field} className="pl-10 bg-background" /></FormControl>
+                                </InputWithIcon>
+                                <FormMessage />
+                            </FormItem>
+                        )} />
+                        
+                        <FormField control={form.control} name="recipient_phone" render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>প্রাপকের ফোন</FormLabel>
+                                <InputWithIcon icon={<Phone className="h-4 w-4 text-muted-foreground" />}>
+                                <FormControl><Input placeholder="01XXXXXXXXX" {...field} className="pl-10 bg-background" /></FormControl>
+                                </InputWithIcon>
+                                <FormMessage />
+                            </FormItem>
+                        )} />
+                        <FormField control={form.control} name="recipient_address" render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>প্রাপকের ঠিকানা</FormLabel>
+                            <InputWithIcon icon={<MapPin className="h-4 w-4 text-muted-foreground" />}>
+                              <FormControl><Textarea placeholder="সম্পূর্ণ ঠিকানা" {...field} className="pl-10 bg-background" /></FormControl>
+                            </InputWithIcon>
+                            <FormMessage />
+                          </FormItem>
+                        )} />
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="bg-muted/30">
+                    <CardHeader className="pb-4">
+                        <CardTitle className="text-base font-medium">অর্ডারের বিবরণ</CardTitle>
+                    </CardHeader>
+                     <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <FormField control={form.control} name="invoice" render={({ field }) => (
+                            <FormItem>
+                            <FormLabel>ইনভয়েস আইডি</FormLabel>
+                            <InputWithIcon icon={<FileText className="h-4 w-4 text-muted-foreground" />}>
+                                <FormControl><Input placeholder="ইউনিক ইনভয়েস আইডি" {...field} className="pl-10 bg-background" /></FormControl>
+                            </InputWithIcon>
+                            <FormMessage />
+                            </FormItem>
+                        )} />
+                        <FormField control={form.control} name="cod_amount" render={({ field }) => (
+                            <FormItem>
+                            <FormLabel>ক্যাশ অন ডেলিভারি (COD)</FormLabel>
+                            <InputWithIcon icon={<span className="text-muted-foreground font-bold text-sm">৳</span>}>
+                                <FormControl><Input type="number" placeholder="0" {...field} className="pl-10 bg-background" /></FormControl>
+                            </InputWithIcon>
+                            <FormMessage />
+                            </FormItem>
+                        )} />
+                        <FormField control={form.control} name="note" render={({ field }) => (
+                            <FormItem className="md:col-span-2">
+                                <FormLabel>বিশেষ নোট (ঐচ্ছিক)</FormLabel>
+                                <InputWithIcon icon={<MessageSquare className="h-4 w-4 text-muted-foreground" />}>
+                                <FormControl><Input placeholder="ডেলিভারি সংক্রান্ত নোট" {...field} className="pl-10 bg-background" /></FormControl>
+                                </InputWithIcon>
+                                <FormMessage />
+                            </FormItem>
+                        )} />
+                    </CardContent>
+                  </Card>
+                </form>
+              </Form>
+            </div>
+          </ScrollArea>
+           <DialogFooter className="p-6 pt-2 border-t bg-background">
+              <DialogClose asChild><Button type="button" variant="outline">বাতিল</Button></DialogClose>
+              <Button type="submit" onClick={form.handleSubmit(onSubmit)} disabled={form.formState.isSubmitting} className="min-w-[150px]">
+                {form.formState.isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Truck className="mr-2 h-4 w-4" />}
+                অর্ডার তৈরি করুন
+              </Button>
+            </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
