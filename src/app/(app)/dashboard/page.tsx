@@ -314,7 +314,7 @@ export default function DashboardPage() {
                     name="search"
                     type="search"
                     placeholder="রোগী অনুসন্ধান করুন (নাম, ডায়েরি নং, ফোন...)"
-                    className="w-full h-12 text-sm pl-5 pr-14 rounded-full bg-card/80 border-2 border-transparent shadow-lg backdrop-blur-sm transition-all duration-300 ease-in-out"
+                    className="w-full h-12 text-sm pl-5 pr-14 rounded-full bg-card/80 border-2 border-transparent shadow-lg backdrop-blur-sm focus:outline-none"
                     onFocus={() => setIsSearchFocused(true)}
                     onBlur={() => setIsSearchFocused(false)}
                 />
@@ -365,8 +365,8 @@ export default function DashboardPage() {
         </div>
       </div>
       
-      <Card className="dashboard-appointments-card hide-on-print">
-        <CardHeader className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
+      <Card className="dashboard-appointments-card">
+        <CardHeader className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2 hide-on-print">
           <div>
             <CardTitle className="font-headline text-lg md:text-xl">আজকের সাক্ষাৎকার</CardTitle>
             <CardDescription className="text-sm">
@@ -386,7 +386,7 @@ export default function DashboardPage() {
                   <TableHead className="w-[15%] hidden sm:table-cell">ঠিকানা</TableHead>
                   <TableHead className="w-[10%] hidden lg:table-cell">পেমেন্ট মাধ্যম</TableHead>
                   <TableHead className="w-[10%] text-right">পরিমাণ</TableHead>
-                  <TableHead className="w-[20%] text-center">অবস্থা ও কার্যক্রম</TableHead>
+                  <TableHead className="w-[20%] text-center hide-on-print">অবস্থা ও কার্যক্রম</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -398,7 +398,7 @@ export default function DashboardPage() {
                     <TableCell className="hidden sm:table-cell">{appt.address}</TableCell>
                     <TableCell className="hidden lg:table-cell">{appt.paymentMethod}</TableCell>
                     <TableCell className="text-right">{formatCurrency(appt.paymentAmount)}</TableCell>
-                    <TableCell className="text-center">
+                    <TableCell className="text-center hide-on-print">
                       <div className="flex flex-col items-center justify-center gap-1">
                          <Badge variant={appt.status === 'Completed' ? 'default' : 'secondary'}
                               className={
@@ -438,7 +438,8 @@ export default function DashboardPage() {
               </TableBody>
                <TableFooter>
                 <TableRow>
-                  <TableCell colSpan={6} className="text-right font-bold">মোট আয়:</TableCell>
+                  <TableCell colSpan={5} className="text-right font-bold hide-on-print">মোট আয়:</TableCell>
+                  <TableCell colSpan={6} className="text-right font-bold print-only-block">মোট আয়:</TableCell>
                   <TableCell className="text-right font-bold">{formatCurrency(todaysTotalRevenue)}</TableCell>
                 </TableRow>
               </TableFooter>
@@ -523,5 +524,3 @@ export default function DashboardPage() {
     </TooltipProvider>
   );
 }
-
-    
