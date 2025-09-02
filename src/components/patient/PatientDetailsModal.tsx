@@ -612,5 +612,3 @@ export function PatientDetailsModal({
     </Dialog>
   );
 }
-
-    

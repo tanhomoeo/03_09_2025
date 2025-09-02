@@ -17,7 +17,7 @@ const nextConfig = {
 
     if (isServer) {
         // Exclude problematic modules from server bundle if they cause issues.
-        config.externals = [...(config.externals || []), '@opentelemetry/instrumentation', '@opentelemetry/winston-transport'];
+        config.externals = [...(config.externals || []), '@opentelemetry/instrumentation'];
     }
 
     return config;
@@ -31,5 +31,3 @@ const nextConfig = {
 };
 
 export default nextConfig;
-
-    
