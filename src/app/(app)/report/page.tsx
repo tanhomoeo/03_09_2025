@@ -155,7 +155,11 @@ export default function EnhancedReportPage() {
         // Process slips and associate with visits or treat as standalone
         dateFilteredSlips.forEach(slip => {
             if (slip.visitId && itemsMap.has(slip.visitId)) {
-                itemsMap.get(slip.visitId)?.slips.push(slip);
+                const item = itemsMap.get(slip.visitId)!;
+                item.slips.push(slip);
+                 if (slip.medicineDeliveryMethod) {
+                    item.deliveryMethod = slip.medicineDeliveryMethod;
+                }
             } else {
                  const key = `slip_${slip.id}`;
                  if (!itemsMap.has(key)) {
