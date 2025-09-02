@@ -517,5 +517,3 @@ export default function DashboardPage() {
     </TooltipProvider>
   );
 }
-
-    
