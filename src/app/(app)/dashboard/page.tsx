@@ -263,28 +263,24 @@ export default function DashboardPage() {
   return (
     <TooltipProvider>
     <div className="space-y-6 md:space-y-8">
-      <div className="mb-6 hide-on-print hidden md:block">
-        <h1 className="text-2xl md:text-3xl font-bold font-headline text-blue-900 dark:text-blue-300 drop-shadow-sm">ড্যাশবোর্ড</h1>
-        <p className="text-muted-foreground mt-1 text-sm md:text-base">আপনার ক্লিনিকের কার্যক্রমের একটি সারসংক্ষেপ।</p>
-      </div>
-
-       <div className="md:hidden hide-on-print -mx-4 -mt-4 sm:-mx-6 sm:-mt-6">
-        <div className="bg-primary/90 backdrop-blur-lg text-primary-foreground p-3 shadow-lg flex items-center justify-between">
-           <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={toggleSidebar}>
+      
+       <div className="md:hidden hide-on-print">
+        <div className="bg-card/80 backdrop-blur-lg p-3 shadow-md flex items-center justify-between border-b">
+           <Button variant="ghost" size="icon" className="text-foreground hover:bg-muted" onClick={toggleSidebar}>
                <Menu className="h-6 w-6"/>
            </Button>
            <div className="flex items-center gap-2">
-              <Image src="/icons/icon.png" width={28} height={28} alt="Logo" data-ai-hint="clinic health logo" className="flex-shrink-0 invert brightness-0 "/>
+              <Image src="/icons/icon.png" width={28} height={28} alt="Logo" data-ai-hint="clinic health logo" className="flex-shrink-0"/>
               <span className="font-bold text-lg">{APP_NAME}</span>
            </div>
-           <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={() => router.push(ROUTES.PATIENT_SEARCH)}>
+           <Button variant="ghost" size="icon" className="text-foreground hover:bg-muted" onClick={() => router.push(ROUTES.PATIENT_SEARCH)}>
                <SearchIcon className="h-6 w-6"/>
            </Button>
         </div>
-         <div className="bg-gradient-to-b from-primary/90 to-primary/80 p-4 pt-2 -mt-1 rounded-b-2xl shadow-inner">
+         <div className="p-4 pt-3">
              <Button 
                 onClick={handleRevenueClick}
-                className="w-full h-12 bg-white/90 text-primary hover:bg-white shadow-lg rounded-full text-base font-bold backdrop-blur-lg transition-all duration-300 ease-in-out"
+                className="w-full h-10 bg-gradient-to-r from-blue-100 to-indigo-200 text-blue-800 dark:from-blue-900/40 dark:to-indigo-900/40 dark:text-blue-200 shadow-lg rounded-full text-sm font-bold backdrop-blur-lg transition-all duration-300 ease-in-out"
               >
                   <div className="relative h-6 w-full overflow-hidden">
                       <div className={cn("absolute inset-0 flex items-center justify-center transition-transform duration-500", showRevenue ? '-translate-y-full' : 'translate-y-0')}>
@@ -298,7 +294,7 @@ export default function DashboardPage() {
          </div>
        </div>
       
-      <div className="hide-on-print flex justify-center my-4 md:my-6 md:mt-0">
+      <div className="hide-on-print flex justify-center my-4 md:my-0">
         <div className="relative w-full max-w-sm lg:max-w-md focus-within:max-w-xl transition-all duration-300 ease-in-out">
             <form onSubmit={handleDashboardSearch} className="relative w-full">
                 <Input
