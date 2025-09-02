@@ -1,11 +1,10 @@
 
 'use client';
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import React, { useEffect, useState, useCallback, useRef, useMemo } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableFooter } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -19,6 +18,9 @@ import { cn } from '@/lib/utils';
 import QuickActionCard from '@/components/dashboard/QuickActionCard';
 import ActivityCard from '@/components/dashboard/ActivityCard';
 import { useSidebar } from '@/components/ui/sidebar';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+
 
 interface AppointmentDisplayItem {
   visitId: string;
@@ -93,6 +95,8 @@ export default function DashboardPage() {
 
   const [clientRenderedTimestamp, setClientRenderedTimestamp] = useState<Date | null>(null);
   const [clinicSettings, setClinicSettings] = useState<ClinicSettings | null>(null);
+  const [allPatients, setAllPatients] = useState<Patient[]>([]);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const [showRevenue, setShowRevenue] = useState(false);
   const revenueTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -121,9 +125,7 @@ export default function DashboardPage() {
     };
   }, []);
 
-  const processAppointments = useCallback((todayVisits: Visit[], todaySlips: PaymentSlip[], allPatients: Patient[]): AppointmentDisplayItem[] => {
-    const patientsDataMap = new Map(allPatients.map(p => [p.id, p]));
-
+  const processAppointments = useCallback((todayVisits: Visit[], todaySlips: PaymentSlip[], patientsDataMap: Map<string, Patient>): AppointmentDisplayItem[] => {
     const appointmentsData = todayVisits
       .map(visit => {
         const patient = patientsDataMap.get(visit.patientId);
@@ -167,7 +169,7 @@ export default function DashboardPage() {
 
     try {
         const [
-            allPatients,
+            patientsData,
             todayVisits,
             monthVisits,
             todaySlips,
@@ -185,8 +187,10 @@ export default function DashboardPage() {
             getPatientsRegisteredWithinDateRange(todayStart, todayEnd),
             getClinicSettings()
         ]);
-    
+        
+        setAllPatients(patientsData);
         setClinicSettings(settings);
+        const patientsMap = new Map(patientsData.map(p => [p.id, p]));
         const uniqueTodayPatientIds = new Set(todayVisits.map(v => v.patientId));
     
         const todayRevenue = todaySlips.reduce((sum, s) => sum + (s.amount || 0), 0);
@@ -200,7 +204,7 @@ export default function DashboardPage() {
     
     
         setStats({
-          totalPatients: allPatients.length,
+          totalPatients: patientsData.length,
           todayPatientCount: uniqueTodayPatientIds.size,
           monthlyPatientCount: new Set(monthVisits.map(v => v.patientId)).size,
           todayRevenue: todayRevenue,
@@ -210,7 +214,7 @@ export default function DashboardPage() {
           monthlyNewPatients: patientsCreatedThisMonth.length,
         });
 
-        const processedAppointments = processAppointments(todayVisits, todaySlips, allPatients);
+        const processedAppointments = processAppointments(todayVisits, todaySlips, patientsMap);
         setTodaysAppointments(processedAppointments);
 
     } catch(error: unknown) {
@@ -235,11 +239,9 @@ export default function DashboardPage() {
     };
   }, [loadDashboardData]);
 
-  const handleDashboardSearch = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (dashboardSearchTerm.trim()) {
-      router.push(`${ROUTES.PATIENT_SEARCH}?q=${encodeURIComponent(dashboardSearchTerm)}`);
-    }
+  const handlePatientSelect = (patient: Patient) => {
+    setIsSearchOpen(false);
+    router.push(`${ROUTES.PATIENT_SEARCH}?q=${patient.diaryNumber || patient.phone}`);
   };
 
   const handlePrintAppointments = () => {
@@ -254,6 +256,16 @@ export default function DashboardPage() {
     router.push(`${ROUTES.PRESCRIPTION}/${patientId}?visitId=${visitId}`);
   };
   
+  const searchedPatients = useMemo(() => {
+    if (!dashboardSearchTerm) return [];
+    const lowerCaseQuery = dashboardSearchTerm.toLowerCase();
+    return allPatients.filter(p => 
+      p.name.toLowerCase().includes(lowerCaseQuery) ||
+      p.phone.includes(dashboardSearchTerm) ||
+      (p.diaryNumber && p.diaryNumber.toString().toLowerCase().includes(lowerCaseQuery))
+    );
+  }, [dashboardSearchTerm, allPatients]);
+
   const todaysTotalRevenue = todaysAppointments.reduce((sum, appt) => sum + appt.paymentAmount, 0);
 
   if (loading) {
@@ -264,7 +276,7 @@ export default function DashboardPage() {
     <TooltipProvider>
     <div className="space-y-6 md:space-y-8">
       
-       <div className="md:hidden hide-on-print -mx-4 sm:-mx-6 py-3 px-4 sm:px-6 bg-gradient-to-br from-green-100 to-lime-200 dark:from-green-800/80 dark:to-lime-900/80 shadow-sm sticky top-0 z-40 backdrop-blur-lg">
+       <div className="md:hidden hide-on-print py-3 px-4 sm:px-6 bg-gradient-to-br from-green-100 to-lime-200 dark:from-green-800/80 dark:to-lime-900/80 shadow-sm sticky top-0 z-40 backdrop-blur-lg">
         <div className="flex items-center justify-between">
            <button type="button" onClick={toggleSidebar} className="flex items-center gap-3 flex-shrink-0 -ml-1">
               <div className="p-1.5 bg-white/50 dark:bg-black/20 rounded-full shadow-md">
@@ -301,26 +313,42 @@ export default function DashboardPage() {
        </div>
 
       <div className="hide-on-print flex justify-center my-4 md:my-0">
-        <div className="relative w-full max-w-sm lg:max-w-md focus-within:max-w-xl transition-all duration-300 ease-in-out">
-            <form onSubmit={handleDashboardSearch} className="relative w-full">
-                <Input
-                    id="dashboardSearchInput"
-                    type="search"
-                    placeholder="রোগী অনুসন্ধান করুন (নাম, ডায়েরি নং, ফোন...)"
-                    className="w-full h-11 md:h-12 text-sm md:text-base pl-4 pr-12 rounded-full bg-card/80 border-2 border-transparent focus:bg-background shadow-lg backdrop-blur-sm focus-visible:ring-transparent focus-visible:ring-offset-0"
-                    value={dashboardSearchTerm}
-                    onChange={(e) => setDashboardSearchTerm(e.target.value)}
-                />
+        <Popover open={isSearchOpen} onOpenChange={setIsSearchOpen}>
+            <PopoverTrigger asChild>
                 <Button 
-                    type="submit" 
-                    size="icon" 
-                    className="absolute right-1.5 top-1/2 -translate-y-1/2 h-8 w-8 md:h-9 md:w-9 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-md hover:shadow-lg hover:brightness-110 active:scale-95 transition-all"
-                    aria-label="Search"
+                  variant="outline" 
+                  className="w-full max-w-sm lg:max-w-md h-11 md:h-12 text-sm md:text-base pl-4 pr-12 rounded-full bg-card/80 border-2 border-transparent shadow-lg backdrop-blur-sm hover:bg-muted focus-visible:ring-transparent focus-visible:ring-offset-0 justify-start"
+                  onClick={() => setIsSearchOpen(true)}
                 >
-                    <SearchIcon className="h-4 w-4 md:h-5" />
+                  <SearchIcon className="mr-2 h-4 w-4 text-muted-foreground" />
+                  <span className="text-muted-foreground">রোগী অনুসন্ধান করুন (নাম, ডায়েরি নং, ফোন...)</span>
                 </Button>
-            </form>
-        </div>
+            </PopoverTrigger>
+            <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
+              <Command>
+                <CommandInput 
+                  placeholder="রোগী খুঁজুন..."
+                  value={dashboardSearchTerm}
+                  onValueChange={setDashboardSearchTerm}
+                />
+                <CommandList>
+                  {dashboardSearchTerm.length > 0 && searchedPatients.length === 0 && (
+                    <CommandEmpty>কোনো রোগী পাওয়া যায়নি।</CommandEmpty>
+                  )}
+                  {searchedPatients.length > 0 && (
+                    <CommandGroup heading="অনুসন্ধানের ফলাফল">
+                      {searchedPatients.map((p) => (
+                        <CommandItem key={p.id} onSelect={() => handlePatientSelect(p)} className="cursor-pointer">
+                          <Users className="mr-2 h-4 w-4" />
+                          <span>{p.name} - {p.phone}</span>
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  )}
+                </CommandList>
+              </Command>
+            </PopoverContent>
+        </Popover>
       </div>
 
       <div className="hide-on-print">
