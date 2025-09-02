@@ -20,6 +20,7 @@ import ActivityCard from '@/components/dashboard/ActivityCard';
 import { useSidebar } from '@/components/ui/sidebar';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Input } from '@/components/ui/input';
 
 
 interface AppointmentDisplayItem {
@@ -549,3 +550,5 @@ export default function DashboardPage() {
     </TooltipProvider>
   );
 }
+
+    
