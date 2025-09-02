@@ -271,18 +271,12 @@ export default function DashboardPage() {
               <span className="font-bold text-md">{APP_NAME}</span>
            </button>
            
-           <Button 
-              onClick={handleRevenueClick}
-              className="h-8 rounded-full text-xs font-bold backdrop-blur-lg transition-all duration-300 ease-in-out px-3 bg-gradient-to-r from-blue-100 to-indigo-200 text-blue-800 dark:from-blue-900/40 dark:to-indigo-900/40 dark:text-blue-200 shadow-sm"
+            <Button
+                onClick={handleRevenueClick}
+                className="h-auto rounded-md text-xs font-bold backdrop-blur-lg transition-all duration-300 ease-in-out p-1.5 px-3 bg-gradient-to-r from-blue-100 to-indigo-200 text-blue-800 dark:from-blue-900/40 dark:to-indigo-900/40 dark:text-blue-200 shadow-sm flex flex-col"
             >
-                <div className="relative h-5 overflow-hidden">
-                    <div className={cn("absolute inset-0 flex items-center justify-center transition-transform duration-500", showRevenue ? '-translate-y-full' : 'translate-y-0')}>
-                        ব্যালেন্স দেখুন
-                    </div>
-                    <div className={cn("absolute inset-0 flex items-center justify-center transition-transform duration-500", showRevenue ? 'translate-y-0' : 'translate-y-full')}>
-                        {formatCurrency(stats.todayRevenue || 0)}
-                    </div>
-                </div>
+                <span className="text-[10px] font-medium opacity-80 -mb-0.5">ব্যালেন্স দেখুন</span>
+                <span className="text-sm font-bold">{formatCurrency(stats.todayRevenue || 0)}</span>
             </Button>
         </div>
        </div>
