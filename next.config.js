@@ -23,7 +23,7 @@ const nextConfig = {
     }
     
     // externals helps with dependencies that are not meant to be bundled for the client
-    config.externals = [...(config.externals || []), 'canvas', 'eslint'];
+    config.externals = [...(config.externals || []), 'canvas', 'handlebars', 'eslint'];
 
     return config;
   },
