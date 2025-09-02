@@ -264,17 +264,19 @@ export default function DashboardPage() {
     <TooltipProvider>
     <div className="space-y-6 md:space-y-8">
       
-       <div className="md:hidden hide-on-print p-2 bg-gradient-to-br from-green-100 to-lime-200 shadow-sm sticky top-0 z-40 -mx-4 sm:-mx-6">
-        <div className="flex items-center justify-between px-2 sm:px-4">
-           <button type="button" onClick={toggleSidebar} className="flex items-center gap-2 flex-shrink-0 -ml-1">
-              <Image src="/icons/icon.png" width={28} height={28} alt="Logo" data-ai-hint="clinic health logo" className="flex-shrink-0"/>
-              <span className="font-bold text-md">{APP_NAME}</span>
+       <div className="md:hidden hide-on-print py-3 px-4 bg-background/70 backdrop-blur-lg shadow-sm sticky top-0 z-40 -mx-4 sm:-mx-6">
+        <div className="flex items-center justify-between">
+           <button type="button" onClick={toggleSidebar} className="flex items-center gap-3 flex-shrink-0 -ml-1">
+              <div className="p-1 bg-white/50 dark:bg-black/20 rounded-full shadow-md">
+                <Image src="/icons/icon.png" width={28} height={28} alt="Logo" data-ai-hint="clinic health logo" className="flex-shrink-0"/>
+              </div>
+              <span className="font-bold text-lg text-green-900 dark:text-green-200">{APP_NAME}</span>
            </button>
            
             <Button
                 onClick={handleRevenueClick}
                 className={cn(
-                  "h-auto rounded-full text-xs font-bold transition-all duration-300 ease-in-out py-1.5 px-3",
+                  "relative h-auto rounded-full text-[11px] font-bold transition-all duration-300 ease-in-out py-1 px-2.5",
                   "bg-gradient-to-r from-blue-100 to-indigo-200 text-blue-800",
                   "dark:from-blue-900/40 dark:to-indigo-900/40 dark:text-blue-200",
                   "shadow-md hover:shadow-lg hover:-translate-y-px"
@@ -288,7 +290,7 @@ export default function DashboardPage() {
                       ব্যালেন্স দেখুন
                   </span>
                   <span className={cn(
-                      "absolute inset-0 transition-all duration-300 font-bold opacity-0 translate-y-2",
+                      "absolute inset-0 transition-all duration-300 font-semibold opacity-0 translate-y-2",
                       showRevenue && "opacity-100 translate-y-0"
                   )}>
                       {formatCurrency(stats.todayRevenue || 0)}

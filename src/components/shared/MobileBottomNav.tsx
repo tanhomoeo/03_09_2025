@@ -53,7 +53,7 @@ export function MobileBottomNav() {
 
   return (
     <>
-      <div className="md:hidden fixed bottom-0 left-0 z-50 w-full h-16 bg-gradient-to-br from-green-100 to-lime-200 border-t border-border/20 backdrop-blur-lg">
+      <div className="md:hidden fixed bottom-0 left-0 z-50 w-full h-14 bg-gradient-to-br from-green-100 to-lime-200 border-t border-border/20 backdrop-blur-lg">
         <div className="grid h-full max-w-lg grid-cols-5 mx-auto font-medium">
           {navItems.map((item) => {
             if (item.href === 'SCAN_ACTION') {
@@ -62,7 +62,7 @@ export function MobileBottomNav() {
                   <button
                     onClick={() => setIsCameraModalOpen(true)}
                     type="button"
-                    className="flex items-center justify-center w-16 h-16 bg-blue-600 rounded-full text-primary-foreground shadow-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800"
+                    className="flex items-center justify-center w-14 h-14 bg-blue-600 rounded-full text-primary-foreground shadow-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800"
                     aria-label={item.label}
                   >
                     <Camera className="w-6 h-6" />
