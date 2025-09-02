@@ -47,6 +47,11 @@ import {
   Clock,
   XCircle,
   BadgeHelp,
+  User,
+  Phone,
+  MapPin,
+  FileText,
+  MessageSquare,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -192,8 +197,12 @@ export default function CourierPage() {
       const result = await placeSteadfastOrder(orderData);
 
       if (result.status === 200 && result.consignment) {
-        await addConsignment(result.consignment);
-        setConsignments(prev => [result.consignment, ...prev].sort((a,b) => parseISO(b.created_at).getTime() - parseISO(a.created_at).getTime()));
+        const newConsignment = result.consignment;
+        await addConsignment(newConsignment);
+        
+        // Add to local state instead of re-fetching everything
+        setConsignments(prev => [newConsignment, ...prev].sort((a,b) => parseISO(b.created_at).getTime() - parseISO(a.created_at).getTime()));
+        
         toast({
           title: 'অর্ডার সফল হয়েছে',
           description: result.message,
@@ -211,6 +220,16 @@ export default function CourierPage() {
       });
     }
   };
+  
+  const InputWithIcon = ({ icon, children }: { icon: React.ReactNode, children: React.ReactNode }) => (
+    <div className="relative">
+      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+        {icon}
+      </div>
+      {children}
+    </div>
+  );
+
 
   return (
     <div className="space-y-6">
@@ -309,94 +328,75 @@ export default function CourierPage() {
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>নতুন কুরিয়ার অর্ডার</DialogTitle>
+            <DialogTitle className="font-headline flex items-center gap-2">
+              <Truck className="h-6 w-6 text-primary"/>
+              নতুন কুরিয়ার অর্ডার
+            </DialogTitle>
             <DialogDescription>
-              অনুগ্রহ করে পার্সেলের জন্য প্রয়োজনীয় তথ্য দিন।
+              অনুগ্রহ করে পার্সেলের জন্য প্রয়োজনীয় তথ্য দিন। এই তথ্য Steadfast কুরিয়ারে পাঠানো হবে।
             </DialogDescription>
           </DialogHeader>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
-              <FormField
-                control={form.control}
-                name="invoice"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>ইনভয়েস আইডি</FormLabel>
-                    <FormControl>
-                      <Input placeholder="ইউনিক ইনভয়েস আইডি" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="recipient_name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>প্রাপকের নাম</FormLabel>
-                    <FormControl>
-                      <Input placeholder="প্রাপকের পুরো নাম" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="recipient_phone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>প্রাপকের ফোন</FormLabel>
-                    <FormControl>
-                      <Input placeholder="01XXXXXXXXX" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="recipient_address"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>প্রাপকের ঠিকানা</FormLabel>
-                    <FormControl>
-                      <Textarea placeholder="সম্পূর্ণ ঠিকানা" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="cod_amount"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>ক্যাশ অন ডেলিভারি (COD)</FormLabel>
-                    <FormControl>
-                      <Input type="number" placeholder="0" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="note"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>বিশেষ নোট (ঐচ্ছিক)</FormLabel>
-                    <FormControl>
-                      <Textarea placeholder="ডেলিভারি সংক্রান্ত নোট" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <DialogFooter>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                 <FormField control={form.control} name="recipient_name" render={({ field }) => (
+                    <FormItem className="md:col-span-2">
+                      <FormLabel>প্রাপকের নাম</FormLabel>
+                      <InputWithIcon icon={<User className="h-4 w-4 text-muted-foreground" />}>
+                        <FormControl><Input placeholder="প্রাপকের পুরো নাম" {...field} className="pl-10" /></FormControl>
+                      </InputWithIcon>
+                      <FormMessage />
+                    </FormItem>
+                  )} />
+                  <FormField control={form.control} name="recipient_phone" render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>প্রাপকের ফোন</FormLabel>
+                       <InputWithIcon icon={<Phone className="h-4 w-4 text-muted-foreground" />}>
+                         <FormControl><Input placeholder="01XXXXXXXXX" {...field} className="pl-10" /></FormControl>
+                       </InputWithIcon>
+                      <FormMessage />
+                    </FormItem>
+                  )} />
+                   <FormField control={form.control} name="invoice" render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>ইনভয়েস আইডি</FormLabel>
+                      <InputWithIcon icon={<FileText className="h-4 w-4 text-muted-foreground" />}>
+                        <FormControl><Input placeholder="ইউনিক ইনভয়েস আইডি" {...field} className="pl-10" /></FormControl>
+                      </InputWithIcon>
+                      <FormMessage />
+                    </FormItem>
+                  )} />
+                  <FormField control={form.control} name="recipient_address" render={({ field }) => (
+                    <FormItem className="md:col-span-2">
+                      <FormLabel>প্রাপকের ঠিকানা</FormLabel>
+                       <InputWithIcon icon={<MapPin className="h-4 w-4 text-muted-foreground" />}>
+                        <FormControl><Textarea placeholder="সম্পূর্ণ ঠিকানা" {...field} className="pl-10" /></FormControl>
+                       </InputWithIcon>
+                      <FormMessage />
+                    </FormItem>
+                  )} />
+                  <FormField control={form.control} name="cod_amount" render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>ক্যাশ অন ডেলিভারি (COD)</FormLabel>
+                      <InputWithIcon icon={<span className="text-muted-foreground font-bold text-sm">৳</span>}>
+                        <FormControl><Input type="number" placeholder="0" {...field} className="pl-10" /></FormControl>
+                      </InputWithIcon>
+                      <FormMessage />
+                    </FormItem>
+                  )} />
+                   <FormField control={form.control} name="note" render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>বিশেষ নোট (ঐচ্ছিক)</FormLabel>
+                       <InputWithIcon icon={<MessageSquare className="h-4 w-4 text-muted-foreground" />}>
+                         <FormControl><Input placeholder="ডেলিভারি সংক্রান্ত নোট" {...field} className="pl-10" /></FormControl>
+                       </InputWithIcon>
+                      <FormMessage />
+                    </FormItem>
+                  )} />
+              </div>
+              <DialogFooter className="pt-4">
                 <DialogClose asChild><Button type="button" variant="outline">বাতিল</Button></DialogClose>
-                <Button type="submit" disabled={form.formState.isSubmitting}>
+                <Button type="submit" disabled={form.formState.isSubmitting} className="min-w-[150px]">
                   {form.formState.isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Truck className="mr-2 h-4 w-4" />}
                   অর্ডার তৈরি করুন
                 </Button>
