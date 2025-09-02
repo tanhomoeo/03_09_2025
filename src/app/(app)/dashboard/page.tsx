@@ -274,15 +274,26 @@ export default function DashboardPage() {
             <Button
                 onClick={handleRevenueClick}
                 className={cn(
-                  "h-auto rounded-full text-xs font-bold backdrop-blur-lg transition-all duration-300 ease-in-out p-1.5 px-3 flex flex-col items-center justify-center",
+                  "h-auto rounded-full text-xs font-bold backdrop-blur-lg transition-all duration-300 ease-in-out py-1.5 px-3",
                   "bg-gradient-to-r from-blue-100 to-indigo-200 text-blue-800",
                   "dark:from-blue-900/40 dark:to-indigo-900/40 dark:text-blue-200",
-                  "shadow-md hover:shadow-lg hover:-translate-y-px",
-                  showRevenue ? "w-32" : "w-auto"
+                  "shadow-md hover:shadow-lg hover:-translate-y-px"
                 )}
             >
-                <span className="text-[9px] font-medium opacity-80 -mb-0.5 transition-opacity", !showRevenue && 'opacity-100', showRevenue && 'opacity-0 h-0' >ব্যালেন্স দেখুন</span>
-                <span className="text-sm font-bold transition-opacity", !showRevenue && 'opacity-0 h-0', showRevenue && 'opacity-100'>{formatCurrency(stats.todayRevenue || 0)}</span>
+              <div className="relative h-4 flex items-center">
+                  <span className={cn(
+                      "transition-all duration-300",
+                      showRevenue ? "opacity-0 -translate-y-2" : "opacity-100 translate-y-0"
+                  )}>
+                      ব্যালেন্স দেখুন
+                  </span>
+                  <span className={cn(
+                      "absolute inset-0 transition-all duration-300 font-bold",
+                      showRevenue ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
+                  )}>
+                      {formatCurrency(stats.todayRevenue || 0)}
+                  </span>
+              </div>
             </Button>
         </div>
        </div>
