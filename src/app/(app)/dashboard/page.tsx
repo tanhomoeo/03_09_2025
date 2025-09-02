@@ -368,32 +368,6 @@ export default function DashboardPage() {
         </div>
       </div>
       
-       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 hide-on-print">
-        <ActivityCard
-          title="দৈনিক কার্যকলাপ"
-          icon={CalendarDays}
-          iconColorClass="text-blue-500"
-          gradientClass="bg-gradient-to-br from-blue-100 to-violet-200"
-          stats={[
-            { label: 'আজকের মোট আয়', value: formatCurrency(stats.todayRevenue || 0), icon: TrendingUp },
-            { label: 'আজকের সক্রিয় রোগী', value: stats.dailyActivePatients.toLocaleString('bn-BD'), icon: UserPlus },
-            { label: 'অন্যান্য নিবন্ধিত রোগী', value: stats.dailyOtherRegistered.toLocaleString('bn-BD'), icon: Users },
-          ]}
-          detailsLink={ROUTES.DAILY_REPORT}
-        />
-        <ActivityCard
-          title="মাসিক কার্যকলাপ"
-          icon={BarChart3}
-          iconColorClass="text-green-500"
-          gradientClass="bg-gradient-to-br from-green-100 to-lime-200"
-          stats={[
-            { label: 'চলতি মাসের মোট আয়', value: formatCurrency(stats.monthlyIncome || 0), icon: TrendingUp },
-            { label: 'এই মাসে নতুন রোগী', value: stats.monthlyNewPatients.toLocaleString('bn-BD'), icon: UserPlus },
-            { label: 'মোট নিবন্ধিত রোগী', value: stats.totalPatients.toLocaleString('bn-BD'), icon: Users },
-          ]}
-        />
-      </div>
-
       <Card className="dashboard-appointments-card hide-on-print hidden md:block">
         <CardHeader className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
           <div>
@@ -476,6 +450,32 @@ export default function DashboardPage() {
         </CardContent>
       </Card>
       
+       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 hide-on-print">
+        <ActivityCard
+          title="দৈনিক কার্যকলাপ"
+          icon={CalendarDays}
+          iconColorClass="text-blue-500"
+          gradientClass="bg-gradient-to-br from-blue-100 to-violet-200"
+          stats={[
+            { label: 'আজকের মোট আয়', value: formatCurrency(stats.todayRevenue || 0), icon: TrendingUp },
+            { label: 'আজকের সক্রিয় রোগী', value: stats.dailyActivePatients.toLocaleString('bn-BD'), icon: UserPlus },
+            { label: 'অন্যান্য নিবন্ধিত রোগী', value: stats.dailyOtherRegistered.toLocaleString('bn-BD'), icon: Users },
+          ]}
+          detailsLink={ROUTES.DAILY_REPORT}
+        />
+        <ActivityCard
+          title="মাসিক কার্যকলাপ"
+          icon={BarChart3}
+          iconColorClass="text-green-500"
+          gradientClass="bg-gradient-to-br from-green-100 to-lime-200"
+          stats={[
+            { label: 'চলতি মাসের মোট আয়', value: formatCurrency(stats.monthlyIncome || 0), icon: TrendingUp },
+            { label: 'এই মাসে নতুন রোগী', value: stats.monthlyNewPatients.toLocaleString('bn-BD'), icon: UserPlus },
+            { label: 'মোট নিবন্ধিত রোগী', value: stats.totalPatients.toLocaleString('bn-BD'), icon: Users },
+          ]}
+        />
+      </div>
+
       {/* --- Print-Only View --- */}
       <div className="print-only-block print-dashboard-container bg-white text-black">
         <div className="print-header">
@@ -526,5 +526,3 @@ export default function DashboardPage() {
     </TooltipProvider>
   );
 }
-
-    
