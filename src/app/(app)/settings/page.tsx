@@ -262,9 +262,7 @@ export default function AppSettingsPage() {
         </CardHeader>
         <CardContent>
           <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="destructive"><LogOut className="mr-2 h-4 w-4" /> লগ আউট</Button>
-            </AlertDialogTrigger>
+            <AlertDialogTrigger asChild><Button variant="destructive"><LogOut className="mr-2 h-4 w-4" /> লগ আউট</Button></AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle>আপনি কি লগ আউট করতে নিশ্চিত?</AlertDialogTitle>
