@@ -264,7 +264,7 @@ export default function DashboardPage() {
     <TooltipProvider>
     <div className="space-y-6 md:space-y-8">
       
-       <div className="md:hidden hide-on-print py-3 bg-background/70 backdrop-blur-lg shadow-sm sticky top-0 z-40">
+       <div className="md:hidden hide-on-print py-3 bg-gradient-to-br from-green-100 to-lime-200 dark:from-green-800 dark:to-lime-900 shadow-sm sticky top-0 z-40">
         <div className="flex items-center justify-between">
            <button type="button" onClick={toggleSidebar} className="flex items-center gap-3 flex-shrink-0 -ml-1">
               <div className="p-1 bg-white/50 dark:bg-black/20 rounded-full shadow-md">
