@@ -9,7 +9,7 @@ const SECRET_KEY = process.env.STEADFAST_SECRET_KEY;
 
 async function makeSteadfastRequest<T>(
   path: string,
-  method: 'GET' | 'POST' = 'GET', // Default to GET for fetching data
+  method: 'GET' | 'POST' = 'GET',
   body: Record<string, unknown> | null = null,
 ): Promise<T> {
   if (!BASE_URL || !API_KEY || !SECRET_KEY) {
@@ -25,7 +25,7 @@ async function makeSteadfastRequest<T>(
   const options: RequestInit = {
     method,
     headers,
-    cache: 'no-store', // Ensure fresh data is fetched every time
+    cache: 'no-store',
   };
 
   if (body) {
@@ -34,17 +34,44 @@ async function makeSteadfastRequest<T>(
 
   try {
     const response = await fetch(`${BASE_URL}${path}`, options);
-    const data = await response.json();
+    
+    // Check if the response is ok (status in the range 200-299)
+    if (!response.ok) {
+        let errorMessage = `API Error: ${response.status} ${response.statusText}`;
+        try {
+            // Try to parse the error response as JSON
+            const errorData = await response.json();
+            errorMessage = errorData.message || JSON.stringify(errorData);
+        } catch (e) {
+            // If it's not JSON, it might be HTML or plain text
+            const textError = await response.text();
+            // Shorten long HTML error pages
+            errorMessage = textError.length > 200 ? textError.substring(0, 200) + '...' : textError;
+        }
+        throw new Error(`An error occurred with the courier service: ${errorMessage}`);
+    }
 
-    if (response.status >= 400) {
-      throw new Error(data.message || 'An error occurred with the courier service.');
+    const text = await response.text();
+    // It's possible for a successful response to have an empty body.
+    if (!text) {
+        return {} as T;
+    }
+    
+    const data = JSON.parse(text);
+
+    if (data.status && data.status !== 200 && data.status !== 201) {
+        throw new Error(data.message || 'An error occurred with the courier service.');
     }
     
     return data as T;
+
   } catch (error) {
     console.error(`Steadfast API Error (${path}):`, error);
     if (error instanceof Error) {
-        throw new Error(`Failed to fetch from Steadfast API: ${error.message}`);
+        if (error.message.includes('JSON')) {
+             throw new Error(`Failed to parse response from Steadfast API. This might be a temporary issue with the courier service.`);
+        }
+        throw new Error(`Failed to communicate with Steadfast API: ${error.message}`);
     }
     throw new Error('An unknown error occurred while communicating with the courier service.');
   }
