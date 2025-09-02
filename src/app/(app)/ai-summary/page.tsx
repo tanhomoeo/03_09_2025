@@ -12,6 +12,7 @@ import {
   Wand2,
   FileText,
   Brain,
+  Lightbulb,
 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -158,14 +159,28 @@ export default function AiRepertoryPage() {
             )}
 
             {results && !isLoading && !error && (
-              <AnalysisResultDisplay result={results} />
+              <>
+                 {results.srpSummary && (
+                  <Alert className="mb-6 bg-yellow-100/70 border-yellow-300/80 text-yellow-900 dark:bg-yellow-900/20 dark:border-yellow-800/50 dark:text-yellow-200 shadow-md">
+                    <Lightbulb className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
+                    <AlertTitle className="font-bold text-lg text-yellow-800 dark:text-yellow-300">
+                      Key Guiding Symptoms (SRP Summary)
+                    </AlertTitle>
+                    <AlertDescription className="text-yellow-800 dark:text-yellow-300/90 pt-1">
+                      {results.srpSummary}
+                    </AlertDescription>
+                  </Alert>
+                )}
+                <AnalysisResultDisplay result={results} />
+              </>
             )}
             
             {!isLoading &&
               !error &&
               results &&
+              !results.srpSummary &&
               Object.values(results).every(category => 
-                Object.values(category).every(value => !value)
+                typeof category !== 'string' && category && Object.values(category).every(value => !value)
               ) && (
                 <div className="flex flex-col items-center justify-center h-full min-h-[400px]">
                   <Alert className="w-full">

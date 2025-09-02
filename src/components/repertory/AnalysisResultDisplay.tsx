@@ -15,7 +15,7 @@ import type { ComplaintAnalyzerOutput } from '@/ai/flows/complaint-analyzer-flow
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
-type CategoryKey = keyof ComplaintAnalyzerOutput;
+type CategoryKey = Exclude<keyof ComplaintAnalyzerOutput, 'srpSummary'>;
 
 const CATEGORY_META: Record<
   CategoryKey,
@@ -57,12 +57,21 @@ export function AnalysisResultDisplay({ result }: AnalysisResultDisplayProps) {
   return (
     <div className="space-y-4">
       {Object.entries(result).map(([category, data]) => {
+        if (category === 'srpSummary' || typeof data !== 'object' || !data) return null;
+
         const categoryKey = category as CategoryKey;
         const meta = CATEGORY_META[categoryKey];
         if (!meta) return null;
 
         const hasContent = Object.values(data).some(value => value && String(value).trim() !== '');
         if (!hasContent) return null;
+
+        const generalContent = Object.entries(data).filter(([key]) => key !== 'srp').map(([key, value]) => {
+            if (!value || typeof value !== 'string' || !value.trim()) return null;
+            return { key, value };
+        }).filter(Boolean);
+
+        const srpContent = data.srp;
 
         return (
           <Card key={categoryKey} className={cn('overflow-hidden shadow-md border-border/30', meta.color)}>
@@ -72,27 +81,24 @@ export function AnalysisResultDisplay({ result }: AnalysisResultDisplayProps) {
                 {meta.title}
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-4 text-sm space-y-2 text-foreground/90">
-              {Object.entries(data).map(([key, value]) => {
-                if (!value || typeof value !== 'string' || !value.trim()) return null;
-
-                const isSrp = key === 'srp';
-                return (
-                  <div
-                    key={key}
-                    className={cn(
-                      "p-2 rounded-md",
-                      isSrp ? 'bg-red-100/60 dark:bg-red-900/30 border border-red-500/50' : 'bg-background/30'
-                    )}
-                  >
-                    <strong className={cn("block mb-0.5", isSrp ? 'font-bold text-red-700 dark:text-red-300 flex items-center gap-1.5' : 'font-semibold text-muted-foreground')}>
-                       {isSrp && <AlertTriangle className="h-4 w-4" />}
-                       {LABEL_MAP[key] || key}
-                    </strong>
-                    <p className={cn(isSrp ? 'font-semibold' : '')}>{value}</p>
+            <CardContent className="p-0 text-sm grid grid-cols-3">
+              <div className="col-span-2 space-y-2 p-3">
+                 {generalContent.map(item => item && (
+                     <div key={item.key}>
+                        <strong className="block mb-0.5 font-semibold text-muted-foreground">{LABEL_MAP[item.key] || item.key}</strong>
+                        <p>{item.value}</p>
+                     </div>
+                 ))}
+              </div>
+              {srpContent && (
+                  <div className="col-span-1 p-3 bg-red-100/60 dark:bg-red-900/30 border-l border-red-500/20">
+                     <strong className='font-bold text-red-700 dark:text-red-300 flex items-center gap-1.5'>
+                        <AlertTriangle className="h-4 w-4" />
+                        {LABEL_MAP['srp']}
+                     </strong>
+                     <p className="font-semibold pt-1">{srpContent}</p>
                   </div>
-                );
-              })}
+              )}
             </CardContent>
           </Card>
         );

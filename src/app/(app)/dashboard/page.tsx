@@ -18,9 +18,8 @@ import { cn } from '@/lib/utils';
 import QuickActionCard from '@/components/dashboard/QuickActionCard';
 import ActivityCard from '@/components/dashboard/ActivityCard';
 import { useSidebar } from '@/components/ui/sidebar';
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Input } from '@/components/ui/input';
+import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 
 
 interface AppointmentDisplayItem {
@@ -70,7 +69,7 @@ const DashboardSkeleton = () => (
       <div className="h-8 bg-muted-foreground/30 rounded w-1/3 mb-4"></div>
       <div className="space-y-2">
         {[...Array(3)].map((_, i) => (
-            <div key={i} className="h-12 bg-muted-foreground/20 rounded"></div>
+            <div key*={i} className="h-12 bg-muted-foreground/20 rounded"></div>
         ))}
       </div>
     </div>
@@ -91,14 +90,11 @@ export default function DashboardPage() {
   });
   const [loading, setLoading] = useState(true);
   const [todaysAppointments, setTodaysAppointments] = useState<AppointmentDisplayItem[]>([]);
-  const [dashboardSearchTerm, setDashboardSearchTerm] = useState('');
   const router = useRouter();
 
   const [clientRenderedTimestamp, setClientRenderedTimestamp] = useState<Date | null>(null);
   const [clinicSettings, setClinicSettings] = useState<ClinicSettings | null>(null);
-  const [allPatients, setAllPatients] = useState<Patient[]>([]);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-
+  
   const [showRevenue, setShowRevenue] = useState(false);
   const revenueTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { toggleSidebar } = useSidebar();
@@ -189,7 +185,6 @@ export default function DashboardPage() {
             getClinicSettings()
         ]);
         
-        setAllPatients(patientsData);
         setClinicSettings(settings);
         const patientsMap = new Map(patientsData.map(p => [p.id, p]));
         const uniqueTodayPatientIds = new Set(todayVisits.map(v => v.patientId));
@@ -240,11 +235,6 @@ export default function DashboardPage() {
     };
   }, [loadDashboardData]);
 
-  const handlePatientSelect = (patient: Patient) => {
-    setIsSearchOpen(false);
-    router.push(`${ROUTES.PATIENT_SEARCH}?q=${patient.diaryNumber || patient.phone}`);
-  };
-
   const handlePrintAppointments = () => {
     if (typeof window !== 'undefined') {
       document.body.classList.add('printing-dashboard-active');
@@ -257,15 +247,15 @@ export default function DashboardPage() {
     router.push(`${ROUTES.PRESCRIPTION}/${patientId}?visitId=${visitId}`);
   };
   
-  const searchedPatients = useMemo(() => {
-    if (!dashboardSearchTerm) return [];
-    const lowerCaseQuery = dashboardSearchTerm.toLowerCase();
-    return allPatients.filter(p => 
-      p.name.toLowerCase().includes(lowerCaseQuery) ||
-      p.phone.includes(dashboardSearchTerm) ||
-      (p.diaryNumber && p.diaryNumber.toString().toLowerCase().includes(lowerCaseQuery))
-    );
-  }, [dashboardSearchTerm, allPatients]);
+  const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const searchTerm = e.currentTarget.search.value;
+    if (searchTerm) {
+      router.push(`${ROUTES.PATIENT_SEARCH}?q=${searchTerm}`);
+    }
+  };
+
+  const [searchOpen, setSearchOpen] = useState(false);
 
   const todaysTotalRevenue = todaysAppointments.reduce((sum, appt) => sum + appt.paymentAmount, 0);
 
@@ -314,45 +304,31 @@ export default function DashboardPage() {
         </div>
        </div>
 
-      <div className="hide-on-print flex justify-center my-4 md:my-0">
-        <Popover open={isSearchOpen} onOpenChange={setIsSearchOpen}>
-            <PopoverTrigger asChild>
-                <div 
-                  className="relative w-full max-w-sm lg:max-w-md"
-                  onClick={() => setIsSearchOpen(true)}
-                >
-                  <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10" />
-                  <Input
-                    placeholder="রোগী অনুসন্ধান করুন (নাম, ডায়েরি নং, ফোন...)"
-                    className="w-full h-11 md:h-12 text-sm md:text-base pl-10 pr-4 rounded-full bg-card/80 border-2 border-transparent shadow-lg backdrop-blur-sm hover:bg-muted focus-visible:ring-primary focus-visible:ring-offset-2"
-                    value={dashboardSearchTerm}
-                    onChange={(e) => {
-                      if (!isSearchOpen) setIsSearchOpen(true);
-                      setDashboardSearchTerm(e.target.value);
-                    }}
-                  />
-                </div>
-            </PopoverTrigger>
-            <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
-              <Command shouldFilter={false}>
-                <CommandList>
-                  {searchedPatients.length === 0 && dashboardSearchTerm.length > 0 ? (
-                    <CommandEmpty>কোনো রোগী পাওয়া যায়নি।</CommandEmpty>
-                  ) : (
-                    <CommandGroup heading="অনুসন্ধানের ফলাফল">
-                      {searchedPatients.map((p) => (
-                        <CommandItem key={p.id} onSelect={() => handlePatientSelect(p)} className="cursor-pointer">
-                          <Users className="mr-2 h-4 w-4" />
-                          <span>{p.name} - {p.phone}</span>
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  )}
-                </CommandList>
-              </Command>
-            </PopoverContent>
-        </Popover>
-      </div>
+        <div className="flex items-center justify-center my-4 md:my-0">
+          <form onSubmit={handleSearchSubmit} className="relative w-full max-w-sm lg:max-w-md">
+            <div className="relative">
+              <Input
+                name="search"
+                type="search"
+                placeholder="রোগী অনুসন্ধান করুন..."
+                className={cn(
+                  'h-11 w-full rounded-full bg-card/80 pl-12 pr-4 text-sm shadow-lg transition-all duration-300 ease-in-out focus:w-full focus:pr-4 md:h-12 md:text-base',
+                  'border-2 border-transparent backdrop-blur-sm hover:bg-muted focus-visible:ring-primary focus-visible:ring-offset-2'
+                )}
+                onFocus={() => setSearchOpen(true)}
+                onBlur={() => setSearchOpen(false)}
+              />
+              <div
+                className={cn(
+                  'absolute inset-y-0 left-0 flex cursor-pointer items-center pl-4 text-muted-foreground transition-colors duration-300',
+                  searchOpen && 'text-primary'
+                )}
+              >
+                <SearchIcon className="h-5 w-5" />
+              </div>
+            </div>
+          </form>
+        </div>
 
       <div className="hide-on-print">
         <h2 className="text-lg md:text-xl font-semibold font-headline mb-3">দ্রুত কার্যক্রম</h2>
@@ -550,5 +526,3 @@ export default function DashboardPage() {
     </TooltipProvider>
   );
 }
-
-    

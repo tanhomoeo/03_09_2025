@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview A Genkit flow to analyze patient complaints and categorize them into 7 key homeopathic principles.
@@ -6,6 +7,7 @@
  * to structure the information into seven categories: Location, Causation, Sensation,
  * Modalities, Concomitant, Generalities, and Past History. For each category, it
  * separates general symptoms from "Strange, Rare, and Peculiar" (SRP) symptoms.
+ * It also generates a concise summary of all identified SRP symptoms.
  *
  * - analyzeComplaint - The main function to call the flow.
  * - ComplaintAnalyzerInput - The input type for the flow.
@@ -70,6 +72,7 @@ const ComplaintAnalyzerOutputSchema = z.object({
   concomitant: ConcomitantSchema.describe('প্রধান লক্ষণের সাথে সম্পর্কিত অন্যান্য সহগামী লক্ষণ।'),
   generalities: GeneralitiesSchema.describe('রোগীর সামগ্রিক শারীরিক ও মানসিক বৈশিষ্ট্য।'),
   pastHistory: PastHistorySchema.describe('রোগীর অতীত রোগের, ব্যক্তিগত, পারিবারিক এবং চিকিৎসার ইতিহাস।'),
+  srpSummary: z.string().optional().describe('A concise summary of all the key guiding Strange, Rare, and Peculiar (SRP) symptoms identified across all categories. This should be a readable paragraph.'),
 });
 export type ComplaintAnalyzerOutput = z.infer<typeof ComplaintAnalyzerOutputSchema>;
 
@@ -96,30 +99,34 @@ const complaintAnalyzerPrompt = ai.definePrompt({
         { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_NONE' },
     ],
   },
-  prompt: `You are an expert homeopathic doctor's assistant. Your task is to analyze the patient's symptoms provided in Bengali and categorize them according to the 7 key principles of homeopathy.
+  prompt: `You are an expert homeopathic doctor's assistant. Your task is to analyze the patient's symptoms provided in Bengali and perform two steps:
 
-For each of the 7 categories, you must separate the information into two parts:
-1.  **General Part**: Contains the common, expected symptoms for that category. For 'Modalities', list aggravations and ameliorations here. For 'Generalities', list physical and mental generals. For 'Past History', list all historical details.
-2.  **Peculiarity (SRP) Part**: This is crucial. You must identify and extract only the "Strange, Rare, and Peculiar" (SRP) symptoms for that category. These are the unique, guiding symptoms that are most important for a homeopath.
+Step 1: Categorize Symptoms
+Analyze the text and categorize them according to the 7 key principles of homeopathy. For each category, you must separate the information into two parts:
+1.  **General Part**: Contains the common, expected symptoms. For 'Modalities', list aggravations and ameliorations here. For 'Generalities', list physical and mental generals. For 'Past History', list all historical details.
+2.  **Peculiarity (SRP) Part**: This is crucial. You must identify and extract only the "Strange, Rare, and Peculiar" (SRP) symptoms. These are the unique, guiding symptoms.
+
+Here are the 7 categories:
+- **Location (অবস্থান)**
+- **Causation (কারণ)**
+- **Sensation (অনুভূতি)**
+- **Modalities (হ্রাস/বৃদ্ধি)**
+- **Concomitant (সহগামী লক্ষণ)**
+- **Generalities (সামগ্রিক বৈশিষ্ট্য)**
+- **Past History (অতীত ইতিহাস)**
+
+Step 2: Create SRP Summary
+After categorizing all symptoms, review ALL the SRP fields you have filled. Create a concise, readable paragraph in Bengali that summarizes all these key guiding symptoms. Place this summary in the \`srpSummary\` field.
 
 Follow these rules strictly:
 - The final output MUST be a valid JSON object matching the provided schema.
 - If no information is found for a specific field (e.g., no SRP symptom for 'Location'), leave that field as an empty string.
 - Provide all responses in Bengali.
 
-Here are the 7 categories you must use:
-1.  **Location (অবস্থান)**: Where the symptoms are located.
-2.  **Causation (কারণ)**: The cause of the ailments.
-3.  **Sensation (অনুভূতি)**: How the patient feels (e.g., pain type, sensation).
-4.  **Modalities (হ্রাস/বৃদ্ধি)**: What makes the symptoms better (Amelioration) or worse (Aggravation).
-5.  **Concomitant (সহগামী লক্ষণ)**: Symptoms that appear alongside the main complaint.
-6.  **Generalities (সামগ্রিক বৈশিষ্ট্য)**: The patient's overall physical and mental characteristics.
-7.  **Past History (অতীত ইতিহাস)**: Patient's past medical, personal, family, and treatment history.
-
 Patient's Symptoms Text:
 {{{symptoms}}}
 
-Now, analyze the text and provide the structured JSON output.`,
+Now, analyze the text and provide the structured JSON output including the final SRP summary.`,
 });
 
 // Define the Genkit flow that orchestrates the process.
