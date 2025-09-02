@@ -69,7 +69,7 @@ const DashboardSkeleton = () => (
       <div className="h-8 bg-muted-foreground/30 rounded w-1/3 mb-4"></div>
       <div className="space-y-2">
         {[...Array(3)].map((_, i) => (
-            <div key*={i} className="h-12 bg-muted-foreground/20 rounded"></div>
+            <div key={i} className="h-12 bg-muted-foreground/20 rounded"></div>
         ))}
       </div>
     </div>
@@ -526,3 +526,5 @@ export default function DashboardPage() {
     </TooltipProvider>
   );
 }
+
+    
