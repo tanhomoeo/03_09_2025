@@ -192,3 +192,42 @@ export interface PersonalExpense {
   createdAt: string; // ISO string
   updatedAt: string; // ISO string
 }
+
+// Types for Steadfast Courier
+export interface SteadfastOrder {
+    invoice: string;
+    recipient_name: string;
+    recipient_phone: string;
+    recipient_address: string;
+    cod_amount: number;
+    alternative_phone?: string;
+    recipient_email?: string;
+    note?: string;
+    item_description?: string;
+    total_lot?: number;
+    delivery_type?: 0 | 1;
+}
+
+export interface SteadfastConsignment {
+    consignment_id: number;
+    invoice: string;
+    tracking_code: string;
+    recipient_name: string;
+    recipient_phone: string;
+    recipient_address: string;
+    cod_amount: number;
+    status: string; // e.g., "in_review"
+    note: string | null;
+    created_at: string; // ISO date string
+    updated_at: string; // ISO date string
+}
+
+export interface SteadfastStatus {
+    status: number;
+    delivery_status: string;
+}
+
+export interface SteadfastBalance {
+    status: number;
+    current_balance: number;
+}

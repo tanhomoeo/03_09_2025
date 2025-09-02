@@ -14,6 +14,7 @@ export const ROUTES = {
   STORE_MANAGEMENT: '/store-management',
   PERSONAL_EXPENSES: '/personal-expenses',
   REPERTORY_BROWSER: '/repertory',
+  COURIER: '/courier',
   LOGIN: '/',
 };
 

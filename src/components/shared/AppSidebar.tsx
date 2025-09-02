@@ -25,7 +25,8 @@ import {
   DollarSign,
   Wand2,
   BookMarked,
-  Menu
+  Menu,
+  Truck,
 } from 'lucide-react';
 import { ROUTES, APP_NAME } from '@/lib/constants';
 import { cn } from '@/lib/utils';
@@ -40,6 +41,7 @@ const mainNavItems = [
   { href: ROUTES.DAILY_REPORT, label: 'প্রতিবেদন', icon: FileText },
   { href: ROUTES.AI_SUMMARY, label: 'AI রেপার্টরি', icon: Wand2 },
   { href: ROUTES.REPERTORY_BROWSER, label: 'রেপার্টরি ব্রাউজার', icon: BookMarked },
+  { href: ROUTES.COURIER, label: 'কুরিয়ার সার্ভিস', icon: Truck },
   { href: ROUTES.STORE_MANAGEMENT, label: 'ঔষধ ব্যবস্থাপনা', icon: Store },
   { href: ROUTES.PERSONAL_EXPENSES, label: 'ব্যক্তিগত খরচ', icon: DollarSign },
   { href: ROUTES.APP_SETTINGS, label: 'সেটিংস', icon: Settings },
@@ -52,6 +54,7 @@ const navGradients = [
   'from-lime-100 to-yellow-200',
   'from-purple-100 to-fuchsia-200',
   'from-cyan-100 to-sky-200',
+  'from-blue-100 to-indigo-200', // Courier
   'from-amber-100 to-orange-200',
   'from-rose-100 to-pink-200',
   'from-slate-100 to-gray-200',
@@ -64,6 +67,7 @@ const navIconColors = [
   'text-lime-600',
   'text-purple-500',
   'text-cyan-500',
+  'text-blue-500', // Courier
   'text-amber-500',
   'text-rose-500',
   'text-slate-500',
