@@ -18,7 +18,6 @@ import { cn } from '@/lib/utils';
 import QuickActionCard from '@/components/dashboard/QuickActionCard';
 import ActivityCard from '@/components/dashboard/ActivityCard';
 import { useSidebar } from '@/components/ui/sidebar';
-import { Input } from '@/components/ui/input';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 
 
@@ -98,7 +97,7 @@ export default function DashboardPage() {
   const [showRevenue, setShowRevenue] = useState(false);
   const revenueTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { toggleSidebar } = useSidebar();
-
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
 
   useEffect(() => {
     setClientRenderedTimestamp(new Date());
@@ -254,9 +253,7 @@ export default function DashboardPage() {
       router.push(`${ROUTES.PATIENT_SEARCH}?q=${searchTerm}`);
     }
   };
-
-  const [searchOpen, setSearchOpen] = useState(false);
-
+  
   const todaysTotalRevenue = todaysAppointments.reduce((sum, appt) => sum + appt.paymentAmount, 0);
 
   if (loading) {
@@ -304,30 +301,29 @@ export default function DashboardPage() {
         </div>
        </div>
 
-        <div className="flex items-center justify-center my-4 md:my-0">
-          <form onSubmit={handleSearchSubmit} className="relative w-full max-w-sm lg:max-w-md">
-            <div className="relative">
-              <Input
-                name="search"
-                type="search"
-                placeholder="রোগী অনুসন্ধান করুন..."
+        <div className="flex items-center justify-center my-4 md:my-0 hide-on-print">
+            <form
+                onSubmit={handleSearchSubmit}
                 className={cn(
-                  'h-11 w-full rounded-full bg-card/80 pl-12 pr-4 text-sm shadow-lg transition-all duration-300 ease-in-out focus:w-full focus:pr-4 md:h-12 md:text-base',
-                  'border-2 border-transparent backdrop-blur-sm hover:bg-muted focus-visible:ring-primary focus-visible:ring-offset-2'
+                'relative w-full max-w-sm lg:max-w-md transition-all duration-300 ease-in-out',
+                isSearchFocused && 'max-w-lg lg:max-w-xl'
                 )}
-                onFocus={() => setSearchOpen(true)}
-                onBlur={() => setSearchOpen(false)}
-              />
-              <div
-                className={cn(
-                  'absolute inset-y-0 left-0 flex cursor-pointer items-center pl-4 text-muted-foreground transition-colors duration-300',
-                  searchOpen && 'text-primary'
-                )}
-              >
+            >
+                <input
+                    name="search"
+                    type="search"
+                    placeholder="রোগী অনুসন্ধান করুন (নাম, ডায়েরি নং, ফোন...)"
+                    className="w-full h-12 text-sm pl-5 pr-14 rounded-full bg-card/80 border-2 border-transparent shadow-lg backdrop-blur-sm transition-all duration-300 ease-in-out focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background"
+                    onFocus={() => setIsSearchFocused(true)}
+                    onBlur={() => setIsSearchFocused(false)}
+                />
+                <button
+                type="submit"
+                className="absolute inset-y-0 right-0 flex items-center justify-center w-12 h-12 rounded-full bg-primary text-primary-foreground shadow-md transition-transform hover:scale-105 active:scale-95"
+                >
                 <SearchIcon className="h-5 w-5" />
-              </div>
-            </div>
-          </form>
+                </button>
+            </form>
         </div>
 
       <div className="hide-on-print">
@@ -368,7 +364,7 @@ export default function DashboardPage() {
         </div>
       </div>
       
-      <Card className="dashboard-appointments-card hide-on-print hidden md:block">
+      <Card className="dashboard-appointments-card hide-on-print">
         <CardHeader className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
           <div>
             <CardTitle className="font-headline text-lg md:text-xl">আজকের সাক্ষাৎকার</CardTitle>
