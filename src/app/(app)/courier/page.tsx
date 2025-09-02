@@ -33,8 +33,8 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { PageHeaderCard } from '@/components/shared/PageHeaderCard';
-import { placeSteadfastOrder, getCurrentBalance, getDeliveryStatusByInvoice } from '@/lib/steadfastService';
-import { addConsignment, getConsignments, updateConsignmentStatus, formatCurrency, getPatients } from '@/lib/firestoreService';
+import { placeSteadfastOrder, getCurrentBalance, getDeliveryStatusByInvoice, getAllConsignments } from '@/lib/steadfastService';
+import { addConsignment, updateConsignmentStatus, formatCurrency, getPatients } from '@/lib/firestoreService';
 import type { SteadfastOrder, SteadfastConsignment, SteadfastBalance, Patient } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import {
@@ -52,7 +52,6 @@ import {
   MapPin,
   FileText,
   MessageSquare,
-  Search,
 } from 'lucide-react';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -61,7 +60,9 @@ import { cn } from '@/lib/utils';
 import { format, parseISO } from 'date-fns';
 import { bn } from 'date-fns/locale';
 import { ScrollArea } from '@/components/ui/scroll-area';
-
+import { ShippingLabel } from '@/components/courier/ShippingLabel';
+import { getClinicSettings } from '@/lib/firestoreService';
+import type { ClinicSettings } from '@/lib/types';
 
 const orderSchema = z.object({
   invoice: z.string().min(1, 'ইনভয়েস আইডি আবশ্যক।'),
@@ -103,6 +104,11 @@ export default function CourierPage() {
   const [allPatients, setAllPatients] = useState<Patient[]>([]);
   const [patientSearchQuery, setPatientSearchQuery] = useState('');
 
+  const [isLabelModalOpen, setIsLabelModalOpen] = useState(false);
+  const [selectedConsignmentForLabel, setSelectedConsignmentForLabel] = useState<SteadfastConsignment | null>(null);
+  const [clinicSettings, setClinicSettings] = useState<ClinicSettings | null>(null);
+
+
   const form = useForm<OrderFormValues>({
     resolver: zodResolver(orderSchema),
     defaultValues: {
@@ -118,14 +124,16 @@ export default function CourierPage() {
   const fetchCourierData = useCallback(async () => {
     setIsLoading(true);
     try {
-      const [balanceData, consignmentsData, patientsData] = await Promise.all([
+      const [balanceData, consignmentsResponse, patientsData, settings] = await Promise.all([
           getCurrentBalance(),
-          getConsignments(),
-          getPatients()
+          getAllConsignments(),
+          getPatients(),
+          getClinicSettings(),
       ]);
       setBalance(balanceData);
-      setConsignments(consignmentsData);
+      setConsignments(consignmentsResponse.data || []);
       setAllPatients(patientsData);
+      setClinicSettings(settings);
     } catch (error) {
       toast({
         title: 'তথ্য লোড করতে সমস্যা',
@@ -223,7 +231,6 @@ export default function CourierPage() {
        const orderData: SteadfastOrder = {
         ...data,
         cod_amount: Number(data.cod_amount),
-        recipient_phone: String(data.recipient_phone),
       };
       const result = await placeSteadfastOrder(orderData);
 
@@ -239,6 +246,9 @@ export default function CourierPage() {
         });
         setIsModalOpen(false);
         fetchBalance();
+        
+        setSelectedConsignmentForLabel(newConsignment);
+        setIsLabelModalOpen(true);
       } else {
         throw new Error(result.message || 'অর্ডার তৈরি করতে সমস্যা হয়েছে।');
       }
@@ -356,7 +366,7 @@ export default function CourierPage() {
       </div>
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="sm:max-w-3xl p-0">
+        <DialogContent className="sm:max-w-2xl p-0">
           <DialogHeader className="p-6 pb-4">
             <DialogTitle className="font-headline flex items-center gap-2 text-xl">
               <Truck className="h-6 w-6 text-primary"/>
@@ -400,76 +410,85 @@ export default function CourierPage() {
                         </CardContent>
                     </Card>
 
-                  <Card className="bg-muted/30">
-                    <CardHeader className="pb-4">
-                        <CardTitle className="text-base font-medium">প্রাপকের বিবরণ</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        <FormField control={form.control} name="recipient_name" render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>প্রাপকের নাম</FormLabel>
-                                <InputWithIcon icon={<User className="h-4 w-4 text-muted-foreground" />}>
-                                <FormControl><Input placeholder="প্রাপকের পুরো নাম" {...field} className="pl-10 bg-background" /></FormControl>
-                                </InputWithIcon>
-                                <FormMessage />
-                            </FormItem>
-                        )} />
-                        
-                        <FormField control={form.control} name="recipient_phone" render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>প্রাপকের ফোন</FormLabel>
-                                <InputWithIcon icon={<Phone className="h-4 w-4 text-muted-foreground" />}>
-                                <FormControl><Input placeholder="01XXXXXXXXX" {...field} className="pl-10 bg-background" /></FormControl>
-                                </InputWithIcon>
-                                <FormMessage />
-                            </FormItem>
-                        )} />
-                        <FormField control={form.control} name="recipient_address" render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>প্রাপকের ঠিকানা</FormLabel>
-                            <InputWithIcon icon={<MapPin className="h-4 w-4 text-muted-foreground" />}>
-                              <FormControl><Textarea placeholder="সম্পূর্ণ ঠিকানা" {...field} className="pl-10 bg-background" /></FormControl>
-                            </InputWithIcon>
-                            <FormMessage />
-                          </FormItem>
-                        )} />
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="bg-muted/30">
-                    <CardHeader className="pb-4">
-                        <CardTitle className="text-base font-medium">অর্ডারের বিবরণ</CardTitle>
-                    </CardHeader>
-                     <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <FormField control={form.control} name="invoice" render={({ field }) => (
-                            <FormItem>
-                            <FormLabel>ইনভয়েস আইডি</FormLabel>
-                            <InputWithIcon icon={<FileText className="h-4 w-4 text-muted-foreground" />}>
-                                <FormControl><Input placeholder="ইউনিক ইনভয়েস আইডি" {...field} className="pl-10 bg-background" /></FormControl>
-                            </InputWithIcon>
-                            <FormMessage />
-                            </FormItem>
-                        )} />
-                        <FormField control={form.control} name="cod_amount" render={({ field }) => (
-                            <FormItem>
-                            <FormLabel>ক্যাশ অন ডেলিভারি (COD)</FormLabel>
-                            <InputWithIcon icon={<span className="text-muted-foreground font-bold text-sm">৳</span>}>
-                                <FormControl><Input type="number" placeholder="0" {...field} className="pl-10 bg-background" /></FormControl>
-                            </InputWithIcon>
-                            <FormMessage />
-                            </FormItem>
-                        )} />
-                        <FormField control={form.control} name="note" render={({ field }) => (
-                            <FormItem className="md:col-span-2">
-                                <FormLabel>বিশেষ নোট (ঐচ্ছিক)</FormLabel>
-                                <InputWithIcon icon={<MessageSquare className="h-4 w-4 text-muted-foreground" />}>
-                                <FormControl><Input placeholder="ডেলিভারি সংক্রান্ত নোট" {...field} className="pl-10 bg-background" /></FormControl>
-                                </InputWithIcon>
-                                <FormMessage />
-                            </FormItem>
-                        )} />
-                    </CardContent>
-                  </Card>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <Card className="bg-muted/30 md:col-span-1">
+                             <CardHeader className="pb-4">
+                                <CardTitle className="text-base font-medium">অর্ডারের বিবরণ</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                               <FormField control={form.control} name="invoice" render={({ field }) => (
+                                    <FormItem>
+                                    <FormLabel>ইনভয়েস আইডি</FormLabel>
+                                    <InputWithIcon icon={<FileText className="h-4 w-4 text-muted-foreground" />}>
+                                        <FormControl><Input placeholder="ইউনিক ইনভয়েস আইডি" {...field} className="pl-10 bg-background" /></FormControl>
+                                    </InputWithIcon>
+                                    <FormMessage />
+                                    </FormItem>
+                                )} />
+                                <FormField control={form.control} name="cod_amount" render={({ field }) => (
+                                    <FormItem>
+                                    <FormLabel>ক্যাশ অন ডেলিভারি (COD)</FormLabel>
+                                    <InputWithIcon icon={<span className="text-muted-foreground font-bold text-sm">৳</span>}>
+                                        <FormControl><Input type="number" placeholder="0" {...field} className="pl-10 bg-background" /></FormControl>
+                                    </InputWithIcon>
+                                    <FormMessage />
+                                    </FormItem>
+                                )} />
+                            </CardContent>
+                        </Card>
+                        <Card className="bg-muted/30 md:col-span-1">
+                            <CardHeader className="pb-4">
+                                <CardTitle className="text-base font-medium">প্রাপকের বিবরণ</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <FormField control={form.control} name="recipient_name" render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>প্রাপকের নাম</FormLabel>
+                                        <InputWithIcon icon={<User className="h-4 w-4 text-muted-foreground" />}>
+                                        <FormControl><Input placeholder="প্রাপকের পুরো নাম" {...field} className="pl-10 bg-background" /></FormControl>
+                                        </InputWithIcon>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+                                
+                                <FormField control={form.control} name="recipient_phone" render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>প্রাপকের ফোন</FormLabel>
+                                        <InputWithIcon icon={<Phone className="h-4 w-4 text-muted-foreground" />}>
+                                        <FormControl><Input placeholder="01XXXXXXXXX" {...field} className="pl-10 bg-background" /></FormControl>
+                                        </InputWithIcon>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+                            </CardContent>
+                        </Card>
+                    </div>
+
+                    <Card className="bg-muted/30">
+                        <CardHeader className="pb-4">
+                            <CardTitle className="text-base font-medium">ঠিকানা ও নোট</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <FormField control={form.control} name="recipient_address" render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>প্রাপকের ঠিকানা</FormLabel>
+                                    <InputWithIcon icon={<MapPin className="h-4 w-4 text-muted-foreground" />}>
+                                    <FormControl><Textarea placeholder="সম্পূর্ণ ঠিকানা" {...field} className="pl-10 bg-background" /></FormControl>
+                                    </InputWithIcon>
+                                    <FormMessage />
+                                </FormItem>
+                                )} />
+                             <FormField control={form.control} name="note" render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>বিশেষ নোট (ঐচ্ছিক)</FormLabel>
+                                    <InputWithIcon icon={<MessageSquare className="h-4 w-4 text-muted-foreground" />}>
+                                    <FormControl><Input placeholder="ডেলিভারি সংক্রান্ত নোট" {...field} className="pl-10 bg-background" /></FormControl>
+                                    </InputWithIcon>
+                                    <FormMessage />
+                                </FormItem>
+                            )} />
+                        </CardContent>
+                    </Card>
                 </form>
               </Form>
             </div>
@@ -483,6 +502,15 @@ export default function CourierPage() {
             </DialogFooter>
         </DialogContent>
       </Dialog>
+      
+      {selectedConsignmentForLabel && (
+        <ShippingLabel
+            isOpen={isLabelModalOpen}
+            onClose={() => setIsLabelModalOpen(false)}
+            consignment={selectedConsignmentForLabel}
+            clinicSettings={clinicSettings}
+        />
+      )}
     </div>
   );
 }

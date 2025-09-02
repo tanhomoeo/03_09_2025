@@ -1,3 +1,4 @@
+
 'use server';
 
 import type { SteadfastOrder, SteadfastConsignment, SteadfastStatus, SteadfastBalance } from './types';
@@ -8,7 +9,7 @@ const SECRET_KEY = process.env.STEADFAST_SECRET_KEY;
 
 async function makeSteadfastRequest<T>(
   path: string,
-  method: 'GET' | 'POST' = 'POST',
+  method: 'GET' | 'POST' = 'GET', // Default to GET for fetching data
   body: Record<string, unknown> | null = null,
 ): Promise<T> {
   if (!BASE_URL || !API_KEY || !SECRET_KEY) {
@@ -24,6 +25,7 @@ async function makeSteadfastRequest<T>(
   const options: RequestInit = {
     method,
     headers,
+    cache: 'no-store', // Ensure fresh data is fetched every time
   };
 
   if (body) {
@@ -53,20 +55,34 @@ export const placeSteadfastOrder = async (orderData: SteadfastOrder): Promise<{ 
 };
 
 export const getDeliveryStatusByInvoice = async (invoiceId: string): Promise<SteadfastStatus> => {
-    return makeSteadfastRequest<SteadfastStatus>(`/status_by_invoice/${invoiceId}`, 'GET');
+    return makeSteadfastRequest<SteadfastStatus>(`/status_by_invoice/${invoiceId}`);
 };
 
 export const getDeliveryStatusByConsignmentId = async (consignmentId: number): Promise<SteadfastStatus> => {
-    return makeSteadfastRequest<SteadfastStatus>(`/status_by_cid/${consignmentId}`, 'GET');
+    return makeSteadfastRequest<SteadfastStatus>(`/status_by_cid/${consignmentId}`);
 };
 
 export const getDeliveryStatusByTrackingCode = async (trackingCode: string): Promise<SteadfastStatus> => {
-    return makeSteadfastRequest<SteadfastStatus>(`/status_by_trackingcode/${trackingCode}`, 'GET');
+    return makeSteadfastRequest<SteadfastStatus>(`/status_by_trackingcode/${trackingCode}`);
 };
 
 
 export const getCurrentBalance = async (): Promise<SteadfastBalance> => {
-    return makeSteadfastRequest<SteadfastBalance>('/get_balance', 'GET');
+    return makeSteadfastRequest<SteadfastBalance>('/get_balance');
 };
 
-// You can add bulk order and return request functions here later if needed.
+/**
+ * Fetches all consignments from Steadfast.
+ * Note: This endpoint might be paginated. The current implementation fetches the first page.
+ */
+export const getAllConsignments = async (): Promise<{data: SteadfastConsignment[]}> => {
+    return makeSteadfastRequest<{data: SteadfastConsignment[]}>('/get_all_orders');
+};
+
+/**
+ * Fetches consignments based on their status from Steadfast.
+ * @param status - The delivery status to filter by.
+ */
+export const getConsignmentsByStatus = async (status: string): Promise<{data: SteadfastConsignment[]}> => {
+    return makeSteadfastRequest<{data: SteadfastConsignment[]}>(`/get_orders_by_status?status=${status}`);
+};
