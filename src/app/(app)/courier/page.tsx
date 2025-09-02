@@ -205,7 +205,6 @@ export default function CourierPage() {
         });
         setIsModalOpen(false);
         fetchBalance(); // Refresh balance after order
-        window.dispatchEvent(new CustomEvent('firestoreDataChange'));
       } else {
         throw new Error(result.message || 'অর্ডার তৈরি করতে সমস্যা হয়েছে।');
       }
