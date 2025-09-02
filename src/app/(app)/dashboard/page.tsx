@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableFooter } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -309,17 +310,17 @@ export default function DashboardPage() {
                 isSearchFocused && 'max-w-lg lg:max-w-xl'
                 )}
             >
-                <input
+                <Input
                     name="search"
                     type="search"
                     placeholder="রোগী অনুসন্ধান করুন (নাম, ডায়েরি নং, ফোন...)"
-                    className="w-full h-12 text-sm pl-5 pr-14 rounded-full bg-card/80 border-2 border-transparent shadow-lg backdrop-blur-sm transition-all duration-300 ease-in-out focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background"
+                    className="w-full h-12 text-sm pl-5 pr-14 rounded-full bg-card/80 border-2 border-transparent shadow-lg backdrop-blur-sm transition-all duration-300 ease-in-out"
                     onFocus={() => setIsSearchFocused(true)}
                     onBlur={() => setIsSearchFocused(false)}
                 />
                 <button
                 type="submit"
-                className="absolute inset-y-0 right-0 flex items-center justify-center w-12 h-12 rounded-full bg-primary text-primary-foreground shadow-md transition-transform hover:scale-105 active:scale-95"
+                className="absolute inset-y-0 right-0 flex items-center justify-center w-12 h-12 rounded-full bg-blue-600 text-primary-foreground shadow-md transition-transform hover:bg-blue-700 active:scale-95"
                 >
                 <SearchIcon className="h-5 w-5" />
                 </button>
@@ -522,3 +523,5 @@ export default function DashboardPage() {
     </TooltipProvider>
   );
 }
+
+    
