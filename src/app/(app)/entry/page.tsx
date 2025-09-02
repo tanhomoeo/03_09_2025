@@ -49,7 +49,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { format, isValid } from "date-fns";
 import { bn } from "date-fns/locale";
 import { cn } from "@/lib/utils";
@@ -79,11 +78,6 @@ const patientFormSchema = z.object({
   phone: z.string().regex(/^(\+8801|01)\d{9}$/, {
     message: "একটি বৈধ বাংলাদেশী ফোন নম্বর লিখুন।",
   }),
-  guardianRelation: z
-    .enum(["father", "husband", ""], {
-      errorMap: () => ({ message: "অভিভাবকের সম্পর্ক নির্বাচন করুন।" }),
-    })
-    .optional(),
   guardianName: z.string().optional(),
   district: z.string().optional(),
   thanaUpazila: z.string().optional(),
@@ -127,7 +121,6 @@ function PatientEntryPageContent() {
       gender: "",
       occupation: "",
       phone: "",
-      guardianRelation: "",
       guardianName: "",
       district: "",
       thanaUpazila: "",
@@ -246,7 +239,7 @@ function PatientEntryPageContent() {
   const handleSaveBasicInfo = async () => {
     const basicInfoFields: (keyof PatientFormValues)[] = [
         "registrationDate", "diaryNumber", "name", "age", "gender", "occupation", 
-        "phone", "guardianRelation", "guardianName", "district", "thanaUpazila", "villageUnion"
+        "phone", "guardianName", "district", "thanaUpazila", "villageUnion"
     ];
     const triggerResult = await form.trigger(basicInfoFields);
 
@@ -262,7 +255,7 @@ function PatientEntryPageContent() {
         const patientDataPayload: Partial<Patient> = {
             name: data.name, phone: data.phone, registrationDate: data.registrationDate.toISOString(),
             age: data.age || undefined, gender: (data.gender as Patient['gender']) || undefined, 
-            occupation: data.occupation || undefined, guardianRelation: (data.guardianRelation as Patient['guardianRelation']) || undefined,
+            occupation: data.occupation || undefined, 
             guardianName: data.guardianName || undefined, district: data.district || undefined, 
             thanaUpazila: data.thanaUpazila || undefined, villageUnion: data.villageUnion || undefined,
             diaryNumber: data.diaryNumber || undefined,
@@ -299,7 +292,7 @@ function PatientEntryPageContent() {
         const fullPatientData: Partial<Patient> = {
             name: data.name, phone: data.phone, registrationDate: data.registrationDate.toISOString(),
             age: data.age || undefined, gender: (data.gender as Patient['gender']) || undefined,
-            occupation: data.occupation || undefined, guardianRelation: (data.guardianRelation as Patient['guardianRelation']) || undefined,
+            occupation: data.occupation || undefined, 
             guardianName: data.guardianName || undefined, district: data.district || undefined,
             thanaUpazila: data.thanaUpazila || undefined, villageUnion: data.villageUnion || undefined,
             diaryNumber: data.diaryNumber || undefined, caseNotes: data.caseNotes || undefined,
@@ -339,9 +332,6 @@ function PatientEntryPageContent() {
             title="নতুন রোগী নিবন্ধন"
             description="নতুন রোগী নিবন্ধন করতে নিচের বিবরণগুলি পূরণ করুন।"
             className="bg-gradient-to-br from-violet-100 to-indigo-200 dark:from-violet-900/30 dark:to-indigo-900/30"
-            actions={
-              <UserPlus className="h-8 w-8 text-primary" />
-            }
           />
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <Card className="shadow-lg border-border/30 bg-card/60 backdrop-blur-xl">
@@ -543,46 +533,10 @@ function PatientEntryPageContent() {
 
                   <FormField
                     control={form.control}
-                    name="guardianRelation"
-                    render={({ field }) => (
-                      <FormItem className="space-y-1">
-                        <FormLabel>পিতা/স্বামী</FormLabel>
-                        <FormControl>
-                          <RadioGroup
-                            onValueChange={field.onChange}
-                            value={field.value || ""}
-                            className="flex space-x-3 pt-1 items-center h-10"
-                            id="patientGuardianRelationEntry"
-                          >
-                            <FormItem className="flex items-center space-x-1.5 space-y-0">
-                              <FormControl>
-                                <RadioGroupItem value="father" />
-                              </FormControl>
-                              <FormLabel className="font-normal text-sm">
-                                পিতা
-                              </FormLabel>
-                            </FormItem>
-                            <FormItem className="flex items-center space-x-1.5 space-y-0">
-                              <FormControl>
-                                <RadioGroupItem value="husband" />
-                              </FormControl>
-                              <FormLabel className="font-normal text-sm">
-                                স্বামী
-                              </FormLabel>
-                            </FormItem>
-                          </RadioGroup>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
                     name="guardianName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>অভিভাবকের নাম (ঐচ্ছিক)</FormLabel>
+                        <FormLabel>অভিভাবক (পিতা/স্বামী)</FormLabel>
                         <FormControl>
                           <Input
                             placeholder="অভিভাবকের নাম লিখুন"

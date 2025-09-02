@@ -45,7 +45,6 @@ export interface CategorizedCaseNotes {
 }
 
 export type PatientGender = 'male' | 'female' | 'other' | '';
-export type GuardianRelation = 'father' | 'husband' | '';
 
 export interface Patient {
   id: string;
@@ -59,7 +58,6 @@ export interface Patient {
   age?: string;
   gender?: PatientGender;
   occupation?: string;
-  guardianRelation?: GuardianRelation;
   guardianName?: string;
   district?: string;
   thanaUpazila?: string;

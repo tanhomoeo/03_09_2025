@@ -29,7 +29,6 @@ import type {
   EnrichedVisit,
   CategorizedCaseNotes,
   PatientGender,
-  GuardianRelation,
 } from "@/lib/types";
 import {
   getVisitsByPatientId,
@@ -137,7 +136,6 @@ const patientInfoSchema = z.object({
   age: z.string().optional(),
   gender: z.enum(["male", "female", "other", ""]).optional(),
   occupation: z.string().optional(),
-  guardianRelation: z.enum(["father", "husband", ""]).optional(),
   guardianName: z.string().optional(),
   thanaUpazila: z.string().optional(),
   registrationDate: z
@@ -175,7 +173,6 @@ export function PatientDetailsModal({
       age: "",
       gender: "",
       occupation: "",
-      guardianRelation: "",
       guardianName: "",
       thanaUpazila: "",
       registrationDate: "",
@@ -194,7 +191,6 @@ export function PatientDetailsModal({
       age: p.age || "",
       gender: p.gender || "",
       occupation: p.occupation || "",
-      guardianRelation: p.guardianRelation || "",
       guardianName: p.guardianName || "",
       thanaUpazila: p.thanaUpazila || "",
       registrationDate: p.registrationDate
@@ -279,7 +275,6 @@ export function PatientDetailsModal({
         age: data.age || undefined,
         gender: data.gender as PatientGender,
         occupation: data.occupation || undefined,
-        guardianRelation: data.guardianRelation as GuardianRelation,
         guardianName: data.guardianName || undefined,
         thanaUpazila: data.thanaUpazila || undefined,
         registrationDate: data.registrationDate ? new Date(data.registrationDate).toISOString() : new Date().toISOString(),
@@ -361,8 +356,7 @@ export function PatientDetailsModal({
                                     <FormField control={patientInfoForm.control} name="phone" render={({ field }) => ( <FormItem><FormLabel>ফোন</FormLabel><FormControl><Input {...field} readOnly={!isEditingInfo} className={cn(!isEditingInfo && readOnlyInputFieldClass)} /></FormControl><FormMessage /></FormItem> )} />
                                     <FormField control={patientInfoForm.control} name="age" render={({ field }) => ( <FormItem><FormLabel>বয়স</FormLabel><FormControl><Input {...field} readOnly={!isEditingInfo} className={cn(!isEditingInfo && readOnlyInputFieldClass)} /></FormControl><FormMessage /></FormItem> )} />
                                     <FormField control={patientInfoForm.control} name="gender" render={({ field }) => ( <FormItem><FormLabel>লিঙ্গ</FormLabel><Select onValueChange={field.onChange} value={field.value || ""} disabled={!isEditingInfo}><FormControl><SelectTrigger className={cn(!isEditingInfo && readOnlyInputFieldClass, !isEditingInfo && "cursor-default")}><SelectValue placeholder="লিঙ্গ নির্বাচন করুন" /></SelectTrigger></FormControl><SelectContent><SelectItem value="male">পুরুষ</SelectItem><SelectItem value="female">মহিলা</SelectItem><SelectItem value="other">অন্যান্য</SelectItem></SelectContent></Select><FormMessage /></FormItem> )} />
-                                    <FormField control={patientInfoForm.control} name="guardianName" render={({ field }) => ( <FormItem><FormLabel>অভিভাবকের নাম</FormLabel><FormControl><Input {...field} readOnly={!isEditingInfo} className={cn(!isEditingInfo && readOnlyInputFieldClass)} /></FormControl><FormMessage /></FormItem> )} />
-                                    <FormField control={patientInfoForm.control} name="guardianRelation" render={({ field }) => ( <FormItem><FormLabel>পিতা/স্বামী</FormLabel><Select onValueChange={field.onChange} value={field.value || ""} disabled={!isEditingInfo}><FormControl><SelectTrigger className={cn(!isEditingInfo && readOnlyInputFieldClass, !isEditingInfo && "cursor-default")}><SelectValue placeholder="সম্পর্ক নির্বাচন করুন" /></SelectTrigger></FormControl><SelectContent><SelectItem value="father">পিতা</SelectItem><SelectItem value="husband">স্বামী</SelectItem></SelectContent></Select><FormMessage /></FormItem> )} />
+                                    <FormField control={patientInfoForm.control} name="guardianName" render={({ field }) => ( <FormItem><FormLabel>অভিভাবক (পিতা/স্বামী)</FormLabel><FormControl><Input {...field} readOnly={!isEditingInfo} className={cn(!isEditingInfo && readOnlyInputFieldClass)} /></FormControl><FormMessage /></FormItem> )} />
                                     <FormField control={patientInfoForm.control} name="occupation" render={({ field }) => ( <FormItem><FormLabel>পেশা</FormLabel><Select onValueChange={field.onChange} value={field.value || ""} disabled={!isEditingInfo}><FormControl><SelectTrigger className={cn(!isEditingInfo && readOnlyInputFieldClass, !isEditingInfo && "cursor-default")}><SelectValue placeholder="পেশা নির্বাচন করুন" /></SelectTrigger></FormControl><SelectContent><SelectItem value="student">ছাত্র/ছাত্রী</SelectItem><SelectItem value="housewife">গৃহিণী</SelectItem><SelectItem value="service">চাকুরীজীবী</SelectItem><SelectItem value="business">ব্যবসায়ী</SelectItem><SelectItem value="farmer">কৃষক</SelectItem><SelectItem value="labourer">শ্রমিক</SelectItem><SelectItem value="unemployed">বেকার</SelectItem><SelectItem value="retired">অবসরপ্রাপ্ত</SelectItem><SelectItem value="other">অন্যান্য</SelectItem></SelectContent></Select><FormMessage /></FormItem> )} />
                                     <FormField control={patientInfoForm.control} name="villageUnion" render={({ field }) => ( <FormItem><FormLabel>গ্রাম/ইউনিয়ন</FormLabel><FormControl><Input {...field} readOnly={!isEditingInfo} className={cn(!isEditingInfo && readOnlyInputFieldClass)} /></FormControl><FormMessage /></FormItem> )} />
                                     <FormField control={patientInfoForm.control} name="thanaUpazila" render={({ field }) => ( <FormItem><FormLabel>থানা/উপজেলা</FormLabel><FormControl><Input {...field} readOnly={!isEditingInfo} className={cn(!isEditingInfo && readOnlyInputFieldClass)} /></FormControl><FormMessage /></FormItem> )} />
