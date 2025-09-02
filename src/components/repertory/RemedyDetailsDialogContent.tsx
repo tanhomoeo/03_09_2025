@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -71,5 +70,3 @@ export function RemedyDetailsDialogContent({ remedyName }: RemedyDetailsDialogCo
     </DialogContent>
   );
 }
-
-    

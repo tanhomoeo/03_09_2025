@@ -1,4 +1,3 @@
-
 'use client';
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import dynamic from 'next/dynamic';
@@ -225,7 +224,7 @@ export const RepertoryBrowser: React.FC<RepertoryBrowserProps> = ({ chapters = [
                         key={chapter.id}
                         variant={selectedChapter?.id === chapter.id ? "secondary" : "ghost"}
                         className={cn(
-                          "w-full justify-start mb-1 text-left h-auto py-2.5 text-base",
+                          "w-full justify-start mb-1 text-left h-auto py-2.5",
                           selectedChapter?.id === chapter.id && "bg-primary/10 text-primary"
                         )}
                         onClick={() => handleChapterSelect(chapter)}
@@ -233,7 +232,7 @@ export const RepertoryBrowser: React.FC<RepertoryBrowserProps> = ({ chapters = [
                           <div className={cn("transition-colors", selectedChapter?.id === chapter.id ? "text-primary" : "text-muted-foreground")}>
                             {getChapterIcon(chapter.name.en)}
                           </div>
-                          <span className="font-medium">{chapter.name[language] || chapter.name.en}</span>
+                          <span className="font-medium text-sm">{chapter.name[language] || chapter.name.en}</span>
                           <ChevronRight className="ml-auto h-5 w-5 text-muted-foreground/50"/>
                         </Button>
                     );
