@@ -264,7 +264,7 @@ export default function DashboardPage() {
     <TooltipProvider>
     <div className="space-y-6 md:space-y-8">
       
-       <div className="md:hidden hide-on-print p-2.5 bg-gradient-to-r from-slate-50 to-gray-100 dark:from-slate-900/80 dark:to-gray-900/80 shadow-sm sticky top-0 z-40 backdrop-blur-lg">
+       <div className="md:hidden hide-on-print p-2.5 bg-background/70 shadow-sm sticky top-0 z-40 backdrop-blur-lg">
         <div className="flex items-center justify-between">
            <button type="button" onClick={toggleSidebar} className="flex items-center gap-2 flex-shrink-0 -ml-1">
               <Image src="/icons/icon.png" width={28} height={28} alt="Logo" data-ai-hint="clinic health logo" className="flex-shrink-0"/>
@@ -276,7 +276,7 @@ export default function DashboardPage() {
                 className="h-auto rounded-md text-xs font-bold backdrop-blur-lg transition-all duration-300 ease-in-out p-1.5 px-3 bg-gradient-to-r from-blue-100 to-indigo-200 text-blue-800 dark:from-blue-900/40 dark:to-indigo-900/40 dark:text-blue-200 shadow-sm flex flex-col"
             >
                 <span className="text-[10px] font-medium opacity-80 -mb-0.5">ব্যালেন্স দেখুন</span>
-                <span className="text-sm font-bold">{formatCurrency(stats.todayRevenue || 0)}</span>
+                <span className="text-sm font-bold">{showRevenue ? formatCurrency(stats.todayRevenue || 0) : 'দেখুন'}</span>
             </Button>
         </div>
        </div>
