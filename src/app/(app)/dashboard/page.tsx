@@ -264,9 +264,9 @@ export default function DashboardPage() {
     <TooltipProvider>
     <div className="space-y-6 md:space-y-8">
       
-       <div className="md:hidden hide-on-print p-2">
-        <div className="bg-card/80 backdrop-blur-lg p-2.5 shadow-md flex items-center justify-between border-b rounded-lg">
-           <button type="button" onClick={toggleSidebar} className="flex items-center gap-2 flex-shrink-0">
+       <div className="md:hidden hide-on-print p-2.5 bg-gradient-to-r from-slate-50 to-gray-100 dark:from-slate-900/80 dark:to-gray-900/80 shadow-sm sticky top-0 z-40 backdrop-blur-lg">
+        <div className="flex items-center justify-between">
+           <button type="button" onClick={toggleSidebar} className="flex items-center gap-2 flex-shrink-0 -ml-1">
               <Image src="/icons/icon.png" width={28} height={28} alt="Logo" data-ai-hint="clinic health logo" className="flex-shrink-0"/>
               <span className="font-bold text-md">{APP_NAME}</span>
            </button>
@@ -286,8 +286,8 @@ export default function DashboardPage() {
             </Button>
         </div>
        </div>
-      
-      <div className="hide-on-print flex justify-center my-4 md:my-0">
+
+      <div className="hide-on-print flex justify-center my-4 md:my-0 px-4">
         <div className="relative w-full max-w-sm lg:max-w-md focus-within:max-w-xl transition-all duration-300 ease-in-out">
             <form onSubmit={handleDashboardSearch} className="relative w-full">
                 <Input
@@ -310,7 +310,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="hide-on-print">
+      <div className="hide-on-print px-4">
         <h2 className="text-lg md:text-xl font-semibold font-headline mb-3">দ্রুত কার্যক্রম</h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
            <QuickActionCard
@@ -348,7 +348,7 @@ export default function DashboardPage() {
         </div>
       </div>
       
-       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 hide-on-print">
+       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 hide-on-print px-4">
         <ActivityCard
           title="দৈনিক কার্যকলাপ"
           icon={CalendarDays}
@@ -374,7 +374,7 @@ export default function DashboardPage() {
         />
       </div>
 
-      <Card className="dashboard-appointments-card hide-on-print hidden md:block">
+      <Card className="dashboard-appointments-card hide-on-print hidden md:block mx-4">
         <CardHeader className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
           <div>
             <CardTitle className="font-headline text-lg md:text-xl">আজকের সাক্ষাৎকার</CardTitle>

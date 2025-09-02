@@ -37,7 +37,7 @@ export default function AppLayout({
   return (
     <SidebarProvider>
       <AppSidebar />
-      <main className="flex-1 md:p-8 md:ml-0 max-w-6xl mx-auto w-full">
+      <main className="flex-1 md:ml-0 max-w-6xl mx-auto w-full">
         {children}
       </main>
       <MobileBottomNav />
