@@ -7,7 +7,6 @@ import { usePathname, useRouter } from 'next/navigation';
 import { Home, UserPlus, Wand2, Truck, Camera } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ROUTES } from '@/lib/constants';
-import { useToast } from '@/hooks/use-toast';
 import type { HandwrittenFormOutput } from '@/ai/flows/handwritten-patient-form-parser-flow';
 import dynamic from 'next/dynamic';
 import type { ScanPatientFormModalProps } from '@/components/patient/ScanPatientFormModal';
@@ -28,7 +27,6 @@ const ScanPatientFormModal = dynamic<ScanPatientFormModalProps>(
 export function MobileBottomNav() {
   const pathname = usePathname();
   const router = useRouter();
-  const { toast } = useToast();
   const [isCameraModalOpen, setIsCameraModalOpen] = useState(false);
 
   const handleDataExtracted = (extractedData: HandwrittenFormOutput) => {
@@ -42,18 +40,13 @@ export function MobileBottomNav() {
     if (extractedData.age) query.set('age', extractedData.age);
     
     setIsCameraModalOpen(false);
-    
-    toast({
-      title: "ফর্ম ডেটা প্রস্তুত",
-      description: "শনাক্ত করা তথ্য দিয়ে নিবন্ধন ফর্মটি পূরণ করা হচ্ছে।",
-    });
 
     router.push(`${ROUTES.PATIENT_ENTRY}?${query.toString()}`);
   };
 
   return (
     <>
-      <div className="md:hidden fixed bottom-0 left-0 z-50 w-full h-14 bg-gradient-to-br from-green-100 to-lime-200 border-t border-border/20 backdrop-blur-lg">
+      <div className="md:hidden fixed bottom-0 left-0 z-50 w-full h-14 bg-background/70 border-t border-border/20 backdrop-blur-lg">
         <div className="grid h-full max-w-lg grid-cols-5 mx-auto font-medium">
           {navItems.map((item) => {
             if (item.href === 'SCAN_ACTION') {

@@ -276,12 +276,12 @@ export default function DashboardPage() {
     <TooltipProvider>
     <div className="space-y-6 md:space-y-8">
       
-       <div className={cn("md:hidden hide-on-print py-3 sticky top-0 z-40 backdrop-blur-lg",
+       <div className={cn("md:hidden hide-on-print py-3 sticky top-0 z-40 backdrop-blur-lg -mx-4 sm:-mx-6",
         "bg-background/70 shadow-sm"
        )}>
         <div className="flex items-center justify-between px-4 sm:px-6">
            <button type="button" onClick={toggleSidebar} className="flex items-center gap-3 flex-shrink-0 -ml-1">
-              <div className="p-1.5 bg-card rounded-full shadow-md">
+              <div className="p-1.5 bg-white/50 dark:bg-black/20 rounded-full shadow-md">
                 <Image src="/icons/icon.png" width={28} height={28} alt="Logo" data-ai-hint="clinic health logo" className="flex-shrink-0"/>
               </div>
               <span className="font-bold text-lg text-primary">{APP_NAME}</span>
@@ -297,14 +297,14 @@ export default function DashboardPage() {
             >
               <div className="relative h-4 flex items-center overflow-hidden">
                   <span className={cn(
-                      "transition-all duration-300 opacity-100 translate-y-0",
-                      showRevenue && "opacity-0 -translate-y-2"
+                      "transition-all duration-300",
+                      showRevenue ? "opacity-0 -translate-y-full" : "opacity-100 translate-y-0"
                   )}>
                       ব্যালেন্স
                   </span>
                   <span className={cn(
-                      "absolute inset-0 transition-all duration-300 font-semibold opacity-0 translate-y-2",
-                      showRevenue && "opacity-100 translate-y-0"
+                      "absolute inset-0 transition-all duration-300 font-semibold",
+                      showRevenue ? "opacity-100 translate-y-0" : "opacity-0 translate-y-full"
                   )}>
                       {formatCurrency(stats.todayRevenue || 0)}
                   </span>
