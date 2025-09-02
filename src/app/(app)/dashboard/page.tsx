@@ -97,7 +97,6 @@ export default function DashboardPage() {
   const [showRevenue, setShowRevenue] = useState(false);
   const revenueTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { toggleSidebar } = useSidebar();
-  const [isSearchFocused, setIsSearchFocused] = useState(false);
 
   useEffect(() => {
     setClientRenderedTimestamp(new Date());
@@ -248,7 +247,8 @@ export default function DashboardPage() {
   
   const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const searchTerm = e.currentTarget.search.value;
+    const formData = new FormData(e.currentTarget);
+    const searchTerm = formData.get('search') as string;
     if (searchTerm) {
       router.push(`${ROUTES.PATIENT_SEARCH}?q=${searchTerm}`);
     }
@@ -305,8 +305,7 @@ export default function DashboardPage() {
             <form
                 onSubmit={handleSearchSubmit}
                 className={cn(
-                'relative w-full max-w-[280px] lg:max-w-xs transition-all duration-300 ease-in-out',
-                isSearchFocused ? 'max-w-md lg:max-w-lg' : 'max-w-[280px] lg:max-w-xs'
+                'relative w-full max-w-[280px] lg:max-w-xs transition-all duration-300 ease-in-out focus-within:max-w-md lg:focus-within:max-w-lg'
                 )}
             >
                 <Input
@@ -314,8 +313,6 @@ export default function DashboardPage() {
                     type="search"
                     placeholder="রোগী অনুসন্ধান করুন (নাম, ডায়েরি নং...)"
                     className="w-full h-11 text-sm pl-4 pr-12 rounded-full bg-card/80 border-2 border-transparent shadow-lg backdrop-blur-sm focus:outline-none"
-                    onFocus={() => setIsSearchFocused(true)}
-                    onBlur={() => setIsSearchFocused(false)}
                 />
                 <button
                 type="submit"
@@ -369,7 +366,7 @@ export default function DashboardPage() {
           <div>
             <CardTitle className="font-headline text-lg md:text-xl">আজকের সাক্ষাৎকার</CardTitle>
             <CardDescription className="text-sm">
-              {clientRenderedTimestamp ? format(clientRenderedTimestamp, "eeee, MMMM dd, yyyy", { locale: bn }) : 'লোড হচ্ছে...'}
+              {clientRenderedTimestamp && isValid(clientRenderedTimestamp) ? format(clientRenderedTimestamp, "eeee, MMMM dd, yyyy", { locale: bn }) : 'লোড হচ্ছে...'}
             </CardDescription>
           </div>
           <Button variant="outline" size="sm" onClick={handlePrintAppointments}><Printer className="mr-2 h-4 w-4" /> প্রিন্ট তালিকা</Button>

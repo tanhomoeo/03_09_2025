@@ -2,7 +2,7 @@
 "use client";
 
 import { UseFormReturn } from "react-hook-form";
-import { Loader2, Mic } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -37,9 +37,8 @@ export function SymptomForm({ form, onSubmit, isLoading }: SymptomFormProps) {
                   {...field}
                 />
               </FormControl>
-              <p className="text-xs text-muted-foreground pt-1 flex items-center gap-1">
-                <Mic className="h-3 w-3" />
-                <span>টিপস: ভয়েস টাইপিংয়ের জন্য কীবোর্ডের &apos;V&apos; কী চাপুন।</span>
+              <p className="text-xs text-muted-foreground pt-1">
+                 টিপস: ভয়েস টাইপিংয়ের জন্য কীবোর্ডের &apos;Control&apos; কী চেপে ধরে রাখুন।
               </p>
               <FormMessage />
             </FormItem>

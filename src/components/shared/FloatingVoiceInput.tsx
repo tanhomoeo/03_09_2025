@@ -58,8 +58,8 @@ export function FloatingVoiceInput() {
   }
 
   const buttonTitle = isListening
-    ? "শোনা বন্ধ করতে ক্লিক করুন অথবা 'V' চাপুন"
-    : "ভয়েস টাইপিং শুরু করতে ক্লিক করুন অথবা 'V' চাপুন";
+    ? "শোনা বন্ধ করতে ক্লিক করুন অথবা 'Control' চাপুন"
+    : "ভয়েস টাইপিং শুরু করতে ক্লিক করুন অথবা 'Control' চাপুন";
 
   return (
     <Button

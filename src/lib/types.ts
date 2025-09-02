@@ -42,6 +42,7 @@ export interface CategorizedCaseNotes {
     treatmentSystems?: string;
     otherTreatments?: string;
   };
+  keySymptoms?: string[];
 }
 
 export type PatientGender = 'male' | 'female' | 'other' | '';
@@ -104,7 +105,7 @@ export interface Prescription {
   diagnosis?: string;
 }
 
-export type PaymentMethod = 'cash' | 'bkash' | 'nagad' | 'rocket' | 'other';
+export type PaymentMethod = 'cash' | 'bkash' | 'nagad' | 'rocket' | 'other' | '';
 
 export interface PaymentSlip {
   id: string;

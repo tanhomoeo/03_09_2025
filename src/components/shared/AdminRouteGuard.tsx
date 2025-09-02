@@ -8,6 +8,7 @@ import { Loader2, ShieldAlert } from 'lucide-react';
 import { PageHeaderCard } from './PageHeaderCard';
 import { Button } from '../ui/button';
 import { ROUTES } from '@/lib/constants';
+import { LoadingSpinner } from './LoadingSpinner';
 
 interface AdminRouteGuardProps {
   children: React.ReactNode;
@@ -19,12 +20,7 @@ export default function AdminRouteGuard({ children }: AdminRouteGuardProps) {
 
   if (loading || !user) {
     return (
-      <div className="flex h-screen w-full items-center justify-center" aria-live="polite" aria-busy="true">
-        <div className="flex flex-col items-center gap-4">
-            <Loader2 className="h-12 w-12 animate-spin text-primary" />
-            <p className="text-muted-foreground">অ্যাক্সেস যাচাই করা হচ্ছে...</p>
-        </div>
-      </div>
+      <LoadingSpinner variant="page" label="অ্যাক্সেস যাচাই করা হচ্ছে..." />
     );
   }
 

@@ -159,7 +159,7 @@ export function CreatePaymentSlipModal({ patient, isOpen, onClose, onSlipCreated
                 <FormItem>
                   <FormLabel>টাকার পরিমাণ (BDT)</FormLabel>
                    <FormControl>
-                     <Input type="number" placeholder="0.00" {...field} />
+                     <Input type="number" placeholder="0" {...field} />
                    </FormControl>
                   <FormMessage />
                 </FormItem>

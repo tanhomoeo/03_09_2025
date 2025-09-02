@@ -34,7 +34,6 @@ import {
   ClipboardEdit,
   Lightbulb,
   Save,
-  UserPlus,
 } from "lucide-react";
 import {
   Popover,
@@ -638,6 +637,9 @@ function PatientEntryPageContent() {
                           className="text-base"
                         />
                       </FormControl>
+                       <p className="text-xs text-muted-foreground pt-1">
+                          টিপস: ভয়েস টাইপিংয়ের জন্য কীবোর্ডের &apos;Control&apos; কী চেপে ধরে রাখুন।
+                       </p>
                       <FormMessage />
                     </FormItem>
                   )}
