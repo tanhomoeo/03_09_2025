@@ -1,6 +1,6 @@
 
 'use client';
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -181,16 +181,10 @@ const searchInRubrics = (rubrics: Rubric[] | undefined, searchTerm: string, lang
 
 
 export const RepertoryBrowser: React.FC<RepertoryBrowserProps> = ({ chapters = [] }) => {
-  const [selectedChapter, setSelectedChapter] = useState<Chapter | null>(null);
+  const [selectedChapter, setSelectedChapter] = useState<Chapter | null>(chapters.length > 0 ? chapters[0] : null);
   const [searchTerm, setSearchTerm] = useState('');
   const [language, setLanguage] = useState<Language>('bn');
   
-  useEffect(() => {
-    if (Array.isArray(chapters) && chapters.length > 0 && !selectedChapter) {
-        setSelectedChapter(chapters[0]);
-    }
-  }, [chapters, selectedChapter]);
-
   const filteredRubrics = useMemo(() => {
     if (!selectedChapter) return [];
     if (searchTerm) {

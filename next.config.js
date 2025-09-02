@@ -16,7 +16,7 @@ const nextConfig = {
 
     if (isServer) {
         // Exclude problematic modules from server bundle if they cause issues.
-        config.externals = [...(config.externals || []), '@opentelemetry/winston-transport', 'handlebars'];
+        config.externals = [...(config.externals || []), '@opentelemetry/winston-transport'];
     }
 
     return config;
