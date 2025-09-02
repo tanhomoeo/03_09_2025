@@ -127,6 +127,7 @@ export interface ClinicSettings {
   clinicAddress?: string;
   clinicContact?: string;
   bmRegNo?: string;
+  clinicLogo?: string;
 }
 
 export interface EnrichedVisit extends Visit {
@@ -254,5 +255,3 @@ export interface TrackingUpdatePayload {
     tracking_message: string;
     updated_at: string; // YYYY-MM-DD HH:MM:SS
 }
-
-    
