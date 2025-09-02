@@ -89,7 +89,7 @@ export type SuggestRemediesOutput = z.infer<typeof SuggestRemediesOutputSchema>;
 
 const loadKnowledgeBase = (fileName: string): string => {
     try {
-        const fullPath = path.join(process.cwd(), 'public', 'data', fileName);
+        const fullPath = path.join(process.cwd(), 'src', 'ai', 'data', fileName);
         return fs.readFileSync(fullPath, 'utf-8');
     } catch (error) {
         console.error(`Error reading knowledge base file ${fileName}:`, error);

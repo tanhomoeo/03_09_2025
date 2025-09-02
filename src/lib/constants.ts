@@ -19,7 +19,7 @@ export const ROUTES = {
 };
 
 export const APP_NAME = 'ত্রিফুল আরোগ্য নিকেতন';
-export const APP_VERSION = '1.12.0';
+export const APP_VERSION = '1.13.0';
 
 // To grant admin privileges, add Firebase Authentication UIDs to this array.
 // You can find the UID in the Firebase Console > Authentication > Users table.

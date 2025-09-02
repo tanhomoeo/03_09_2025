@@ -5,6 +5,7 @@ import React from 'react';
 import { Brain, Stethoscope, Sparkle, Dna, Activity, Syringe, HeartPulse } from 'lucide-react';
 import type { CategorizedCaseNotes } from '@/lib/types';
 import { cn } from '@/lib/utils';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export const LABELS: Record<string, { title: string; subs: Record<string, string>; icon: React.ElementType }> = {
   physicalSymptoms: {
@@ -81,11 +82,9 @@ export const LABELS: Record<string, { title: string; subs: Record<string, string
 interface CategorizedSymptomsDisplayProps {
   symptoms: CategorizedCaseNotes;
   labels: typeof LABELS;
-  showNumbers?: boolean;
-  highlightedSymptoms?: string[];
 }
 
-export const CategorizedSymptomsDisplay: React.FC<CategorizedSymptomsDisplayProps> = ({ symptoms, labels, showNumbers = false, highlightedSymptoms = [] }) => {
+export const CategorizedSymptomsDisplay: React.FC<CategorizedSymptomsDisplayProps> = ({ symptoms, labels }) => {
   const categoryGradients = [
     'from-sky-100 to-blue-100 dark:from-sky-900/40 dark:to-blue-900/40',
     'from-violet-100 to-indigo-100 dark:from-violet-900/40 dark:to-indigo-900/40',
@@ -95,11 +94,6 @@ export const CategorizedSymptomsDisplay: React.FC<CategorizedSymptomsDisplayProp
     'from-amber-100 to-orange-100 dark:from-amber-900/40 dark:to-orange-900/40',
     'from-rose-100 to-pink-100 dark:from-rose-900/40 dark:to-pink-900/40',
   ];
-
-  const isHighlighted = (text: string) => {
-    if (!text) return false;
-    return highlightedSymptoms.some(highlight => text.includes(highlight) || highlight.includes(text));
-  };
 
   return (
     <div className="space-y-4">
@@ -112,20 +106,18 @@ export const CategorizedSymptomsDisplay: React.FC<CategorizedSymptomsDisplayProp
         const CategoryIcon = categoryInfo.icon;
 
         return (
-          <div key={categoryKey} className="rounded-lg border bg-card/40 shadow-sm overflow-hidden">
-            <div className={cn("p-3 bg-gradient-to-r", categoryGradients[index % categoryGradients.length])}>
-                <h4 className="font-bold text-base text-slate-700 dark:text-slate-200 flex items-center">
-                    {showNumbers && <span className="mr-2 text-primary/70 dark:text-primary-foreground/70 font-mono text-lg">{index + 1}.</span>}
+          <Card key={categoryKey} className="rounded-lg border bg-card/40 shadow-sm overflow-hidden">
+            <CardHeader className={cn("p-3 bg-gradient-to-r", categoryGradients[index % categoryGradients.length])}>
+                <CardTitle className="font-bold text-base text-slate-700 dark:text-slate-200 flex items-center">
                     <CategoryIcon className="w-5 h-5 mr-2 text-primary/80 dark:text-primary-foreground/80"/>
                     {categoryInfo.title}
-                </h4>
-            </div>
-            <div className="p-4 space-y-2 text-sm">
+                </CardTitle>
+            </CardHeader>
+            <CardContent className="p-4 space-y-2 text-sm">
               {Object.entries(subcategories!).map(([subKey, value]) => {
                 if (typeof value === 'string' && value.trim() !== '') {
-                  const highlight = isHighlighted(value);
                   return (
-                    <div key={subKey} className={cn("grid grid-cols-3 gap-2 p-1 rounded-md", highlight && "bg-yellow-200/50 dark:bg-yellow-800/30")}>
+                    <div key={subKey} className="grid grid-cols-3 gap-2 p-1 rounded-md">
                       <strong className="font-semibold text-foreground/80 col-span-1">{categoryInfo.subs[subKey] || subKey}:</strong> 
                       <p className="text-foreground/90 col-span-2">{value}</p>
                     </div>
@@ -133,12 +125,10 @@ export const CategorizedSymptomsDisplay: React.FC<CategorizedSymptomsDisplayProp
                 }
                 return null;
               })}
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         );
       })}
     </div>
   );
 };
-
-    

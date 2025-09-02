@@ -10,14 +10,12 @@ interface RepertorySuggestionDisplayProps {
 
 export function RepertorySuggestionDisplay({ suggestion }: RepertorySuggestionDisplayProps) {
   return (
-    <Alert className="mb-6 bg-yellow-50/70 border-yellow-200/80 text-yellow-900 shadow-inner">
-      <Lightbulb className="h-4 w-4 text-yellow-600" />
-      <AlertTitle className="font-bold text-yellow-800">রেপার্টরির পরামর্শ</AlertTitle>
-      <AlertDescription className="text-yellow-700">
+    <Alert className="mb-6 bg-blue-100/70 border-blue-300/80 text-blue-900 dark:bg-blue-900/30 dark:border-blue-700/50 dark:text-blue-200 shadow-md">
+      <Lightbulb className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+      <AlertTitle className="font-bold text-lg text-blue-800 dark:text-blue-300">রেপার্টরির পরামর্শ</AlertTitle>
+      <AlertDescription className="text-blue-800/90 dark:text-blue-300/90 pt-1">
         {suggestion}
       </AlertDescription>
     </Alert>
   );
 }
-
-    
