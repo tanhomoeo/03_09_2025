@@ -275,7 +275,7 @@ export default function CourierPage() {
               <FormField control={form.control} name="note" render={({ field }) => ( <FormItem> <FormLabel>বিশেষ নোট (ঐচ্ছিক)</FormLabel> <FormControl> <Textarea placeholder="ডেলিভারি সংক্রান্ত নোট" {...field} /> </FormControl> <FormMessage /> </FormItem> )}/>
               <DialogFooter>
                 <DialogClose asChild>
-                  <Button type="button" variant="outline"> বাতিল </Button>
+                  <Button type="button" variant="outline">বাতিল</Button>
                 </DialogClose>
                 <Button type="submit" disabled={form.formState.isSubmitting}>
                   {form.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
@@ -289,5 +289,3 @@ export default function CourierPage() {
     </div>
   );
 }
-
-    

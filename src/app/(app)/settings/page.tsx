@@ -261,9 +261,23 @@ export default function AppSettingsPage() {
           <CardDescription>আপনার অ্যাকাউন্ট থেকে লগ আউট করুন।</CardDescription>
         </CardHeader>
         <CardContent>
-          <Button variant="destructive" onClick={handleLogout}>
-            <LogOut className="mr-2 h-4 w-4" /> লগ আউট
-          </Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="destructive"><LogOut className="mr-2 h-4 w-4" /> লগ আউট</Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>আপনি কি লগ আউট করতে নিশ্চিত?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  আপনাকে আবার লগইন করতে হবে আপনার কাজ চালিয়ে যাওয়ার জন্য।
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>বাতিল</AlertDialogCancel>
+                <AlertDialogAction onClick={handleLogout}>নিশ্চিত করুন</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </CardContent>
       </Card>
 

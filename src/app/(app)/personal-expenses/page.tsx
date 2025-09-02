@@ -473,9 +473,7 @@ export default function PersonalExpensesPage() {
               />
               <DialogFooter>
                 <DialogClose asChild>
-                  <Button type="button" variant="outline">
-                    বাতিল
-                  </Button>
+                  <Button type="button" variant="outline">বাতিল</Button>
                 </DialogClose>
                 <Button type="submit" disabled={form.formState.isSubmitting}>
                   {form.formState.isSubmitting && (
