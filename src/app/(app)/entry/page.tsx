@@ -34,7 +34,6 @@ import {
   ClipboardEdit,
   Lightbulb,
   Save,
-  UserPlus,
 } from "lucide-react";
 import {
   Popover,

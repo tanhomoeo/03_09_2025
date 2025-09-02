@@ -138,7 +138,7 @@ export default function EnhancedReportPage() {
           return isValid(slipDate) && slipDate >= finalStartDate && slipDate <= finalEndDate;
         })
 
-        let itemsMap = new Map<string, ReportData>();
+        const itemsMap = new Map<string, ReportData>();
 
         // Process visits
         dateFilteredVisits.forEach(visit => {

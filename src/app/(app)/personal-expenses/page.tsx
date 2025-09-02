@@ -56,7 +56,6 @@ import {
   Trash2,
   Loader2,
   Search,
-  Calendar,
   Wallet,
   Landmark,
   Utensils,
@@ -188,7 +187,7 @@ export default function PersonalExpensesPage() {
         description: 'খরচটি তালিকা থেকে মুছে ফেলা হয়েছে।',
       });
       fetchExpenses();
-    } catch (error) {
+    } catch (_error) {
       toast({
         title: 'ত্রুটি',
         description: 'খরচটি মুছতে সমস্যা হয়েছে।',
@@ -224,7 +223,7 @@ export default function PersonalExpensesPage() {
       }
       fetchExpenses();
       setIsModalOpen(false);
-    } catch (error) {
+    } catch (_error) {
       toast({
         title: 'ত্রুটি',
         description: 'তথ্য সংরক্ষণ করতে সমস্যা হয়েছে।',
@@ -394,7 +393,7 @@ export default function PersonalExpensesPage() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              {editingMedicine ? 'খরচ সম্পাদনা করুন' : 'নতুন খরচ যোগ করুন'}
+              {editingExpense ? 'খরচ সম্পাদনা করুন' : 'নতুন খরচ যোগ করুন'}
             </DialogTitle>
             <DialogDescription>
               খরচের বিবরণ পূরণ করে সংরক্ষণ করুন।

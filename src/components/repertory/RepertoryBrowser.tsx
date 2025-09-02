@@ -8,7 +8,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { 
     Search, ChevronDown, ChevronRight, Dot, PlusCircle, Languages,
-    BrainCircuit, Star, User, Eye, Ear, Wind, Smile, Bone, Mic, Droplet, Droplets, UserRound, AirVent, Lung, Heart, Hand, Moon, Snowflake, Thermometer, Loader2
+    BrainCircuit, Star, User, Eye, Ear, Wind, Smile, Bone, Mic, Droplet, Droplets, UserRound, AirVent, Heart, Hand, Moon, Snowflake, Thermometer, Loader2
 } from 'lucide-react';
 import type { Chapter, Rubric, Remedy } from '@/lib/types';
 import { cn } from '@/lib/utils';
@@ -66,7 +66,7 @@ const getChapterIcon = (chapterNameEn: string): React.ReactNode => {
         'female genitalia': UserRound,
         larynx: AirVent,
         trachea: AirVent,
-        respiration: Lung,
+        respiration: Wind,
         cough: Mic,
         expectoration: Mic,
         chest: Heart,

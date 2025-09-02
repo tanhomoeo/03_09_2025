@@ -8,6 +8,7 @@ import { Printer } from 'lucide-react';
 import { APP_NAME } from '@/lib/constants';
 import Barcode from 'react-barcode';
 import { QRCodeSVG } from 'qrcode.react';
+import Image from 'next/image';
 
 interface ShippingLabelProps {
   consignment: SteadfastConsignment;
@@ -139,7 +140,7 @@ export function ShippingLabel({ consignment, clinicSettings, isOpen, onClose }: 
         <div id="shipping-label-print-area" className="label-container p-4 border-2 border-black rounded-lg">
           <div className="header flex items-center justify-center gap-4 border-b-2 border-black pb-3 mb-3">
              {clinicSettings?.clinicLogo ? (
-                 <img src={clinicSettings.clinicLogo} alt="Clinic Logo" className="logo h-12 w-12" />
+                 <Image src={clinicSettings.clinicLogo} alt="Clinic Logo" className="logo" width={40} height={40} />
              ) : (
                  <div className="logo h-12 w-12 bg-gray-200 flex items-center justify-center rounded-full">
                      <span className="text-sm font-bold text-gray-500">Logo</span>

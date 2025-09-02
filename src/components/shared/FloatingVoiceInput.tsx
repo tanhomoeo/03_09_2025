@@ -5,11 +5,9 @@ import { Button } from '@/components/ui/button';
 import { Mic, Loader2, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { useToast } from '@/hooks/use-toast';
 import { useVoiceContext } from '@/contexts/VoiceInputContext';
 
 export function FloatingVoiceInput() {
-  const { toast } = useToast();
   const isMobile = useIsMobile();
   const {
     isListening,

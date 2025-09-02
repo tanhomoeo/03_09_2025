@@ -48,13 +48,12 @@ import {
 import type { Medicine } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import {
-  Store,
   PlusCircle,
   Pencil,
   Trash2,
   Loader2,
   Search,
-  PackageWarning,
+  AlertTriangle,
 } from 'lucide-react';
 import {
   AlertDialog,
@@ -165,7 +164,7 @@ export default function StoreManagementPage() {
         description: 'ঔষধটি তালিকা থেকে মুছে ফেলা হয়েছে।',
       });
       fetchMedicines();
-    } catch (error) {
+    } catch (_error) {
       toast({
         title: 'ত্রুটি',
         description: 'ঔষধটি মুছতে সমস্যা হয়েছে।',
@@ -191,7 +190,7 @@ export default function StoreManagementPage() {
       }
       fetchMedicines();
       setIsModalOpen(false);
-    } catch (error) {
+    } catch (_error) {
       toast({
         title: 'ত্রুটি',
         description: 'তথ্য সংরক্ষণ করতে সমস্যা হয়েছে।',
@@ -219,7 +218,7 @@ export default function StoreManagementPage() {
               variant={showLowStock ? 'destructive' : 'outline'}
               onClick={() => setShowLowStock(!showLowStock)}
             >
-              <PackageWarning className="mr-2 h-4 w-4" />
+              <AlertTriangle className="mr-2 h-4 w-4" />
               {showLowStock ? 'সকল স্টক দেখুন' : 'লো স্টক'}
             </Button>
             <Button onClick={handleAddNew}>

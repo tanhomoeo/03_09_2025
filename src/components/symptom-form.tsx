@@ -9,11 +9,11 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
  
-const symptomFormSchema = z.object({
+const _symptomFormSchema = z.object({
   symptoms: z.string().min(10, { message: "অনুগ্রহ করে লক্ষণগুলি কমপক্ষে ১০টি অক্ষরে বর্ণনা করুন।" }),
 });
 
-export type SymptomFormValues = z.infer<typeof symptomFormSchema>;
+export type SymptomFormValues = z.infer<typeof _symptomFormSchema>;
 
 interface SymptomFormProps {
   form: UseFormReturn<SymptomFormValues>;
@@ -39,7 +39,7 @@ export function SymptomForm({ form, onSubmit, isLoading }: SymptomFormProps) {
               </FormControl>
               <p className="text-xs text-muted-foreground pt-1 flex items-center gap-1">
                 <Mic className="h-3 w-3" />
-                <span>টিপস: ভয়েস টাইপিংয়ের জন্য কীবোর্ডের 'V' কী চাপুন।</span>
+                <span>টিপস: ভয়েস টাইপিংয়ের জন্য কীবোর্ডের &apos;V&apos; কী চাপুন।</span>
               </p>
               <FormMessage />
             </FormItem>

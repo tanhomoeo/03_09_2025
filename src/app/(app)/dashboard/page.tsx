@@ -1,6 +1,6 @@
 
 'use client';
-import React, { useEffect, useState, useCallback, useRef, useMemo } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -19,8 +19,6 @@ import { cn } from '@/lib/utils';
 import QuickActionCard from '@/components/dashboard/QuickActionCard';
 import ActivityCard from '@/components/dashboard/ActivityCard';
 import { useSidebar } from '@/components/ui/sidebar';
-import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
-
 
 interface AppointmentDisplayItem {
   visitId: string;
@@ -307,7 +305,7 @@ export default function DashboardPage() {
                 onSubmit={handleSearchSubmit}
                 className={cn(
                 'relative w-full max-w-[280px] lg:max-w-xs transition-all duration-300 ease-in-out',
-                isSearchFocused && 'max-w-md lg:max-w-lg'
+                isSearchFocused ? 'max-w-md lg:max-w-lg' : 'max-w-[280px] lg:max-w-xs'
                 )}
             >
                 <Input

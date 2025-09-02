@@ -1,3 +1,4 @@
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
@@ -8,11 +9,20 @@ const nextConfig = {
       },
     ],
   },
-  webpack: (config) => {
+  webpack: (config, { isServer }) => {
     config.module.rules.push({
       test: /\.txt$/,
       use: 'raw-loader',
     });
+
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        "fs": false,
+      };
+    }
+    
+    config.externals = [...(config.externals || []), 'canvas', 'handlebars', 'eslint'];
 
     return config;
   },
