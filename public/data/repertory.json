@@ -1,299 +1,71 @@
 
 [
-    {
-        "id": "1",
-        "name": {
-            "en": "Mind",
-            "bn": "মন"
-        },
-        "rubrics": []
-    },
-    {
-        "id": "2",
-        "name": {
-            "en": "Vertigo",
-            "bn": "মাথা ঘোরা"
-        },
-        "rubrics": []
-    },
-    {
-        "id": "3",
-        "name": {
-            "en": "Head",
-            "bn": "মাথা"
-        },
-        "rubrics": []
-    },
-    {
-        "id": "4",
-        "name": {
-            "en": "Eye",
-            "bn": "চোখ"
-        },
-        "rubrics": []
-    },
-    {
-        "id": "5",
-        "name": {
-            "en": "Vision",
-            "bn": "দৃষ্টি"
-        },
-        "rubrics": []
-    },
-    {
-        "id": "6",
-        "name": {
-            "en": "Ear",
-            "bn": "কান"
-        },
-        "rubrics": []
-    },
-    {
-        "id": "7",
-        "name": {
-            "en": "Hearing",
-            "bn": "শ্রবণ"
-        },
-        "rubrics": []
-    },
-    {
-        "id": "8",
-        "name": {
-            "en": "Nose",
-            "bn": "নাক"
-        },
-        "rubrics": []
-    },
-    {
-        "id": "9",
-        "name": {
-            "en": "Face",
-            "bn": "মুখমন্ডল"
-        },
-        "rubrics": []
-    },
-    {
-        "id": "10",
-        "name": {
-            "en": "Mouth",
-            "bn": "মুখ"
-        },
-        "rubrics": []
-    },
-    {
-        "id": "11",
-        "name": {
-            "en": "Teeth",
-            "bn": "দাঁত"
-        },
-        "rubrics": []
-    },
-    {
-        "id": "12",
-        "name": {
-            "en": "Throat",
-            "bn": "গলা"
-        },
-        "rubrics": []
-    },
-    {
-        "id": "13",
-        "name": {
-            "en": "External Throat",
-            "bn": "বহিরাগত গলা"
-        },
-        "rubrics": []
-    },
-    {
-        "id": "14",
-        "name": {
-            "en": "Stomach",
-            "bn": "পাকস্থলী"
-        },
-        "rubrics": []
-    },
-    {
-        "id": "15",
-        "name": {
-            "en": "Abdomen",
-            "bn": "পেট"
-        },
-        "rubrics": []
-    },
-    {
-        "id": "16",
-        "name": {
-            "en": "Rectum",
-            "bn": "মলদ্বার"
-        },
-        "rubrics": []
-    },
-    {
-        "id": "17",
-        "name": {
-            "en": "Stool",
-            "bn": "মল"
-        },
-        "rubrics": []
-    },
-    {
-        "id": "18",
-        "name": {
-            "en": "Urinary Organs",
-            "bn": "মূত্রথলি"
-        },
-        "rubrics": []
-    },
-    {
-        "id": "19",
-        "name": {
-            "en": "Kidneys",
-            "bn": "কিডনি"
-        },
-        "rubrics": []
-    },
-    {
-        "id": "20",
-        "name": {
-            "en": "Bladder",
-            "bn": "মূত্রাশয়"
-        },
-        "rubrics": []
-    },
-    {
-        "id": "21",
-        "name": {
-            "en": "Urethra",
-            "bn": "মূত্রনালী"
-        },
-        "rubrics": []
-    },
-    {
-        "id": "22",
-        "name": {
-            "en": "Urine",
-            "bn": "প্রস্রাব"
-        },
-        "rubrics": []
-    },
-    {
-        "id": "23",
-        "name": {
-            "en": "Male Genitalia",
-            "bn": "পুরুষ জননেন্দ্রিয়"
-        },
-        "rubrics": []
-    },
-    {
-        "id": "24",
-        "name": {
-            "en": "Female Genitalia",
-            "bn": "মহিলা জননেন্দ্রিয়"
-        },
-        "rubrics": []
-    },
-    {
-        "id": "25",
-        "name": {
-            "en": "Larynx and Trachea",
-            "bn": "স্বরযন্ত্র এবং শ্বাসনালী"
-        },
-        "rubrics": []
-    },
-    {
-        "id": "26",
-        "name": {
-            "en": "Respiration",
-            "bn": "শ্বাস"
-        },
-        "rubrics": []
-    },
-    {
-        "id": "27",
-        "name": {
-            "en": "Cough",
-            "bn": "কাশি"
-        },
-        "rubrics": []
-    },
-    {
-        "id": "28",
-        "name": {
-            "en": "Expectoration",
-            "bn": "কফ"
-        },
-        "rubrics": []
-    },
-    {
-        "id": "29",
-        "name": {
-            "en": "Chest",
-            "bn": "বুক"
-        },
-        "rubrics": []
-    },
-    {
-        "id": "30",
-        "name": {
-            "en": "Back",
-            "bn": "পিঠ"
-        },
-        "rubrics": []
-    },
-    {
-        "id": "31",
-        "name": {
-            "en": "Extremities",
-            "bn": "অঙ্গপ্রত্যঙ্গ"
-        },
-        "rubrics": []
-    },
-    {
-        "id": "32",
-        "name": {
-            "en": "Sleep",
-            "bn": "ঘুম"
-        },
-        "rubrics": []
-    },
-    {
-        "id": "33",
-        "name": {
-            "en": "Chill",
-            "bn": "শীত"
-        },
-        "rubrics": []
-    },
-    {
-        "id": "34",
-        "name": {
-            "en": "Fever",
-            "bn": "জ্বর"
-        },
-        "rubrics": []
-    },
-    {
-        "id": "35",
-        "name": {
-            "en": "Perspiration",
-            "bn": "ঘাম"
-        },
-        "rubrics": []
-    },
-    {
-        "id": "36",
-        "name": {
-            "en": "Skin",
-            "bn": "ত্বক"
-        },
-        "rubrics": []
-    },
-    {
-        "id": "37",
-        "name": {
-            "en": "Generalities",
-            "bn": "সাধারণ"
-        },
-        "rubrics": []
-    }
+  {
+    "id": "mind",
+    "name": { "en": "Mind", "bn": "মন" },
+    "rubrics": [
+      {
+        "id": "abandoned",
+        "name": { "en": "Abandoned", "bn": "পরিত্যক্ত" },
+        "remedies": [
+          { "name": "Puls", "grade": 3 },
+          { "name": "Arg-n", "grade": 2 }
+        ],
+        "children": [
+          {
+            "id": "abandoned-feels-like",
+            "name": { "en": "Feels like", "bn": "মনে হয়" },
+            "remedies": [
+              { "name": "Aur", "grade": 2 },
+              { "name": "Mag-c", "grade": 2 }
+            ],
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "absent-minded",
+        "name": { "en": "Absent-minded", "bn": "অন্যমনস্ক" },
+        "remedies": [
+          { "name": "Nux-m", "grade": 3 },
+          { "name": "Apis", "grade": 2 }
+        ],
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": "head",
+    "name": { "en": "Head", "bn": "মাথা" },
+    "rubrics": [
+      {
+        "id": "pain",
+        "name": { "en": "Pain", "bn": "ব্যথা" },
+        "remedies": [
+          { "name": "Bell", "grade": 3 },
+          { "name": "Glon", "grade": 3 }
+        ],
+        "children": [
+          {
+            "id": "pain-forehead",
+            "name": { "en": "Forehead", "bn": "কপাল" },
+            "remedies": [
+              { "name": "Bry", "grade": 2 },
+              { "name": "Nux-v", "grade": 2 }
+            ],
+            "children": []
+          },
+          {
+            "id": "pain-temples",
+            "name": { "en": "Temples", "bn": "রগ" },
+            "remedies": [
+              { "name": "Sang", "grade": 2 },
+              { "name": "Spig", "grade": 2 }
+            ],
+            "children": []
+          }
+        ]
+      }
+    ]
+  }
 ]
