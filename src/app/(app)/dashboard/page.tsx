@@ -264,10 +264,10 @@ export default function DashboardPage() {
     <TooltipProvider>
     <div className="space-y-6 md:space-y-8">
       
-       <div className="md:hidden hide-on-print py-3 bg-gradient-to-br from-green-100 to-lime-200 dark:from-green-800 dark:to-lime-900 shadow-sm sticky top-0 z-40">
+       <div className="md:hidden hide-on-print -mx-4 sm:-mx-6 py-3 px-4 sm:px-6 bg-gradient-to-br from-green-100 to-lime-200 dark:from-green-800/80 dark:to-lime-900/80 shadow-sm sticky top-0 z-40 backdrop-blur-lg">
         <div className="flex items-center justify-between">
            <button type="button" onClick={toggleSidebar} className="flex items-center gap-3 flex-shrink-0 -ml-1">
-              <div className="p-1 bg-white/50 dark:bg-black/20 rounded-full shadow-md">
+              <div className="p-1.5 bg-white/50 dark:bg-black/20 rounded-full shadow-md">
                 <Image src="/icons/icon.png" width={28} height={28} alt="Logo" data-ai-hint="clinic health logo" className="flex-shrink-0"/>
               </div>
               <span className="font-bold text-lg text-green-900 dark:text-green-200">{APP_NAME}</span>
