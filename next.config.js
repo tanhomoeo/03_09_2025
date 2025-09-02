@@ -1,3 +1,4 @@
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
@@ -14,10 +15,15 @@ const nextConfig = {
       use: 'raw-loader',
     });
 
-    if (isServer) {
-        // Exclude problematic modules from server bundle if they cause issues.
-        config.externals = [...(config.externals || []), '@opentelemetry/winston-transport'];
+    if (!isServer) {
+        config.resolve.fallback = {
+            ...config.resolve.fallback,
+            "fs": false,
+        };
     }
+    
+    // externals helps with dependencies that are not meant to be bundled for the client
+    config.externals = [...(config.externals || []), 'canvas', 'eslint'];
 
     return config;
   },

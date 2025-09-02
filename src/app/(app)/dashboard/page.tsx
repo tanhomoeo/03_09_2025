@@ -19,7 +19,6 @@ import { cn } from '@/lib/utils';
 import QuickActionCard from '@/components/dashboard/QuickActionCard';
 import ActivityCard from '@/components/dashboard/ActivityCard';
 import { useSidebar } from '@/components/ui/sidebar';
-import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 
 interface AppointmentDisplayItem {
   visitId: string;
@@ -301,27 +300,29 @@ export default function DashboardPage() {
         </div>
        </div>
 
-        <div className="flex items-center justify-center my-4 md:my-0 hide-on-print">
-            <form
-                onSubmit={handleSearchSubmit}
-                className={cn(
-                'relative w-full max-w-[280px] lg:max-w-xs transition-all duration-300 ease-in-out focus-within:max-w-md lg:focus-within:max-w-lg'
-                )}
-            >
-                <Input
-                    name="search"
-                    type="search"
-                    placeholder="রোগী অনুসন্ধান করুন (নাম, ডায়েরি নং...)"
-                    className="w-full h-11 text-sm pl-4 pr-12 rounded-full bg-card/80 border-2 border-transparent shadow-lg backdrop-blur-sm focus:outline-none"
-                />
-                <button
-                type="submit"
-                className="absolute inset-y-0 right-0 flex items-center justify-center w-11 h-11 rounded-full bg-blue-600 text-primary-foreground shadow-md transition-transform hover:bg-blue-700 active:scale-95"
-                >
-                <SearchIcon className="h-5 w-5" />
-                </button>
-            </form>
-        </div>
+      <div className="flex items-center justify-center my-4 md:my-0 hide-on-print">
+        <form
+          onSubmit={handleSearchSubmit}
+          className={cn(
+            "relative w-full max-w-[280px] lg:max-w-xs transition-all duration-300 ease-in-out focus-within:max-w-md lg:focus-within:max-w-lg"
+          )}
+        >
+          <Input
+            name="search"
+            type="search"
+            placeholder="রোগী অনুসন্ধান করুন (নাম, ডায়েরি নং...)"
+            className="w-full h-11 text-sm pl-4 pr-12 rounded-full bg-card/80 border-2 border-transparent shadow-lg backdrop-blur-sm focus:outline-none"
+            aria-label="Search patients"
+          />
+          <button
+            type="submit"
+            className="absolute inset-y-0 right-0 flex items-center justify-center w-11 h-11 rounded-full bg-blue-600 text-primary-foreground shadow-md transition-transform hover:bg-blue-700 active:scale-95"
+            aria-label="Submit search"
+          >
+            <SearchIcon className="h-5 w-5" />
+          </button>
+        </form>
+      </div>
 
       <div className="hide-on-print">
         <h2 className="text-lg md:text-xl font-semibold font-headline mb-3">দ্রুত কার্যক্রম</h2>
