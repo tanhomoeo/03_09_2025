@@ -5,7 +5,6 @@ import { useState, useEffect, useCallback, startTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import {
   Bot,
   AlertTriangle,
@@ -13,28 +12,22 @@ import {
   Wand2,
   FileText,
   Brain,
-  Lightbulb,
 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
-  categorizeCaseNotes,
-  type CategorizedCaseNotesOutput,
-} from "@/ai/flows/categorize-case-notes-flow";
+  analyzeComplaint,
+  type ComplaintAnalyzerOutput,
+} from "@/ai/flows/complaint-analyzer-flow";
 import { SymptomForm, type SymptomFormValues } from "@/components/symptom-form";
 import { PageHeaderCard } from "@/components/shared/PageHeaderCard";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
+  CardDescription,
 } from "@/components/ui/card";
-import {
-  CategorizedSymptomsDisplay,
-  LABELS as CATEGORY_LABELS,
-} from "@/components/categorized-symptoms-display";
-import type { SuggestRemediesOutput } from "@/ai/flows/suggest-remedies";
-import { RemedyDetailsDialogContent } from "@/components/remedy-details-dialog-content";
+import { AnalysisResultDisplay } from "@/components/repertory/AnalysisResultDisplay";
 
 const formSchema = z.object({
   symptoms: z.string().min(10, {
@@ -43,7 +36,7 @@ const formSchema = z.object({
 });
 
 export default function AiRepertoryPage() {
-  const [results, setResults] = useState<CategorizedCaseNotesOutput | null>(
+  const [results, setResults] = useState<ComplaintAnalyzerOutput | null>(
     null,
   );
   const [isLoading, setIsLoading] = useState(false);
@@ -73,8 +66,8 @@ export default function AiRepertoryPage() {
 
     startTransition(async () => {
       try {
-        const result = await categorizeCaseNotes({
-          caseNotesText: values.symptoms,
+        const result = await analyzeComplaint({
+          symptoms: values.symptoms,
         });
 
         if (!result) {
@@ -94,16 +87,8 @@ export default function AiRepertoryPage() {
     });
   }
 
-  const handleRemedyClick = (remedyName: string) => {
-    // This function will be called from ResultsDisplay
-    // The DialogTrigger inside ResultsDisplay will handle opening the modal
-    // This function could be used for logging or other side effects if needed
-    console.log(`Remedy clicked: ${remedyName}`);
-  };
-
 
   return (
-    <Dialog>
       <div className="space-y-6">
         <PageHeaderCard
           title="AI রেপার্টরি ও কেস বিশ্লেষণ"
@@ -173,43 +158,15 @@ export default function AiRepertoryPage() {
             )}
 
             {results && !isLoading && !error && (
-              <div className="space-y-6">
-                {results.keySymptoms && results.keySymptoms.length > 0 && (
-                  <Alert className="bg-yellow-100/70 border-yellow-300/80 text-yellow-900 dark:bg-yellow-900/20 dark:border-yellow-800/50 dark:text-yellow-200">
-                    <Lightbulb className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
-                    <AlertTitle className="font-bold text-yellow-800 dark:text-yellow-300">
-                      মূল লক্ষণসমূহ (Key Symptoms)
-                    </AlertTitle>
-                    <AlertDescription className="text-yellow-700 dark:text-yellow-300/90">
-                      AI দ্বারা চিহ্নিত প্রধান লক্ষণগুলো নিচে দেওয়া হলো:
-                      <ul className="list-disc pl-5 mt-1">
-                        {results.keySymptoms.map((symptom, i) => (
-                          <li key={i}>{symptom}</li>
-                        ))}
-                      </ul>
-                    </AlertDescription>
-                  </Alert>
-                )}
-
-                {results.categorizedNotes && (
-                  <>
-                    <h3 className="font-semibold text-foreground/90 mt-4 mb-2">
-                      শ্রেণীবদ্ধ লক্ষণসমূহ:
-                    </h3>
-                    <CategorizedSymptomsDisplay
-                      symptoms={results.categorizedNotes}
-                      labels={CATEGORY_LABELS}
-                      showNumbers={true}
-                      highlightedSymptoms={results.keySymptoms}
-                    />
-                  </>
-                )}
-              </div>
+              <AnalysisResultDisplay result={results} />
             )}
+            
             {!isLoading &&
               !error &&
               results &&
-              !results.categorizedNotes && (
+              Object.values(results).every(category => 
+                Object.values(category).every(value => !value)
+              ) && (
                 <div className="flex flex-col items-center justify-center h-full min-h-[400px]">
                   <Alert className="w-full">
                     <Bot className="h-4 w-4" />
@@ -225,6 +182,5 @@ export default function AiRepertoryPage() {
           </div>
         </div>
       </div>
-    </Dialog>
   );
 }
