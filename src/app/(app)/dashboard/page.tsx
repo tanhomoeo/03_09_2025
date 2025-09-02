@@ -19,6 +19,7 @@ import { cn } from '@/lib/utils';
 import QuickActionCard from '@/components/dashboard/QuickActionCard';
 import ActivityCard from '@/components/dashboard/ActivityCard';
 import { useSidebar } from '@/components/ui/sidebar';
+import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 
 interface AppointmentDisplayItem {
   visitId: string;
@@ -90,16 +91,11 @@ export default function DashboardPage() {
   const [todaysAppointments, setTodaysAppointments] = useState<AppointmentDisplayItem[]>([]);
   const router = useRouter();
 
-  const [clientRenderedTimestamp, setClientRenderedTimestamp] = useState<Date | null>(null);
   const [clinicSettings, setClinicSettings] = useState<ClinicSettings | null>(null);
   
   const [showRevenue, setShowRevenue] = useState(false);
   const revenueTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { toggleSidebar } = useSidebar();
-
-  useEffect(() => {
-    setClientRenderedTimestamp(new Date());
-  }, []);
 
   const handleRevenueClick = () => {
     if (revenueTimeoutRef.current) {
@@ -367,7 +363,7 @@ export default function DashboardPage() {
           <div>
             <CardTitle className="font-headline text-lg md:text-xl">আজকের সাক্ষাৎকার</CardTitle>
             <CardDescription className="text-sm">
-              {clientRenderedTimestamp && isValid(clientRenderedTimestamp) ? format(clientRenderedTimestamp, "eeee, MMMM dd, yyyy", { locale: bn }) : 'লোড হচ্ছে...'}
+              {format(new Date(), "eeee, MMMM dd, yyyy", { locale: bn })}
             </CardDescription>
           </div>
           <Button variant="outline" size="sm" onClick={handlePrintAppointments}><Printer className="mr-2 h-4 w-4" /> প্রিন্ট তালিকা</Button>
@@ -476,7 +472,7 @@ export default function DashboardPage() {
         <div className="print-header">
           <h1 className="font-headline text-xl font-bold">{clinicSettings?.clinicName || APP_NAME}</h1>
           <h2 className="print-title text-lg font-semibold mt-1">আজকের সাক্ষাৎকার</h2>
-          {clientRenderedTimestamp && <p className="text-xs">{format(clientRenderedTimestamp, "eeee, dd MMMM, yyyy", { locale: bn })}</p>}
+          <p className="text-xs">{format(new Date(), "eeee, dd MMMM, yyyy", { locale: bn })}</p>
         </div>
         <Table>
           <TableHeader>
