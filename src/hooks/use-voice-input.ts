@@ -71,7 +71,7 @@ export function useVoiceInput() {
     const isInputFocused = target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement;
 
     if (
-      event.key.toLowerCase() === 'v' &&
+      event.key && event.key.toLowerCase() === 'v' &&
       isInputFocused
     ) {
       event.preventDefault();
