@@ -189,7 +189,11 @@ export default function CourierPage() {
 
   const onSubmit: SubmitHandler<OrderFormValues> = async (data) => {
     try {
-      const orderData: SteadfastOrder = data;
+       const orderData: SteadfastOrder = {
+        ...data,
+        cod_amount: Number(data.cod_amount),
+        recipient_phone: String(data.recipient_phone),
+      };
       const result = await placeSteadfastOrder(orderData);
 
       if (result.status === 200 && result.consignment) {
@@ -325,9 +329,7 @@ export default function CourierPage() {
               <FormField control={form.control} name="cod_amount" render={({ field }) => ( <FormItem> <FormLabel>ক্যাশ অন ডেলিভারি (COD)</FormLabel> <FormControl> <Input type="number" placeholder="0" {...field} /> </FormControl> <FormMessage /> </FormItem> )}/>
               <FormField control={form.control} name="note" render={({ field }) => ( <FormItem> <FormLabel>বিশেষ নোট (ঐচ্ছিক)</FormLabel> <FormControl> <Textarea placeholder="ডেলিভারি সংক্রান্ত নোট" {...field} /> </FormControl> <FormMessage /> </FormItem> )}/>
               <DialogFooter>
-                <DialogClose asChild>
-                  <Button type="button" variant="outline">বাতিল</Button>
-                </DialogClose>
+                <DialogClose asChild><Button type="button" variant="outline">বাতিল</Button></DialogClose>
                 <Button type="submit" disabled={form.formState.isSubmitting}>
                   {form.formState.isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Truck className="mr-2 h-4 w-4" />}
                   অর্ডার তৈরি করুন
@@ -340,5 +342,3 @@ export default function CourierPage() {
     </div>
   );
 }
-
-    
