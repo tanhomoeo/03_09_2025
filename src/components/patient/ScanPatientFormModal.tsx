@@ -1,4 +1,3 @@
-
 'use client';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from '@/components/ui/dialog';
@@ -6,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Camera, AlertCircle, CheckCircle } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { parseHandwrittenForm, type HandwrittenFormOutput } from '@/ai/flows/handwritten-patient-form-parser-flow';
+import type { HandwrittenFormOutput } from '@/ai/flows/handwritten-patient-form-parser-flow';
 import Image from 'next/image';
 
 export interface ScanPatientFormModalProps {
@@ -123,7 +122,7 @@ export default function ScanPatientFormModal({ isOpen, onClose, onDataExtracted 
     if (capturedImage) {
         return (
             <div className="space-y-4">
-                <p className="text-sm text-center text-muted-foreground">ছবিটি যাচাই করুন এবং তথ্য প্রসেস করতে &quot;প্রসেস করুন&quot; বাটনে ক্লিক করুন।</p>
+                <p className="text-sm text-center text-muted-foreground">ছবিটি যাচাই করুন এবং তথ্য প্রসেস করতে &quot;প্র��েস করুন&quot; বাটনে ক্লিক করুন।</p>
                 <Image src={capturedImage} alt="Captured patient form" width={1280} height={720} className="w-full h-auto rounded-md border" />
             </div>
         );
