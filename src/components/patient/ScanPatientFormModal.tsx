@@ -36,6 +36,14 @@ export default function ScanPatientFormModal({
   const [isProcessing, setIsProcessing] = useState(false);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
 
+  const stopCurrentStream = () => {
+    const video = videoRef.current;
+    if (video && video.srcObject) {
+      (video.srcObject as MediaStream).getTracks().forEach((t) => t.stop());
+      video.srcObject = null;
+    }
+  };
+
   const getCameraPermission = useCallback(async () => {
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       setHasCameraPermission(false);
@@ -53,6 +61,7 @@ export default function ScanPatientFormModal({
         video.srcObject = stream;
         try {
           video.setAttribute('playsinline', 'true');
+          video.setAttribute('autoplay', 'true');
           video.muted = true;
           await video.play();
         } catch {
@@ -62,30 +71,30 @@ export default function ScanPatientFormModal({
     };
 
     try {
-      // Try rear camera first
-      await startStream({
-        video: {
-          facingMode: { ideal: 'environment' },
-          width: { ideal: 1280 },
-          height: { ideal: 720 },
-        } as MediaTrackConstraints,
-      });
+      // First get permission so device labels are populated
+      await startStream({ video: true });
       setHasCameraPermission(true);
-    } catch {
-      try {
-        // Fallback to any available camera
-        await startStream({ video: true });
-        setHasCameraPermission(true);
-      } catch (err2) {
-        console.error('Error accessing camera:', err2);
-        setHasCameraPermission(false);
-        toast({
-          variant: 'destructive',
-          title: 'ক্যামেরা অ্যাক্সেস ডিনাইড',
-          description:
-            'ফর্ম স্ক্যান করতে অনুগ্রহ করে ব্রাউজার সেটিংসে ক্যামেরা ব্যবহারের অনুমতি দিন।',
-        });
+
+      // Try to switch explicitly to back camera if available
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      const videoDevices = devices.filter((d) => d.kind === 'videoinput');
+      const backCam = videoDevices.find((d) => /back|rear|environment/i.test(d.label));
+
+      if (backCam) {
+        stopCurrentStream();
+        await startStream({ video: { deviceId: { exact: backCam.deviceId } } });
+      } else {
+        stopCurrentStream();
+        await startStream({ video: { facingMode: { ideal: 'environment' } } as MediaTrackConstraints });
       }
+    } catch (err2) {
+      console.error('Error accessing camera:', err2);
+      setHasCameraPermission(false);
+      toast({
+        variant: 'destructive',
+        title: 'ক্যামেরা অ্যাক্সেস ডিনাইড',
+        description: 'ফর্ম স্ক্যান করতে অনুগ্রহ করে ব্রাউজার/ডিভাইস সেটিংসে ক্যামেরা অনুমতি দিন।',
+      });
     }
   }, [toast]);
 
@@ -166,7 +175,7 @@ export default function ScanPatientFormModal({
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>ক্যামেরা অ্যাক্সেস আবশ্যক</AlertTitle>
           <AlertDescription>
-            এই ফিচারটি ব্যবহার করতে, অনুগ্রহ করে আপনার ব্রাউজারকে ক্যামেরা
+            এই ফিচারট�� ব্যবহার করতে, অনুগ্রহ করে আপনার ব্রাউজারকে ক্যামেরা
             ব্যবহারের অনুমতি দিন এবং পৃষ্ঠা���ি পুনরায় লোড করুন।
           </AlertDescription>
         </Alert>
