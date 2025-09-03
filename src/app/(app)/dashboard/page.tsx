@@ -1,4 +1,3 @@
-
 'use client';
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import Image from 'next/image';
@@ -284,7 +283,7 @@ export default function DashboardPage() {
 
   return (
     <TooltipProvider>
-    <div className="space-y-6 md:space-y-8">
+    <div className="space-y-6 md:space-y-8 content-auto">
       
        <div className={cn("md:hidden hide-on-print py-3 sticky top-0 z-40 backdrop-blur-lg -mx-4 sm:-mx-6",
         "bg-background/70 shadow-sm"
@@ -563,5 +562,3 @@ export default function DashboardPage() {
     </TooltipProvider>
   );
 }
-
-    
