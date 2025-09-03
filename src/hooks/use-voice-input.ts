@@ -1,4 +1,3 @@
-
 'use client';
 import {
   useState,
@@ -6,11 +5,6 @@ import {
   useCallback,
   useRef,
 } from 'react';
-import type {
-  SpeechRecognition,
-  SpeechRecognitionErrorEvent,
-  SpeechRecognitionEvent,
-} from '@/lib/custom.d';
 import { useToast } from './use-toast';
 
 export function useVoiceInput() {
