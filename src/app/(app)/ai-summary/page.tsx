@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useCallback, startTransition } from "react";
@@ -14,10 +13,7 @@ import {
   Lightbulb,
 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import {
-  suggestRemedies,
-  type SuggestRemediesOutput,
-} from "@/ai/flows/suggest-remedies";
+import type { SuggestRemediesOutput } from "@/ai/flows/suggest-remedies";
 import { SymptomForm, type SymptomFormValues } from "@/components/symptom-form";
 import { PageHeaderCard } from "@/components/shared/PageHeaderCard";
 import {
@@ -61,19 +57,21 @@ export default function AiRepertoryPage() {
 
     startTransition(async () => {
       try {
-        const result = await suggestRemedies({
-          symptoms: values.symptoms,
+        const res = await fetch('/api/ai/suggest-remedies', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ symptoms: values.symptoms }),
         });
-
-        if (!result) {
-          throw new Error("AI কোনো বিশ্লেষণ দিতে পারেনি।");
+        const result = (await res.json()) as SuggestRemediesOutput | { error?: string };
+        if (!res.ok || (result as any)?.error) {
+          throw new Error(((result as any)?.error as string) || 'AI কোনো বিশ্লেষণ দিতে পারেনি।');
         }
-        setResults(result);
+        setResults(result as SuggestRemediesOutput);
       } catch (e: unknown) {
         const errorMessage =
           e instanceof Error
             ? e.message
-            : "বিশ্লেষণ আনতে একটি ত্রুটি ঘটেছে। অনুগ্রহ করে আপনার সংযোগ বা API কী পরীক্ষা করে আবার চেষ্টা করুন।";
+            : 'বিশ্লেষণ আনতে একটি ত্রুটি ঘটেছে। অনুগ্রহ করে আপনার সংযোগ বা API কী পরীক্ষা করে আবার চেষ্টা করুন।';
         setError(errorMessage);
         console.error(e);
       } finally {
@@ -147,7 +145,7 @@ export default function AiRepertoryPage() {
                       <Brain />
                     </div>
                     <p className="text-muted-foreground text-center font-headline text-lg">
-                      AI বিশ্লেষণের ফলাফল
+                      AI বিশ্লেষণে�� ফলাফল
                     </p>
                     <p className="text-muted-foreground/80 text-sm text-center mt-1">
                       বিশ্লেষণের ফলাফল এখানে প্রদর্শিত হবে।
