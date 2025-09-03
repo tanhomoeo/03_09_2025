@@ -1,5 +1,3 @@
-
-
 export interface CategorizedCaseNotes {
   physicalSymptoms?: {
     general?: string;
@@ -232,6 +230,32 @@ export interface SteadfastStatus {
 export interface SteadfastBalance {
     status: number;
     current_balance: number;
+}
+
+// Bulk order types
+export interface SteadfastBulkOrderItem extends SteadfastOrder {}
+export interface SteadfastBulkOrderResultItem {
+    invoice: string;
+    recipient_name: string;
+    recipient_address: string;
+    recipient_phone: string;
+    cod_amount: string | number;
+    note: string | null;
+    consignment_id: number | null;
+    tracking_code: string | null;
+    status: 'success' | 'error' | string;
+}
+
+// Return request types
+export type SteadfastReturnStatus = 'pending' | 'approved' | 'processing' | 'completed' | 'cancelled';
+export interface SteadfastReturnRequest {
+    id: number;
+    user_id?: number;
+    consignment_id: number;
+    reason: string | null;
+    status: SteadfastReturnStatus;
+    created_at: string;
+    updated_at: string;
 }
 
 // Types for Steadfast Webhook
