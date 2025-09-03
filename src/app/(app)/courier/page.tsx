@@ -1,4 +1,3 @@
-
 'use client';
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
@@ -33,7 +32,8 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { PageHeaderCard } from '@/components/shared/PageHeaderCard';
-import { placeSteadfastOrder, getCurrentBalance, getDeliveryStatusByInvoice, getAllConsignments } from '@/lib/steadfastService';
+// Use server via API routes to avoid client importing server-only modules
+// import { placeSteadfastOrder, getCurrentBalance, getDeliveryStatusByInvoice, getAllConsignments } from '@/lib/steadfastService';
 import { addConsignment, updateConsignmentStatus, formatCurrency, getPatients } from '@/lib/firestoreService';
 import type { SteadfastOrder, SteadfastConsignment, SteadfastBalance, Patient } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
@@ -121,12 +121,35 @@ export default function CourierPage() {
     },
   });
 
+  const api = {
+    balance: async () => {
+      const r = await fetch('/api/steadfast/balance', { cache: 'no-store' });
+      if (!r.ok) throw new Error(await r.text());
+      return r.json();
+    },
+    consignments: async () => {
+      const r = await fetch('/api/steadfast/consignments', { cache: 'no-store' });
+      if (!r.ok) throw new Error(await r.text());
+      return r.json();
+    },
+    statusByInvoice: async (invoice: string) => {
+      const r = await fetch(`/api/steadfast/status-by-invoice?invoice=${encodeURIComponent(invoice)}`, { cache: 'no-store' });
+      if (!r.ok) throw new Error(await r.text());
+      return r.json();
+    },
+    placeOrder: async (payload: SteadfastOrder) => {
+      const r = await fetch('/api/steadfast/order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      if (!r.ok) throw new Error(await r.text());
+      return r.json();
+    }
+  } as const;
+
   const fetchCourierData = useCallback(async () => {
     setIsLoading(true);
     try {
       const [balanceData, consignmentsResponse, patientsData, settings] = await Promise.all([
-          getCurrentBalance(),
-          getAllConsignments(),
+          api.balance(),
+          api.consignments(),
           getPatients(),
           getClinicSettings(),
       ]);
@@ -187,7 +210,7 @@ export default function CourierPage() {
   const handleRefreshStatus = useCallback(async (consignment: SteadfastConsignment) => {
     setIsRefreshingStatus(consignment.consignment_id);
     try {
-      const statusData = await getDeliveryStatusByInvoice(consignment.invoice);
+      const statusData = await api.statusByInvoice(consignment.invoice);
       await updateConsignmentStatus(consignment.consignment_id, statusData.delivery_status);
       setConsignments(prev => 
         prev.map(c => 
