@@ -1,4 +1,3 @@
-
 'use client';
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
@@ -109,7 +108,7 @@ export default function StoreManagementPage() {
     try {
       const meds = await getMedicines();
       setMedicines(meds);
-    } catch (error) {
+    } catch (_error) {
       toast({
         title: 'ত্রুটি',
         description: 'ঔষধের তালিকা আনতে সমস্যা হয়েছে।',
