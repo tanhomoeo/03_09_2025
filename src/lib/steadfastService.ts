@@ -1,4 +1,3 @@
-
 'use server';
 
 import type { SteadfastOrder, SteadfastConsignment, SteadfastStatus, SteadfastBalance } from './types';
@@ -42,7 +41,7 @@ async function makeSteadfastRequest<T>(
             // Try to parse the error response as JSON
             const errorData = await response.json();
             errorMessage = errorData.message || JSON.stringify(errorData);
-        } catch (_e) {
+        } catch {
             // If it's not JSON, it might be HTML or plain text
             const textError = await response.text();
             // Shorten long HTML error pages
