@@ -224,7 +224,7 @@ export default function CourierPage() {
     } catch (error) {
       toast({
         title: 'স্ট্যাটাস আপডেট ব্যর্থ',
-        description: error instanceof Error ? error.message : 'একটি অজানা ত্রুটি হয়েছে।',
+        description: error instanceof Error ? error.message : 'একটি অজানা ��্রুটি হয়েছে।',
         variant: 'destructive',
       });
     } finally {
@@ -260,7 +260,7 @@ export default function CourierPage() {
         ...data,
         cod_amount: Number(data.cod_amount),
       };
-      const result = await placeSteadfastOrder(orderData);
+      const result = await api.placeOrder(orderData);
 
       if (result.status === 200 && result.consignment) {
         const newConsignment = result.consignment;
