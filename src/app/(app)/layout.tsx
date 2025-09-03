@@ -6,7 +6,6 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouter, usePathname } from 'next/navigation';
 import { AppSidebar } from '@/components/shared/AppSidebar';
 import { MobileBottomNav } from '@/components/shared/MobileBottomNav';
-import { SidebarProvider } from '@/components/ui/sidebar';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 import { ROUTES } from '@/lib/constants';
 import { cn } from '@/lib/utils';
@@ -36,15 +35,15 @@ export default function AppLayout({
   }
 
   return (
-    <SidebarProvider>
+    <>
         <AppSidebar />
         <main className={cn(
-            "flex-1 w-full transition-all duration-300 ease-in-out px-4 sm:px-6",
+            "flex-1 w-full transition-all duration-300 ease-in-out px-4 sm:px-6 pb-20 md:pb-6",
             "peer-data-[state=open]:md:ml-[16rem] peer-data-[state=closed]:md:ml-[4.5rem]"
         )}>
             {children}
         </main>
         <MobileBottomNav />
-    </SidebarProvider>
+    </>
   );
 }

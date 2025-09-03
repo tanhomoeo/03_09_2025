@@ -75,8 +75,14 @@ const navIconColors = [
 
 export function AppSidebar() {
   const pathname = usePathname();
-  const { setOpenMobile, toggleSidebar } = useSidebar();
+  const { setOpenMobile, toggleSidebar, isMobile } = useSidebar();
   const { isAdmin } = useAuth();
+
+  const handleLinkClick = () => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  };
 
   const renderNavItems = (items: typeof mainNavItems) => (
     <SidebarMenu className="gap-2">
@@ -95,7 +101,7 @@ export function AppSidebar() {
               size="sm"
               isActive={isActive}
               tooltip={{ children: item.label, side: 'right', align: 'center' }}
-              onClick={() => setOpenMobile(false)}
+              onClick={handleLinkClick}
               className={cn(
                 'p-2',
                 'transition-all duration-300 ease-in-out group w-[96%] rounded-lg',
