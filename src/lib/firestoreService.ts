@@ -524,7 +524,7 @@ export const getConsignments = async (): Promise<(SteadfastConsignment & { id: s
   try {
     const q = query(consignmentsCollectionRef(), orderBy('created_at', 'desc'));
     const snapshot = await getDocs(q);
-    return snapshot.docs.map(docSnap => convertDocument<SteadfastConsignment>({ ...docSnap, id: docSnap.id }));
+    return snapshot.docs.map(docSnap => convertDocument<SteadfastConsignment & { id: string }>({ ...docSnap, id: docSnap.id }));
   } catch (error) {
     console.error("Error getting consignments: ", error);
     return [];
@@ -535,7 +535,7 @@ export const addConsignment = async (consignmentData: SteadfastConsignment): Pro
   try {
     // Use consignment_id as the document ID for easy lookup and to prevent duplicates
     const consignmentRef = doc(getDbInstance(), 'consignments', String(consignmentData.consignment_id));
-    await setDoc(consignmentRef, prepareDataForFirestore(consignmentData as Record<string, unknown>) as any);
+    await setDoc(consignmentRef, prepareDataForFirestore(consignmentData as unknown as Record<string, unknown>) as any);
     return String(consignmentData.consignment_id);
   } catch (error) {
     console.error("Error adding consignment: ", error);
