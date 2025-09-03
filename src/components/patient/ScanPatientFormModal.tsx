@@ -32,20 +32,39 @@ export default function ScanPatientFormModal({ isOpen, onClose, onDataExtracted 
       });
       return;
     }
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
+    const startStream = async (constraints: MediaStreamConstraints) => {
+      const stream = await navigator.mediaDevices.getUserMedia(constraints);
+      const video = videoRef.current;
+      if (video) {
+        video.srcObject = stream;
+        try {
+          video.setAttribute('playsinline', 'true');
+          video.muted = true;
+          await video.play();
+        } catch (e) {
+          // Some browsers auto-play without explicit play; ignore.
+        }
       }
+    };
+
+    try {
+      // Try rear camera first
+      await startStream({ video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } } as MediaTrackConstraints });
       setHasCameraPermission(true);
-    } catch (error) {
-      console.error('Error accessing camera:', error);
-      setHasCameraPermission(false);
-      toast({
-        variant: 'destructive',
-        title: 'ক্যামেরা অ্যাক্সেস ডিনাইড',
-        description: 'ফর্ম স্ক্যান করতে অনুগ্রহ করে ব্রাউজার সেটিংসে ক্যামেরা ব্যবহারের অনুমতি দিন।',
-      });
+    } catch (err1) {
+      try {
+        // Fallback to any available camera
+        await startStream({ video: true });
+        setHasCameraPermission(true);
+      } catch (err2) {
+        console.error('Error accessing camera:', err2);
+        setHasCameraPermission(false);
+        toast({
+          variant: 'destructive',
+          title: 'ক্যামেরা অ্যাক্সেস ডিনাইড',
+          description: 'ফর্ম স্ক্যান করতে অনুগ্রহ করে ব্রাউজার সেটিংসে ক্যামেরা ব্যবহারের অনুমতি দিন।',
+        });
+      }
     }
   }, [toast]);
 
@@ -122,7 +141,7 @@ export default function ScanPatientFormModal({ isOpen, onClose, onDataExtracted 
     if (capturedImage) {
         return (
             <div className="space-y-4">
-                <p className="text-sm text-center text-muted-foreground">ছবিটি যাচাই করুন এবং তথ্য প্রসেস করতে &quot;প্র��েস করুন&quot; বাটনে ক্লিক করুন।</p>
+                <p className="text-sm text-center text-muted-foreground">ছবিটি যাচাই করুন এবং তথ্য প্রসেস করতে &quot;প্রসেস করুন&quot; বাটনে ক্লিক করুন।</p>
                 <Image src={capturedImage} alt="Captured patient form" width={1280} height={720} className="w-full h-auto rounded-md border" />
             </div>
         );
@@ -130,7 +149,7 @@ export default function ScanPatientFormModal({ isOpen, onClose, onDataExtracted 
 
     return (
         <>
-            <p className="text-sm text-center text-muted-foreground mb-2">হাতে লেখা ফর্মটি ক্যামেরার সামনে পরিষ্কারভাবে ধরে রাখুন এবং ছবি তুলুন।</p>
+            <p className="text-sm text-center text-muted-foreground mb-2">হাতে ল��খা ফর্মটি ক্যামেরার সামনে পরিষ্কারভাবে ধরে রাখুন এবং ছবি তুলুন।</p>
             <div className="relative w-full aspect-video bg-muted rounded-md overflow-hidden">
                 <video ref={videoRef} className="w-full h-full object-cover" autoPlay playsInline muted />
                 <canvas ref={canvasRef} className="hidden" />
