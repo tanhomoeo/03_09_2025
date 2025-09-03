@@ -1,18 +1,11 @@
 "use client";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { Search, BookText, Loader2 } from "lucide-react";
 import { searchMateria, type MateriaEntry } from "@/lib/repertoryIndex";
-import dynamic from "next/dynamic";
-import { cn } from "@/lib/utils";
-
-const RemedyDetailsDialogContent = dynamic(
-  () => import("@/components/remedy-details-dialog-content").then((mod) => mod.RemedyDetailsDialogContent),
-  { ssr: false }
-);
 
 export const MateriaMedicaSearch: React.FC = () => {
   const [query, setQuery] = useState("");
