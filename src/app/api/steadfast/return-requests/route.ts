@@ -14,7 +14,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const payload = await request.json();
-    if (!payload || (typeof payload !== 'object')) {
+    if (!payload || typeof payload !== 'object') {
       return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
     }
     const data = await createReturnRequest(payload);

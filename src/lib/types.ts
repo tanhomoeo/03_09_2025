@@ -51,7 +51,7 @@ export interface Patient {
   phone: string;
   createdAt: string;
   updatedAt: string;
-  
+
   registrationDate?: string;
   diaryNumber?: string;
   age?: string;
@@ -103,7 +103,13 @@ export interface Prescription {
   diagnosis?: string;
 }
 
-export type PaymentMethod = 'cash' | 'bkash' | 'nagad' | 'rocket' | 'other' | '';
+export type PaymentMethod =
+  | 'cash'
+  | 'bkash'
+  | 'nagad'
+  | 'rocket'
+  | 'other'
+  | '';
 
 export interface PaymentSlip {
   id: string;
@@ -195,87 +201,98 @@ export interface PersonalExpense {
 
 // Types for Steadfast Courier
 export interface SteadfastOrder {
-    invoice: string;
-    recipient_name: string;
-    recipient_phone: string;
-    recipient_address: string;
-    cod_amount: number;
-    alternative_phone?: string;
-    recipient_email?: string;
-    note?: string;
-    item_description?: string;
-    total_lot?: number;
-    delivery_type?: 0 | 1;
+  invoice: string;
+  recipient_name: string;
+  recipient_phone: string;
+  recipient_address: string;
+  cod_amount: number;
+  alternative_phone?: string;
+  recipient_email?: string;
+  note?: string;
+  item_description?: string;
+  total_lot?: number;
+  delivery_type?: 0 | 1;
 }
 
 export interface SteadfastConsignment {
-    consignment_id: number;
-    invoice: string;
-    tracking_code: string;
-    recipient_name: string;
-    recipient_phone: string;
-    recipient_address: string;
-    cod_amount: number;
-    status: string; // e.g., "in_review"
-    note: string | null;
-    created_at: string; // ISO date string
-    updated_at: string; // ISO date string
+  consignment_id: number;
+  invoice: string;
+  tracking_code: string;
+  recipient_name: string;
+  recipient_phone: string;
+  recipient_address: string;
+  cod_amount: number;
+  status: string; // e.g., "in_review"
+  note: string | null;
+  created_at: string; // ISO date string
+  updated_at: string; // ISO date string
 }
 
 export interface SteadfastStatus {
-    status: number;
-    delivery_status: string;
+  status: number;
+  delivery_status: string;
 }
 
 export interface SteadfastBalance {
-    status: number;
-    current_balance: number;
+  status: number;
+  current_balance: number;
 }
 
 // Bulk order types
 export interface SteadfastBulkOrderItem extends SteadfastOrder {}
 export interface SteadfastBulkOrderResultItem {
-    invoice: string;
-    recipient_name: string;
-    recipient_address: string;
-    recipient_phone: string;
-    cod_amount: string | number;
-    note: string | null;
-    consignment_id: number | null;
-    tracking_code: string | null;
-    status: 'success' | 'error' | string;
+  invoice: string;
+  recipient_name: string;
+  recipient_address: string;
+  recipient_phone: string;
+  cod_amount: string | number;
+  note: string | null;
+  consignment_id: number | null;
+  tracking_code: string | null;
+  status: 'success' | 'error' | string;
 }
 
 // Return request types
-export type SteadfastReturnStatus = 'pending' | 'approved' | 'processing' | 'completed' | 'cancelled';
+export type SteadfastReturnStatus =
+  | 'pending'
+  | 'approved'
+  | 'processing'
+  | 'completed'
+  | 'cancelled';
 export interface SteadfastReturnRequest {
-    id: number;
-    user_id?: number;
-    consignment_id: number;
-    reason: string | null;
-    status: SteadfastReturnStatus;
-    created_at: string;
-    updated_at: string;
+  id: number;
+  user_id?: number;
+  consignment_id: number;
+  reason: string | null;
+  status: SteadfastReturnStatus;
+  created_at: string;
+  updated_at: string;
 }
 
 // Types for Steadfast Webhook
-export type DeliveryStatus = 'pending' | 'delivered' | 'partial_delivered' | 'cancelled' | 'unknown' | 'in_review';
+export type DeliveryStatus =
+  | 'pending'
+  | 'delivered'
+  | 'partial_delivered'
+  | 'cancelled'
+  | 'unknown'
+  | 'in_review';
 
 export interface DeliveryStatusPayload {
-    notification_type: 'delivery_status';
-    consignment_id: number;
-    invoice: string;
-    cod_amount: number;
-    status: DeliveryStatus | string; // Use string as a fallback for other statuses from doc
-    delivery_charge: number;
-    tracking_message: string;
-    updated_at: string; // YYYY-MM-DD HH:MM:SS
+  notification_type: 'delivery_status';
+  consignment_id: number;
+  invoice: string;
+  cod_amount: number;
+  status: DeliveryStatus | string; // Use string as a fallback for other statuses from doc
+  delivery_charge: number;
+  tracking_message: string;
+  updated_at: string; // YYYY-MM-DD HH:MM:SS
 }
 
 export interface TrackingUpdatePayload {
-    notification_type: 'tracking_update';
-    consignment_id: number;
-    invoice: string;
-    tracking_message: string;
-    updated_at: string; // YYYY-MM-DD HH:MM:SS
+  notification_type: 'tracking_update';
+  consignment_id: number;
+  invoice: string;
+  tracking_message: string;
+  updated_at: string; // YYYY-MM-DD HH:MM:SS
 }

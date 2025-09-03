@@ -78,14 +78,20 @@ export default function ScanPatientFormModal({
       // Try to switch explicitly to back camera if available
       const devices = await navigator.mediaDevices.enumerateDevices();
       const videoDevices = devices.filter((d) => d.kind === 'videoinput');
-      const backCam = videoDevices.find((d) => /back|rear|environment/i.test(d.label));
+      const backCam = videoDevices.find((d) =>
+        /back|rear|environment/i.test(d.label),
+      );
 
       if (backCam) {
         stopCurrentStream();
         await startStream({ video: { deviceId: { exact: backCam.deviceId } } });
       } else {
         stopCurrentStream();
-        await startStream({ video: { facingMode: { ideal: 'environment' } } as MediaTrackConstraints });
+        await startStream({
+          video: {
+            facingMode: { ideal: 'environment' },
+          } as MediaTrackConstraints,
+        });
       }
     } catch (err2) {
       console.error('Error accessing camera:', err2);
@@ -93,7 +99,8 @@ export default function ScanPatientFormModal({
       toast({
         variant: 'destructive',
         title: 'ক্যামেরা অ্যাক্সেস ডিনাইড',
-        description: 'ফর্ম স্ক্যান করতে অনুগ্রহ করে ব্রাউজার/ডিভাইস সেটিংসে ক্যামেরা অনুমতি দিন।',
+        description:
+          'ফর্ম স্ক্যান করতে অনুগ্রহ করে ব্রাউজার/ডিভাইস সেটিংসে ক্যামেরা অনুমতি দিন।',
       });
     }
   }, [toast]);
