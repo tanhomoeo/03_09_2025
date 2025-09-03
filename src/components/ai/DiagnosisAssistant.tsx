@@ -1,11 +1,10 @@
-
 'use client';
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Sparkles, Loader2, AlertCircle, Wand2, ListChecks, Pill, Copy } from 'lucide-react';
 import type { Patient, Visit } from '@/lib/types';
-import { analyzeHomeopathicCase, type HomeopathicAssistantOutput } from '@/ai/flows/homeopathic-assistant-flow';
+import type { HomeopathicAssistantOutput } from '@/ai/flows/homeopathic-assistant-flow';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 
@@ -111,7 +110,7 @@ export function DiagnosisAssistant({ patient, visit, onKeySymptomsSelect }: Diag
             <div>
               <h4 className="font-semibold text-md mb-2 flex items-center">
                   <ListChecks className="mr-2 h-5 w-5 text-blue-600"/>
-                  প্রধান লক্ষণসমূহ
+                  প্রধান লক্ষ��সমূহ
               </h4>
               <ul className="list-disc list-inside space-y-1 text-sm bg-muted/50 p-3 rounded-md">
                 {analysisResult.keySymptoms.map((symptom, i) => <li key={`symptom-${i}`}>{symptom}</li>)}
