@@ -41,7 +41,7 @@ export default function ScanPatientFormModal({ isOpen, onClose, onDataExtracted 
           video.setAttribute('playsinline', 'true');
           video.muted = true;
           await video.play();
-        } catch (e) {
+        } catch {
           // Some browsers auto-play without explicit play; ignore.
         }
       }
@@ -51,7 +51,7 @@ export default function ScanPatientFormModal({ isOpen, onClose, onDataExtracted 
       // Try rear camera first
       await startStream({ video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } } as MediaTrackConstraints });
       setHasCameraPermission(true);
-    } catch (err1) {
+    } catch {
       try {
         // Fallback to any available camera
         await startStream({ video: true });
@@ -140,7 +140,7 @@ export default function ScanPatientFormModal({ isOpen, onClose, onDataExtracted 
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>ক্যামেরা অ্যাক্সেস আবশ্যক</AlertTitle>
           <AlertDescription>
-            এই ফিচারটি ব্যবহার করতে, অনুগ্রহ করে আপনার ব্রাউজারকে ক্যামেরা ব্যবহারের অনুমতি দিন এবং পৃষ্ঠাটি পুনরায় লোড করুন।
+            এই ফিচারটি ব্যবহার করতে, অনুগ্রহ করে আপনার ব্রাউজারকে ক্যামেরা ব্যবহারের অনুমতি দিন এবং পৃষ্ঠা���ি পুনরায় লোড করুন।
           </AlertDescription>
         </Alert>
       );
@@ -196,7 +196,7 @@ export default function ScanPatientFormModal({ isOpen, onClose, onDataExtracted 
             হাতে লেখা ফর্ম স্ক্যান করুন
           </DialogTitle>
           <DialogDescription>
-            রোগীর নিবন্ধন ফর্মের ছবি তুলে স্বয়ংক্রিয়ভাবে ডেটা এন্ট্রি করুন।
+            রোগীর নিবন্ধন ফর্ম��র ছবি তুলে স্বয়ংক্রিয়ভাবে ডেটা এন্ট্রি করুন।
           </DialogDescription>
         </DialogHeader>
         <div className="py-4">
