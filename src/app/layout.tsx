@@ -59,6 +59,12 @@ export default function RootLayout({
           <meta name="apple-mobile-web-app-capable" content="yes" />
           <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
           <meta name="apple-mobile-web-app-title" content={APP_NAME} />
+          <link rel="preconnect" href="https://firestore.googleapis.com" crossOrigin="anonymous" />
+          <link rel="preconnect" href="https://www.googleapis.com" crossOrigin="anonymous" />
+          <link rel="preconnect" href="https://identitytoolkit.googleapis.com" crossOrigin="anonymous" />
+          <link rel="preconnect" href="https://lh3.googleusercontent.com" crossOrigin="anonymous" />
+          <link rel="preconnect" href="https://storage.googleapis.com" crossOrigin="anonymous" />
+          <link rel="dns-prefetch" href="https://firestore.googleapis.com" />
       </head>
       <body>
         <RootLayoutClient>{children}</RootLayoutClient>
