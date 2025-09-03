@@ -392,7 +392,7 @@ export default function DashboardPage() {
       <div className="space-y-6 md:space-y-8 content-auto">
         <div
           className={cn(
-            'md:hidden hide-on-print py-3 sticky top-0 z-40 backdrop-blur-lg -mx-4 sm:-mx-6',
+            'md:hidden hide-on-print py-3 sticky top-0 z-40 backdrop-blur-md -mx-4 sm:-mx-6',
             'bg-background/70 shadow-sm',
           )}
         >
@@ -588,7 +588,7 @@ export default function DashboardPage() {
                     </TableHead>
                     <TableHead className="w-[10%] text-right">পরিমাণ</TableHead>
                     <TableHead className="w-[20%] text-center hide-on-print">
-                      অবস্থা ও কার্যক্রম
+                      অব���্থা ও কার্যক্রম
                     </TableHead>
                   </TableRow>
                 </TableHeader>
@@ -786,7 +786,7 @@ export default function DashboardPage() {
               ) : (
                 <TableRow>
                   <TableCell colSpan={7} className="text-center py-8">
-                    আজকের জন্য কোন সাক্ষাৎ নেই।
+                    আজকের জন্য কোন ��াক্ষাৎ নেই।
                   </TableCell>
                 </TableRow>
               )}
