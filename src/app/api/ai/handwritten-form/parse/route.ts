@@ -6,7 +6,10 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { photoDataUri } = body as { photoDataUri?: string };
     if (!photoDataUri || typeof photoDataUri !== 'string') {
-      return NextResponse.json({ error: 'Invalid or missing photoDataUri' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Invalid or missing photoDataUri' },
+        { status: 400 },
+      );
     }
     const result = await parseHandwrittenForm({ photoDataUri });
     return NextResponse.json(result, { status: 200 });

@@ -6,7 +6,10 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { caseNotesText } = body as { caseNotesText?: string };
     if (!caseNotesText || typeof caseNotesText !== 'string') {
-      return NextResponse.json({ error: 'Invalid or missing caseNotesText' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Invalid or missing caseNotesText' },
+        { status: 400 },
+      );
     }
     const result = await categorizeCaseNotes({ caseNotesText });
     return NextResponse.json(result, { status: 200 });

@@ -1,6 +1,14 @@
 'use client';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Camera, AlertCircle, CheckCircle } from 'lucide-react';
@@ -14,11 +22,17 @@ export interface ScanPatientFormModalProps {
   onDataExtracted: (data: HandwrittenFormOutput) => void;
 }
 
-export default function ScanPatientFormModal({ isOpen, onClose, onDataExtracted }: ScanPatientFormModalProps) {
+export default function ScanPatientFormModal({
+  isOpen,
+  onClose,
+  onDataExtracted,
+}: ScanPatientFormModalProps) {
   const { toast } = useToast();
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
+  const [hasCameraPermission, setHasCameraPermission] = useState<
+    boolean | null
+  >(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
 
@@ -49,7 +63,13 @@ export default function ScanPatientFormModal({ isOpen, onClose, onDataExtracted 
 
     try {
       // Try rear camera first
-      await startStream({ video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } } as MediaTrackConstraints });
+      await startStream({
+        video: {
+          facingMode: { ideal: 'environment' },
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
+        } as MediaTrackConstraints,
+      });
       setHasCameraPermission(true);
     } catch {
       try {
@@ -62,7 +82,8 @@ export default function ScanPatientFormModal({ isOpen, onClose, onDataExtracted 
         toast({
           variant: 'destructive',
           title: 'ক্যামেরা অ্যাক্সেস ডিনাইড',
-          description: 'ফর্ম স্ক্যান করতে অনুগ্রহ করে ব্রাউজার সেটিংসে ক্যামেরা ব্যবহারের অনুমতি দিন।',
+          description:
+            'ফর্ম স্ক্যান করতে অনুগ্রহ করে ব্রাউজার সেটিংসে ক্যামেরা ব্যবহারের অনুমতি দিন।',
         });
       }
     }
@@ -76,12 +97,12 @@ export default function ScanPatientFormModal({ isOpen, onClose, onDataExtracted 
       // Stop camera stream when modal is closed
       if (videoRef.current && videoRef.current.srcObject) {
         const stream = videoRef.current.srcObject as MediaStream;
-        stream.getTracks().forEach(track => track.stop());
+        stream.getTracks().forEach((track) => track.stop());
         videoRef.current.srcObject = null;
       }
     }
   }, [isOpen, getCameraPermission]);
-  
+
   const handleCapture = () => {
     if (videoRef.current && canvasRef.current) {
       const video = videoRef.current;
@@ -108,11 +129,16 @@ export default function ScanPatientFormModal({ isOpen, onClose, onDataExtracted 
       });
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data?.error || 'ছবি থেকে তথ্য বের করতে একটি সমস্যা হয়েছে।');
+        throw new Error(
+          data?.error || 'ছবি থেকে তথ্য বের করতে একটি সমস্যা হয়েছে।',
+        );
       }
       onDataExtracted(data as HandwrittenFormOutput);
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'ছবি থেকে তথ্য বের করতে একটি সমস্যা হয়েছে।';
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'ছবি থেকে তথ্য বের করতে একটি সমস্যা হয়েছে।';
       console.error('AI parsing error:', error);
       toast({
         variant: 'destructive',
@@ -140,55 +166,88 @@ export default function ScanPatientFormModal({ isOpen, onClose, onDataExtracted 
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>ক্যামেরা অ্যাক্সেস আবশ্যক</AlertTitle>
           <AlertDescription>
-            এই ফিচারটি ব্যবহার করতে, অনুগ্রহ করে আপনার ব্রাউজারকে ক্যামেরা ব্যবহারের অনুমতি দিন এবং পৃষ্ঠা���ি পুনরায় লোড করুন।
+            এই ফিচারটি ব্যবহার করতে, অনুগ্রহ করে আপনার ব্রাউজারকে ক্যামেরা
+            ব্যবহারের অনুমতি দিন এবং পৃষ্ঠা���ি পুনরায় লোড করুন।
           </AlertDescription>
         </Alert>
       );
     }
 
     if (capturedImage) {
-        return (
-            <div className="space-y-4">
-                <p className="text-sm text-center text-muted-foreground">ছবিটি যাচাই করুন এবং তথ্য প্রসেস করতে &quot;প্রসেস করুন&quot; বাটনে ক্লিক করুন।</p>
-                <Image src={capturedImage} alt="Captured patient form" width={1280} height={720} className="w-full h-auto rounded-md border" />
-            </div>
-        );
+      return (
+        <div className="space-y-4">
+          <p className="text-sm text-center text-muted-foreground">
+            ছবিটি যাচাই করুন এবং তথ্য প্রসেস করতে &quot;প্রসেস করুন&quot; বাটনে
+            ক্লিক করুন।
+          </p>
+          <Image
+            src={capturedImage}
+            alt="Captured patient form"
+            width={1280}
+            height={720}
+            className="w-full h-auto rounded-md border"
+          />
+        </div>
+      );
     }
 
     return (
-        <>
-            <p className="text-sm text-center text-muted-foreground mb-2">হাতে লেখা ফর্মটি ক্যামেরার সামনে পরিষ্কারভাবে ধরে রাখুন এবং ছবি তুলুন।</p>
-            <div className="relative w-full aspect-video bg-muted rounded-md overflow-hidden">
-                <video ref={videoRef} className="w-full h-full object-cover" autoPlay playsInline muted />
-                <canvas ref={canvasRef} className="hidden" />
-            </div>
-        </>
+      <>
+        <p className="text-sm text-center text-muted-foreground mb-2">
+          হাতে লেখা ফর্মটি ক্যামেরার সামনে পরিষ্কারভাবে ধরে রাখুন এবং ছবি তুলুন।
+        </p>
+        <div className="relative w-full aspect-video bg-muted rounded-md overflow-hidden">
+          <video
+            ref={videoRef}
+            className="w-full h-full object-cover"
+            autoPlay
+            playsInline
+            muted
+          />
+          <canvas ref={canvasRef} className="hidden" />
+        </div>
+      </>
     );
   };
-  
+
   const renderFooter = () => {
-      if (capturedImage) {
-          return (
-              <>
-                  <Button variant="outline" onClick={() => setCapturedImage(null)} disabled={isProcessing}>আবার ছবি তুলুন</Button>
-                  <Button onClick={handleProcessImage} disabled={isProcessing}>
-                      {isProcessing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CheckCircle className="mr-2 h-4 w-4" />}
-                      {isProcessing ? 'প্রসেসিং...' : 'প্রসেস করুন'}
-                  </Button>
-              </>
-          );
-      }
+    if (capturedImage) {
       return (
-          <Button onClick={handleCapture} disabled={!hasCameraPermission}>
-              <Camera className="mr-2 h-4 w-4" /> ছবি তুলুন
+        <>
+          <Button
+            variant="outline"
+            onClick={() => setCapturedImage(null)}
+            disabled={isProcessing}
+          >
+            আবার ছবি তুলুন
           </Button>
+          <Button onClick={handleProcessImage} disabled={isProcessing}>
+            {isProcessing ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <CheckCircle className="mr-2 h-4 w-4" />
+            )}
+            {isProcessing ? 'প্রসেসিং...' : 'প্রসেস করুন'}
+          </Button>
+        </>
       );
-  }
+    }
+    return (
+      <Button onClick={handleCapture} disabled={!hasCameraPermission}>
+        <Camera className="mr-2 h-4 w-4" /> ছবি তুলুন
+      </Button>
+    );
+  };
 
   if (!isOpen) return null;
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open) onClose();
+      }}
+    >
       <DialogContent className="sm:max-w-xl">
         <DialogHeader>
           <DialogTitle className="font-headline flex items-center">
@@ -199,11 +258,13 @@ export default function ScanPatientFormModal({ isOpen, onClose, onDataExtracted 
             রোগীর নিবন্ধন ফর্ম��র ছবি তুলে স্বয়ংক্রিয়ভাবে ডেটা এন্ট্রি করুন।
           </DialogDescription>
         </DialogHeader>
-        <div className="py-4">
-          {renderContent()}
-        </div>
+        <div className="py-4">{renderContent()}</div>
         <DialogFooter className="pt-4">
-          <DialogClose asChild><Button variant="outline" onClick={onClose}>বাতিল</Button></DialogClose>
+          <DialogClose asChild>
+            <Button variant="outline" onClick={onClose}>
+              বাতিল
+            </Button>
+          </DialogClose>
           {renderFooter()}
         </DialogFooter>
       </DialogContent>

@@ -5,8 +5,15 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { symptoms } = body as { symptoms?: string };
-    if (!symptoms || typeof symptoms !== 'string' || symptoms.trim().length < 10) {
-      return NextResponse.json({ error: 'Invalid or insufficient symptoms' }, { status: 400 });
+    if (
+      !symptoms ||
+      typeof symptoms !== 'string' ||
+      symptoms.trim().length < 10
+    ) {
+      return NextResponse.json(
+        { error: 'Invalid or insufficient symptoms' },
+        { status: 400 },
+      );
     }
     const result = await suggestRemedies({ symptoms });
     return NextResponse.json(result, { status: 200 });

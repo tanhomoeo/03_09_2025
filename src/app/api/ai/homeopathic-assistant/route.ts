@@ -5,8 +5,15 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { caseData } = body as { caseData?: string };
-    if (!caseData || typeof caseData !== 'string' || caseData.trim().length < 20) {
-      return NextResponse.json({ error: 'Invalid or insufficient caseData' }, { status: 400 });
+    if (
+      !caseData ||
+      typeof caseData !== 'string' ||
+      caseData.trim().length < 20
+    ) {
+      return NextResponse.json(
+        { error: 'Invalid or insufficient caseData' },
+        { status: 400 },
+      );
     }
     const result = await analyzeHomeopathicCase({ caseData });
     return NextResponse.json(result, { status: 200 });

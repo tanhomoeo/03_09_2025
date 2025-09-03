@@ -6,7 +6,10 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { remedyName } = body as { remedyName?: string };
     if (!remedyName || typeof remedyName !== 'string') {
-      return NextResponse.json({ error: 'Invalid or missing remedyName' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Invalid or missing remedyName' },
+        { status: 400 },
+      );
     }
     const result = await getRemedyDetails({ remedyName });
     return NextResponse.json(result, { status: 200 });

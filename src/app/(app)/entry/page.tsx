@@ -234,9 +234,13 @@ function PatientEntryPageContent() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ caseNotesText }),
       });
-      const result = (await res.json()) as CategorizedCaseNotesOutput | { error?: string };
+      const result = (await res.json()) as
+        | CategorizedCaseNotesOutput
+        | { error?: string };
       if (!res.ok || (result as any)?.error) {
-        throw new Error(((result as any)?.error as string) || 'বিশ্লেষণ ব্যর্থ হয়েছে');
+        throw new Error(
+          ((result as any)?.error as string) || 'বিশ্লেষণ ব্যর্থ হয়েছে',
+        );
       }
       const data = result as CategorizedCaseNotesOutput;
       setCategorizationResult(data);

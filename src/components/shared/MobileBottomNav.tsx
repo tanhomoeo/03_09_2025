@@ -19,8 +19,11 @@ const navItems = [
 ];
 
 const ScanPatientFormModal = dynamic<ScanPatientFormModalProps>(
-  () => import('@/components/patient/ScanPatientFormModal').then((mod) => mod.default),
-  { ssr: false }
+  () =>
+    import('@/components/patient/ScanPatientFormModal').then(
+      (mod) => mod.default,
+    ),
+  { ssr: false },
 );
 
 export function MobileBottomNav() {
@@ -32,12 +35,15 @@ export function MobileBottomNav() {
     const query = new URLSearchParams();
     if (extractedData.name) query.set('name', extractedData.name);
     if (extractedData.phone) query.set('phone', extractedData.phone);
-    if (extractedData.guardianName) query.set('guardianName', extractedData.guardianName);
-    if (extractedData.villageUnion) query.set('villageUnion', extractedData.villageUnion);
-    if (extractedData.thanaUpazila) query.set('thanaUpazila', extractedData.thanaUpazila);
+    if (extractedData.guardianName)
+      query.set('guardianName', extractedData.guardianName);
+    if (extractedData.villageUnion)
+      query.set('villageUnion', extractedData.villageUnion);
+    if (extractedData.thanaUpazila)
+      query.set('thanaUpazila', extractedData.thanaUpazila);
     if (extractedData.district) query.set('district', extractedData.district);
     if (extractedData.age) query.set('age', extractedData.age);
-    
+
     setIsCameraModalOpen(false);
 
     router.push(`${ROUTES.PATIENT_ENTRY}?${query.toString()}`);
@@ -50,7 +56,10 @@ export function MobileBottomNav() {
           {navItems.map((item) => {
             if (item.href === 'SCAN_ACTION') {
               return (
-                <div key={item.label} className="relative flex items-center justify-center -top-4">
+                <div
+                  key={item.label}
+                  className="relative flex items-center justify-center -top-4"
+                >
                   <button
                     onClick={() => setIsCameraModalOpen(true)}
                     type="button"
@@ -71,7 +80,7 @@ export function MobileBottomNav() {
                 href={item.href}
                 className={cn(
                   'inline-flex flex-col items-center justify-center px-2 hover:bg-muted/50 group',
-                  isActive ? 'text-primary' : 'text-muted-foreground'
+                  isActive ? 'text-primary' : 'text-muted-foreground',
                 )}
               >
                 <item.icon className="w-6 h-6" />
@@ -81,12 +90,12 @@ export function MobileBottomNav() {
           })}
         </div>
       </div>
-      
+
       {isCameraModalOpen && (
-         <ScanPatientFormModal
-            isOpen={isCameraModalOpen}
-            onClose={() => setIsCameraModalOpen(false)}
-            onDataExtracted={handleDataExtracted}
+        <ScanPatientFormModal
+          isOpen={isCameraModalOpen}
+          onClose={() => setIsCameraModalOpen(false)}
+          onDataExtracted={handleDataExtracted}
         />
       )}
     </>

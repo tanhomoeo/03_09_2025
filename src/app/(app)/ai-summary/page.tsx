@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useState, useCallback, startTransition } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import { useState, useCallback, startTransition } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 import {
   AlertTriangle,
   LoaderCircle,
@@ -11,25 +11,28 @@ import {
   FileText,
   Brain,
   Lightbulb,
-} from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import type { SuggestRemediesOutput } from "@/ai/flows/suggest-remedies";
-import { SymptomForm, type SymptomFormValues } from "@/components/symptom-form";
-import { PageHeaderCard } from "@/components/shared/PageHeaderCard";
+} from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import type { SuggestRemediesOutput } from '@/ai/flows/suggest-remedies';
+import { SymptomForm, type SymptomFormValues } from '@/components/symptom-form';
+import { PageHeaderCard } from '@/components/shared/PageHeaderCard';
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
-} from "@/components/ui/card";
-import { CategorizedSymptomsDisplay, LABELS as CATEGORY_LABELS } from "@/components/repertory/CategorizedSymptomsDisplay";
-import { RemedySuggestionsDisplay } from "@/components/repertory/RemedySuggestionsDisplay";
-import { RepertorySuggestionDisplay } from "@/components/repertory/RepertorySuggestionDisplay";
+} from '@/components/ui/card';
+import {
+  CategorizedSymptomsDisplay,
+  LABELS as CATEGORY_LABELS,
+} from '@/components/repertory/CategorizedSymptomsDisplay';
+import { RemedySuggestionsDisplay } from '@/components/repertory/RemedySuggestionsDisplay';
+import { RepertorySuggestionDisplay } from '@/components/repertory/RepertorySuggestionDisplay';
 
 const formSchema = z.object({
   symptoms: z.string().min(10, {
-    message: "অনুগ্রহ করে লক্ষণগুলি কমপক্ষে ১০টি অক্ষরে বর্ণনা করুন।",
+    message: 'অনুগ্রহ করে লক্ষণগুলি কমপক্ষে ১০টি অক্ষরে বর্ণনা করুন।',
   }),
 });
 
@@ -41,12 +44,12 @@ export default function AiRepertoryPage() {
   const form = useForm<SymptomFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      symptoms: "",
+      symptoms: '',
     },
   });
 
   const handleStopVoiceInput = useCallback(() => {
-    window.dispatchEvent(new CustomEvent("stop-voice-input"));
+    window.dispatchEvent(new CustomEvent('stop-voice-input'));
   }, []);
 
   const handleSubmit = (values: SymptomFormValues) => {
@@ -62,9 +65,14 @@ export default function AiRepertoryPage() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ symptoms: values.symptoms }),
         });
-        const result = (await res.json()) as SuggestRemediesOutput | { error?: string };
+        const result = (await res.json()) as
+          | SuggestRemediesOutput
+          | { error?: string };
         if (!res.ok || (result as any)?.error) {
-          throw new Error(((result as any)?.error as string) || 'AI কোনো বিশ্লেষণ দিতে পারেনি।');
+          throw new Error(
+            ((result as any)?.error as string) ||
+              'AI কোনো বিশ্লেষণ দিতে পারেনি।',
+          );
         }
         setResults(result as SuggestRemediesOutput);
       } catch (e: unknown) {
@@ -140,17 +148,17 @@ export default function AiRepertoryPage() {
                 </h3>
               </CardHeader>
               <CardContent className="p-0">
-                  <div className="flex flex-col items-center justify-center h-full min-h-[400px]">
-                    <div className="text-6xl text-muted-foreground/20 mb-4">
-                      <Brain />
-                    </div>
-                    <p className="text-muted-foreground text-center font-headline text-lg">
-                      AI বিশ্লেষণে�� ফলাফল
-                    </p>
-                    <p className="text-muted-foreground/80 text-sm text-center mt-1">
-                      বিশ্লেষণের ফলাফল এখানে প্রদর্শিত হবে।
-                    </p>
+                <div className="flex flex-col items-center justify-center h-full min-h-[400px]">
+                  <div className="text-6xl text-muted-foreground/20 mb-4">
+                    <Brain />
                   </div>
+                  <p className="text-muted-foreground text-center font-headline text-lg">
+                    AI বিশ্লেষণে�� ফলাফল
+                  </p>
+                  <p className="text-muted-foreground/80 text-sm text-center mt-1">
+                    বিশ্লেষণের ফলাফল এখানে প্রদর্শিত হবে।
+                  </p>
+                </div>
               </CardContent>
             </Card>
           )}
@@ -158,25 +166,27 @@ export default function AiRepertoryPage() {
           {results && !isLoading && !error && (
             <>
               {results.bestRepertorySuggestion && (
-                <RepertorySuggestionDisplay suggestion={results.bestRepertorySuggestion} />
+                <RepertorySuggestionDisplay
+                  suggestion={results.bestRepertorySuggestion}
+                />
               )}
               {results.remedies && results.remedies.length > 0 && (
                 <RemedySuggestionsDisplay remedies={results.remedies} />
               )}
               {results.categorizedSymptoms && (
                 <Card className="shadow-lg border-border/20 bg-card/50 backdrop-blur-lg">
-                    <CardHeader>
-                        <CardTitle className="font-headline text-xl flex items-center gap-2">
-                           <Lightbulb className="w-6 h-6 text-primary"/>
-                           বিশ্লেষিত লক্ষণসমূহ
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <CategorizedSymptomsDisplay
-                            symptoms={results.categorizedSymptoms}
-                            labels={CATEGORY_LABELS}
-                        />
-                    </CardContent>
+                  <CardHeader>
+                    <CardTitle className="font-headline text-xl flex items-center gap-2">
+                      <Lightbulb className="w-6 h-6 text-primary" />
+                      বিশ্লেষিত লক্ষণসমূহ
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <CategorizedSymptomsDisplay
+                      symptoms={results.categorizedSymptoms}
+                      labels={CATEGORY_LABELS}
+                    />
+                  </CardContent>
                 </Card>
               )}
             </>
