@@ -108,7 +108,7 @@ export default function StoreManagementPage() {
     try {
       const meds = await getMedicines();
       setMedicines(meds);
-    } catch (_error) {
+    } catch {
       toast({
         title: 'ত্রুটি',
         description: 'ঔষধের তালিকা আনতে সমস্যা হয়েছে।',
@@ -163,7 +163,7 @@ export default function StoreManagementPage() {
         description: 'ঔষধটি তালিকা থেকে মুছে ফেলা হয়েছে।',
       });
       fetchMedicines();
-    } catch (_error) {
+    } catch {
       toast({
         title: 'ত্রুটি',
         description: 'ঔষধটি মুছতে সমস্যা হয়েছে।',
@@ -189,7 +189,7 @@ export default function StoreManagementPage() {
       }
       fetchMedicines();
       setIsModalOpen(false);
-    } catch (_error) {
+    } catch {
       toast({
         title: 'ত্রুটি',
         description: 'তথ্য সংরক্ষণ করতে সমস্যা হয়েছে।',
