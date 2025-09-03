@@ -3,6 +3,11 @@ import React, { useState, useEffect } from 'react';
 import { PageHeaderCard } from '@/components/shared/PageHeaderCard';
 import { BookMarked, Loader2 } from 'lucide-react';
 import { RepertoryBrowser } from '@/components/repertory/RepertoryBrowser';
+import dynamic from 'next/dynamic';
+const MateriaMedicaSearch = dynamic(
+  () => import('@/components/repertory/MateriaMedicaSearch').then(m => m.MateriaMedicaSearch),
+  { ssr: false }
+);
 import type { Chapter } from '@/lib/types';
 
 export default function RepertoryBrowserPage() {
@@ -46,7 +51,7 @@ export default function RepertoryBrowserPage() {
           {isLoading ? (
             <div className="flex items-center justify-center h-full">
               <Loader2 className="h-8 w-8 animate-spin text-primary" />
-              <p className="ml-3 text-muted-foreground">রেপার্টরি লোড হচ্ছে...</p>
+              <p className="ml-3 text-muted-foreground">রে���ার্টরি লোড হচ্ছে...</p>
             </div>
           ) : error ? (
             <div className="flex items-center justify-center h-full text-destructive">
