@@ -53,10 +53,7 @@ import { cn } from '@/lib/utils';
 import { Textarea } from '@/components/ui/textarea';
 import dynamic from 'next/dynamic';
 import type { HandwrittenFormOutput } from '@/ai/flows/handwritten-patient-form-parser-flow';
-import {
-  categorizeCaseNotes,
-  CategorizedCaseNotesOutput,
-} from '@/ai/flows/categorize-case-notes-flow';
+import type { CategorizedCaseNotesOutput } from '@/ai/flows/categorize-case-notes-flow';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import {
   CategorizedSymptomsDisplay,
@@ -232,12 +229,21 @@ function PatientEntryPageContent() {
     setCategorizationResult(null);
 
     try {
-      const result = await categorizeCaseNotes({ caseNotesText });
-      setCategorizationResult(result);
-      form.setValue('categorizedCaseNotes', result.categorizedNotes, {
+      const res = await fetch('/api/ai/categorize-notes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ caseNotesText }),
+      });
+      const result = (await res.json()) as CategorizedCaseNotesOutput | { error?: string };
+      if (!res.ok || (result as any)?.error) {
+        throw new Error(((result as any)?.error as string) || 'বিশ্লেষণ ব্যর্থ হয়েছে');
+      }
+      const data = result as CategorizedCaseNotesOutput;
+      setCategorizationResult(data);
+      form.setValue('categorizedCaseNotes', data.categorizedNotes, {
         shouldDirty: true,
       });
-      form.setValue('keySymptoms', result.keySymptoms, { shouldDirty: true });
+      form.setValue('keySymptoms', data.keySymptoms, { shouldDirty: true });
       toast({
         title: 'লক্ষণ শ্রেণীবিভাগ সফল হয়েছে',
         description:
@@ -248,7 +254,7 @@ function PatientEntryPageContent() {
         error instanceof Error ? error.message : 'একটি অজানা ত্রুটি ঘটেছে।';
       setCategorizationError(errorMessage);
       toast({
-        title: 'বিশ্লেষণ ব্যর্থ হয়েছে',
+        title: 'বিশ্লেষণ ব্য���্থ হয়েছে',
         description: errorMessage,
         variant: 'destructive',
       });
@@ -392,7 +398,7 @@ function PatientEntryPageContent() {
                   রোগীর সাধারণ তথ্য
                 </CardTitle>
                 <CardDescription>
-                  রোগীর ব্যক্তিগত এবং যোগাযোগের তথ্য লিখুন।
+                  রোগীর ব্যক্তিগত ��বং যোগাযোগের তথ্য লিখুন।
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -446,7 +452,7 @@ function PatientEntryPageContent() {
                     name="diaryNumber"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>ডায়েরি নম্বর</FormLabel>
+                        <FormLabel>ডায়েরি নম��বর</FormLabel>
                         <FormControl>
                           <Input
                             placeholder="যেমন: F/123, CH/456"
