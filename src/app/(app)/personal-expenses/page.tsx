@@ -1,4 +1,3 @@
-
 'use client';
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
@@ -102,7 +101,7 @@ const expenseCategories: {
   { value: 'utilities', label: 'বিল', icon: Wallet },
   { value: 'personal', label: 'ব্যক্তিগত', icon: ShoppingBag },
   { value: 'health', label: 'স্বাস্থ্য', icon: HeartPulse },
-  { value: 'education', label: 'শিক্ষা', icon: GraduationCap },
+  { value: 'education', label: '��িক্ষা', icon: GraduationCap },
   { value: 'entertainment', label: 'বিনোদন', icon: Sparkles },
   { value: 'other', label: 'অন্যান্য', icon: DollarSign },
 ];
@@ -142,7 +141,7 @@ export default function PersonalExpensesPage() {
     try {
       const allExpenses = await getExpenses();
       setExpenses(allExpenses);
-    } catch (error) {
+    } catch (_error) {
       toast({
         title: 'ত্রুটি',
         description: 'খরচের তালিকা আনতে সমস্যা হয়েছে।',
@@ -190,7 +189,7 @@ export default function PersonalExpensesPage() {
     } catch (_error) {
       toast({
         title: 'ত্রুটি',
-        description: 'খরচটি মুছতে সমস্যা হয়েছে।',
+        description: 'খরচটি মুছতে সমস্যা হ���েছে।',
         variant: 'destructive',
       });
     }
@@ -381,7 +380,7 @@ export default function PersonalExpensesPage() {
             ) : (
               <TableRow>
                 <TableCell colSpan={5} className="h-24 text-center">
-                  এই মাসের জন্য কোনো খরচ পাওয়া যায়নি।
+                  এই মাসের জন্য কোনো খর�� পাওয়া যায়নি।
                 </TableCell>
               </TableRow>
             )}
