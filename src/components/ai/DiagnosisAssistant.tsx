@@ -50,8 +50,16 @@ export function DiagnosisAssistant({ patient, visit, onKeySymptomsSelect }: Diag
     const fullCaseData = caseDataParts.filter(Boolean).join("\n");
 
     try {
-      const result = await analyzeHomeopathicCase({ caseData: fullCaseData });
-      setAnalysisResult(result);
+      const res = await fetch('/api/ai/homeopathic-assistant', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ caseData: fullCaseData }),
+      });
+      const result = (await res.json()) as HomeopathicAssistantOutput | { error?: string };
+      if (!res.ok || (result as any)?.error) {
+        throw new Error(((result as any)?.error as string) || 'AI কোনো উত্তর দেয়নি।');
+      }
+      setAnalysisResult(result as HomeopathicAssistantOutput);
     } catch (e: unknown) {
       const errorMessage = e instanceof Error ? e.message : 'AI বিশ্লেষণ করার সময় একটি অজানা ত্রুটি হয়েছে।';
       setError(errorMessage);
@@ -110,7 +118,7 @@ export function DiagnosisAssistant({ patient, visit, onKeySymptomsSelect }: Diag
             <div>
               <h4 className="font-semibold text-md mb-2 flex items-center">
                   <ListChecks className="mr-2 h-5 w-5 text-blue-600"/>
-                  প্রধান লক্ষ��সমূহ
+                  প্রধান লক্ষণসমূহ
               </h4>
               <ul className="list-disc list-inside space-y-1 text-sm bg-muted/50 p-3 rounded-md">
                 {analysisResult.keySymptoms.map((symptom, i) => <li key={`symptom-${i}`}>{symptom}</li>)}
