@@ -43,19 +43,15 @@ async function makeSteadfastRequest<T>(
 
     // Check if the response is ok (status in the range 200-299)
     if (!response.ok) {
+      const raw = await response.text();
       let errorMessage = `API Error: ${response.status} ${response.statusText}`;
-      try {
-        // Try to parse the error response as JSON
-        const errorData = await response.json();
-        errorMessage = errorData.message || JSON.stringify(errorData);
-      } catch {
-        // If it's not JSON, it might be HTML or plain text
-        const textError = await response.text();
-        // Shorten long HTML error pages
-        errorMessage =
-          textError.length > 200
-            ? textError.substring(0, 200) + '...'
-            : textError;
+      if (raw) {
+        try {
+          const errorData = JSON.parse(raw);
+          errorMessage = errorData.message || JSON.stringify(errorData);
+        } catch {
+          errorMessage = raw.length > 200 ? raw.substring(0, 200) + '...' : raw;
+        }
       }
       throw new Error(
         `An error occurred with the courier service: ${errorMessage}`,
