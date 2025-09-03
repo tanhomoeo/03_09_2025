@@ -524,7 +524,7 @@ export const getConsignments = async (): Promise<(SteadfastConsignment & { id: s
   try {
     const q = query(consignmentsCollectionRef(), orderBy('created_at', 'desc'));
     const snapshot = await getDocs(q);
-    return snapshot.docs.map(docSnap => convertDocument<SteadfastConsignment & { id: string }>({ ...docSnap, id: docSnap.id }));
+    return snapshot.docs.map(docSnap => convertDocument<SteadfastConsignment & { id: string }>(docSnap));
   } catch (error) {
     console.error("Error getting consignments: ", error);
     return [];
@@ -650,7 +650,7 @@ export const formatCurrency = (amount: number): string => {
 
 export const PAYMENT_METHOD_LABELS: Record<Exclude<PaymentMethod, ''>, string> = {
   cash: 'ক্যাশ',
-  bkash: 'বিকাশ',
+  bkash: '���িকাশ',
   nagad: 'নগদ',
   rocket: 'রকেট',
   other: 'অন্যান্য',
