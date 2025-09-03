@@ -26,7 +26,6 @@ import * as z from "zod";
 import type {
   Patient,
   EnrichedVisit,
-  CategorizedCaseNotes,
   PatientGender,
 } from "@/lib/types";
 import {
@@ -361,7 +360,7 @@ export function PatientDetailsModal({
                                     <FormField control={patientInfoForm.control} name="thanaUpazila" render={({ field }) => ( <FormItem><FormLabel>থানা/উপজেলা</FormLabel><FormControl><Input {...field} readOnly={!isEditingInfo} className={cn(!isEditingInfo && readOnlyInputFieldClass)} /></FormControl><FormMessage /></FormItem> )} />
                                     <FormField control={patientInfoForm.control} name="district" render={({ field }) => ( <FormItem><FormLabel>জেলা</FormLabel><FormControl><Input {...field} readOnly={!isEditingInfo} className={cn(!isEditingInfo && readOnlyInputFieldClass)} /></FormControl><FormMessage /></FormItem> )} />
                                     <FormField control={patientInfoForm.control} name="diaryNumber" render={({ field }) => ( <FormItem><FormLabel>ডায়েরি নম্বর</FormLabel><FormControl><Input type="text" {...field} value={field.value || ""} readOnly={!isEditingInfo} className={cn(!isEditingInfo && readOnlyInputFieldClass)} placeholder="যেমন: F/123" /></FormControl><FormMessage /></FormItem> )} />
-                                    <FormField control={patientInfoForm.control} name="registrationDate" render={({ field }) => ( <FormItem><FormLabel>নিবন্ধনের তারিখ</FormLabel><FormControl><Input type="date" {...field} readOnly={!isEditingInfo} className={cn(!isEditingInfo && readOnlyInputFieldClass)} /></FormControl><FormMessage /></FormItem> )} />
+                                    <FormField control={patientInfoForm.control} name="registrationDate" render={({ field }) => ( <FormItem><FormLabel>নি��ন্ধনের তারিখ</FormLabel><FormControl><Input type="date" {...field} readOnly={!isEditingInfo} className={cn(!isEditingInfo && readOnlyInputFieldClass)} /></FormControl><FormMessage /></FormItem> )} />
                                 </div>
                             </CardContent>
                         </Card>
@@ -587,7 +586,7 @@ export function PatientDetailsModal({
                   </ul>
                 ) : (
                   <p className="text-muted-foreground text-center py-4">
-                    এই রোগীর জন্য কোন পূর্ববর্তী ভিজিটের তথ্য নেই।
+                    এই রোগীর ���ন্য কোন পূর্ববর্তী ভিজিটের তথ্য নেই।
                   </p>
                 )}
               </TabsContent>
