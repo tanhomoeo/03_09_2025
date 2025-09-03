@@ -520,7 +520,7 @@ export const saveClinicSettings = async (settings: ClinicSettings): Promise<bool
 };
 
 // Courier Consignment Functions
-export const getConsignments = async (): Promise<SteadfastConsignment[]> => {
+export const getConsignments = async (): Promise<(SteadfastConsignment & { id: string })[]> => {
   try {
     const q = query(consignmentsCollectionRef(), orderBy('created_at', 'desc'));
     const snapshot = await getDocs(q);
