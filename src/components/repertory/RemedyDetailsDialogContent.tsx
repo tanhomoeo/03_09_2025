@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getRemedyDetails, type RemedyDetailsOutput } from '@/ai/flows/remedy-details';
+import type { RemedyDetailsOutput } from '@/ai/flows/remedy-details';
 import { RemedyDetailsDisplay } from '@/components/repertory/RemedyDetailsDisplay';
 import { DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { LoaderCircle } from 'lucide-react';
@@ -25,11 +25,16 @@ export function RemedyDetailsDialogContent({ remedyName }: RemedyDetailsDialogCo
       setError(null);
       setDetails(null);
       try {
-        const result = await getRemedyDetails({ remedyName });
-        if (!result) {
-          throw new Error('No details found for this remedy.');
+        const res = await fetch('/api/ai/remedy-details', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ remedyName }),
+        });
+        const result = (await res.json()) as RemedyDetailsOutput | { error?: string };
+        if (!res.ok || (result as any)?.error) {
+          throw new Error(((result as any)?.error as string) || 'No details found for this remedy.');
         }
-        setDetails(result);
+        setDetails(result as RemedyDetailsOutput);
       } catch (e) {
         console.error('Failed to fetch remedy details:', e);
         const errorMessage = e instanceof Error ? e.message : 'An error occurred while fetching remedy details. Please try again.';
