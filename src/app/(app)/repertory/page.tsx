@@ -38,9 +38,9 @@ export default function RepertoryBrowserPage() {
   }, []);
 
   return (
-    <div className="space-y-6 h-full flex flex-col">
+    <div className="space-y-6 h-full flex flex-col content-auto">
       <PageHeaderCard
-        title="রেপ���র্টরি ব্রাউজার"
+        title="রেপার্টরি ব্রাউজার"
         description="অধ্যায়, রুব্রিক এবং প্রতিকার ব্রাউজ এবং অনুসন্ধান করুন।"
         actions={<BookMarked className="h-8 w-8 text-primary" />}
         className="bg-gradient-to-br from-cyan-100 to-sky-200 dark:from-cyan-900/30 dark:to-sky-900/30 flex-shrink-0"
