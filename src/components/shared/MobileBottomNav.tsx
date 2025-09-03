@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState } from 'react';
@@ -46,7 +45,7 @@ export function MobileBottomNav() {
 
   return (
     <>
-      <div className="md:hidden fixed bottom-0 left-0 z-50 w-full h-14 bg-background/70 border-t border-border/20 backdrop-blur-lg">
+      <div className="md:hidden fixed bottom-0 left-0 z-50 w-full h-14 bg-background/70 border-t border-border/20 backdrop-blur-md">
         <div className="grid h-full max-w-lg grid-cols-5 mx-auto font-medium">
           {navItems.map((item) => {
             if (item.href === 'SCAN_ACTION') {
