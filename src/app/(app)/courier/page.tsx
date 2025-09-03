@@ -68,7 +68,7 @@ const orderSchema = z.object({
   invoice: z.string().min(1, 'ইনভয়েস আইডি আবশ্যক।'),
   recipient_name: z.string().min(1, 'প্রাপকের নাম আবশ্যক।').max(100),
   recipient_phone: z.string().regex(/^01\d{9}$/, 'একটি বৈধ ১১ সংখ্যার ফোন নম্বর দিন।'),
-  recipient_address: z.string().min(1, 'প্রাপ��ের ঠিকানা আবশ্যক।').max(250),
+  recipient_address: z.string().min(1, 'প্রাপকের ঠিকানা আবশ্যক।').max(250),
   cod_amount: z.coerce.number().min(0, 'ক্যাশ অন ডেলিভারি পরিমাণ ঋণাত্মক হতে পারে না।'),
   note: z.string().optional(),
 });
@@ -180,7 +180,7 @@ export default function CourierPage() {
   const fetchBalance = useCallback(async () => {
     setIsLoadingBalance(true);
     try {
-      const balanceData = await getCurrentBalance();
+      const balanceData = await api.balance();
       setBalance(balanceData);
     } catch (error) {
       toast({
