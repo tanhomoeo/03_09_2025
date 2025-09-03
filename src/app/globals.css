@@ -109,6 +109,7 @@ body {
   body {
     @apply bg-background;
     color: hsl(var(--text-body));
+    font-family: var(--font-alegreya), serif;
   }
   
   body:not(.login-page-active) {
