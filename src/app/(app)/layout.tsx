@@ -40,7 +40,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <AppSidebar />
       <main
         className={cn(
-          'flex-1 w-full transition-all duration-300 ease-in-out motion-reduce:transition-none motion-reduce:animate-none px-4 sm:px-6 pb-20 md:pb-6',
+          'flex-1 w-full will-change-[margin] transition-[margin] duration-200 ease-out motion-reduce:transition-none motion-reduce:animate-none px-4 sm:px-6 pb-20 md:pb-6',
           'peer-data-[state=open]:md:ml-[16rem] peer-data-[state=closed]:md:ml-[4.5rem]',
         )}
       >
