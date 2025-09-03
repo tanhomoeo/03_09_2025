@@ -1,10 +1,9 @@
-
 'use client';
 
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
-import { Loader2, ShieldAlert } from 'lucide-react';
+import { ShieldAlert } from 'lucide-react';
 import { PageHeaderCard } from './PageHeaderCard';
 import { Button } from '../ui/button';
 import { ROUTES } from '@/lib/constants';
