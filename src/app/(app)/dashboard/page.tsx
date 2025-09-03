@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableFooter } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Users, UserPlus, FileText, BarChart3, TrendingUp, Search as SearchIcon, Printer, CalendarDays, MessageSquareText, PlayCircle } from 'lucide-react';
+import { Users, UserPlus, FileText, BarChart3, TrendingUp, Search as SearchIcon, Printer, CalendarDays, MessageSquareText, PlayCircle, Loader2 } from 'lucide-react';
 import { getPatients, getVisitsWithinDateRange, getPaymentSlipsWithinDateRange, getPatientsRegisteredWithinDateRange, formatCurrency, getPaymentMethodLabel, getClinicSettings } from '@/lib/firestoreService';
 import type { ClinicSettings, Patient, Visit, PaymentSlip, PaymentMethod } from '@/lib/types';
 import { ROUTES, APP_NAME } from '@/lib/constants';
@@ -19,7 +19,8 @@ import { cn } from '@/lib/utils';
 import QuickActionCard from '@/components/dashboard/QuickActionCard';
 import ActivityCard from '@/components/dashboard/ActivityCard';
 import { useSidebar } from '@/components/ui/sidebar';
-import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
+import { useDebounce } from '@/hooks/use-debounce';
 
 interface AppointmentDisplayItem {
   visitId: string;
@@ -96,6 +97,51 @@ export default function DashboardPage() {
   const [showRevenue, setShowRevenue] = useState(false);
   const revenueTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { toggleSidebar } = useSidebar();
+  
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<Patient[]>([]);
+  const [isSearchLoading, setIsSearchLoading] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const debouncedSearchQuery = useDebounce(searchQuery, 300);
+  const searchFormRef = useRef<HTMLDivElement>(null);
+
+
+  useEffect(() => {
+    const fetchSearchResults = async () => {
+      if (debouncedSearchQuery.length < 2) {
+        setSearchResults([]);
+        return;
+      }
+      setIsSearchLoading(true);
+      try {
+        const allPatients = await getPatients();
+        const lowerCaseQuery = debouncedSearchQuery.toLowerCase();
+        const filtered = allPatients.filter(p => 
+            p.name.toLowerCase().includes(lowerCaseQuery) ||
+            p.phone.includes(debouncedSearchQuery) ||
+            (p.diaryNumber && p.diaryNumber.toLowerCase().includes(lowerCaseQuery))
+        );
+        setSearchResults(filtered);
+      } catch (error) {
+        console.error("Failed to search patients", error);
+      } finally {
+        setIsSearchLoading(false);
+      }
+    };
+    fetchSearchResults();
+  }, [debouncedSearchQuery]);
+
+   useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchFormRef.current && !searchFormRef.current.contains(event.target as Node)) {
+        setIsSearchOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleRevenueClick = () => {
     if (revenueTimeoutRef.current) {
@@ -242,11 +288,15 @@ export default function DashboardPage() {
   
   const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const searchTerm = formData.get('search') as string;
-    if (searchTerm) {
-      router.push(`${ROUTES.PATIENT_SEARCH}?q=${searchTerm}`);
+    if (searchQuery) {
+      router.push(`${ROUTES.PATIENT_SEARCH}?q=${searchQuery}`);
     }
+  };
+
+  const handlePatientSelect = (patient: Patient) => {
+    setIsSearchOpen(false);
+    setSearchQuery('');
+    router.push(`${ROUTES.PATIENT_SEARCH}?q=${patient.diaryNumber || patient.phone || patient.name}&tab=history`);
   };
   
   const todaysTotalRevenue = todaysAppointments.reduce((sum, appt) => sum + appt.paymentAmount, 0);
@@ -296,28 +346,47 @@ export default function DashboardPage() {
         </div>
        </div>
 
-      <div className="flex items-center justify-center my-4 md:my-0 hide-on-print">
-        <form
-          onSubmit={handleSearchSubmit}
-          className={cn(
-            "relative w-full max-w-[280px] lg:max-w-xs transition-all duration-300 ease-in-out focus-within:max-w-md lg:focus-within:max-w-lg"
+      <div className="flex items-center justify-center my-4 md:my-0 hide-on-print" ref={searchFormRef}>
+        <Command className={cn("relative w-full max-w-[280px] lg:max-w-xs transition-all duration-300 ease-in-out focus-within:max-w-md lg:focus-within:max-w-lg", 
+        "rounded-full bg-card/80 border-2 border-transparent shadow-lg backdrop-blur-sm overflow-visible")}>
+          <form onSubmit={handleSearchSubmit}>
+             <CommandInput
+              value={searchQuery}
+              onValueChange={setSearchQuery}
+              onFocus={() => setIsSearchOpen(true)}
+              placeholder="রোগী অনুসন্ধান করুন (নাম, ডায়েরি নং...)"
+              className="w-full h-11 text-sm pl-4 pr-12 rounded-full focus:outline-none"
+              aria-label="Search patients"
+            />
+            <button
+              type="submit"
+              className="absolute inset-y-0 right-0 flex items-center justify-center w-11 h-11 rounded-full bg-blue-600 text-primary-foreground shadow-md transition-transform hover:bg-blue-700 active:scale-95"
+              aria-label="Submit search"
+            >
+              <SearchIcon className="h-5 w-5" />
+            </button>
+          </form>
+          {isSearchOpen && (
+              <CommandList className="absolute top-full mt-2 w-full rounded-lg border bg-background shadow-lg z-10">
+                {isSearchLoading && <div className="p-2 text-center text-sm text-muted-foreground flex items-center justify-center"><Loader2 className="mr-2 h-4 w-4 animate-spin" /> অনুসন্ধান চলছে...</div>}
+                {!isSearchLoading && debouncedSearchQuery.length > 1 && searchResults.length === 0 && (
+                    <CommandEmpty>কোনো রোগী পাওয়া যায়নি।</CommandEmpty>
+                )}
+                {searchResults.length > 0 && (
+                  <CommandGroup heading="অনুসন্ধানের ফলাফল">
+                    {searchResults.map((p) => (
+                      <CommandItem key={p.id} onSelect={() => handlePatientSelect(p)} className="cursor-pointer">
+                        <div className="flex flex-col">
+                            <span className="font-medium">{p.name}</span>
+                            <span className="text-xs text-muted-foreground">ফোন: {p.phone}</span>
+                        </div>
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                )}
+              </CommandList>
           )}
-        >
-          <Input
-            name="search"
-            type="search"
-            placeholder="রোগী অনুসন্ধান করুন (নাম, ডায়েরি নং...)"
-            className="w-full h-11 text-sm pl-4 pr-12 rounded-full bg-card/80 border-2 border-transparent shadow-lg backdrop-blur-sm focus:outline-none"
-            aria-label="Search patients"
-          />
-          <button
-            type="submit"
-            className="absolute inset-y-0 right-0 flex items-center justify-center w-11 h-11 rounded-full bg-blue-600 text-primary-foreground shadow-md transition-transform hover:bg-blue-700 active:scale-95"
-            aria-label="Submit search"
-          >
-            <SearchIcon className="h-5 w-5" />
-          </button>
-        </form>
+        </Command>
       </div>
 
       <div className="hide-on-print">
