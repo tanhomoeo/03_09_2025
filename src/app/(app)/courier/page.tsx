@@ -166,8 +166,8 @@ export default function CourierPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [toast]);
-  
+  }, [toast, api]);
+
   useEffect(() => {
     fetchCourierData();
     const handleDataChange = () => fetchCourierData();
@@ -191,7 +191,7 @@ export default function CourierPage() {
     } finally {
       setIsLoadingBalance(false);
     }
-  }, [toast]);
+  }, [toast, api]);
 
 
   const handleAddNew = () => {
@@ -230,8 +230,8 @@ export default function CourierPage() {
     } finally {
       setIsRefreshingStatus(null);
     }
-  }, [toast]);
-  
+  }, [toast, api]);
+
   const searchedPatients = useMemo(() => {
     if (!patientSearchQuery) return [];
     const lowerCaseQuery = patientSearchQuery.toLowerCase();
@@ -525,7 +525,7 @@ export default function CourierPage() {
               <DialogClose asChild><Button type="button" variant="outline">বাতিল</Button></DialogClose>
               <Button type="submit" onClick={form.handleSubmit(onSubmit)} disabled={form.formState.isSubmitting} className="min-w-[150px]">
                 {form.formState.isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Truck className="mr-2 h-4 w-4" />}
-                অর্ডার তৈরি করুন
+                অর্ডার তৈরি ��রুন
               </Button>
             </DialogFooter>
         </DialogContent>
