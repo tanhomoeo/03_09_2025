@@ -101,11 +101,19 @@ export default function ScanPatientFormModal({ isOpen, onClose, onDataExtracted 
     if (!capturedImage) return;
     setIsProcessing(true);
     try {
-      const result = await parseHandwrittenForm({ photoDataUri: capturedImage });
-      onDataExtracted(result);
+      const res = await fetch('/api/ai/handwritten-form/parse', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ photoDataUri: capturedImage }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data?.error || 'ছবি থেকে তথ্য বের করতে একটি সমস্যা হয়েছে।');
+      }
+      onDataExtracted(data as HandwrittenFormOutput);
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'ছবি থেকে তথ্য বের করতে একটি সমস্যা হয়েছে।';
-      console.error("AI parsing error:", error);
+      console.error('AI parsing error:', error);
       toast({
         variant: 'destructive',
         title: 'AI প্রসেসিং ব্যর্থ হয়েছে',
@@ -149,7 +157,7 @@ export default function ScanPatientFormModal({ isOpen, onClose, onDataExtracted 
 
     return (
         <>
-            <p className="text-sm text-center text-muted-foreground mb-2">হাতে ল��খা ফর্মটি ক্যামেরার সামনে পরিষ্কারভাবে ধরে রাখুন এবং ছবি তুলুন।</p>
+            <p className="text-sm text-center text-muted-foreground mb-2">হাতে লেখা ফর্মটি ক্যামেরার সামনে পরিষ্কারভাবে ধরে রাখুন এবং ছবি তুলুন।</p>
             <div className="relative w-full aspect-video bg-muted rounded-md overflow-hidden">
                 <video ref={videoRef} className="w-full h-full object-cover" autoPlay playsInline muted />
                 <canvas ref={canvasRef} className="hidden" />
