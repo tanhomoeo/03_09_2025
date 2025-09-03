@@ -40,7 +40,7 @@ export default function RepertoryBrowserPage() {
   return (
     <div className="space-y-6 h-full flex flex-col">
       <PageHeaderCard
-        title="রেপার্টরি ব্রাউজার"
+        title="রেপ���র্টরি ব্রাউজার"
         description="অধ্যায়, রুব্রিক এবং প্রতিকার ব্রাউজ এবং অনুসন্ধান করুন।"
         actions={<BookMarked className="h-8 w-8 text-primary" />}
         className="bg-gradient-to-br from-cyan-100 to-sky-200 dark:from-cyan-900/30 dark:to-sky-900/30 flex-shrink-0"
@@ -51,7 +51,7 @@ export default function RepertoryBrowserPage() {
           {isLoading ? (
             <div className="flex items-center justify-center h-full">
               <Loader2 className="h-8 w-8 animate-spin text-primary" />
-              <p className="ml-3 text-muted-foreground">রে���ার্টরি লোড হচ্ছে...</p>
+              <p className="ml-3 text-muted-foreground">রেপার্টরি লোড হচ্ছে...</p>
             </div>
           ) : error ? (
             <div className="flex items-center justify-center h-full text-destructive">
@@ -62,9 +62,7 @@ export default function RepertoryBrowserPage() {
           )}
         </div>
         <div>
-          {typeof window !== 'undefined' ? (
-            (await import('@/components/repertory/MateriaMedicaSearch')).MateriaMedicaSearch
-          ) : null}
+          <MateriaMedicaSearch />
         </div>
       </div>
     </div>
