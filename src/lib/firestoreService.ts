@@ -13,6 +13,8 @@ import {
   orderBy,
   Timestamp,
   setDoc,
+  or,
+  limit
 } from 'firebase/firestore';
 import type { Patient, Visit, Prescription, PaymentSlip, ClinicSettings, PaymentMethod, CategorizedCaseNotes, Medicine, PersonalExpense, SteadfastConsignment } from './types';
 import { startOfWeek, endOfWeek, startOfMonth, endOfMonth, isValid } from 'date-fns';
@@ -100,6 +102,46 @@ export const getPatients = async (): Promise<Patient[]> => {
     return [];
   }
 };
+
+export const getPatientsByQuery = async (searchQuery: string): Promise<Patient[]> => {
+  if (!searchQuery) {
+    // Return all patients if query is empty, or handle as needed
+    return getPatients();
+  }
+  const lowerCaseQuery = searchQuery.toLowerCase();
+  try {
+    const q = query(
+      patientsCollectionRef(),
+      or(
+        where('name', '>=', searchQuery), where('name', '<=', searchQuery + '\uf8ff'),
+        where('phone', '==', searchQuery),
+        where('diaryNumber', '==', searchQuery)
+        // Firestore doesn't support case-insensitive or partial text search natively with this method.
+        // For more advanced search, a third-party service like Algolia is recommended.
+        // This query works for exact phone/diary number and prefix-based name search.
+      ),
+      limit(15) // Limit results for performance
+    );
+    
+    // As Firestore doesn't support `or` with `orderBy` on different fields, manual client-side filter is needed for full text search
+    // A more robust solution is to fetch all and filter, or use a dedicated search service.
+    // Let's do a broader fetch and a client-side filter for better UX in this context.
+    
+    const allPatients = await getPatients();
+    const filtered = allPatients.filter(p =>
+        p.name.toLowerCase().includes(lowerCaseQuery) ||
+        p.phone.includes(searchQuery) ||
+        (p.diaryNumber && p.diaryNumber.toLowerCase().includes(lowerCaseQuery))
+    ).slice(0, 15); // limit results
+    
+    return filtered;
+
+  } catch (error) {
+    console.error("Error searching patients: ", error);
+    return [];
+  }
+};
+
 
 export const addPatient = async (patientData: Partial<Patient>): Promise<string> => {
   try {
@@ -633,3 +675,5 @@ export const getMonthRange = (date: Date): { start: Date; end: Date } => {
   const end = endOfMonth(validDate);
   return { start, end };
 };
+
+    

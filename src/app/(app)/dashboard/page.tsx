@@ -9,7 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableFoo
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Users, UserPlus, FileText, BarChart3, TrendingUp, Search as SearchIcon, Printer, CalendarDays, MessageSquareText, PlayCircle, Loader2 } from 'lucide-react';
-import { getPatients, getVisitsWithinDateRange, getPaymentSlipsWithinDateRange, getPatientsRegisteredWithinDateRange, formatCurrency, getPaymentMethodLabel, getClinicSettings } from '@/lib/firestoreService';
+import { getVisitsWithinDateRange, getPaymentSlipsWithinDateRange, getPatientsRegisteredWithinDateRange, formatCurrency, getPaymentMethodLabel, getClinicSettings, getPatientsByQuery } from '@/lib/firestoreService';
 import type { ClinicSettings, Patient, Visit, PaymentSlip, PaymentMethod } from '@/lib/types';
 import { ROUTES, APP_NAME } from '@/lib/constants';
 import { format, startOfDay, endOfDay, startOfMonth, endOfMonth, isValid } from 'date-fns';
@@ -84,13 +84,7 @@ export default function DashboardPage() {
       }
       setIsSearchLoading(true);
       try {
-        const allPatients = await getPatients();
-        const lowerCaseQuery = debouncedSearchQuery.toLowerCase();
-        const filtered = allPatients.filter(p => 
-            p.name.toLowerCase().includes(lowerCaseQuery) ||
-            p.phone.includes(debouncedSearchQuery) ||
-            (p.diaryNumber && p.diaryNumber.toLowerCase().includes(lowerCaseQuery))
-        );
+        const filtered = await getPatientsByQuery(debouncedSearchQuery);
         setSearchResults(filtered);
       } catch (error) {
         console.error("Failed to search patients", error);
@@ -175,7 +169,6 @@ export default function DashboardPage() {
 
     try {
         const [
-            patientsData,
             todayVisits,
             monthVisits,
             todaySlips,
@@ -184,7 +177,6 @@ export default function DashboardPage() {
             patientsCreatedToday,
             settings
         ] = await Promise.all([
-            getPatients(),
             getVisitsWithinDateRange(todayStart, todayEnd),
             getVisitsWithinDateRange(monthStart, monthEnd),
             getPaymentSlipsWithinDateRange(todayStart, todayEnd),
@@ -195,7 +187,22 @@ export default function DashboardPage() {
         ]);
         
         setClinicSettings(settings);
-        const patientsMap = new Map(patientsData.map(p => [p.id, p]));
+        const allPatientIds = new Set([
+            ...todayVisits.map(v => v.patientId),
+            ...monthVisits.map(v => v.patientId)
+        ]);
+
+        const patientsMap = new Map<string, Patient>();
+        if (allPatientIds.size > 0) {
+            // This could be optimized further by a `getPatientsByIds` function if needed
+            const allPatients = await getPatientsByQuery(''); // Simplified: gets all patients if needed
+            allPatients.forEach(p => {
+                if (allPatientIds.has(p.id)) {
+                    patientsMap.set(p.id, p);
+                }
+            });
+        }
+        
         const uniqueTodayPatientIds = new Set(todayVisits.map(v => v.patientId));
     
         const todayRevenue = todaySlips.reduce((sum, s) => sum + (s.amount || 0), 0);
@@ -209,7 +216,7 @@ export default function DashboardPage() {
     
     
         setStats({
-          totalPatients: patientsData.length,
+          totalPatients: (await getPatientsByQuery('')).length, // Simplified count
           todayPatientCount: uniqueTodayPatientIds.size,
           monthlyPatientCount: new Set(monthVisits.map(v => v.patientId)).size,
           todayRevenue: todayRevenue,
@@ -556,3 +563,5 @@ export default function DashboardPage() {
     </TooltipProvider>
   );
 }
+
+    
