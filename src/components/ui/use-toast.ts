@@ -1,4 +1,3 @@
-
 "use client"
 
 // Inspired by react-hot-toast library
@@ -34,22 +33,10 @@ export type ActionType =
 
 
 type Action =
-  | {
-      type: ActionType
-      toast: ToasterToast
-    }
-  | {
-      type: ActionType
-      toast: Partial<ToasterToast>
-    }
-  | {
-      type: ActionType
-      toastId?: ToasterToast["id"]
-    }
-  | {
-      type: ActionType
-      toastId?: ToasterToast["id"]
-    }
+  | { type: "ADD_TOAST"; toast: ToasterToast }
+  | { type: "UPDATE_TOAST"; toast: Partial<ToasterToast> }
+  | { type: "DISMISS_TOAST"; toastId?: ToasterToast["id"] }
+  | { type: "REMOVE_TOAST"; toastId?: ToasterToast["id"] }
 
 interface State {
   toasts: ToasterToast[]
