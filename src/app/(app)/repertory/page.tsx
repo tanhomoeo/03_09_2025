@@ -1,4 +1,3 @@
-
 'use client';
 import React, { useState, useEffect } from 'react';
 import { PageHeaderCard } from '@/components/shared/PageHeaderCard';
@@ -42,19 +41,26 @@ export default function RepertoryBrowserPage() {
         className="bg-gradient-to-br from-cyan-100 to-sky-200 dark:from-cyan-900/30 dark:to-sky-900/30 flex-shrink-0"
       />
       
-      <div className="flex-grow min-h-0">
-        {isLoading ? (
-          <div className="flex items-center justify-center h-full">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            <p className="ml-3 text-muted-foreground">রেপার্টরি লোড হচ্ছে...</p>
-          </div>
-        ) : error ? (
-          <div className="flex items-center justify-center h-full text-destructive">
-            <p>Error loading data: {error}</p>
-          </div>
-        ) : (
-          <RepertoryBrowser chapters={repertoryData} />
-        )}
+      <div className="flex-grow min-h-0 grid grid-rows-2 gap-6">
+        <div className="min-h-0">
+          {isLoading ? (
+            <div className="flex items-center justify-center h-full">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <p className="ml-3 text-muted-foreground">রেপার্টরি লোড হচ্ছে...</p>
+            </div>
+          ) : error ? (
+            <div className="flex items-center justify-center h-full text-destructive">
+              <p>Error loading data: {error}</p>
+            </div>
+          ) : (
+            <RepertoryBrowser chapters={repertoryData} />
+          )}
+        </div>
+        <div>
+          {typeof window !== 'undefined' ? (
+            (await import('@/components/repertory/MateriaMedicaSearch')).MateriaMedicaSearch
+          ) : null}
+        </div>
       </div>
     </div>
   );
