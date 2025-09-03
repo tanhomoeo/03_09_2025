@@ -62,7 +62,7 @@ import {
   HeartPulse,
   GraduationCap,
   Sparkles,
-  ShoppingBag
+  ShoppingBag,
 } from 'lucide-react';
 import {
   AlertDialog,
@@ -121,7 +121,7 @@ export default function PersonalExpensesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingExpense, setEditingExpense] = useState<PersonalExpense | null>(
-    null
+    null,
   );
   const [searchTerm, setSearchTerm] = useState('');
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -244,21 +244,21 @@ export default function PersonalExpensesPage() {
           exp.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
           getCategoryInfo(exp.category)
             .label.toLowerCase()
-            .includes(searchTerm.toLowerCase())
+            .includes(searchTerm.toLowerCase()),
       );
   }, [expenses, searchTerm, currentMonth]);
 
   const totalForMonth = useMemo(
     () => filteredExpenses.reduce((sum, exp) => sum + exp.amount, 0),
-    [filteredExpenses]
+    [filteredExpenses],
   );
-  
+
   const changeMonth = (direction: 'next' | 'prev') => {
-      setCurrentMonth(prev => {
-          const newDate = new Date(prev);
-          newDate.setMonth(newDate.getMonth() + (direction === 'next' ? 1 : -1));
-          return newDate;
-      });
+    setCurrentMonth((prev) => {
+      const newDate = new Date(prev);
+      newDate.setMonth(newDate.getMonth() + (direction === 'next' ? 1 : -1));
+      return newDate;
+    });
   };
 
   return (
@@ -277,28 +277,42 @@ export default function PersonalExpensesPage() {
       <Card className="shadow-md bg-card/80 backdrop-blur-lg">
         <CardContent className="p-4 flex flex-col sm:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-3">
-              <Button onClick={() => changeMonth('prev')} variant="outline" size="sm">পূর্ববর্তী মাস</Button>
-              <span className="font-bold text-lg text-primary">
-                  {format(currentMonth, 'MMMM yyyy', { locale: bn })}
-              </span>
-              <Button onClick={() => changeMonth('next')} variant="outline" size="sm">পরবর্তী মাস</Button>
+            <Button
+              onClick={() => changeMonth('prev')}
+              variant="outline"
+              size="sm"
+            >
+              পূর্ববর্তী মাস
+            </Button>
+            <span className="font-bold text-lg text-primary">
+              {format(currentMonth, 'MMMM yyyy', { locale: bn })}
+            </span>
+            <Button
+              onClick={() => changeMonth('next')}
+              variant="outline"
+              size="sm"
+            >
+              পরবর্তী মাস
+            </Button>
           </div>
           <div className="font-bold text-xl">
-            মোট খরচ:{" "}
-            <span className="text-destructive">{formatCurrency(totalForMonth)}</span>
+            মোট খরচ:{' '}
+            <span className="text-destructive">
+              {formatCurrency(totalForMonth)}
+            </span>
           </div>
         </CardContent>
       </Card>
 
-       <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-          <Input
-            placeholder="বিবরণ বা খাত দিয়ে খুঁজুন..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10"
-          />
-        </div>
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+        <Input
+          placeholder="বিবরণ বা খাত দিয়ে খুঁজুন..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="pl-10"
+        />
+      </div>
 
       <div className="overflow-x-auto rounded-lg border shadow-sm bg-card/80 backdrop-blur-lg">
         <Table>
@@ -357,7 +371,9 @@ export default function PersonalExpensesPage() {
                         </AlertDialogTrigger>
                         <AlertDialogContent>
                           <AlertDialogHeader>
-                            <AlertDialogTitle>আপনি কি নিশ্চিত?</AlertDialogTitle>
+                            <AlertDialogTitle>
+                              আপনি কি নিশ্চিত?
+                            </AlertDialogTitle>
                             <AlertDialogDescription>
                               এই খরচটি তালিকা থেকে স্থায়ীভাবে মুছে ফেলা হবে। এই
                               প্রক্রিয়াটি বাতিল করা যাবে না।
@@ -399,7 +415,10 @@ export default function PersonalExpensesPage() {
             </DialogDescription>
           </DialogHeader>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-4 py-4"
+            >
               <FormField
                 control={form.control}
                 name="date"
@@ -450,7 +469,10 @@ export default function PersonalExpensesPage() {
                   <FormItem>
                     <FormLabel>বিবরণ</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="খরচের বিস্তারিত বিবরণ" {...field} />
+                      <Textarea
+                        placeholder="খরচের বিস্তারিত বিবরণ"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -470,7 +492,11 @@ export default function PersonalExpensesPage() {
                 )}
               />
               <DialogFooter>
-                <DialogClose asChild><Button type="button" variant="outline">বাতিল</Button></DialogClose>
+                <DialogClose asChild>
+                  <Button type="button" variant="outline">
+                    বাতিল
+                  </Button>
+                </DialogClose>
                 <Button type="submit" disabled={form.formState.isSubmitting}>
                   {form.formState.isSubmitting && (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />

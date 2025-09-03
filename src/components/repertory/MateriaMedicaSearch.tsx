@@ -1,14 +1,20 @@
-"use client";
-import React, { useCallback, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Badge } from "@/components/ui/badge";
-import { Search, BookText, Loader2 } from "lucide-react";
-import { searchMateria, type MateriaEntry } from "@/lib/repertoryIndex";
+'use client';
+import React, { useCallback, useState } from 'react';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Badge } from '@/components/ui/badge';
+import { Search, BookText, Loader2 } from 'lucide-react';
+import { searchMateria, type MateriaEntry } from '@/lib/repertoryIndex';
 
 export const MateriaMedicaSearch: React.FC = () => {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState('');
   const [results, setResults] = useState<MateriaEntry[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -38,7 +44,10 @@ export const MateriaMedicaSearch: React.FC = () => {
         <CardTitle className="font-headline text-lg flex items-center gap-2">
           <BookText className="h-5 w-5 text-primary" /> মেটেরিয়া মেডিকা সার্চ
         </CardTitle>
-        <CardDescription>প্রজেক্টের টেক্সট ফাইলগুলো থেকে কীওয়ার্ড দিয়ে অনুসন্ধান করুন এবং প্রাসঙ্গিক রেমেডি/টেক্সট দেখুন।</CardDescription>
+        <CardDescription>
+          প্রজেক্টের টেক্সট ফাইলগুলো থেকে কীওয়ার্ড দিয়ে অনুসন্ধান করুন এবং
+          প্রাসঙ্গিক রেমেডি/টেক্সট দেখুন।
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="relative mb-4">
@@ -57,18 +66,27 @@ export const MateriaMedicaSearch: React.FC = () => {
               <span className="ml-2">অনুসন্ধান করা হচ্ছে...</span>
             </div>
           ) : results.length === 0 && query.trim() ? (
-            <div className="text-center py-10 text-muted-foreground">কোনো ফলাফল পাওয়া যায়নি।</div>
+            <div className="text-center py-10 text-muted-foreground">
+              কোনো ফলাফল পাওয়া যায়নি।
+            </div>
           ) : (
             <ul className="space-y-3">
               {results.map((r, i) => (
-                <li key={`${r.source}-${r.index}-${i}`} className="p-3 rounded-md border bg-card/70 hover:bg-muted/40 transition-colors">
+                <li
+                  key={`${r.source}-${r.index}-${i}`}
+                  className="p-3 rounded-md border bg-card/70 hover:bg-muted/40 transition-colors"
+                >
                   <div className="flex items-center justify-between gap-2 mb-2">
-                    <div className="text-sm text-muted-foreground truncate">{r.source.split("/").pop()}</div>
-                    {r.remedy && <Badge variant="secondary" className="whitespace-nowrap">{r.remedy}</Badge>}
+                    <div className="text-sm text-muted-foreground truncate">
+                      {r.source.split('/').pop()}
+                    </div>
+                    {r.remedy && (
+                      <Badge variant="secondary" className="whitespace-nowrap">
+                        {r.remedy}
+                      </Badge>
+                    )}
                   </div>
-                  <p className="text-sm leading-relaxed">
-                    {r.snippet}
-                  </p>
+                  <p className="text-sm leading-relaxed">{r.snippet}</p>
                 </li>
               ))}
             </ul>

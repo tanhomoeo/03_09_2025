@@ -1,4 +1,4 @@
-import type {Metadata, Viewport} from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { APP_NAME } from '@/lib/constants';
 import { Alegreya } from 'next/font/google';
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
-    statusBarStyle: "black-translucent",
+    statusBarStyle: 'black-translucent',
     title: APP_NAME,
   },
   formatDetection: {
@@ -46,7 +46,6 @@ export const viewport: Viewport = {
   userScalable: false,
 };
 
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -55,16 +54,39 @@ export default function RootLayout({
   return (
     <html lang="bn" className={`${alegreya.variable}`} suppressHydrationWarning>
       <head>
-          <meta name="mobile-web-app-capable" content="yes" />
-          <meta name="apple-mobile-web-app-capable" content="yes" />
-          <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-          <meta name="apple-mobile-web-app-title" content={APP_NAME} />
-          <link rel="preconnect" href="https://firestore.googleapis.com" crossOrigin="anonymous" />
-          <link rel="preconnect" href="https://www.googleapis.com" crossOrigin="anonymous" />
-          <link rel="preconnect" href="https://identitytoolkit.googleapis.com" crossOrigin="anonymous" />
-          <link rel="preconnect" href="https://lh3.googleusercontent.com" crossOrigin="anonymous" />
-          <link rel="preconnect" href="https://storage.googleapis.com" crossOrigin="anonymous" />
-          <link rel="dns-prefetch" href="https://firestore.googleapis.com" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta
+          name="apple-mobile-web-app-status-bar-style"
+          content="black-translucent"
+        />
+        <meta name="apple-mobile-web-app-title" content={APP_NAME} />
+        <link
+          rel="preconnect"
+          href="https://firestore.googleapis.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preconnect"
+          href="https://www.googleapis.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preconnect"
+          href="https://identitytoolkit.googleapis.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preconnect"
+          href="https://lh3.googleusercontent.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preconnect"
+          href="https://storage.googleapis.com"
+          crossOrigin="anonymous"
+        />
+        <link rel="dns-prefetch" href="https://firestore.googleapis.com" />
       </head>
       <body>
         <RootLayoutClient>{children}</RootLayoutClient>

@@ -201,7 +201,7 @@ export default function StoreManagementPage() {
   const filteredMedicines = useMemo(() => {
     return medicines
       .filter((med) =>
-        med.name.toLowerCase().includes(searchTerm.toLowerCase())
+        med.name.toLowerCase().includes(searchTerm.toLowerCase()),
       )
       .filter((med) => !showLowStock || med.quantity < 10);
   }, [medicines, searchTerm, showLowStock]);
@@ -304,10 +304,12 @@ export default function StoreManagementPage() {
                         </AlertDialogTrigger>
                         <AlertDialogContent>
                           <AlertDialogHeader>
-                            <AlertDialogTitle>আপনি কি নিশ্চিত?</AlertDialogTitle>
+                            <AlertDialogTitle>
+                              আপনি কি নিশ্চিত?
+                            </AlertDialogTitle>
                             <AlertDialogDescription>
-                              এই ঔষধটি তালিকা থেকে স্থায়ীভাবে মুছে ফেলা হবে।
-                              এই প্রক্রিয়াটি বাতিল করা যাবে না।
+                              এই ঔষধটি তালিকা থেকে স্থায়ীভাবে মুছে ফেলা হবে। এই
+                              প্রক্রিয়াটি বাতিল করা যাবে না।
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
@@ -346,7 +348,10 @@ export default function StoreManagementPage() {
             </DialogDescription>
           </DialogHeader>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-4 py-4"
+            >
               <div className="grid grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
@@ -459,7 +464,11 @@ export default function StoreManagementPage() {
                 />
               </div>
               <DialogFooter>
-                <DialogClose asChild><Button type="button" variant="outline">বাতিল</Button></DialogClose>
+                <DialogClose asChild>
+                  <Button type="button" variant="outline">
+                    বাতিল
+                  </Button>
+                </DialogClose>
                 <Button type="submit" disabled={form.formState.isSubmitting}>
                   {form.formState.isSubmitting && (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />

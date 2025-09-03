@@ -1,12 +1,18 @@
-"use client";
+'use client';
 
-import { UseFormReturn } from "react-hook-form";
-import { Loader2 } from "lucide-react";
+import { UseFormReturn } from 'react-hook-form';
+import { Loader2 } from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
- 
+import { Button } from '@/components/ui/button';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from '@/components/ui/form';
+import { Textarea } from '@/components/ui/textarea';
+
 export type SymptomFormValues = {
   symptoms: string;
 };
@@ -34,7 +40,8 @@ export function SymptomForm({ form, onSubmit, isLoading }: SymptomFormProps) {
                 />
               </FormControl>
               <p className="text-xs text-muted-foreground pt-1">
-                 টিপস: ভয়েস টাইপিংয়ের জন্য কীবোর্ডের &apos;Control&apos; কী চেপে ধরে রাখুন।
+                টিপস: ভয়েস টাইপিংয়ের জন্য কীবোর্ডের &apos;Control&apos; কী চেপে
+                ধরে রাখুন।
               </p>
               <FormMessage />
             </FormItem>
@@ -52,7 +59,7 @@ export function SymptomForm({ form, onSubmit, isLoading }: SymptomFormProps) {
                 বিশ্লেষণ করা হচ্ছে...
               </>
             ) : (
-              "বিশ্লেষণ করুন"
+              'বিশ্লেষণ করুন'
             )}
           </Button>
         </div>

@@ -14,7 +14,10 @@ async function fetchText(path: string): Promise<string> {
 }
 
 function tokenize(text: string): string[] {
-  return text.split(/\n{2,}/g).map(s => s.trim()).filter(Boolean);
+  return text
+    .split(/\n{2,}/g)
+    .map((s) => s.trim())
+    .filter(Boolean);
 }
 
 function guessRemedy(block: string): string | null {
@@ -57,7 +60,10 @@ export async function getMateriaIndex(): Promise<MateriaEntry[]> {
   return all;
 }
 
-export async function searchMateria(query: string, limit = 50): Promise<MateriaEntry[]> {
+export async function searchMateria(
+  query: string,
+  limit = 50,
+): Promise<MateriaEntry[]> {
   const q = query.trim().toLowerCase();
   if (!q) return [];
   const idx = await getMateriaIndex();

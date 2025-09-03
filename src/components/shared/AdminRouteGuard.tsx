@@ -25,19 +25,19 @@ export default function AdminRouteGuard({ children }: AdminRouteGuardProps) {
 
   if (!isAdmin) {
     return (
-        <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-4 w-full">
-            <PageHeaderCard
-                title="প্রবেশাধিকার নেই"
-                description="দুঃখিত, এই পৃষ্ঠাটি শুধুমাত্র অ্যাডমিনদের জন্য সংরক্ষিত।"
-                actions={<ShieldAlert className="w-10 h-10 text-destructive" />}
-                className="w-full max-w-2xl mx-auto"
-                titleClassName="text-destructive"
-            />
-            <div className="mt-8">
-                <Button onClick={() => router.push(ROUTES.DASHBOARD)}>
-                    ড্যাশবোর্ডে ফিরে যান
-                </Button>
-            </div>
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-4 w-full">
+        <PageHeaderCard
+          title="প্রবেশাধিকার নেই"
+          description="দুঃখিত, এই পৃষ্ঠাটি শুধুমাত্র অ্যাডমিনদের জন্য সংরক্ষিত।"
+          actions={<ShieldAlert className="w-10 h-10 text-destructive" />}
+          className="w-full max-w-2xl mx-auto"
+          titleClassName="text-destructive"
+        />
+        <div className="mt-8">
+          <Button onClick={() => router.push(ROUTES.DASHBOARD)}>
+            ড্যাশবোর্ডে ফিরে যান
+          </Button>
+        </div>
       </div>
     );
   }
