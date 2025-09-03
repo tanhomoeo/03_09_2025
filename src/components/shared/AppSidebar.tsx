@@ -1,4 +1,3 @@
-
 'use client';
 
 import React from 'react';
@@ -104,7 +103,7 @@ export function AppSidebar() {
               onClick={handleLinkClick}
               className={cn(
                 'p-2',
-                'transition-all duration-300 ease-in-out group w-[96%] rounded-lg',
+                'transform-gpu will-change-transform transition-transform duration-200 ease-out group w-[96%] rounded-lg',
                 'hover:brightness-105 active:shadow-inner',
                  isActive 
                   ? 'shadow-inner brightness-110'
