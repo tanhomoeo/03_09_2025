@@ -133,6 +133,44 @@ export const getDeliveryStatusByTrackingCode = async (
   );
 };
 
+// Bulk order create
+export const bulkCreateOrders = async (
+  data: import('./types').SteadfastBulkOrderItem[],
+): Promise<import('./types').SteadfastBulkOrderResultItem[]> => {
+  const res = await makeSteadfastRequest<{ data?: import('./types').SteadfastBulkOrderResultItem[] }>(
+    `/create_order/bulk-order`,
+    'POST',
+    { data }
+  );
+  return res?.data || [];
+};
+
+// Return requests
+export const createReturnRequest = async (
+  payload: { consignment_id?: number; invoice?: string; tracking_code?: string; reason?: string }
+): Promise<import('./types').SteadfastReturnRequest> => {
+  return makeSteadfastRequest<import('./types').SteadfastReturnRequest>(
+    `/create_return_request`,
+    'POST',
+    payload
+  );
+};
+
+export const getReturnRequest = async (
+  id: number
+): Promise<import('./types').SteadfastReturnRequest> => {
+  return makeSteadfastRequest<import('./types').SteadfastReturnRequest>(
+    `/get_return_request/${id}`,
+  );
+};
+
+export const getReturnRequests = async (): Promise<import('./types').SteadfastReturnRequest[]> => {
+  const res = await makeSteadfastRequest<{ data?: import('./types').SteadfastReturnRequest[] }>(
+    `/get_return_requests`
+  );
+  return res?.data || ([] as import('./types').SteadfastReturnRequest[]);
+};
+
 export const getCurrentBalance = async (): Promise<SteadfastBalance> => {
   return makeSteadfastRequest<SteadfastBalance>('/get_balance');
 };
