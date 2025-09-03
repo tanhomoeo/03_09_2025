@@ -9,7 +9,7 @@ const SECRET_KEY = process.env.STEADFAST_SECRET_KEY;
 async function makeSteadfastRequest<T>(
   path: string,
   method: 'GET' | 'POST' = 'GET',
-  body: Record<string, unknown> | null = null,
+  body: unknown | null = null,
 ): Promise<T> {
   if (!BASE_URL || !API_KEY || !SECRET_KEY) {
     throw new Error('Steadfast API credentials are not configured in the environment.');
