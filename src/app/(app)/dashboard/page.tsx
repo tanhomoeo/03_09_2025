@@ -465,7 +465,7 @@ export default function DashboardPage() {
                 onValueChange={setSearchQuery}
                 onFocus={() => setIsSearchOpen(true)}
                 placeholder="রোগী অনুসন্ধান করুন (নাম, ডায়েরি নং...)"
-                className="w-full h-11 text-sm pl-4 pr-12 rounded-full focus:outline-none"
+                className="w-full h-11 text-sm pl-4 pr-12 rounded-full focus:outline-none text-black placeholder-black/60 dark:text-white dark:placeholder-white/60"
                 aria-label="Search patients"
               />
               <button
