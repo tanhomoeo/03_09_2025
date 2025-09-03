@@ -1,4 +1,3 @@
-
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
 import {
@@ -336,7 +335,7 @@ export function PatientDetailsModal({
         >
           <TabsList className="grid w-full grid-cols-3 sticky top-0 bg-transparent z-10 p-4 border-b rounded-none h-auto gap-2">
             <TabsTrigger value="info" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-lg rounded-md p-2 text-sm font-semibold transition-all">সাধারণ তথ্য</TabsTrigger>
-            <TabsTrigger value="case_history" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-lg rounded-md p-2 text-sm font-semibold transition-all">কেস হিস্ট্রি</TabsTrigger>
+            <TabsTrigger value="case_history" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-lg rounded-md p-2 text-sm font-semibold transition-all">কে�� হিস্ট্রি</TabsTrigger>
             <TabsTrigger value="history" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-lg rounded-md p-2 text-sm font-semibold transition-all">ভিজিটের বিবরণ</TabsTrigger>
           </TabsList>
 
@@ -404,7 +403,7 @@ export function PatientDetailsModal({
                                                         <FormField
                                                             key={`${categoryKey}.${subKey}`}
                                                             control={patientInfoForm.control}
-                                                            name={`categorizedCaseNotes.${categoryKey as keyof CategorizedCaseNotes}.${subKey as never}`}
+                                                            name={`categorizedCaseNotes.${categoryKey}.${subKey}` as any}
                                                             render={({ field }) => (
                                                                 <FormItem>
                                                                     <FormLabel className="text-sm">{subLabel}</FormLabel>
@@ -425,7 +424,6 @@ export function PatientDetailsModal({
                                         <CategorizedSymptomsDisplay
                                             symptoms={patientInfoForm.watch("categorizedCaseNotes")!}
                                             labels={CATEGORY_LABELS}
-                                            showNumbers={true}
                                         />
                                     ) : (
                                         <p className="text-sm text-muted-foreground italic">এই রোগীর জন্য কোনো বিস্তারিত বা শ্রেণীবদ্ধ নোট নেই।</p>
