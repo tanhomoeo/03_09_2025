@@ -1,4 +1,3 @@
-
 import { getDbInstance } from './firebase';
 import {
   collection,
@@ -110,7 +109,7 @@ export const getPatientsByQuery = async (searchQuery: string): Promise<Patient[]
   }
   const lowerCaseQuery = searchQuery.toLowerCase();
   try {
-    const q = query(
+    const _q = query(
       patientsCollectionRef(),
       or(
         where('name', '>=', searchQuery), where('name', '<=', searchQuery + '\uf8ff'),
@@ -675,5 +674,3 @@ export const getMonthRange = (date: Date): { start: Date; end: Date } => {
   const end = endOfMonth(validDate);
   return { start, end };
 };
-
-    
