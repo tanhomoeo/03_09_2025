@@ -193,7 +193,7 @@ export const updatePatient = async (patientId: string, patientData: Partial<Pati
             }
         }
         
-        await updateDoc(patientRef, prepareDataForFirestore(firestoreUpdateData));
+        await updateDoc(patientRef, prepareDataForFirestore(firestoreUpdateData) as any);
         return true;
     } catch (error) {
         console.error("Error updating patient: ", error);
@@ -248,7 +248,7 @@ export const addVisit = async (visitData: Omit<Visit, 'id' | 'createdAt'>): Prom
       ...visitData,
       createdAt: new Date().toISOString(),
     };
-    const docRef = await addDoc(visitsCollectionRef(), prepareDataForFirestore(newVisit as Record<string, unknown>));
+    const docRef = await addDoc(visitsCollectionRef(), prepareDataForFirestore(newVisit as Record<string, unknown>) as any);
     return docRef.id;
   } catch (error) {
     console.error("Error adding visit: ", error);
@@ -259,7 +259,7 @@ export const addVisit = async (visitData: Omit<Visit, 'id' | 'createdAt'>): Prom
 export const updateVisit = async (visitId: string, visitData: Partial<Visit>): Promise<boolean> => {
   try {
     const visitRef = doc(getDbInstance(), 'visits', visitId);
-    await updateDoc(visitRef, prepareDataForFirestore(visitData as Record<string, unknown>));
+    await updateDoc(visitRef, prepareDataForFirestore(visitData as Record<string, unknown>) as any);
     return true;
   } catch (error) {
     console.error("Error updating visit: ", error);
@@ -279,7 +279,7 @@ export const createVisitForPrescription = async (
       symptoms,
       medicineDeliveryMethod,
     };
-    const docRef = await addDoc(visitsCollectionRef(), prepareDataForFirestore(visitData as Record<string, unknown>));
+    const docRef = await addDoc(visitsCollectionRef(), prepareDataForFirestore(visitData as Record<string, unknown>) as any);
     return docRef.id;
   } catch (error) {
     console.error("Error creating visit for prescription: ", error);
@@ -343,7 +343,7 @@ export const addPrescription = async (prescriptionData: Partial<Prescription>): 
       ...prescriptionData,
       createdAt: new Date().toISOString(),
     };
-    const docRef = await addDoc(prescriptionsCollectionRef(), prepareDataForFirestore(newPrescription as Record<string, unknown>));
+    const docRef = await addDoc(prescriptionsCollectionRef(), prepareDataForFirestore(newPrescription as Record<string, unknown>) as any);
     return docRef.id;
   } catch (error) {
     console.error("Error adding prescription: ", error);
@@ -354,7 +354,7 @@ export const addPrescription = async (prescriptionData: Partial<Prescription>): 
 export const updatePrescription = async (prescriptionId: string, prescriptionData: Partial<Prescription>): Promise<boolean> => {
   try {
     const presRef = doc(getDbInstance(), 'prescriptions', prescriptionId);
-    await updateDoc(presRef, prepareDataForFirestore(prescriptionData as Record<string, unknown>));
+    await updateDoc(presRef, prepareDataForFirestore(prescriptionData as Record<string, unknown>) as any);
     return true;
   } catch (error) {
     console.error("Error updating prescription: ", error);
@@ -401,7 +401,7 @@ export const addPaymentSlip = async (slipData: Omit<PaymentSlip, 'id' | 'created
       ...slipData,
       createdAt: new Date().toISOString(),
     };
-    const docRef = await addDoc(paymentSlipsCollectionRef(), prepareDataForFirestore(newSlip as Record<string, unknown>));
+    const docRef = await addDoc(paymentSlipsCollectionRef(), prepareDataForFirestore(newSlip as Record<string, unknown>) as any);
     return docRef.id;
   } catch (error) {
     console.error("Error adding payment slip: ", error);
@@ -456,7 +456,7 @@ export const addMedicine = async (medicineData: Omit<Medicine, 'id' | 'createdAt
       createdAt: now,
       updatedAt: now,
     };
-    const docRef = await addDoc(medicinesCollectionRef(), prepareDataForFirestore(newMedicine as Record<string, unknown>));
+    const docRef = await addDoc(medicinesCollectionRef(), prepareDataForFirestore(newMedicine as Record<string, unknown>) as any);
     return docRef.id;
   } catch (error) {
     console.error("Error adding medicine: ", error);
@@ -471,7 +471,7 @@ export const updateMedicine = async (medicineId: string, medicineData: Partial<O
         ...medicineData,
         updatedAt: new Date().toISOString(),
     }
-    await updateDoc(medicineRef, prepareDataForFirestore(updatedData as Record<string, unknown>));
+    await updateDoc(medicineRef, prepareDataForFirestore(updatedData as Record<string, unknown>) as any);
   } catch (error) {
     console.error("Error updating medicine: ", error);
     throw error;
@@ -535,7 +535,7 @@ export const addConsignment = async (consignmentData: SteadfastConsignment): Pro
   try {
     // Use consignment_id as the document ID for easy lookup and to prevent duplicates
     const consignmentRef = doc(getDbInstance(), 'consignments', String(consignmentData.consignment_id));
-    await setDoc(consignmentRef, prepareDataForFirestore(consignmentData as Record<string, unknown>));
+    await setDoc(consignmentRef, prepareDataForFirestore(consignmentData as Record<string, unknown>) as any);
     return String(consignmentData.consignment_id);
   } catch (error) {
     console.error("Error adding consignment: ", error);
@@ -577,7 +577,7 @@ export const addExpense = async (expenseData: Omit<PersonalExpense, 'id' | 'crea
       createdAt: now,
       updatedAt: now,
     };
-    const docRef = await addDoc(personalExpensesCollectionRef(), prepareDataForFirestore(newExpense as Record<string, unknown>));
+    const docRef = await addDoc(personalExpensesCollectionRef(), prepareDataForFirestore(newExpense as Record<string, unknown>) as any);
     return docRef.id;
   } catch (error) {
     console.error("Error adding personal expense: ", error);
@@ -592,7 +592,7 @@ export const updateExpense = async (expenseId: string, expenseData: Partial<Omit
       ...expenseData,
       updatedAt: new Date().toISOString(),
     };
-    await updateDoc(expenseRef, prepareDataForFirestore(updatedData as Record<string, unknown>));
+    await updateDoc(expenseRef, prepareDataForFirestore(updatedData as Record<string, unknown>) as any);
   } catch (error) {
     console.error("Error updating personal expense: ", error);
     throw error;
