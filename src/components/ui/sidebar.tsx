@@ -1,4 +1,3 @@
-
 "use client"
 
 import * as React from "react"
@@ -195,7 +194,7 @@ const Sidebar = React.forwardRef<
           <SheetContent
             data-sidebar="sidebar"
             data-mobile="true"
-            className="w-[--sidebar-width] border-none bg-background/80 p-0 text-foreground shadow-2xl backdrop-blur-lg [&>button]:hidden"
+            className="w-[--sidebar-width] border-none bg-background/80 p-0 text-foreground shadow-2xl backdrop-blur-md md:backdrop-blur-lg transform-gpu will-change-transform [&>button]:hidden"
             style={
               {
                 "--sidebar-width": SIDEBAR_WIDTH_MOBILE,
@@ -221,13 +220,13 @@ const Sidebar = React.forwardRef<
       >
         <div
           className={cn(
-            "relative h-svh w-[--sidebar-width] bg-transparent transition-all duration-300 ease-in-out",
+            "relative h-svh w-[--sidebar-width] bg-transparent transition-all duration-200 ease-out will-change-[width]",
             "group-data-[collapsible=icon]:w-[--sidebar-width-icon]"
           )}
         />
         <div
           className={cn(
-            "fixed inset-y-0 z-20 hidden h-svh w-[--sidebar-width] transition-[left,right,width] duration-300 ease-in-out",
+            "fixed inset-y-0 z-20 hidden h-svh w-[--sidebar-width] transition-[left,right,width] duration-200 ease-out will-change-[width] transform-gpu",
             "md:flex",
             side === "left" ? "left-0" : "right-0",
             variant === "floating" || variant === "inset"
@@ -240,7 +239,7 @@ const Sidebar = React.forwardRef<
           <div
             data-sidebar="sidebar"
             className={cn(
-              "flex h-full w-full flex-col overflow-hidden bg-background/80 shadow-2xl backdrop-blur-lg group-data-[variant=floating]:rounded-xl",
+              "flex h-full w-full flex-col overflow-hidden bg-background/80 shadow-2xl backdrop-blur-md md:backdrop-blur-lg group-data-[variant=floating]:rounded-xl",
               side === "left" ? "" : ""
             )}
           >
