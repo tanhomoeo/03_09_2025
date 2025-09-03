@@ -68,7 +68,7 @@ const orderSchema = z.object({
   invoice: z.string().min(1, 'ইনভয়েস আইডি আবশ্যক।'),
   recipient_name: z.string().min(1, 'প্রাপকের নাম আবশ্যক।').max(100),
   recipient_phone: z.string().regex(/^01\d{9}$/, 'একটি বৈধ ১১ সংখ্যার ফোন নম্বর দিন।'),
-  recipient_address: z.string().min(1, 'প্রাপকের ঠিকানা আবশ্যক।').max(250),
+  recipient_address: z.string().min(1, 'প্রাপ��ের ঠিকানা আবশ্যক।').max(250),
   cod_amount: z.coerce.number().min(0, 'ক্যাশ অন ডেলিভারি পরিমাণ ঋণাত্মক হতে পারে না।'),
   note: z.string().optional(),
 });
@@ -121,7 +121,7 @@ export default function CourierPage() {
     },
   });
 
-  const api = {
+  const api = React.useMemo(() => ({
     balance: async () => {
       const r = await fetch('/api/steadfast/balance', { cache: 'no-store' });
       if (!r.ok) throw new Error(await r.text());
@@ -142,7 +142,7 @@ export default function CourierPage() {
       if (!r.ok) throw new Error(await r.text());
       return r.json();
     }
-  } as const;
+  }), []);
 
   const fetchCourierData = useCallback(async () => {
     setIsLoading(true);
@@ -525,7 +525,7 @@ export default function CourierPage() {
               <DialogClose asChild><Button type="button" variant="outline">বাতিল</Button></DialogClose>
               <Button type="submit" onClick={form.handleSubmit(onSubmit)} disabled={form.formState.isSubmitting} className="min-w-[150px]">
                 {form.formState.isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Truck className="mr-2 h-4 w-4" />}
-                অর্ডার তৈরি ��রুন
+                অর্ডার তৈরি করুন
               </Button>
             </DialogFooter>
         </DialogContent>
