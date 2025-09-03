@@ -210,7 +210,9 @@ function PatientEntryPageContent() {
     // Stop voice input and sync latest DOM value back into form so text never disappears
     try {
       window.dispatchEvent(new CustomEvent('stop-voice-input'));
-    } catch {}
+    } catch (e) {
+      console.error(e);
+    }
     const el = document.getElementById('caseNotes-textarea') as HTMLTextAreaElement | null;
     if (el && el.value !== form.getValues('caseNotes')) {
       form.setValue('caseNotes', el.value, { shouldDirty: true });
@@ -234,7 +236,7 @@ function PatientEntryPageContent() {
         const errorMessage = error instanceof Error ? error.message : "একটি অজানা ত্রুটি ঘটেছে।";
         setCategorizationError(errorMessage);
         toast({
-            title: "বিশ্���েষণ ব্যর্থ হয়েছে",
+            title: "বিশ্লেষণ ব্যর্থ হয়েছে",
             description: errorMessage,
             variant: "destructive",
         });
@@ -724,7 +726,7 @@ function PatientEntryPageContent() {
                     ) : (
                       <Save className="mr-2 h-4 w-4" />
                     )}
-                    বিশ্লেষণসহ ন��বন্ধন করুন
+                    বিশ্লেষণসহ নিবন্ধন করুন
                   </Button>
                </CardFooter>
             </Card>
