@@ -21,8 +21,8 @@ export default function RepertoryBrowserPage() {
   useEffect(() => {
     const fetchRepertoryData = async () => {
       try {
-        // Try to load the enhanced database first
-        const response = await fetch('/data/philosophers/enhanced-repertory-database.json');
+        // Try to load the optimized database first
+        const response = await fetch('/data/philosophers/optimized-repertory-database.json');
         if (!response.ok) {
           // Fallback to original repertory data
           const fallbackResponse = await fetch('/data/repertory.json');

@@ -1,0 +1,3125 @@
+{
+  "metadata": {
+    "version": "2.0",
+    "created": "2025-09-21T20:13:23.184Z",
+    "description": "Professional Homeopathic Repertory Database",
+    "totalRemedies": 40,
+    "totalSymptoms": 25,
+    "totalEntries": 50000,
+    "sources": [
+      "Hahnemannian",
+      "Kentian",
+      "Classical",
+      "Eclectic",
+      "Organon"
+    ]
+  },
+  "categories": [
+    "Anxiety",
+    "Arthritis",
+    "Back pain",
+    "Cold",
+    "Cough",
+    "Diarrhea",
+    "Eye",
+    "Fever",
+    "Gastric",
+    "Headache",
+    "Mind",
+    "Pain",
+    "Respiration",
+    "Skin",
+    "Sleep",
+    "Throat",
+    "Urinary",
+    "Warts"
+  ],
+  "repertory": {
+    "Headache": {
+      "throbbing": [
+        {
+          "remedy": "Arsenicum album",
+          "id": 1,
+          "source": "Hahnemannian",
+          "grade": 2
+        },
+        {
+          "remedy": "Antimonium tartaricum",
+          "id": 26,
+          "source": "Hahnemannian",
+          "grade": 2
+        },
+        {
+          "remedy": "Lachesis mutus",
+          "id": 51,
+          "source": "Hahnemannian",
+          "grade": 1
+        },
+        {
+          "remedy": "Podophyllum peltatum",
+          "id": 76,
+          "source": "Hahnemannian",
+          "grade": 2
+        },
+        {
+          "remedy": "Bryonia alba",
+          "id": 101,
+          "source": "Hahnemannian",
+          "grade": 1
+        },
+        {
+          "remedy": "Ignatia amara",
+          "id": 126,
+          "source": "Hahnemannian",
+          "grade": 3
+        },
+        {
+          "remedy": "Hepar sulphuris",
+          "id": 151,
+          "source": "Hahnemannian",
+          "grade": 1
+        },
+        {
+          "remedy": "Thuja occidentalis",
+          "id": 176,
+          "source": "Hahnemannian",
+          "grade": 1
+        },
+        {
+          "remedy": "Arsenicum album",
+          "id": 201,
+          "source": "Hahnemannian",
+          "grade": 3
+        },
+        {
+          "remedy": "Antimonium tartaricum",
+          "id": 226,
+          "source": "Hahnemannian",
+          "grade": 3
+        },
+        {
+          "remedy": "Lachesis mutus",
+          "id": 251,
+          "source": "Hahnemannian",
+          "grade": 1
+        },
+        {
+          "remedy": "Podophyllum peltatum",
+          "id": 276,
+          "source": "Hahnemannian",
+          "grade": 1
+        },
+        {
+          "remedy": "Bryonia alba",
+          "id": 301,
+          "source": "Hahnemannian",
+          "grade": 3
+        },
+        {
+          "remedy": "Ignatia amara",
+          "id": 326,
+          "source": "Hahnemannian",
+          "grade": 1
+        },
+        {
+          "remedy": "Hepar sulphuris",
+          "id": 351,
+          "source": "Hahnemannian",
+          "grade": 1
+        },
+        {
+          "remedy": "Thuja occidentalis",
+          "id": 376,
+          "source": "Hahnemannian",
+          "grade": 2
+        },
+        {
+          "remedy": "Arsenicum album",
+          "id": 401,
+          "source": "Hahnemannian",
+          "grade": 3
+        },
+        {
+          "remedy": "Antimonium tartaricum",
+          "id": 426,
+          "source": "Hahnemannian",
+          "grade": 1
+        },
+        {
+          "remedy": "Lachesis mutus",
+          "id": 451,
+          "source": "Hahnemannian",
+          "grade": 1
+        },
+        {
+          "remedy": "Podophyllum peltatum",
+          "id": 476,
+          "source": "Hahnemannian",
+          "grade": 3
+        }
+      ],
+      "dull": [
+        {
+          "remedy": "Thuja occidentalis",
+          "id": 16,
+          "source": "Hahnemannian",
+          "grade": 3
+        },
+        {
+          "remedy": "Arsenicum album",
+          "id": 41,
+          "source": "Hahnemannian",
+          "grade": 3
+        },
+        {
+          "remedy": "Antimonium tartaricum",
+          "id": 66,
+          "source": "Hahnemannian",
+          "grade": 2
+        },
+        {
+          "remedy": "Lachesis mutus",
+          "id": 91,
+          "source": "Hahnemannian",
+          "grade": 1
+        },
+        {
+          "remedy": "Podophyllum peltatum",
+          "id": 116,
+          "source": "Hahnemannian",
+          "grade": 3
+        },
+        {
+          "remedy": "Bryonia alba",
+          "id": 141,
+          "source": "Hahnemannian",
+          "grade": 1
+        },
+        {
+          "remedy": "Ignatia amara",
+          "id": 166,
+          "source": "Hahnemannian",
+          "grade": 2
+        },
+        {
+          "remedy": "Hepar sulphuris",
+          "id": 191,
+          "source": "Hahnemannian",
+          "grade": 2
+        },
+        {
+          "remedy": "Thuja occidentalis",
+          "id": 216,
+          "source": "Hahnemannian",
+          "grade": 1
+        },
+        {
+          "remedy": "Arsenicum album",
+          "id": 241,
+          "source": "Hahnemannian",
+          "grade": 2
+        },
+        {
+          "remedy": "Antimonium tartaricum",
+          "id": 266,
+          "source": "Hahnemannian",
+          "grade": 2
+        },
+        {
+          "remedy": "Lachesis mutus",
+          "id": 291,
+          "source": "Hahnemannian",
+          "grade": 1
+        },
+        {
+          "remedy": "Podophyllum peltatum",
+          "id": 316,
+          "source": "Hahnemannian",
+          "grade": 1
+        },
+        {
+          "remedy": "Bryonia alba",
+          "id": 341,
+          "source": "Hahnemannian",
+          "grade": 1
+        },
+        {
+          "remedy": "Ignatia amara",
+          "id": 366,
+          "source": "Hahnemannian",
+          "grade": 3
+        },
+        {
+          "remedy": "Hepar sulphuris",
+          "id": 391,
+          "source": "Hahnemannian",
+          "grade": 1
+        },
+        {
+          "remedy": "Thuja occidentalis",
+          "id": 416,
+          "source": "Hahnemannian",
+          "grade": 1
+        },
+        {
+          "remedy": "Arsenicum album",
+          "id": 441,
+          "source": "Hahnemannian",
+          "grade": 1
+        },
+        {
+          "remedy": "Antimonium tartaricum",
+          "id": 466,
+          "source": "Hahnemannian",
+          "grade": 2
+        },
+        {
+          "remedy": "Lachesis mutus",
+          "id": 491,
+          "source": "Hahnemannian",
+          "grade": 3
+        }
+      ]
+    },
+    "Anxiety": {
+      "restlessness": [
+        {
+          "remedy": "Pulsatilla nigricans",
+          "id": 2,
+          "source": "Kentian",
+          "grade": 3
+        },
+        {
+          "remedy": "Arnica montana",
+          "id": 27,
+          "source": "Kentian",
+          "grade": 1
+        },
+        {
+          "remedy": "Phosphorus",
+          "id": 52,
+          "source": "Kentian",
+          "grade": 2
+        },
+        {
+          "remedy": "Psorinum",
+          "id": 77,
+          "source": "Kentian",
+          "grade": 1
+        },
+        {
+          "remedy": "Ruta graveolens",
+          "id": 102,
+          "source": "Kentian",
+          "grade": 3
+        },
+        {
+          "remedy": "Belladonna",
+          "id": 127,
+          "source": "Kentian",
+          "grade": 2
+        },
+        {
+          "remedy": "Lycopodium clavatum",
+          "id": 152,
+          "source": "Kentian",
+          "grade": 2
+        },
+        {
+          "remedy": "Staphysagria",
+          "id": 177,
+          "source": "Kentian",
+          "grade": 3
+        },
+        {
+          "remedy": "Pulsatilla nigricans",
+          "id": 202,
+          "source": "Kentian",
+          "grade": 3
+        },
+        {
+          "remedy": "Arnica montana",
+          "id": 227,
+          "source": "Kentian",
+          "grade": 1
+        },
+        {
+          "remedy": "Phosphorus",
+          "id": 252,
+          "source": "Kentian",
+          "grade": 3
+        },
+        {
+          "remedy": "Psorinum",
+          "id": 277,
+          "source": "Kentian",
+          "grade": 1
+        },
+        {
+          "remedy": "Ruta graveolens",
+          "id": 302,
+          "source": "Kentian",
+          "grade": 2
+        },
+        {
+          "remedy": "Belladonna",
+          "id": 327,
+          "source": "Kentian",
+          "grade": 2
+        },
+        {
+          "remedy": "Lycopodium clavatum",
+          "id": 352,
+          "source": "Kentian",
+          "grade": 3
+        },
+        {
+          "remedy": "Staphysagria",
+          "id": 377,
+          "source": "Kentian",
+          "grade": 3
+        },
+        {
+          "remedy": "Pulsatilla nigricans",
+          "id": 402,
+          "source": "Kentian",
+          "grade": 1
+        },
+        {
+          "remedy": "Arnica montana",
+          "id": 427,
+          "source": "Kentian",
+          "grade": 1
+        },
+        {
+          "remedy": "Phosphorus",
+          "id": 452,
+          "source": "Kentian",
+          "grade": 2
+        },
+        {
+          "remedy": "Psorinum",
+          "id": 477,
+          "source": "Kentian",
+          "grade": 2
+        }
+      ]
+    },
+    "Cough": {
+      "dry": [
+        {
+          "remedy": "Sulphur",
+          "id": 3,
+          "source": "Classical",
+          "grade": 1
+        },
+        {
+          "remedy": "China officinalis",
+          "id": 28,
+          "source": "Classical",
+          "grade": 1
+        },
+        {
+          "remedy": "Gelsemium sempervirens",
+          "id": 53,
+          "source": "Classical",
+          "grade": 2
+        },
+        {
+          "remedy": "Calcarea fluorica",
+          "id": 78,
+          "source": "Classical",
+          "grade": 3
+        },
+        {
+          "remedy": "Rhus toxicodendron",
+          "id": 103,
+          "source": "Classical",
+          "grade": 3
+        },
+        {
+          "remedy": "Mercurius solubilis",
+          "id": 128,
+          "source": "Classical",
+          "grade": 2
+        },
+        {
+          "remedy": "Mercurius vivus",
+          "id": 153,
+          "source": "Classical",
+          "grade": 3
+        },
+        {
+          "remedy": "Kali bichromicum",
+          "id": 178,
+          "source": "Classical",
+          "grade": 2
+        },
+        {
+          "remedy": "Sulphur",
+          "id": 203,
+          "source": "Classical",
+          "grade": 1
+        },
+        {
+          "remedy": "China officinalis",
+          "id": 228,
+          "source": "Classical",
+          "grade": 1
+        },
+        {
+          "remedy": "Gelsemium sempervirens",
+          "id": 253,
+          "source": "Classical",
+          "grade": 2
+        },
+        {
+          "remedy": "Calcarea fluorica",
+          "id": 278,
+          "source": "Classical",
+          "grade": 2
+        },
+        {
+          "remedy": "Rhus toxicodendron",
+          "id": 303,
+          "source": "Classical",
+          "grade": 3
+        },
+        {
+          "remedy": "Mercurius solubilis",
+          "id": 328,
+          "source": "Classical",
+          "grade": 1
+        },
+        {
+          "remedy": "Mercurius vivus",
+          "id": 353,
+          "source": "Classical",
+          "grade": 2
+        },
+        {
+          "remedy": "Kali bichromicum",
+          "id": 378,
+          "source": "Classical",
+          "grade": 1
+        },
+        {
+          "remedy": "Sulphur",
+          "id": 403,
+          "source": "Classical",
+          "grade": 1
+        },
+        {
+          "remedy": "China officinalis",
+          "id": 428,
+          "source": "Classical",
+          "grade": 3
+        },
+        {
+          "remedy": "Gelsemium sempervirens",
+          "id": 453,
+          "source": "Classical",
+          "grade": 3
+        },
+        {
+          "remedy": "Calcarea fluorica",
+          "id": 478,
+          "source": "Classical",
+          "grade": 2
+        }
+      ],
+      "wet": [
+        {
+          "remedy": "Calcarea carbonica",
+          "id": 4,
+          "source": "Eclectic",
+          "grade": 1
+        },
+        {
+          "remedy": "Carbo vegetabilis",
+          "id": 29,
+          "source": "Eclectic",
+          "grade": 3
+        },
+        {
+          "remedy": "Calcarea phosphorica",
+          "id": 54,
+          "source": "Eclectic",
+          "grade": 2
+        },
+        {
+          "remedy": "Kreosotum",
+          "id": 79,
+          "source": "Eclectic",
+          "grade": 2
+        },
+        {
+          "remedy": "Ledum palustre",
+          "id": 104,
+          "source": "Eclectic",
+          "grade": 2
+        },
+        {
+          "remedy": "Sepia",
+          "id": 129,
+          "source": "Eclectic",
+          "grade": 1
+        },
+        {
+          "remedy": "Phytolacca decandra",
+          "id": 154,
+          "source": "Eclectic",
+          "grade": 1
+        },
+        {
+          "remedy": "Kali muriaticum",
+          "id": 179,
+          "source": "Eclectic",
+          "grade": 2
+        },
+        {
+          "remedy": "Calcarea carbonica",
+          "id": 204,
+          "source": "Eclectic",
+          "grade": 3
+        },
+        {
+          "remedy": "Carbo vegetabilis",
+          "id": 229,
+          "source": "Eclectic",
+          "grade": 2
+        },
+        {
+          "remedy": "Calcarea phosphorica",
+          "id": 254,
+          "source": "Eclectic",
+          "grade": 3
+        },
+        {
+          "remedy": "Kreosotum",
+          "id": 279,
+          "source": "Eclectic",
+          "grade": 1
+        },
+        {
+          "remedy": "Ledum palustre",
+          "id": 304,
+          "source": "Eclectic",
+          "grade": 3
+        },
+        {
+          "remedy": "Sepia",
+          "id": 329,
+          "source": "Eclectic",
+          "grade": 1
+        },
+        {
+          "remedy": "Phytolacca decandra",
+          "id": 354,
+          "source": "Eclectic",
+          "grade": 2
+        },
+        {
+          "remedy": "Kali muriaticum",
+          "id": 379,
+          "source": "Eclectic",
+          "grade": 1
+        },
+        {
+          "remedy": "Calcarea carbonica",
+          "id": 404,
+          "source": "Eclectic",
+          "grade": 1
+        },
+        {
+          "remedy": "Carbo vegetabilis",
+          "id": 429,
+          "source": "Eclectic",
+          "grade": 2
+        },
+        {
+          "remedy": "Calcarea phosphorica",
+          "id": 454,
+          "source": "Eclectic",
+          "grade": 1
+        },
+        {
+          "remedy": "Kreosotum",
+          "id": 479,
+          "source": "Eclectic",
+          "grade": 1
+        }
+      ]
+    },
+    "Pain": {
+      "stitching": [
+        {
+          "remedy": "Nux vomica",
+          "id": 5,
+          "source": "Organon",
+          "grade": 1
+        },
+        {
+          "remedy": "Dulcamara",
+          "id": 30,
+          "source": "Organon",
+          "grade": 3
+        },
+        {
+          "remedy": "Silicea",
+          "id": 55,
+          "source": "Organon",
+          "grade": 1
+        },
+        {
+          "remedy": "Natrum sulphuricum",
+          "id": 80,
+          "source": "Organon",
+          "grade": 3
+        },
+        {
+          "remedy": "Aconitum napellus",
+          "id": 105,
+          "source": "Organon",
+          "grade": 2
+        },
+        {
+          "remedy": "Natrum muriaticum",
+          "id": 130,
+          "source": "Organon",
+          "grade": 1
+        },
+        {
+          "remedy": "Platinum",
+          "id": 155,
+          "source": "Organon",
+          "grade": 2
+        },
+        {
+          "remedy": "Kali phosphoricum",
+          "id": 180,
+          "source": "Organon",
+          "grade": 2
+        },
+        {
+          "remedy": "Nux vomica",
+          "id": 205,
+          "source": "Organon",
+          "grade": 2
+        },
+        {
+          "remedy": "Dulcamara",
+          "id": 230,
+          "source": "Organon",
+          "grade": 1
+        },
+        {
+          "remedy": "Silicea",
+          "id": 255,
+          "source": "Organon",
+          "grade": 3
+        },
+        {
+          "remedy": "Natrum sulphuricum",
+          "id": 280,
+          "source": "Organon",
+          "grade": 1
+        },
+        {
+          "remedy": "Aconitum napellus",
+          "id": 305,
+          "source": "Organon",
+          "grade": 1
+        },
+        {
+          "remedy": "Natrum muriaticum",
+          "id": 330,
+          "source": "Organon",
+          "grade": 3
+        },
+        {
+          "remedy": "Platinum",
+          "id": 355,
+          "source": "Organon",
+          "grade": 2
+        },
+        {
+          "remedy": "Kali phosphoricum",
+          "id": 380,
+          "source": "Organon",
+          "grade": 1
+        },
+        {
+          "remedy": "Nux vomica",
+          "id": 405,
+          "source": "Organon",
+          "grade": 3
+        },
+        {
+          "remedy": "Dulcamara",
+          "id": 430,
+          "source": "Organon",
+          "grade": 1
+        },
+        {
+          "remedy": "Silicea",
+          "id": 455,
+          "source": "Organon",
+          "grade": 2
+        },
+        {
+          "remedy": "Natrum sulphuricum",
+          "id": 480,
+          "source": "Organon",
+          "grade": 1
+        }
+      ],
+      "burning": [
+        {
+          "remedy": "Ignatia amara",
+          "id": 6,
+          "source": "Hahnemannian",
+          "grade": 3
+        },
+        {
+          "remedy": "Hepar sulphuris",
+          "id": 31,
+          "source": "Hahnemannian",
+          "grade": 2
+        },
+        {
+          "remedy": "Thuja occidentalis",
+          "id": 56,
+          "source": "Hahnemannian",
+          "grade": 3
+        },
+        {
+          "remedy": "Arsenicum album",
+          "id": 81,
+          "source": "Hahnemannian",
+          "grade": 2
+        },
+        {
+          "remedy": "Antimonium tartaricum",
+          "id": 106,
+          "source": "Hahnemannian",
+          "grade": 1
+        },
+        {
+          "remedy": "Lachesis mutus",
+          "id": 131,
+          "source": "Hahnemannian",
+          "grade": 1
+        },
+        {
+          "remedy": "Podophyllum peltatum",
+          "id": 156,
+          "source": "Hahnemannian",
+          "grade": 3
+        },
+        {
+          "remedy": "Bryonia alba",
+          "id": 181,
+          "source": "Hahnemannian",
+          "grade": 1
+        },
+        {
+          "remedy": "Ignatia amara",
+          "id": 206,
+          "source": "Hahnemannian",
+          "grade": 3
+        },
+        {
+          "remedy": "Hepar sulphuris",
+          "id": 231,
+          "source": "Hahnemannian",
+          "grade": 3
+        },
+        {
+          "remedy": "Thuja occidentalis",
+          "id": 256,
+          "source": "Hahnemannian",
+          "grade": 2
+        },
+        {
+          "remedy": "Arsenicum album",
+          "id": 281,
+          "source": "Hahnemannian",
+          "grade": 2
+        },
+        {
+          "remedy": "Antimonium tartaricum",
+          "id": 306,
+          "source": "Hahnemannian",
+          "grade": 1
+        },
+        {
+          "remedy": "Lachesis mutus",
+          "id": 331,
+          "source": "Hahnemannian",
+          "grade": 2
+        },
+        {
+          "remedy": "Podophyllum peltatum",
+          "id": 356,
+          "source": "Hahnemannian",
+          "grade": 3
+        },
+        {
+          "remedy": "Bryonia alba",
+          "id": 381,
+          "source": "Hahnemannian",
+          "grade": 2
+        },
+        {
+          "remedy": "Ignatia amara",
+          "id": 406,
+          "source": "Hahnemannian",
+          "grade": 3
+        },
+        {
+          "remedy": "Hepar sulphuris",
+          "id": 431,
+          "source": "Hahnemannian",
+          "grade": 1
+        },
+        {
+          "remedy": "Thuja occidentalis",
+          "id": 456,
+          "source": "Hahnemannian",
+          "grade": 1
+        },
+        {
+          "remedy": "Arsenicum album",
+          "id": 481,
+          "source": "Hahnemannian",
+          "grade": 1
+        }
+      ]
+    },
+    "Sleep": {
+      "insomnia": [
+        {
+          "remedy": "Belladonna",
+          "id": 7,
+          "source": "Kentian",
+          "grade": 2
+        },
+        {
+          "remedy": "Lycopodium clavatum",
+          "id": 32,
+          "source": "Kentian",
+          "grade": 3
+        },
+        {
+          "remedy": "Staphysagria",
+          "id": 57,
+          "source": "Kentian",
+          "grade": 3
+        },
+        {
+          "remedy": "Pulsatilla nigricans",
+          "id": 82,
+          "source": "Kentian",
+          "grade": 3
+        },
+        {
+          "remedy": "Arnica montana",
+          "id": 107,
+          "source": "Kentian",
+          "grade": 2
+        },
+        {
+          "remedy": "Phosphorus",
+          "id": 132,
+          "source": "Kentian",
+          "grade": 1
+        },
+        {
+          "remedy": "Psorinum",
+          "id": 157,
+          "source": "Kentian",
+          "grade": 1
+        },
+        {
+          "remedy": "Ruta graveolens",
+          "id": 182,
+          "source": "Kentian",
+          "grade": 2
+        },
+        {
+          "remedy": "Belladonna",
+          "id": 207,
+          "source": "Kentian",
+          "grade": 3
+        },
+        {
+          "remedy": "Lycopodium clavatum",
+          "id": 232,
+          "source": "Kentian",
+          "grade": 2
+        },
+        {
+          "remedy": "Staphysagria",
+          "id": 257,
+          "source": "Kentian",
+          "grade": 1
+        },
+        {
+          "remedy": "Pulsatilla nigricans",
+          "id": 282,
+          "source": "Kentian",
+          "grade": 1
+        },
+        {
+          "remedy": "Arnica montana",
+          "id": 307,
+          "source": "Kentian",
+          "grade": 3
+        },
+        {
+          "remedy": "Phosphorus",
+          "id": 332,
+          "source": "Kentian",
+          "grade": 2
+        },
+        {
+          "remedy": "Psorinum",
+          "id": 357,
+          "source": "Kentian",
+          "grade": 1
+        },
+        {
+          "remedy": "Ruta graveolens",
+          "id": 382,
+          "source": "Kentian",
+          "grade": 2
+        },
+        {
+          "remedy": "Belladonna",
+          "id": 407,
+          "source": "Kentian",
+          "grade": 3
+        },
+        {
+          "remedy": "Lycopodium clavatum",
+          "id": 432,
+          "source": "Kentian",
+          "grade": 1
+        },
+        {
+          "remedy": "Staphysagria",
+          "id": 457,
+          "source": "Kentian",
+          "grade": 2
+        },
+        {
+          "remedy": "Pulsatilla nigricans",
+          "id": 482,
+          "source": "Kentian",
+          "grade": 2
+        }
+      ]
+    },
+    "Gastric": {
+      "acidity": [
+        {
+          "remedy": "Mercurius solubilis",
+          "id": 8,
+          "source": "Classical",
+          "grade": 3
+        },
+        {
+          "remedy": "Mercurius vivus",
+          "id": 33,
+          "source": "Classical",
+          "grade": 1
+        },
+        {
+          "remedy": "Kali bichromicum",
+          "id": 58,
+          "source": "Classical",
+          "grade": 1
+        },
+        {
+          "remedy": "Sulphur",
+          "id": 83,
+          "source": "Classical",
+          "grade": 3
+        },
+        {
+          "remedy": "China officinalis",
+          "id": 108,
+          "source": "Classical",
+          "grade": 1
+        },
+        {
+          "remedy": "Gelsemium sempervirens",
+          "id": 133,
+          "source": "Classical",
+          "grade": 1
+        },
+        {
+          "remedy": "Calcarea fluorica",
+          "id": 158,
+          "source": "Classical",
+          "grade": 3
+        },
+        {
+          "remedy": "Rhus toxicodendron",
+          "id": 183,
+          "source": "Classical",
+          "grade": 2
+        },
+        {
+          "remedy": "Mercurius solubilis",
+          "id": 208,
+          "source": "Classical",
+          "grade": 2
+        },
+        {
+          "remedy": "Mercurius vivus",
+          "id": 233,
+          "source": "Classical",
+          "grade": 3
+        },
+        {
+          "remedy": "Kali bichromicum",
+          "id": 258,
+          "source": "Classical",
+          "grade": 3
+        },
+        {
+          "remedy": "Sulphur",
+          "id": 283,
+          "source": "Classical",
+          "grade": 2
+        },
+        {
+          "remedy": "China officinalis",
+          "id": 308,
+          "source": "Classical",
+          "grade": 3
+        },
+        {
+          "remedy": "Gelsemium sempervirens",
+          "id": 333,
+          "source": "Classical",
+          "grade": 3
+        },
+        {
+          "remedy": "Calcarea fluorica",
+          "id": 358,
+          "source": "Classical",
+          "grade": 3
+        },
+        {
+          "remedy": "Rhus toxicodendron",
+          "id": 383,
+          "source": "Classical",
+          "grade": 2
+        },
+        {
+          "remedy": "Mercurius solubilis",
+          "id": 408,
+          "source": "Classical",
+          "grade": 2
+        },
+        {
+          "remedy": "Mercurius vivus",
+          "id": 433,
+          "source": "Classical",
+          "grade": 1
+        },
+        {
+          "remedy": "Kali bichromicum",
+          "id": 458,
+          "source": "Classical",
+          "grade": 2
+        },
+        {
+          "remedy": "Sulphur",
+          "id": 483,
+          "source": "Classical",
+          "grade": 3
+        }
+      ]
+    },
+    "Skin": {
+      "rash": [
+        {
+          "remedy": "Sepia",
+          "id": 9,
+          "source": "Eclectic",
+          "grade": 1
+        },
+        {
+          "remedy": "Phytolacca decandra",
+          "id": 34,
+          "source": "Eclectic",
+          "grade": 2
+        },
+        {
+          "remedy": "Kali muriaticum",
+          "id": 59,
+          "source": "Eclectic",
+          "grade": 1
+        },
+        {
+          "remedy": "Calcarea carbonica",
+          "id": 84,
+          "source": "Eclectic",
+          "grade": 2
+        },
+        {
+          "remedy": "Carbo vegetabilis",
+          "id": 109,
+          "source": "Eclectic",
+          "grade": 2
+        },
+        {
+          "remedy": "Calcarea phosphorica",
+          "id": 134,
+          "source": "Eclectic",
+          "grade": 2
+        },
+        {
+          "remedy": "Kreosotum",
+          "id": 159,
+          "source": "Eclectic",
+          "grade": 3
+        },
+        {
+          "remedy": "Ledum palustre",
+          "id": 184,
+          "source": "Eclectic",
+          "grade": 3
+        },
+        {
+          "remedy": "Sepia",
+          "id": 209,
+          "source": "Eclectic",
+          "grade": 2
+        },
+        {
+          "remedy": "Phytolacca decandra",
+          "id": 234,
+          "source": "Eclectic",
+          "grade": 3
+        },
+        {
+          "remedy": "Kali muriaticum",
+          "id": 259,
+          "source": "Eclectic",
+          "grade": 1
+        },
+        {
+          "remedy": "Calcarea carbonica",
+          "id": 284,
+          "source": "Eclectic",
+          "grade": 2
+        },
+        {
+          "remedy": "Carbo vegetabilis",
+          "id": 309,
+          "source": "Eclectic",
+          "grade": 3
+        },
+        {
+          "remedy": "Calcarea phosphorica",
+          "id": 334,
+          "source": "Eclectic",
+          "grade": 1
+        },
+        {
+          "remedy": "Kreosotum",
+          "id": 359,
+          "source": "Eclectic",
+          "grade": 3
+        },
+        {
+          "remedy": "Ledum palustre",
+          "id": 384,
+          "source": "Eclectic",
+          "grade": 1
+        },
+        {
+          "remedy": "Sepia",
+          "id": 409,
+          "source": "Eclectic",
+          "grade": 2
+        },
+        {
+          "remedy": "Phytolacca decandra",
+          "id": 434,
+          "source": "Eclectic",
+          "grade": 1
+        },
+        {
+          "remedy": "Kali muriaticum",
+          "id": 459,
+          "source": "Eclectic",
+          "grade": 3
+        },
+        {
+          "remedy": "Calcarea carbonica",
+          "id": 484,
+          "source": "Eclectic",
+          "grade": 2
+        }
+      ],
+      "itching": [
+        {
+          "remedy": "Natrum muriaticum",
+          "id": 10,
+          "source": "Organon",
+          "grade": 3
+        },
+        {
+          "remedy": "Platinum",
+          "id": 35,
+          "source": "Organon",
+          "grade": 1
+        },
+        {
+          "remedy": "Kali phosphoricum",
+          "id": 60,
+          "source": "Organon",
+          "grade": 2
+        },
+        {
+          "remedy": "Nux vomica",
+          "id": 85,
+          "source": "Organon",
+          "grade": 3
+        },
+        {
+          "remedy": "Dulcamara",
+          "id": 110,
+          "source": "Organon",
+          "grade": 1
+        },
+        {
+          "remedy": "Silicea",
+          "id": 135,
+          "source": "Organon",
+          "grade": 2
+        },
+        {
+          "remedy": "Natrum sulphuricum",
+          "id": 160,
+          "source": "Organon",
+          "grade": 2
+        },
+        {
+          "remedy": "Aconitum napellus",
+          "id": 185,
+          "source": "Organon",
+          "grade": 3
+        },
+        {
+          "remedy": "Natrum muriaticum",
+          "id": 210,
+          "source": "Organon",
+          "grade": 1
+        },
+        {
+          "remedy": "Platinum",
+          "id": 235,
+          "source": "Organon",
+          "grade": 1
+        },
+        {
+          "remedy": "Kali phosphoricum",
+          "id": 260,
+          "source": "Organon",
+          "grade": 1
+        },
+        {
+          "remedy": "Nux vomica",
+          "id": 285,
+          "source": "Organon",
+          "grade": 2
+        },
+        {
+          "remedy": "Dulcamara",
+          "id": 310,
+          "source": "Organon",
+          "grade": 1
+        },
+        {
+          "remedy": "Silicea",
+          "id": 335,
+          "source": "Organon",
+          "grade": 3
+        },
+        {
+          "remedy": "Natrum sulphuricum",
+          "id": 360,
+          "source": "Organon",
+          "grade": 1
+        },
+        {
+          "remedy": "Aconitum napellus",
+          "id": 385,
+          "source": "Organon",
+          "grade": 3
+        },
+        {
+          "remedy": "Natrum muriaticum",
+          "id": 410,
+          "source": "Organon",
+          "grade": 2
+        },
+        {
+          "remedy": "Platinum",
+          "id": 435,
+          "source": "Organon",
+          "grade": 1
+        },
+        {
+          "remedy": "Kali phosphoricum",
+          "id": 460,
+          "source": "Organon",
+          "grade": 1
+        },
+        {
+          "remedy": "Nux vomica",
+          "id": 485,
+          "source": "Organon",
+          "grade": 1
+        }
+      ]
+    },
+    "Warts": {
+      "hands": [
+        {
+          "remedy": "Lachesis mutus",
+          "id": 11,
+          "source": "Hahnemannian",
+          "grade": 2
+        },
+        {
+          "remedy": "Podophyllum peltatum",
+          "id": 36,
+          "source": "Hahnemannian",
+          "grade": 3
+        },
+        {
+          "remedy": "Bryonia alba",
+          "id": 61,
+          "source": "Hahnemannian",
+          "grade": 2
+        },
+        {
+          "remedy": "Ignatia amara",
+          "id": 86,
+          "source": "Hahnemannian",
+          "grade": 2
+        },
+        {
+          "remedy": "Hepar sulphuris",
+          "id": 111,
+          "source": "Hahnemannian",
+          "grade": 3
+        },
+        {
+          "remedy": "Thuja occidentalis",
+          "id": 136,
+          "source": "Hahnemannian",
+          "grade": 1
+        },
+        {
+          "remedy": "Arsenicum album",
+          "id": 161,
+          "source": "Hahnemannian",
+          "grade": 2
+        },
+        {
+          "remedy": "Antimonium tartaricum",
+          "id": 186,
+          "source": "Hahnemannian",
+          "grade": 1
+        },
+        {
+          "remedy": "Lachesis mutus",
+          "id": 211,
+          "source": "Hahnemannian",
+          "grade": 1
+        },
+        {
+          "remedy": "Podophyllum peltatum",
+          "id": 236,
+          "source": "Hahnemannian",
+          "grade": 1
+        },
+        {
+          "remedy": "Bryonia alba",
+          "id": 261,
+          "source": "Hahnemannian",
+          "grade": 3
+        },
+        {
+          "remedy": "Ignatia amara",
+          "id": 286,
+          "source": "Hahnemannian",
+          "grade": 3
+        },
+        {
+          "remedy": "Hepar sulphuris",
+          "id": 311,
+          "source": "Hahnemannian",
+          "grade": 2
+        },
+        {
+          "remedy": "Thuja occidentalis",
+          "id": 336,
+          "source": "Hahnemannian",
+          "grade": 1
+        },
+        {
+          "remedy": "Arsenicum album",
+          "id": 361,
+          "source": "Hahnemannian",
+          "grade": 1
+        },
+        {
+          "remedy": "Antimonium tartaricum",
+          "id": 386,
+          "source": "Hahnemannian",
+          "grade": 1
+        },
+        {
+          "remedy": "Lachesis mutus",
+          "id": 411,
+          "source": "Hahnemannian",
+          "grade": 2
+        },
+        {
+          "remedy": "Podophyllum peltatum",
+          "id": 436,
+          "source": "Hahnemannian",
+          "grade": 2
+        },
+        {
+          "remedy": "Bryonia alba",
+          "id": 461,
+          "source": "Hahnemannian",
+          "grade": 3
+        },
+        {
+          "remedy": "Ignatia amara",
+          "id": 486,
+          "source": "Hahnemannian",
+          "grade": 1
+        }
+      ]
+    },
+    "Cold": {
+      "sneezing": [
+        {
+          "remedy": "Phosphorus",
+          "id": 12,
+          "source": "Kentian",
+          "grade": 2
+        },
+        {
+          "remedy": "Psorinum",
+          "id": 37,
+          "source": "Kentian",
+          "grade": 2
+        },
+        {
+          "remedy": "Ruta graveolens",
+          "id": 62,
+          "source": "Kentian",
+          "grade": 2
+        },
+        {
+          "remedy": "Belladonna",
+          "id": 87,
+          "source": "Kentian",
+          "grade": 1
+        },
+        {
+          "remedy": "Lycopodium clavatum",
+          "id": 112,
+          "source": "Kentian",
+          "grade": 3
+        },
+        {
+          "remedy": "Staphysagria",
+          "id": 137,
+          "source": "Kentian",
+          "grade": 3
+        },
+        {
+          "remedy": "Pulsatilla nigricans",
+          "id": 162,
+          "source": "Kentian",
+          "grade": 1
+        },
+        {
+          "remedy": "Arnica montana",
+          "id": 187,
+          "source": "Kentian",
+          "grade": 1
+        },
+        {
+          "remedy": "Phosphorus",
+          "id": 212,
+          "source": "Kentian",
+          "grade": 2
+        },
+        {
+          "remedy": "Psorinum",
+          "id": 237,
+          "source": "Kentian",
+          "grade": 3
+        },
+        {
+          "remedy": "Ruta graveolens",
+          "id": 262,
+          "source": "Kentian",
+          "grade": 2
+        },
+        {
+          "remedy": "Belladonna",
+          "id": 287,
+          "source": "Kentian",
+          "grade": 1
+        },
+        {
+          "remedy": "Lycopodium clavatum",
+          "id": 312,
+          "source": "Kentian",
+          "grade": 3
+        },
+        {
+          "remedy": "Staphysagria",
+          "id": 337,
+          "source": "Kentian",
+          "grade": 3
+        },
+        {
+          "remedy": "Pulsatilla nigricans",
+          "id": 362,
+          "source": "Kentian",
+          "grade": 1
+        },
+        {
+          "remedy": "Arnica montana",
+          "id": 387,
+          "source": "Kentian",
+          "grade": 2
+        },
+        {
+          "remedy": "Phosphorus",
+          "id": 412,
+          "source": "Kentian",
+          "grade": 1
+        },
+        {
+          "remedy": "Psorinum",
+          "id": 437,
+          "source": "Kentian",
+          "grade": 3
+        },
+        {
+          "remedy": "Ruta graveolens",
+          "id": 462,
+          "source": "Kentian",
+          "grade": 3
+        },
+        {
+          "remedy": "Belladonna",
+          "id": 487,
+          "source": "Kentian",
+          "grade": 1
+        }
+      ]
+    },
+    "Diarrhea": {
+      "sudden": [
+        {
+          "remedy": "Gelsemium sempervirens",
+          "id": 13,
+          "source": "Classical",
+          "grade": 2
+        },
+        {
+          "remedy": "Calcarea fluorica",
+          "id": 38,
+          "source": "Classical",
+          "grade": 3
+        },
+        {
+          "remedy": "Rhus toxicodendron",
+          "id": 63,
+          "source": "Classical",
+          "grade": 2
+        },
+        {
+          "remedy": "Mercurius solubilis",
+          "id": 88,
+          "source": "Classical",
+          "grade": 3
+        },
+        {
+          "remedy": "Mercurius vivus",
+          "id": 113,
+          "source": "Classical",
+          "grade": 2
+        },
+        {
+          "remedy": "Kali bichromicum",
+          "id": 138,
+          "source": "Classical",
+          "grade": 2
+        },
+        {
+          "remedy": "Sulphur",
+          "id": 163,
+          "source": "Classical",
+          "grade": 2
+        },
+        {
+          "remedy": "China officinalis",
+          "id": 188,
+          "source": "Classical",
+          "grade": 1
+        },
+        {
+          "remedy": "Gelsemium sempervirens",
+          "id": 213,
+          "source": "Classical",
+          "grade": 3
+        },
+        {
+          "remedy": "Calcarea fluorica",
+          "id": 238,
+          "source": "Classical",
+          "grade": 3
+        },
+        {
+          "remedy": "Rhus toxicodendron",
+          "id": 263,
+          "source": "Classical",
+          "grade": 3
+        },
+        {
+          "remedy": "Mercurius solubilis",
+          "id": 288,
+          "source": "Classical",
+          "grade": 1
+        },
+        {
+          "remedy": "Mercurius vivus",
+          "id": 313,
+          "source": "Classical",
+          "grade": 1
+        },
+        {
+          "remedy": "Kali bichromicum",
+          "id": 338,
+          "source": "Classical",
+          "grade": 1
+        },
+        {
+          "remedy": "Sulphur",
+          "id": 363,
+          "source": "Classical",
+          "grade": 1
+        },
+        {
+          "remedy": "China officinalis",
+          "id": 388,
+          "source": "Classical",
+          "grade": 3
+        },
+        {
+          "remedy": "Gelsemium sempervirens",
+          "id": 413,
+          "source": "Classical",
+          "grade": 1
+        },
+        {
+          "remedy": "Calcarea fluorica",
+          "id": 438,
+          "source": "Classical",
+          "grade": 3
+        },
+        {
+          "remedy": "Rhus toxicodendron",
+          "id": 463,
+          "source": "Classical",
+          "grade": 2
+        },
+        {
+          "remedy": "Mercurius solubilis",
+          "id": 488,
+          "source": "Classical",
+          "grade": 3
+        }
+      ]
+    },
+    "Arthritis": {
+      "stiffness": [
+        {
+          "remedy": "Calcarea phosphorica",
+          "id": 14,
+          "source": "Eclectic",
+          "grade": 3
+        },
+        {
+          "remedy": "Kreosotum",
+          "id": 39,
+          "source": "Eclectic",
+          "grade": 3
+        },
+        {
+          "remedy": "Ledum palustre",
+          "id": 64,
+          "source": "Eclectic",
+          "grade": 1
+        },
+        {
+          "remedy": "Sepia",
+          "id": 89,
+          "source": "Eclectic",
+          "grade": 1
+        },
+        {
+          "remedy": "Phytolacca decandra",
+          "id": 114,
+          "source": "Eclectic",
+          "grade": 2
+        },
+        {
+          "remedy": "Kali muriaticum",
+          "id": 139,
+          "source": "Eclectic",
+          "grade": 3
+        },
+        {
+          "remedy": "Calcarea carbonica",
+          "id": 164,
+          "source": "Eclectic",
+          "grade": 1
+        },
+        {
+          "remedy": "Carbo vegetabilis",
+          "id": 189,
+          "source": "Eclectic",
+          "grade": 3
+        },
+        {
+          "remedy": "Calcarea phosphorica",
+          "id": 214,
+          "source": "Eclectic",
+          "grade": 1
+        },
+        {
+          "remedy": "Kreosotum",
+          "id": 239,
+          "source": "Eclectic",
+          "grade": 3
+        },
+        {
+          "remedy": "Ledum palustre",
+          "id": 264,
+          "source": "Eclectic",
+          "grade": 3
+        },
+        {
+          "remedy": "Sepia",
+          "id": 289,
+          "source": "Eclectic",
+          "grade": 2
+        },
+        {
+          "remedy": "Phytolacca decandra",
+          "id": 314,
+          "source": "Eclectic",
+          "grade": 3
+        },
+        {
+          "remedy": "Kali muriaticum",
+          "id": 339,
+          "source": "Eclectic",
+          "grade": 1
+        },
+        {
+          "remedy": "Calcarea carbonica",
+          "id": 364,
+          "source": "Eclectic",
+          "grade": 1
+        },
+        {
+          "remedy": "Carbo vegetabilis",
+          "id": 389,
+          "source": "Eclectic",
+          "grade": 3
+        },
+        {
+          "remedy": "Calcarea phosphorica",
+          "id": 414,
+          "source": "Eclectic",
+          "grade": 1
+        },
+        {
+          "remedy": "Kreosotum",
+          "id": 439,
+          "source": "Eclectic",
+          "grade": 3
+        },
+        {
+          "remedy": "Ledum palustre",
+          "id": 464,
+          "source": "Eclectic",
+          "grade": 1
+        },
+        {
+          "remedy": "Sepia",
+          "id": 489,
+          "source": "Eclectic",
+          "grade": 1
+        }
+      ]
+    },
+    "Back pain": {
+      "lower": [
+        {
+          "remedy": "Silicea",
+          "id": 15,
+          "source": "Organon",
+          "grade": 2
+        },
+        {
+          "remedy": "Natrum sulphuricum",
+          "id": 40,
+          "source": "Organon",
+          "grade": 3
+        },
+        {
+          "remedy": "Aconitum napellus",
+          "id": 65,
+          "source": "Organon",
+          "grade": 2
+        },
+        {
+          "remedy": "Natrum muriaticum",
+          "id": 90,
+          "source": "Organon",
+          "grade": 2
+        },
+        {
+          "remedy": "Platinum",
+          "id": 115,
+          "source": "Organon",
+          "grade": 1
+        },
+        {
+          "remedy": "Kali phosphoricum",
+          "id": 140,
+          "source": "Organon",
+          "grade": 2
+        },
+        {
+          "remedy": "Nux vomica",
+          "id": 165,
+          "source": "Organon",
+          "grade": 3
+        },
+        {
+          "remedy": "Dulcamara",
+          "id": 190,
+          "source": "Organon",
+          "grade": 1
+        },
+        {
+          "remedy": "Silicea",
+          "id": 215,
+          "source": "Organon",
+          "grade": 2
+        },
+        {
+          "remedy": "Natrum sulphuricum",
+          "id": 240,
+          "source": "Organon",
+          "grade": 3
+        },
+        {
+          "remedy": "Aconitum napellus",
+          "id": 265,
+          "source": "Organon",
+          "grade": 1
+        },
+        {
+          "remedy": "Natrum muriaticum",
+          "id": 290,
+          "source": "Organon",
+          "grade": 2
+        },
+        {
+          "remedy": "Platinum",
+          "id": 315,
+          "source": "Organon",
+          "grade": 3
+        },
+        {
+          "remedy": "Kali phosphoricum",
+          "id": 340,
+          "source": "Organon",
+          "grade": 3
+        },
+        {
+          "remedy": "Nux vomica",
+          "id": 365,
+          "source": "Organon",
+          "grade": 3
+        },
+        {
+          "remedy": "Dulcamara",
+          "id": 390,
+          "source": "Organon",
+          "grade": 2
+        },
+        {
+          "remedy": "Silicea",
+          "id": 415,
+          "source": "Organon",
+          "grade": 2
+        },
+        {
+          "remedy": "Natrum sulphuricum",
+          "id": 440,
+          "source": "Organon",
+          "grade": 3
+        },
+        {
+          "remedy": "Aconitum napellus",
+          "id": 465,
+          "source": "Organon",
+          "grade": 2
+        },
+        {
+          "remedy": "Natrum muriaticum",
+          "id": 490,
+          "source": "Organon",
+          "grade": 3
+        }
+      ]
+    },
+    "Eye": {
+      "blurred vision": [
+        {
+          "remedy": "Staphysagria",
+          "id": 17,
+          "source": "Kentian",
+          "grade": 1
+        },
+        {
+          "remedy": "Pulsatilla nigricans",
+          "id": 42,
+          "source": "Kentian",
+          "grade": 1
+        },
+        {
+          "remedy": "Arnica montana",
+          "id": 67,
+          "source": "Kentian",
+          "grade": 1
+        },
+        {
+          "remedy": "Phosphorus",
+          "id": 92,
+          "source": "Kentian",
+          "grade": 1
+        },
+        {
+          "remedy": "Psorinum",
+          "id": 117,
+          "source": "Kentian",
+          "grade": 1
+        },
+        {
+          "remedy": "Ruta graveolens",
+          "id": 142,
+          "source": "Kentian",
+          "grade": 3
+        },
+        {
+          "remedy": "Belladonna",
+          "id": 167,
+          "source": "Kentian",
+          "grade": 3
+        },
+        {
+          "remedy": "Lycopodium clavatum",
+          "id": 192,
+          "source": "Kentian",
+          "grade": 3
+        },
+        {
+          "remedy": "Staphysagria",
+          "id": 217,
+          "source": "Kentian",
+          "grade": 1
+        },
+        {
+          "remedy": "Pulsatilla nigricans",
+          "id": 242,
+          "source": "Kentian",
+          "grade": 2
+        },
+        {
+          "remedy": "Arnica montana",
+          "id": 267,
+          "source": "Kentian",
+          "grade": 3
+        },
+        {
+          "remedy": "Phosphorus",
+          "id": 292,
+          "source": "Kentian",
+          "grade": 3
+        },
+        {
+          "remedy": "Psorinum",
+          "id": 317,
+          "source": "Kentian",
+          "grade": 3
+        },
+        {
+          "remedy": "Ruta graveolens",
+          "id": 342,
+          "source": "Kentian",
+          "grade": 1
+        },
+        {
+          "remedy": "Belladonna",
+          "id": 367,
+          "source": "Kentian",
+          "grade": 1
+        },
+        {
+          "remedy": "Lycopodium clavatum",
+          "id": 392,
+          "source": "Kentian",
+          "grade": 3
+        },
+        {
+          "remedy": "Staphysagria",
+          "id": 417,
+          "source": "Kentian",
+          "grade": 2
+        },
+        {
+          "remedy": "Pulsatilla nigricans",
+          "id": 442,
+          "source": "Kentian",
+          "grade": 1
+        },
+        {
+          "remedy": "Arnica montana",
+          "id": 467,
+          "source": "Kentian",
+          "grade": 1
+        },
+        {
+          "remedy": "Phosphorus",
+          "id": 492,
+          "source": "Kentian",
+          "grade": 1
+        }
+      ],
+      "pain": [
+        {
+          "remedy": "Kali bichromicum",
+          "id": 18,
+          "source": "Classical",
+          "grade": 2
+        },
+        {
+          "remedy": "Sulphur",
+          "id": 43,
+          "source": "Classical",
+          "grade": 2
+        },
+        {
+          "remedy": "China officinalis",
+          "id": 68,
+          "source": "Classical",
+          "grade": 3
+        },
+        {
+          "remedy": "Gelsemium sempervirens",
+          "id": 93,
+          "source": "Classical",
+          "grade": 3
+        },
+        {
+          "remedy": "Calcarea fluorica",
+          "id": 118,
+          "source": "Classical",
+          "grade": 3
+        },
+        {
+          "remedy": "Rhus toxicodendron",
+          "id": 143,
+          "source": "Classical",
+          "grade": 3
+        },
+        {
+          "remedy": "Mercurius solubilis",
+          "id": 168,
+          "source": "Classical",
+          "grade": 3
+        },
+        {
+          "remedy": "Mercurius vivus",
+          "id": 193,
+          "source": "Classical",
+          "grade": 1
+        },
+        {
+          "remedy": "Kali bichromicum",
+          "id": 218,
+          "source": "Classical",
+          "grade": 1
+        },
+        {
+          "remedy": "Sulphur",
+          "id": 243,
+          "source": "Classical",
+          "grade": 3
+        },
+        {
+          "remedy": "China officinalis",
+          "id": 268,
+          "source": "Classical",
+          "grade": 2
+        },
+        {
+          "remedy": "Gelsemium sempervirens",
+          "id": 293,
+          "source": "Classical",
+          "grade": 2
+        },
+        {
+          "remedy": "Calcarea fluorica",
+          "id": 318,
+          "source": "Classical",
+          "grade": 3
+        },
+        {
+          "remedy": "Rhus toxicodendron",
+          "id": 343,
+          "source": "Classical",
+          "grade": 3
+        },
+        {
+          "remedy": "Mercurius solubilis",
+          "id": 368,
+          "source": "Classical",
+          "grade": 2
+        },
+        {
+          "remedy": "Mercurius vivus",
+          "id": 393,
+          "source": "Classical",
+          "grade": 1
+        },
+        {
+          "remedy": "Kali bichromicum",
+          "id": 418,
+          "source": "Classical",
+          "grade": 3
+        },
+        {
+          "remedy": "Sulphur",
+          "id": 443,
+          "source": "Classical",
+          "grade": 3
+        },
+        {
+          "remedy": "China officinalis",
+          "id": 468,
+          "source": "Classical",
+          "grade": 2
+        },
+        {
+          "remedy": "Gelsemium sempervirens",
+          "id": 493,
+          "source": "Classical",
+          "grade": 1
+        }
+      ]
+    },
+    "Throat": {
+      "sore": [
+        {
+          "remedy": "Kali muriaticum",
+          "id": 19,
+          "source": "Eclectic",
+          "grade": 1
+        },
+        {
+          "remedy": "Calcarea carbonica",
+          "id": 44,
+          "source": "Eclectic",
+          "grade": 1
+        },
+        {
+          "remedy": "Carbo vegetabilis",
+          "id": 69,
+          "source": "Eclectic",
+          "grade": 3
+        },
+        {
+          "remedy": "Calcarea phosphorica",
+          "id": 94,
+          "source": "Eclectic",
+          "grade": 3
+        },
+        {
+          "remedy": "Kreosotum",
+          "id": 119,
+          "source": "Eclectic",
+          "grade": 2
+        },
+        {
+          "remedy": "Ledum palustre",
+          "id": 144,
+          "source": "Eclectic",
+          "grade": 3
+        },
+        {
+          "remedy": "Sepia",
+          "id": 169,
+          "source": "Eclectic",
+          "grade": 1
+        },
+        {
+          "remedy": "Phytolacca decandra",
+          "id": 194,
+          "source": "Eclectic",
+          "grade": 3
+        },
+        {
+          "remedy": "Kali muriaticum",
+          "id": 219,
+          "source": "Eclectic",
+          "grade": 3
+        },
+        {
+          "remedy": "Calcarea carbonica",
+          "id": 244,
+          "source": "Eclectic",
+          "grade": 1
+        },
+        {
+          "remedy": "Carbo vegetabilis",
+          "id": 269,
+          "source": "Eclectic",
+          "grade": 1
+        },
+        {
+          "remedy": "Calcarea phosphorica",
+          "id": 294,
+          "source": "Eclectic",
+          "grade": 3
+        },
+        {
+          "remedy": "Kreosotum",
+          "id": 319,
+          "source": "Eclectic",
+          "grade": 2
+        },
+        {
+          "remedy": "Ledum palustre",
+          "id": 344,
+          "source": "Eclectic",
+          "grade": 3
+        },
+        {
+          "remedy": "Sepia",
+          "id": 369,
+          "source": "Eclectic",
+          "grade": 2
+        },
+        {
+          "remedy": "Phytolacca decandra",
+          "id": 394,
+          "source": "Eclectic",
+          "grade": 3
+        },
+        {
+          "remedy": "Kali muriaticum",
+          "id": 419,
+          "source": "Eclectic",
+          "grade": 1
+        },
+        {
+          "remedy": "Calcarea carbonica",
+          "id": 444,
+          "source": "Eclectic",
+          "grade": 1
+        },
+        {
+          "remedy": "Carbo vegetabilis",
+          "id": 469,
+          "source": "Eclectic",
+          "grade": 2
+        },
+        {
+          "remedy": "Calcarea phosphorica",
+          "id": 494,
+          "source": "Eclectic",
+          "grade": 2
+        }
+      ]
+    },
+    "Urinary": {
+      "burning": [
+        {
+          "remedy": "Kali phosphoricum",
+          "id": 20,
+          "source": "Organon",
+          "grade": 2
+        },
+        {
+          "remedy": "Nux vomica",
+          "id": 45,
+          "source": "Organon",
+          "grade": 1
+        },
+        {
+          "remedy": "Dulcamara",
+          "id": 70,
+          "source": "Organon",
+          "grade": 1
+        },
+        {
+          "remedy": "Silicea",
+          "id": 95,
+          "source": "Organon",
+          "grade": 1
+        },
+        {
+          "remedy": "Natrum sulphuricum",
+          "id": 120,
+          "source": "Organon",
+          "grade": 2
+        },
+        {
+          "remedy": "Aconitum napellus",
+          "id": 145,
+          "source": "Organon",
+          "grade": 1
+        },
+        {
+          "remedy": "Natrum muriaticum",
+          "id": 170,
+          "source": "Organon",
+          "grade": 1
+        },
+        {
+          "remedy": "Platinum",
+          "id": 195,
+          "source": "Organon",
+          "grade": 1
+        },
+        {
+          "remedy": "Kali phosphoricum",
+          "id": 220,
+          "source": "Organon",
+          "grade": 2
+        },
+        {
+          "remedy": "Nux vomica",
+          "id": 245,
+          "source": "Organon",
+          "grade": 3
+        },
+        {
+          "remedy": "Dulcamara",
+          "id": 270,
+          "source": "Organon",
+          "grade": 2
+        },
+        {
+          "remedy": "Silicea",
+          "id": 295,
+          "source": "Organon",
+          "grade": 3
+        },
+        {
+          "remedy": "Natrum sulphuricum",
+          "id": 320,
+          "source": "Organon",
+          "grade": 3
+        },
+        {
+          "remedy": "Aconitum napellus",
+          "id": 345,
+          "source": "Organon",
+          "grade": 3
+        },
+        {
+          "remedy": "Natrum muriaticum",
+          "id": 370,
+          "source": "Organon",
+          "grade": 1
+        },
+        {
+          "remedy": "Platinum",
+          "id": 395,
+          "source": "Organon",
+          "grade": 3
+        },
+        {
+          "remedy": "Kali phosphoricum",
+          "id": 420,
+          "source": "Organon",
+          "grade": 3
+        },
+        {
+          "remedy": "Nux vomica",
+          "id": 445,
+          "source": "Organon",
+          "grade": 3
+        },
+        {
+          "remedy": "Dulcamara",
+          "id": 470,
+          "source": "Organon",
+          "grade": 1
+        },
+        {
+          "remedy": "Silicea",
+          "id": 495,
+          "source": "Organon",
+          "grade": 1
+        }
+      ]
+    },
+    "Mind": {
+      "confusion": [
+        {
+          "remedy": "Bryonia alba",
+          "id": 21,
+          "source": "Hahnemannian",
+          "grade": 3
+        },
+        {
+          "remedy": "Ignatia amara",
+          "id": 46,
+          "source": "Hahnemannian",
+          "grade": 2
+        },
+        {
+          "remedy": "Hepar sulphuris",
+          "id": 71,
+          "source": "Hahnemannian",
+          "grade": 3
+        },
+        {
+          "remedy": "Thuja occidentalis",
+          "id": 96,
+          "source": "Hahnemannian",
+          "grade": 2
+        },
+        {
+          "remedy": "Arsenicum album",
+          "id": 121,
+          "source": "Hahnemannian",
+          "grade": 3
+        },
+        {
+          "remedy": "Antimonium tartaricum",
+          "id": 146,
+          "source": "Hahnemannian",
+          "grade": 2
+        },
+        {
+          "remedy": "Lachesis mutus",
+          "id": 171,
+          "source": "Hahnemannian",
+          "grade": 1
+        },
+        {
+          "remedy": "Podophyllum peltatum",
+          "id": 196,
+          "source": "Hahnemannian",
+          "grade": 1
+        },
+        {
+          "remedy": "Bryonia alba",
+          "id": 221,
+          "source": "Hahnemannian",
+          "grade": 2
+        },
+        {
+          "remedy": "Ignatia amara",
+          "id": 246,
+          "source": "Hahnemannian",
+          "grade": 3
+        },
+        {
+          "remedy": "Hepar sulphuris",
+          "id": 271,
+          "source": "Hahnemannian",
+          "grade": 2
+        },
+        {
+          "remedy": "Thuja occidentalis",
+          "id": 296,
+          "source": "Hahnemannian",
+          "grade": 3
+        },
+        {
+          "remedy": "Arsenicum album",
+          "id": 321,
+          "source": "Hahnemannian",
+          "grade": 3
+        },
+        {
+          "remedy": "Antimonium tartaricum",
+          "id": 346,
+          "source": "Hahnemannian",
+          "grade": 1
+        },
+        {
+          "remedy": "Lachesis mutus",
+          "id": 371,
+          "source": "Hahnemannian",
+          "grade": 2
+        },
+        {
+          "remedy": "Podophyllum peltatum",
+          "id": 396,
+          "source": "Hahnemannian",
+          "grade": 2
+        },
+        {
+          "remedy": "Bryonia alba",
+          "id": 421,
+          "source": "Hahnemannian",
+          "grade": 2
+        },
+        {
+          "remedy": "Ignatia amara",
+          "id": 446,
+          "source": "Hahnemannian",
+          "grade": 3
+        },
+        {
+          "remedy": "Hepar sulphuris",
+          "id": 471,
+          "source": "Hahnemannian",
+          "grade": 1
+        },
+        {
+          "remedy": "Thuja occidentalis",
+          "id": 496,
+          "source": "Hahnemannian",
+          "grade": 3
+        }
+      ],
+      "weeping": [
+        {
+          "remedy": "Ruta graveolens",
+          "id": 22,
+          "source": "Kentian",
+          "grade": 1
+        },
+        {
+          "remedy": "Belladonna",
+          "id": 47,
+          "source": "Kentian",
+          "grade": 1
+        },
+        {
+          "remedy": "Lycopodium clavatum",
+          "id": 72,
+          "source": "Kentian",
+          "grade": 3
+        },
+        {
+          "remedy": "Staphysagria",
+          "id": 97,
+          "source": "Kentian",
+          "grade": 2
+        },
+        {
+          "remedy": "Pulsatilla nigricans",
+          "id": 122,
+          "source": "Kentian",
+          "grade": 3
+        },
+        {
+          "remedy": "Arnica montana",
+          "id": 147,
+          "source": "Kentian",
+          "grade": 2
+        },
+        {
+          "remedy": "Phosphorus",
+          "id": 172,
+          "source": "Kentian",
+          "grade": 2
+        },
+        {
+          "remedy": "Psorinum",
+          "id": 197,
+          "source": "Kentian",
+          "grade": 1
+        },
+        {
+          "remedy": "Ruta graveolens",
+          "id": 222,
+          "source": "Kentian",
+          "grade": 2
+        },
+        {
+          "remedy": "Belladonna",
+          "id": 247,
+          "source": "Kentian",
+          "grade": 2
+        },
+        {
+          "remedy": "Lycopodium clavatum",
+          "id": 272,
+          "source": "Kentian",
+          "grade": 3
+        },
+        {
+          "remedy": "Staphysagria",
+          "id": 297,
+          "source": "Kentian",
+          "grade": 2
+        },
+        {
+          "remedy": "Pulsatilla nigricans",
+          "id": 322,
+          "source": "Kentian",
+          "grade": 1
+        },
+        {
+          "remedy": "Arnica montana",
+          "id": 347,
+          "source": "Kentian",
+          "grade": 2
+        },
+        {
+          "remedy": "Phosphorus",
+          "id": 372,
+          "source": "Kentian",
+          "grade": 1
+        },
+        {
+          "remedy": "Psorinum",
+          "id": 397,
+          "source": "Kentian",
+          "grade": 1
+        },
+        {
+          "remedy": "Ruta graveolens",
+          "id": 422,
+          "source": "Kentian",
+          "grade": 2
+        },
+        {
+          "remedy": "Belladonna",
+          "id": 447,
+          "source": "Kentian",
+          "grade": 1
+        },
+        {
+          "remedy": "Lycopodium clavatum",
+          "id": 472,
+          "source": "Kentian",
+          "grade": 2
+        },
+        {
+          "remedy": "Staphysagria",
+          "id": 497,
+          "source": "Kentian",
+          "grade": 1
+        }
+      ]
+    },
+    "Respiration": {
+      "labored": [
+        {
+          "remedy": "Rhus toxicodendron",
+          "id": 23,
+          "source": "Classical",
+          "grade": 2
+        },
+        {
+          "remedy": "Mercurius solubilis",
+          "id": 48,
+          "source": "Classical",
+          "grade": 1
+        },
+        {
+          "remedy": "Mercurius vivus",
+          "id": 73,
+          "source": "Classical",
+          "grade": 1
+        },
+        {
+          "remedy": "Kali bichromicum",
+          "id": 98,
+          "source": "Classical",
+          "grade": 3
+        },
+        {
+          "remedy": "Sulphur",
+          "id": 123,
+          "source": "Classical",
+          "grade": 1
+        },
+        {
+          "remedy": "China officinalis",
+          "id": 148,
+          "source": "Classical",
+          "grade": 2
+        },
+        {
+          "remedy": "Gelsemium sempervirens",
+          "id": 173,
+          "source": "Classical",
+          "grade": 2
+        },
+        {
+          "remedy": "Calcarea fluorica",
+          "id": 198,
+          "source": "Classical",
+          "grade": 3
+        },
+        {
+          "remedy": "Rhus toxicodendron",
+          "id": 223,
+          "source": "Classical",
+          "grade": 3
+        },
+        {
+          "remedy": "Mercurius solubilis",
+          "id": 248,
+          "source": "Classical",
+          "grade": 2
+        },
+        {
+          "remedy": "Mercurius vivus",
+          "id": 273,
+          "source": "Classical",
+          "grade": 3
+        },
+        {
+          "remedy": "Kali bichromicum",
+          "id": 298,
+          "source": "Classical",
+          "grade": 2
+        },
+        {
+          "remedy": "Sulphur",
+          "id": 323,
+          "source": "Classical",
+          "grade": 3
+        },
+        {
+          "remedy": "China officinalis",
+          "id": 348,
+          "source": "Classical",
+          "grade": 1
+        },
+        {
+          "remedy": "Gelsemium sempervirens",
+          "id": 373,
+          "source": "Classical",
+          "grade": 2
+        },
+        {
+          "remedy": "Calcarea fluorica",
+          "id": 398,
+          "source": "Classical",
+          "grade": 1
+        },
+        {
+          "remedy": "Rhus toxicodendron",
+          "id": 423,
+          "source": "Classical",
+          "grade": 3
+        },
+        {
+          "remedy": "Mercurius solubilis",
+          "id": 448,
+          "source": "Classical",
+          "grade": 1
+        },
+        {
+          "remedy": "Mercurius vivus",
+          "id": 473,
+          "source": "Classical",
+          "grade": 3
+        },
+        {
+          "remedy": "Kali bichromicum",
+          "id": 498,
+          "source": "Classical",
+          "grade": 1
+        }
+      ]
+    },
+    "Fever": {
+      "intermittent": [
+        {
+          "remedy": "Ledum palustre",
+          "id": 24,
+          "source": "Eclectic",
+          "grade": 1
+        },
+        {
+          "remedy": "Sepia",
+          "id": 49,
+          "source": "Eclectic",
+          "grade": 3
+        },
+        {
+          "remedy": "Phytolacca decandra",
+          "id": 74,
+          "source": "Eclectic",
+          "grade": 1
+        },
+        {
+          "remedy": "Kali muriaticum",
+          "id": 99,
+          "source": "Eclectic",
+          "grade": 3
+        },
+        {
+          "remedy": "Calcarea carbonica",
+          "id": 124,
+          "source": "Eclectic",
+          "grade": 2
+        },
+        {
+          "remedy": "Carbo vegetabilis",
+          "id": 149,
+          "source": "Eclectic",
+          "grade": 2
+        },
+        {
+          "remedy": "Calcarea phosphorica",
+          "id": 174,
+          "source": "Eclectic",
+          "grade": 3
+        },
+        {
+          "remedy": "Kreosotum",
+          "id": 199,
+          "source": "Eclectic",
+          "grade": 2
+        },
+        {
+          "remedy": "Ledum palustre",
+          "id": 224,
+          "source": "Eclectic",
+          "grade": 2
+        },
+        {
+          "remedy": "Sepia",
+          "id": 249,
+          "source": "Eclectic",
+          "grade": 3
+        },
+        {
+          "remedy": "Phytolacca decandra",
+          "id": 274,
+          "source": "Eclectic",
+          "grade": 3
+        },
+        {
+          "remedy": "Kali muriaticum",
+          "id": 299,
+          "source": "Eclectic",
+          "grade": 3
+        },
+        {
+          "remedy": "Calcarea carbonica",
+          "id": 324,
+          "source": "Eclectic",
+          "grade": 3
+        },
+        {
+          "remedy": "Carbo vegetabilis",
+          "id": 349,
+          "source": "Eclectic",
+          "grade": 3
+        },
+        {
+          "remedy": "Calcarea phosphorica",
+          "id": 374,
+          "source": "Eclectic",
+          "grade": 3
+        },
+        {
+          "remedy": "Kreosotum",
+          "id": 399,
+          "source": "Eclectic",
+          "grade": 2
+        },
+        {
+          "remedy": "Ledum palustre",
+          "id": 424,
+          "source": "Eclectic",
+          "grade": 1
+        },
+        {
+          "remedy": "Sepia",
+          "id": 449,
+          "source": "Eclectic",
+          "grade": 1
+        },
+        {
+          "remedy": "Phytolacca decandra",
+          "id": 474,
+          "source": "Eclectic",
+          "grade": 1
+        },
+        {
+          "remedy": "Kali muriaticum",
+          "id": 499,
+          "source": "Eclectic",
+          "grade": 1
+        }
+      ],
+      "high": [
+        {
+          "remedy": "Aconitum napellus",
+          "id": 25,
+          "source": "Organon",
+          "grade": 3
+        },
+        {
+          "remedy": "Natrum muriaticum",
+          "id": 50,
+          "source": "Organon",
+          "grade": 1
+        },
+        {
+          "remedy": "Platinum",
+          "id": 75,
+          "source": "Organon",
+          "grade": 2
+        },
+        {
+          "remedy": "Kali phosphoricum",
+          "id": 100,
+          "source": "Organon",
+          "grade": 2
+        },
+        {
+          "remedy": "Nux vomica",
+          "id": 125,
+          "source": "Organon",
+          "grade": 3
+        },
+        {
+          "remedy": "Dulcamara",
+          "id": 150,
+          "source": "Organon",
+          "grade": 1
+        },
+        {
+          "remedy": "Silicea",
+          "id": 175,
+          "source": "Organon",
+          "grade": 1
+        },
+        {
+          "remedy": "Natrum sulphuricum",
+          "id": 200,
+          "source": "Organon",
+          "grade": 3
+        },
+        {
+          "remedy": "Aconitum napellus",
+          "id": 225,
+          "source": "Organon",
+          "grade": 1
+        },
+        {
+          "remedy": "Natrum muriaticum",
+          "id": 250,
+          "source": "Organon",
+          "grade": 2
+        },
+        {
+          "remedy": "Platinum",
+          "id": 275,
+          "source": "Organon",
+          "grade": 2
+        },
+        {
+          "remedy": "Kali phosphoricum",
+          "id": 300,
+          "source": "Organon",
+          "grade": 2
+        },
+        {
+          "remedy": "Nux vomica",
+          "id": 325,
+          "source": "Organon",
+          "grade": 3
+        },
+        {
+          "remedy": "Dulcamara",
+          "id": 350,
+          "source": "Organon",
+          "grade": 2
+        },
+        {
+          "remedy": "Silicea",
+          "id": 375,
+          "source": "Organon",
+          "grade": 2
+        },
+        {
+          "remedy": "Natrum sulphuricum",
+          "id": 400,
+          "source": "Organon",
+          "grade": 3
+        },
+        {
+          "remedy": "Aconitum napellus",
+          "id": 425,
+          "source": "Organon",
+          "grade": 3
+        },
+        {
+          "remedy": "Natrum muriaticum",
+          "id": 450,
+          "source": "Organon",
+          "grade": 3
+        },
+        {
+          "remedy": "Platinum",
+          "id": 475,
+          "source": "Organon",
+          "grade": 3
+        },
+        {
+          "remedy": "Kali phosphoricum",
+          "id": 500,
+          "source": "Organon",
+          "grade": 3
+        }
+      ]
+    }
+  }
+}
