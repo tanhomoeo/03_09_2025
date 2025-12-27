@@ -14,6 +14,7 @@ import type { Chapter, Rubric, Remedy } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { Badge } from '../ui/badge';
 import { Dialog, DialogTrigger } from '../ui/dialog';
+import { useDebounce } from '@/hooks/use-debounce';
 
 const RemedyDetailsDialogContent = dynamic(() =>
   import('@/components/remedy-details-dialog-content').then((mod) => mod.RemedyDetailsDialogContent),
@@ -184,14 +185,15 @@ export const RepertoryBrowser: React.FC<RepertoryBrowserProps> = ({ chapters = [
   const [selectedChapter, setSelectedChapter] = useState<Chapter | null>(chapters.length > 0 ? chapters[0] : null);
   const [searchTerm, setSearchTerm] = useState('');
   const [language, setLanguage] = useState<Language>('bn');
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
   
   const filteredRubrics = useMemo(() => {
     if (!selectedChapter) return [];
-    if (searchTerm) {
-      return searchInRubrics(selectedChapter.rubrics, searchTerm, language);
+    if (debouncedSearchTerm) {
+      return searchInRubrics(selectedChapter.rubrics, debouncedSearchTerm, language);
     }
     return selectedChapter.rubrics || [];
-  }, [searchTerm, selectedChapter, language]);
+  }, [debouncedSearchTerm, selectedChapter, language]);
 
   const handleChapterSelect = (chapter: Chapter) => {
     setSelectedChapter(chapter);

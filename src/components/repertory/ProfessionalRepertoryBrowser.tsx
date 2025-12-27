@@ -1,22 +1,22 @@
 'use client';
 
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
-  Search, Filter, Grid, List, Star, Heart, Brain, Eye, User, 
-  Wind, Mic, Droplets, Moon, Thermometer, Snowflake, Zap,
-  ChevronRight, ChevronDown, Plus, Minus, ArrowUpDown,
+  Search, Filter, Grid, List, Star, Brain, Eye, User,
+  Wind, Mic, Droplets, Moon, Thermometer, Zap,
+  Plus, Minus,
   BarChart3, PieChart, TrendingUp, BookOpen, Save, Share2,
-  Download, Settings, HelpCircle, RefreshCw, X
+  Download, X, Bone
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import dynamic from 'next/dynamic';
+import { useDebounce } from '@/hooks/use-debounce';
 
 const ProfessionalRemedyDetails = dynamic(() =>
   import('./ProfessionalRemedyDetails').then((mod) => mod.ProfessionalRemedyDetails),
@@ -43,14 +43,6 @@ interface Symptom {
   prevalence?: number;
 }
 
-interface Category {
-  id: string;
-  name: string;
-  icon: React.ReactNode;
-  symptoms: Symptom[];
-  totalSymptoms: number;
-}
-
 interface ProfessionalRepertoryBrowserProps {
   data: any;
 }
@@ -58,13 +50,12 @@ interface ProfessionalRepertoryBrowserProps {
 export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowserProps> = ({ data }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
   const [viewMode, setViewMode] = useState<'list' | 'grid' | 'analytical'>('list');
   const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<'name' | 'frequency' | 'remedies'>('name');
   const [filterGrade, setFilterGrade] = useState<number[]>([1, 2, 3]);
   const [showFilters, setShowFilters] = useState(false);
-  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
-  const [analysisMode, setAnalysisMode] = useState<'frequency' | 'cross' | 'relationship'>('frequency');
 
   // Process the enhanced database data
   const categories = useMemo(() => {
@@ -99,8 +90,8 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
     }
 
     // Search filter
-    if (searchTerm) {
-      const searchLower = searchTerm.toLowerCase();
+    if (debouncedSearchTerm) {
+      const searchLower = debouncedSearchTerm.toLowerCase();
       filtered = filtered.map(category => ({
         ...category,
         symptoms: category.symptoms.filter(symptom => 
@@ -135,7 +126,7 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
     }));
 
     return filtered;
-  }, [categories, selectedCategory, searchTerm, filterGrade, sortBy]);
+  }, [categories, selectedCategory, debouncedSearchTerm, filterGrade, sortBy]);
 
   const toggleSymptomSelection = (symptomId: string) => {
     setSelectedSymptoms(prev => 
@@ -143,18 +134,6 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
         ? prev.filter(id => id !== symptomId)
         : [...prev, symptomId]
     );
-  };
-
-  const toggleCategoryExpansion = (categoryId: string) => {
-    setExpandedCategories(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(categoryId)) {
-        newSet.delete(categoryId);
-      } else {
-        newSet.add(categoryId);
-      }
-      return newSet;
-    });
   };
 
   const getCategoryIcon = (categoryName: string): React.ReactNode => {
@@ -186,7 +165,6 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
 
   const SymptomCard: React.FC<{ symptom: Symptom }> = ({ symptom }) => {
     const isSelected = selectedSymptoms.includes(symptom.id);
-    const isExpanded = expandedCategories.has(symptom.category);
 
     return (
       <Card className={cn(
@@ -278,7 +256,7 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
-              {analysisData.topRemedies.map(([remedy, count], index) => (
+            {analysisData.topRemedies.map(([remedy, count]) => (
                 <div key={remedy} className="flex items-center justify-between">
                   <span className="text-sm">{remedy}</span>
                   <Badge variant="secondary">{count}</Badge>
