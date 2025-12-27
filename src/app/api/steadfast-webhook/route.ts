@@ -33,8 +33,10 @@ export async function POST(request: NextRequest) {
       }
 
       case 'tracking_update':
-        // TODO: Implement logic to add a new tracking event to your database
-        // For example: await addTrackingEvent(payload.consignment_id, payload.tracking_message);
+        await addTrackingEvent(
+          payload.consignment_id,
+          payload.tracking_message,
+        );
         console.log(`Received Tracking Update: Consignment ID ${payload.consignment_id}: ${payload.tracking_message}`);
         break;
 

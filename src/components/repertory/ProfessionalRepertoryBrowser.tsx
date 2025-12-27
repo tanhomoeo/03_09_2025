@@ -205,8 +205,8 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-1">
-            {symptom.remedies.slice(0, 8).map((remedy, index) => (
-              <Dialog key={index}>
+            {symptom.remedies.slice(0, 8).map((remedy, idx) => (
+              <Dialog key={idx}>
                 <DialogTrigger asChild>
                   <Button
                     variant="outline"
@@ -251,10 +251,11 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
           gradeDistribution[remedy.grade] = (gradeDistribution[remedy.grade] || 0) + 1;
         });
       });
+    });
 
-      const topRemedies = Object.entries(remedyFrequency)
-        .sort(([,a], [,b]) => b - a)
-        .slice(0, 10);
+    const topRemedies = Object.entries(remedyFrequency)
+      .sort(([,a], [,b]) => b - a)
+      .slice(0, 10);
 
       return { topRemedies, gradeDistribution, totalSymptoms: allSymptoms.length };
     }, []);
@@ -312,16 +313,52 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
                 <span className="text-sm">Total Symptoms</span>
                 <Badge variant="secondary">{analysisData.totalSymptoms}</Badge>
               </div>
-              <div className="flex justify-between">
-                <span className="text-sm">Selected Symptoms</span>
-                <Badge variant="secondary">{selectedSymptoms.length}</Badge>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <PieChart className="h-5 w-5" />
+            Grade Distribution
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+            {Object.entries(analysisData.gradeDistribution).map(([grade, count]) => (
+              <div key={grade} className="flex items-center justify-between">
+                <span className="text-sm">Grade {grade}</span>
+                <Badge variant="secondary">{count}</Badge>
               </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <BarChart3 className="h-5 w-5" />
+            Statistics
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+            <div className="flex justify-between">
+              <span className="text-sm">Total Symptoms</span>
+              <Badge variant="secondary">{analysisData.totalSymptoms}</Badge>
             </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  };
+            <div className="flex justify-between">
+              <span className="text-sm">Selected Symptoms</span>
+              <Badge variant="secondary">{selectedSymptoms.length}</Badge>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
 
   return (
     <div className="space-y-6">
@@ -517,7 +554,7 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
         {/* Main content area */}  
         <div className="lg:col-span-3">
           {viewMode === 'analytical' ? (
-            <AnalyticalView />
+            analyticalView
           ) : (
             <Card>
               <CardHeader>
