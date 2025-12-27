@@ -214,6 +214,11 @@ export interface SteadfastOrder {
   delivery_type?: 0 | 1;
 }
 
+export interface TrackingEvent {
+  message: string;
+  timestamp: string;
+}
+
 export interface SteadfastConsignment {
   consignment_id: number;
   invoice: string;
@@ -226,6 +231,7 @@ export interface SteadfastConsignment {
   note: string | null;
   created_at: string; // ISO date string
   updated_at: string; // ISO date string
+  tracking_history?: TrackingEvent[];
 }
 
 export interface SteadfastStatus {

@@ -1,6 +1,7 @@
 
 import { type NextRequest, NextResponse } from 'next/server';
 import type { DeliveryStatusPayload, TrackingUpdatePayload } from '@/lib/types';
+import { addTrackingEvent } from '@/lib/firestoreService';
 
 // This is the secret key that Steadfast will use to authenticate their requests.
 // It should be stored securely in your environment variables.
@@ -26,8 +27,10 @@ export async function POST(request: NextRequest) {
         break;
 
       case 'tracking_update':
-        // TODO: Implement logic to add a new tracking event to your database
-        // For example: await addTrackingEvent(payload.consignment_id, payload.tracking_message);
+        await addTrackingEvent(
+          payload.consignment_id,
+          payload.tracking_message,
+        );
         console.log(`Received Tracking Update: Consignment ID ${payload.consignment_id}: ${payload.tracking_message}`);
         break;
 
