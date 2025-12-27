@@ -245,6 +245,7 @@ export interface SteadfastBalance {
 }
 
 // Bulk order types
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface SteadfastBulkOrderItem extends SteadfastOrder {}
 export interface SteadfastBulkOrderResultItem {
   invoice: string;

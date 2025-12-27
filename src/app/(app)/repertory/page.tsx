@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { PageHeaderCard } from '@/components/shared/PageHeaderCard';
-import { BookMarked, Loader2, Stethoscope, Search, Database, Brain, Heart, Zap } from 'lucide-react';
+import { Loader2, Database, Brain, Heart, Zap } from 'lucide-react';
 import { ProfessionalRepertoryBrowser } from '@/components/repertory/ProfessionalRepertoryBrowser';
 import dynamic from 'next/dynamic';
 

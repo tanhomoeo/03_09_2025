@@ -1,18 +1,17 @@
 'use client';
 
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
-  Search, Filter, Grid, List, Star, Heart, Brain, Eye, User, 
-  Wind, Mic, Droplets, Moon, Thermometer, Snowflake, Zap,
-  ChevronRight, ChevronDown, Plus, Minus, ArrowUpDown,
+  Search, Filter, Grid, List, Star, Brain, Eye, User,
+  Wind, Mic, Droplets, Moon, Thermometer, Zap,
+  Plus, Minus,
   BarChart3, PieChart, TrendingUp, BookOpen, Save, Share2,
-  Download, Settings, HelpCircle, RefreshCw, X
+  Download, X, Bone
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
@@ -43,6 +42,7 @@ interface Symptom {
   prevalence?: number;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface Category {
   id: string;
   name: string;
@@ -64,7 +64,6 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
   const [filterGrade, setFilterGrade] = useState<number[]>([1, 2, 3]);
   const [showFilters, setShowFilters] = useState(false);
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
-  const [analysisMode, setAnalysisMode] = useState<'frequency' | 'cross' | 'relationship'>('frequency');
 
   // Process the enhanced database data
   const categories = useMemo(() => {
@@ -95,34 +94,34 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
 
     // Category filter
     if (selectedCategory !== 'all') {
-      filtered = filtered.filter(cat => cat.id === selectedCategory);
+      filtered = filtered.filter((cat: Category) => cat.id === selectedCategory);
     }
 
     // Search filter
     if (searchTerm) {
       const searchLower = searchTerm.toLowerCase();
-      filtered = filtered.map(category => ({
+      filtered = filtered.map((category: Category) => ({
         ...category,
-        symptoms: category.symptoms.filter(symptom => 
+        symptoms: category.symptoms.filter((symptom: Symptom) =>
           symptom.description.toLowerCase().includes(searchLower) ||
           symptom.category.toLowerCase().includes(searchLower)
         )
-      })).filter(category => category.symptoms.length > 0);
+      })).filter((category: Category) => category.symptoms.length > 0);
     }
 
     // Grade filter
-    filtered = filtered.map(category => ({
+    filtered = filtered.map((category: Category) => ({
       ...category,
-      symptoms: category.symptoms.map(symptom => ({
+      symptoms: category.symptoms.map((symptom: Symptom) => ({
         ...symptom,
-        remedies: symptom.remedies.filter(remedy => filterGrade.includes(remedy.grade))
-      })).filter(symptom => symptom.remedies.length > 0)
-    })).filter(category => category.symptoms.length > 0);
+        remedies: symptom.remedies.filter((remedy: Remedy) => filterGrade.includes(remedy.grade))
+      })).filter((symptom: Symptom) => symptom.remedies.length > 0)
+    })).filter((category: Category) => category.symptoms.length > 0);
 
     // Sort symptoms
-    filtered = filtered.map(category => ({
+    filtered = filtered.map((category: Category) => ({
       ...category,
-      symptoms: [...category.symptoms].sort((a, b) => {
+      symptoms: [...category.symptoms].sort((a: Symptom, b: Symptom) => {
         switch (sortBy) {
           case 'frequency':
             return (b.prevalence || 0) - (a.prevalence || 0);
@@ -145,7 +144,7 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
     );
   };
 
-  const toggleCategoryExpansion = (categoryId: string) => {
+  const _toggleCategoryExpansion = (categoryId: string) => {
     setExpandedCategories(prev => {
       const newSet = new Set(prev);
       if (newSet.has(categoryId)) {
@@ -186,7 +185,7 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
 
   const SymptomCard: React.FC<{ symptom: Symptom }> = ({ symptom }) => {
     const isSelected = selectedSymptoms.includes(symptom.id);
-    const isExpanded = expandedCategories.has(symptom.category);
+    const _isExpanded = expandedCategories.has(symptom.category);
 
     return (
       <Card className={cn(
@@ -216,8 +215,8 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-1">
-            {symptom.remedies.slice(0, 8).map((remedy, index) => (
-              <Dialog key={index}>
+            {symptom.remedies.slice(0, 8).map((remedy) => (
+              <Dialog key={remedy.name}>
                 <DialogTrigger asChild>
                   <Button
                     variant="outline"
@@ -249,12 +248,12 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
 
   const AnalyticalView: React.FC = () => {
     const analysisData = useMemo(() => {
-      const allSymptoms = filteredData.flatMap(cat => cat.symptoms);
+      const allSymptoms = filteredData.flatMap((cat: Category) => cat.symptoms);
       const remedyFrequency: { [key: string]: number } = {};
       const gradeDistribution: { [key: number]: number } = { 1: 0, 2: 0, 3: 0 };
       
-      allSymptoms.forEach(symptom => {
-        symptom.remedies.forEach(remedy => {
+      allSymptoms.forEach((symptom: Symptom) => {
+        symptom.remedies.forEach((remedy: Remedy) => {
           remedyFrequency[remedy.name] = (remedyFrequency[remedy.name] || 0) + 1;
           gradeDistribution[remedy.grade] = (gradeDistribution[remedy.grade] || 0) + 1;
         });
@@ -278,7 +277,7 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
-              {analysisData.topRemedies.map(([remedy, count], index) => (
+              {analysisData.topRemedies.map(([remedy, count]) => (
                 <div key={remedy} className="flex items-center justify-between">
                   <span className="text-sm">{remedy}</span>
                   <Badge variant="secondary">{count}</Badge>
@@ -462,7 +461,7 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
                     className="w-full p-2 border rounded-md"
                   >
                     <option value="all">All Categories</option>
-                    {categories.map(cat => (
+              {categories.map((cat: Category) => (
                       <option key={cat.id} value={cat.id}>{cat.name}</option>
                     ))}
                   </select>
@@ -495,10 +494,10 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
                     <Star className="h-4 w-4 mr-2" />
                     All Categories
                     <Badge variant="secondary" className="ml-auto">
-                      {categories.reduce((sum, cat) => sum + cat.totalSymptoms, 0)}
+                      {categories.reduce((sum: number, cat: Category) => sum + cat.totalSymptoms, 0)}
                     </Badge>
                   </Button>
-                  {categories.map(category => (
+                  {categories.map((category: Category) => (
                     <Button
                       key={category.id}
                       variant={selectedCategory === category.id ? 'default' : 'ghost'}
@@ -528,7 +527,7 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
                 <CardTitle className="flex items-center justify-between">
                   <span>Symptoms & Remedies</span>
                   <Badge variant="secondary">
-                    {filteredData.reduce((sum, cat) => sum + cat.symptoms.length, 0)} symptoms
+                    {filteredData.reduce((sum: number, cat: Category) => sum + cat.symptoms.length, 0)} symptoms
                   </Badge>
                 </CardTitle>
               </CardHeader>
@@ -538,8 +537,8 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
                     "gap-4",
                     viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2' : 'space-y-4'
                   )}>
-                    {filteredData.map(category => 
-                      category.symptoms.map(symptom => (
+                    {filteredData.map((category: Category) =>
+                      category.symptoms.map((symptom: Symptom) => (
                         <SymptomCard key={symptom.id} symptom={symptom} />
                       ))
                     )}
@@ -564,8 +563,8 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
             <div className="flex flex-wrap gap-2">
               {selectedSymptoms.map(symptomId => {
                 const symptom = filteredData
-                  .flatMap(cat => cat.symptoms)
-                  .find(s => s.id === symptomId);
+                  .flatMap((cat: Category) => cat.symptoms)
+                  .find((s: Symptom) => s.id === symptomId);
                 return symptom ? (
                   <Badge key={symptomId} variant="secondary" className="text-sm">
                     {symptom.description}
