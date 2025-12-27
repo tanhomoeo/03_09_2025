@@ -14,6 +14,7 @@ import {
   setDoc,
   or,
   limit,
+  arrayUnion,
 } from 'firebase/firestore';
 import type {
   Patient,
@@ -891,4 +892,28 @@ export const getMonthRange = (date: Date): { start: Date; end: Date } => {
   const start = startOfMonth(validDate);
   const end = endOfMonth(validDate);
   return { start, end };
+};
+
+export const addTrackingEvent = async (
+  consignmentId: number,
+  message: string,
+): Promise<boolean> => {
+  try {
+    const consignmentRef = doc(
+      getDbInstance(),
+      'consignments',
+      String(consignmentId),
+    );
+    await updateDoc(consignmentRef, {
+      tracking_history: arrayUnion({
+        message: message,
+        timestamp: new Date().toISOString(),
+      }),
+      updated_at: new Date().toISOString(),
+    });
+    return true;
+  } catch (error) {
+    console.error('Error adding tracking event: ', error);
+    return false;
+  }
 };
