@@ -245,7 +245,7 @@ export interface SteadfastBalance {
 }
 
 // Bulk order types
-export interface SteadfastBulkOrderItem extends SteadfastOrder {}
+export type SteadfastBulkOrderItem = SteadfastOrder;
 export interface SteadfastBulkOrderResultItem {
   invoice: string;
   recipient_name: string;

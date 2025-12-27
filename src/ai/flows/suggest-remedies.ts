@@ -89,11 +89,16 @@ export type SuggestRemediesOutput = z.infer<typeof SuggestRemediesOutputSchema>;
 
 const loadKnowledgeBase = (fileName: string): string => {
     try {
-        const fullPath = path.join(process.cwd(), 'src', 'ai', 'data', fileName);
-        return fs.readFileSync(fullPath, 'utf-8');
+        const fullPath = path.join(process.cwd(), 'public', 'data', fileName);
+        if (fs.existsSync(fullPath)) {
+            return fs.readFileSync(fullPath, 'utf-8');
+        } else {
+             console.warn(`Knowledge base file not found at ${fullPath}. AI will rely on internal knowledge.`);
+             return ''; // Return empty string to indicate missing source
+        }
     } catch (error) {
         console.error(`Error reading knowledge base file ${fileName}:`, error);
-        return `Error: Could not load ${fileName}.`;
+        return '';
     }
 };
 
@@ -125,6 +130,8 @@ Your tasks are:
 2.  **Best Repertory Suggestion**: Analyze the case as a whole and determine which knowledge source (Hahnemann's, Boericke's, Kent's, or your own general AI knowledge) appears most suited for finding the primary remedy for this specific patient. Provide a short justification for your choice in the 'bestRepertorySuggestion' field.
 
 3.  **Suggest Remedies**: Perform a comprehensive analysis using your categorized symptoms and FOUR distinct sources of information (Hahnemann, Boericke, Kent, and your general knowledge) to generate a single, unified list of remedy suggestions.
+
+    *Important Note:* If the provided knowledge base text for any specific Materia Medica (Hahnemann, Boericke, or Kent) is empty or unavailable, you MUST rely on your own extensive internal knowledge and training regarding that specific source to provide accurate analysis and remedy suggestions. Use your general AI knowledge to supplement any gaps.
 
     -   For each potential remedy, provide:
         a.  The medicine's name in English.

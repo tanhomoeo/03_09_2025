@@ -6,11 +6,10 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
-  Pill, Heart, Brain, Eye, User, Wind, Thermometer, 
-  Star, TrendingUp, BarChart3, Info, BookOpen,
-  ArrowLeft, Share2, Download, Plus, Minus
+  Pill, Heart, Brain, User,
+  Star, TrendingUp, Info, BookOpen,
+  ArrowLeft, Share2, Download
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
 
 interface RemedyDetails {
   name: string;
@@ -476,7 +475,7 @@ const getKeySymptoms = (remedyName: string): string[] => {
   return symptoms[remedyName] || ['Characteristic symptoms vary by individual case'];
 };
 
-const getMentalSymptoms = (remedyName: string[]): string[] => {
+const getMentalSymptoms = (_remedyName: string | string[]): string[] => {
   return [
     'Anxiety and restlessness',
     'Fear of death',
@@ -486,7 +485,7 @@ const getMentalSymptoms = (remedyName: string[]): string[] => {
   ];
 };
 
-const getPhysicalSymptoms = (remedyName: string): string[] => {
+const getPhysicalSymptoms = (_remedyName: string): string[] => {
   return [
     'Burning sensations',
     'Dryness of mucous membranes',
@@ -496,18 +495,18 @@ const getPhysicalSymptoms = (remedyName: string): string[] => {
   ];
 };
 
-const getModalities = (remedyName: string) => ({
+const getModalities = (_remedyName: string) => ({
   worse: ['Midnight', 'Cold', 'Alone', 'Motion', 'Noise'],
   better: ['Heat', 'Company', 'Rest', 'Warm drinks', 'Elevation']
 });
 
-const getRelationships = (remedyName: string) => ({
+const getRelationships = (_remedyName: string) => ({
   complementary: ['Phosphorus', 'Sulphur', 'Thuja'],
   follows_well: ['Arnica', 'Aconite', 'Belladonna'],
   antidote: ['Camphor', 'Opium', 'China']
 });
 
-const getPotencies = (remedyName: string): string[] => {
+const getPotencies = (_remedyName: string): string[] => {
   return ['6C', '30C', '200C', '1M', '10M'];
 };
 
@@ -523,10 +522,10 @@ const getSource = (remedyName: string): string => {
   return sources[remedyName] || 'Homeopathic';
 };
 
-const getToxicity = (remedyName: string): string => {
+const getToxicity = (_remedyName: string): string => {
   return 'Highly toxic in crude form, safe when potentized';
 };
 
-const getProvingInfo = (remedyName: string): string => {
+const getProvingInfo = (_remedyName: string): string => {
   return 'Extensively proven by Hahnemann and later provers';
 };
