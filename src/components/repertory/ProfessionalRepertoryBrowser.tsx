@@ -16,6 +16,7 @@ import {
 import { cn } from '@/lib/utils';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import dynamic from 'next/dynamic';
+import { useDebounce } from '@/hooks/use-debounce';
 
 const ProfessionalRemedyDetails = dynamic(() =>
   import('./ProfessionalRemedyDetails').then((mod) => mod.ProfessionalRemedyDetails),
@@ -50,11 +51,13 @@ interface ProfessionalRepertoryBrowserProps {
 export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowserProps> = ({ data }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
   const [viewMode, setViewMode] = useState<'list' | 'grid' | 'analytical'>('list');
   const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<'name' | 'frequency' | 'remedies'>('name');
   const [filterGrade, setFilterGrade] = useState<number[]>([1, 2, 3]);
   const [showFilters, setShowFilters] = useState(false);
+
   // Process the enhanced database data
   const categories = useMemo(() => {
     if (!data?.categories || !data?.repertory) return [];
@@ -137,7 +140,7 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
     }));
 
     return filtered;
-  }, [categories, selectedCategory, searchTerm, filterGrade, sortBy]);
+  }, [categories, selectedCategory, debouncedSearchTerm, filterGrade, sortBy]);
 
   const toggleSymptomSelection = (symptomId: string) => {
     setSelectedSymptoms(prev => 
@@ -271,7 +274,7 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
-              {analysisData.topRemedies.map(([remedy, count]) => (
+            {analysisData.topRemedies.map(([remedy, count]) => (
                 <div key={remedy} className="flex items-center justify-between">
                   <span className="text-sm">{remedy}</span>
                   <Badge variant="secondary">{count}</Badge>
