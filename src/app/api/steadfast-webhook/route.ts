@@ -1,7 +1,7 @@
 
 import { type NextRequest, NextResponse } from 'next/server';
 import type { DeliveryStatusPayload, TrackingUpdatePayload } from '@/lib/types';
-import { addTrackingEvent } from '@/lib/firestoreService';
+import { updateConsignmentStatus } from '@/lib/firestoreService';
 
 // This is the secret key that Steadfast will use to authenticate their requests.
 // It should be stored securely in your environment variables.
@@ -20,11 +20,17 @@ export async function POST(request: NextRequest) {
 
     // 3. Process the webhook based on the notification type
     switch (payload.notification_type) {
-      case 'delivery_status':
-        // TODO: Implement logic to update the order status in your database (e.g., Firestore)
-        // For example: await updateOrderStatus(payload.consignment_id, payload.status);
-        console.log(`Received Delivery Status Update: Consignment ID ${payload.consignment_id} is now ${payload.status}`);
+      case 'delivery_status': {
+        // Update the order status in Firestore
+        const updateSuccess = await updateConsignmentStatus(payload.consignment_id, payload.status);
+
+        if (updateSuccess) {
+          console.log(`Successfully updated Consignment ID ${payload.consignment_id} to status: ${payload.status}`);
+        } else {
+          console.error(`Failed to update Consignment ID ${payload.consignment_id} to status: ${payload.status}`);
+        }
         break;
+      }
 
       case 'tracking_update':
         await addTrackingEvent(
