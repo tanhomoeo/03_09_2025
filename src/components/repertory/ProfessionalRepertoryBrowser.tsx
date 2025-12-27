@@ -1,18 +1,17 @@
 'use client';
 
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
-  Search, Filter, Grid, List, Star, Heart, Brain, Eye, User, 
-  Wind, Mic, Droplets, Moon, Thermometer, Snowflake, Zap,
-  ChevronRight, ChevronDown, Plus, Minus, ArrowUpDown,
+  Search, Filter, Grid, List, Star, Brain, Eye, User,
+  Wind, Mic, Droplets, Moon, Thermometer, Zap,
+  Plus, Minus,
   BarChart3, PieChart, TrendingUp, BookOpen, Save, Share2,
-  Download, Settings, HelpCircle, RefreshCw, X
+  Download, X, Bone
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
@@ -43,14 +42,6 @@ interface Symptom {
   prevalence?: number;
 }
 
-interface Category {
-  id: string;
-  name: string;
-  icon: React.ReactNode;
-  symptoms: Symptom[];
-  totalSymptoms: number;
-}
-
 interface ProfessionalRepertoryBrowserProps {
   data: any;
 }
@@ -63,8 +54,6 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
   const [sortBy, setSortBy] = useState<'name' | 'frequency' | 'remedies'>('name');
   const [filterGrade, setFilterGrade] = useState<number[]>([1, 2, 3]);
   const [showFilters, setShowFilters] = useState(false);
-  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
-  const [analysisMode, setAnalysisMode] = useState<'frequency' | 'cross' | 'relationship'>('frequency');
 
   // Process the enhanced database data
   const categories = useMemo(() => {
@@ -145,18 +134,6 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
     );
   };
 
-  const toggleCategoryExpansion = (categoryId: string) => {
-    setExpandedCategories(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(categoryId)) {
-        newSet.delete(categoryId);
-      } else {
-        newSet.add(categoryId);
-      }
-      return newSet;
-    });
-  };
-
   const getCategoryIcon = (categoryName: string): React.ReactNode => {
     const icons: { [key: string]: React.ReactNode } = {
       'Mind': <Brain className="h-5 w-5" />,
@@ -186,7 +163,6 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
 
   const SymptomCard: React.FC<{ symptom: Symptom }> = ({ symptom }) => {
     const isSelected = selectedSymptoms.includes(symptom.id);
-    const isExpanded = expandedCategories.has(symptom.category);
 
     return (
       <Card className={cn(
@@ -216,8 +192,8 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-1">
-            {symptom.remedies.slice(0, 8).map((remedy, index) => (
-              <Dialog key={index}>
+            {symptom.remedies.slice(0, 8).map((remedy, idx) => (
+              <Dialog key={idx}>
                 <DialogTrigger asChild>
                   <Button
                     variant="outline"
@@ -247,89 +223,87 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
     );
   };
 
-  const AnalyticalView: React.FC = () => {
-    const analysisData = useMemo(() => {
-      const allSymptoms = filteredData.flatMap(cat => cat.symptoms);
-      const remedyFrequency: { [key: string]: number } = {};
-      const gradeDistribution: { [key: number]: number } = { 1: 0, 2: 0, 3: 0 };
-      
-      allSymptoms.forEach(symptom => {
-        symptom.remedies.forEach(remedy => {
-          remedyFrequency[remedy.name] = (remedyFrequency[remedy.name] || 0) + 1;
-          gradeDistribution[remedy.grade] = (gradeDistribution[remedy.grade] || 0) + 1;
-        });
+  const analysisData = useMemo(() => {
+    const allSymptoms = filteredData.flatMap(cat => cat.symptoms);
+    const remedyFrequency: { [key: string]: number } = {};
+    const gradeDistribution: { [key: number]: number } = { 1: 0, 2: 0, 3: 0 };
+
+    allSymptoms.forEach(symptom => {
+      symptom.remedies.forEach(remedy => {
+        remedyFrequency[remedy.name] = (remedyFrequency[remedy.name] || 0) + 1;
+        gradeDistribution[remedy.grade] = (gradeDistribution[remedy.grade] || 0) + 1;
       });
+    });
 
-      const topRemedies = Object.entries(remedyFrequency)
-        .sort(([,a], [,b]) => b - a)
-        .slice(0, 10);
+    const topRemedies = Object.entries(remedyFrequency)
+      .sort(([,a], [,b]) => b - a)
+      .slice(0, 10);
 
-      return { topRemedies, gradeDistribution, totalSymptoms: allSymptoms.length };
-    }, [filteredData]);
+    return { topRemedies, gradeDistribution, totalSymptoms: allSymptoms.length };
+  }, [filteredData]);
 
-    return (
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5" />
-              Top Remedies
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              {analysisData.topRemedies.map(([remedy, count], index) => (
-                <div key={remedy} className="flex items-center justify-between">
-                  <span className="text-sm">{remedy}</span>
-                  <Badge variant="secondary">{count}</Badge>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <PieChart className="h-5 w-5" />
-              Grade Distribution
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              {Object.entries(analysisData.gradeDistribution).map(([grade, count]) => (
-                <div key={grade} className="flex items-center justify-between">
-                  <span className="text-sm">Grade {grade}</span>
-                  <Badge variant="secondary">{count}</Badge>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <BarChart3 className="h-5 w-5" />
-              Statistics
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <span className="text-sm">Total Symptoms</span>
-                <Badge variant="secondary">{analysisData.totalSymptoms}</Badge>
+  const analyticalView = (
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <TrendingUp className="h-5 w-5" />
+            Top Remedies
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+            {analysisData.topRemedies.map(([remedy, count]) => (
+              <div key={remedy} className="flex items-center justify-between">
+                <span className="text-sm">{remedy}</span>
+                <Badge variant="secondary">{count}</Badge>
               </div>
-              <div className="flex justify-between">
-                <span className="text-sm">Selected Symptoms</span>
-                <Badge variant="secondary">{selectedSymptoms.length}</Badge>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <PieChart className="h-5 w-5" />
+            Grade Distribution
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+            {Object.entries(analysisData.gradeDistribution).map(([grade, count]) => (
+              <div key={grade} className="flex items-center justify-between">
+                <span className="text-sm">Grade {grade}</span>
+                <Badge variant="secondary">{count}</Badge>
               </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <BarChart3 className="h-5 w-5" />
+            Statistics
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+            <div className="flex justify-between">
+              <span className="text-sm">Total Symptoms</span>
+              <Badge variant="secondary">{analysisData.totalSymptoms}</Badge>
             </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  };
+            <div className="flex justify-between">
+              <span className="text-sm">Selected Symptoms</span>
+              <Badge variant="secondary">{selectedSymptoms.length}</Badge>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
 
   return (
     <div className="space-y-6">
@@ -521,7 +495,7 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
         {/* Main content area */}  
         <div className="lg:col-span-3">
           {viewMode === 'analytical' ? (
-            <AnalyticalView />
+            analyticalView
           ) : (
             <Card>
               <CardHeader>
