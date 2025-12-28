@@ -1,6 +1,5 @@
-
 'use client';
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -13,7 +12,7 @@ import {
 import type { Chapter, Rubric, Remedy } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { Badge } from '../ui/badge';
-import { Dialog, DialogTrigger } from '../ui/dialog';
+import { Dialog } from '../ui/dialog';
 import { useDebounce } from '@/hooks/use-debounce';
 
 const RemedyDetailsDialogContent = dynamic(() =>
@@ -92,20 +91,28 @@ const getChapterIcon = (chapterNameEn: string): React.ReactNode => {
     return <Dot className="h-5 w-5 mr-3 flex-shrink-0" />;
 };
 
-const RemedyItem: React.FC<{ remedy: Remedy }> = ({ remedy }) => (
-    <Dialog>
-        <DialogTrigger asChild>
-             <button className={cn("flex items-center gap-1.5 text-xs bg-card p-1 px-2.5 rounded-full border shadow-sm transition-transform hover:scale-105", gradeColorClasses[remedy.grade] || 'bg-gray-500 text-white')}>
-                <span>{remedy.name}</span>
-                <span className="font-bold">{remedy.grade}</span>
-            </button>
-        </DialogTrigger>
-        <RemedyDetailsDialogContent remedyName={remedy.name} />
-    </Dialog>
-);
+// Optimization: Memoized Remedy Button to prevent unnecessary re-renders
+const RemedyButton = React.memo<{ remedy: Remedy; onClick: (r: Remedy) => void }>(({ remedy, onClick }) => (
+    <button
+        className={cn("flex items-center gap-1.5 text-xs bg-card p-1 px-2.5 rounded-full border shadow-sm transition-transform hover:scale-105", gradeColorClasses[remedy.grade] || 'bg-gray-500 text-white')}
+        onClick={() => onClick(remedy)}
+    >
+        <span>{remedy.name}</span>
+        <span className="font-bold">{remedy.grade}</span>
+    </button>
+));
+RemedyButton.displayName = 'RemedyButton';
 
 
-const RubricItem: React.FC<{ rubric: Rubric; level?: number; lang: Language }> = ({ rubric, level = 0, lang }) => {
+interface RubricItemProps {
+  rubric: Rubric;
+  level?: number;
+  lang: Language;
+  onRemedyClick: (r: Remedy) => void;
+}
+
+// Optimization: Separated inner component to handle recursion properly with memoization
+function RubricItemInner({ rubric, level = 0, lang, onRemedyClick }: RubricItemProps) {
   const [isOpen, setIsOpen] = useState(level < 1); // Auto-open first few levels
 
   const hasChildren = rubric.children && rubric.children.length > 0;
@@ -143,12 +150,12 @@ const RubricItem: React.FC<{ rubric: Rubric; level?: number; lang: Language }> =
       {isOpen && (
         <div className="mt-1">
           {hasChildren && rubric.children.map(child => (
-            <RubricItem key={child.id} rubric={child} level={level + 1} lang={lang} />
+            <MemoizedRubricItem key={child.id} rubric={child} level={level + 1} lang={lang} onRemedyClick={onRemedyClick} />
           ))}
           {rubric.remedies && rubric.remedies.length > 0 && (
              <div className="flex flex-wrap gap-1.5 p-2 border-l-2 ml-3 mt-1">
                  {rubric.remedies.map(remedy => (
-                    <RemedyItem key={remedy.name} remedy={remedy} />
+                    <RemedyButton key={remedy.name} remedy={remedy} onClick={onRemedyClick} />
                  ))}
              </div>
           )}
@@ -157,6 +164,10 @@ const RubricItem: React.FC<{ rubric: Rubric; level?: number; lang: Language }> =
     </div>
   );
 };
+
+// Optimization: Memoize RubricItem to prevent re-renders when parent (Browser) renders but props haven't changed
+const MemoizedRubricItem = React.memo(RubricItemInner);
+MemoizedRubricItem.displayName = 'MemoizedRubricItem';
 
 interface RepertoryBrowserProps {
   chapters: Chapter[];
@@ -185,6 +196,8 @@ export const RepertoryBrowser: React.FC<RepertoryBrowserProps> = ({ chapters = [
   const [selectedChapter, setSelectedChapter] = useState<Chapter | null>(chapters.length > 0 ? chapters[0] : null);
   const [searchTerm, setSearchTerm] = useState('');
   const [language, setLanguage] = useState<Language>('bn');
+  const [selectedRemedy, setSelectedRemedy] = useState<Remedy | null>(null);
+
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
   
   const filteredRubrics = useMemo(() => {
@@ -203,6 +216,11 @@ export const RepertoryBrowser: React.FC<RepertoryBrowserProps> = ({ chapters = [
   const toggleLanguage = () => {
     setLanguage(prev => prev === 'bn' ? 'en' : 'bn');
   };
+
+  // Optimization: Stable handler for remedy clicks to allow efficient memoization
+  const handleRemedyClick = useCallback((remedy: Remedy) => {
+    setSelectedRemedy(remedy);
+  }, []);
 
   const chapterName = selectedChapter?.name?.[language] || selectedChapter?.name?.en;
 
@@ -257,7 +275,14 @@ export const RepertoryBrowser: React.FC<RepertoryBrowserProps> = ({ chapters = [
         <ScrollArea className="flex-grow">
           <CardContent className="p-4">
             {filteredRubrics.length > 0 ? (
-                filteredRubrics.map(rubric => <RubricItem key={rubric.id} rubric={rubric} lang={language} />)
+                filteredRubrics.map(rubric => (
+                    <MemoizedRubricItem
+                        key={rubric.id}
+                        rubric={rubric}
+                        lang={language}
+                        onRemedyClick={handleRemedyClick}
+                    />
+                ))
             ) : (
                 <div className="text-center py-10 text-muted-foreground">
                     {searchTerm ? 
@@ -269,6 +294,12 @@ export const RepertoryBrowser: React.FC<RepertoryBrowserProps> = ({ chapters = [
           </CardContent>
         </ScrollArea>
       </div>
+
+      {/* Optimization: Single Dialog instance instead of N instances */}
+      <Dialog open={!!selectedRemedy} onOpenChange={(open) => !open && setSelectedRemedy(null)}>
+        {/* We need to pass through the content because RemedyDetailsDialogContent renders DialogContent */}
+        {selectedRemedy && <RemedyDetailsDialogContent remedyName={selectedRemedy.name} />}
+      </Dialog>
     </Card>
   );
 };
