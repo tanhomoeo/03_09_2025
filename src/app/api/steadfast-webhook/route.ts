@@ -1,7 +1,7 @@
 
 import { type NextRequest, NextResponse } from 'next/server';
 import type { DeliveryStatusPayload, TrackingUpdatePayload } from '@/lib/types';
-import { updateConsignmentStatus } from '@/lib/firestoreService';
+import { updateConsignmentStatus, addTrackingEvent } from '@/lib/firestoreService';
 
 // This is the secret key that Steadfast will use to authenticate their requests.
 // It should be stored securely in your environment variables.

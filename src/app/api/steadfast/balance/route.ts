@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getCurrentBalance } from '@/lib/steadfastService';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     const data = await getCurrentBalance();
