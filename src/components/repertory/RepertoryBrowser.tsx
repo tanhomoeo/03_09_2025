@@ -12,7 +12,7 @@ import {
 import type { Chapter, Rubric, Remedy } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { Badge } from '../ui/badge';
-import { Dialog } from '../ui/dialog';
+import { Dialog, DialogTrigger, DialogContent } from '../ui/dialog';
 import { useDebounce } from '@/hooks/use-debounce';
 
 const RemedyDetailsDialogContent = dynamic(() =>
