@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -14,7 +14,7 @@ import {
   Download, X, Bone
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Dialog, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import dynamic from 'next/dynamic';
 import { useDebounce } from '@/hooks/use-debounce';
 
@@ -43,6 +43,98 @@ interface Symptom {
   prevalence?: number;
 }
 
+const getCategoryIcon = (categoryName: string): React.ReactNode => {
+  const icons: { [key: string]: React.ReactNode } = {
+    'Mind': <Brain className="h-5 w-5" />,
+    'Head': <User className="h-5 w-5" />,
+    'Eye': <Eye className="h-5 w-5" />,
+    'Respiration': <Wind className="h-5 w-5" />,
+    'Cough': <Mic className="h-5 w-5" />,
+    'Fever': <Thermometer className="h-5 w-5" />,
+    'Skin': <User className="h-5 w-5" />,
+    'Sleep': <Moon className="h-5 w-5" />,
+    'Gastric': <Droplets className="h-5 w-5" />,
+    'Urinary': <Droplets className="h-5 w-5" />,
+    'Pain': <Zap className="h-5 w-5" />,
+    'Arthritis': <Bone className="h-5 w-5" />
+  };
+  return icons[categoryName] || <Star className="h-5 w-5" />;
+};
+
+const getRemedyColor = (grade: number): string => {
+  const colors = {
+    1: 'bg-gray-500 hover:bg-gray-600',
+    2: 'bg-blue-600 hover:bg-blue-700',
+    3: 'bg-red-600 hover:bg-red-700'
+  };
+  return colors[grade as keyof typeof colors] || colors[1];
+};
+
+interface SymptomCardProps {
+  symptom: Symptom;
+  isSelected: boolean;
+  onToggleSelection: (id: string) => void;
+  onRemedyClick: (remedyName: string) => void;
+}
+
+const SymptomCard = React.memo(({ symptom, isSelected, onToggleSelection, onRemedyClick }: SymptomCardProps) => {
+  return (
+    <Card className={cn(
+      "transition-all duration-200 hover:shadow-md",
+      isSelected && "ring-2 ring-primary"
+    )}>
+      <CardHeader className="pb-3">
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-sm font-medium flex items-center gap-2">
+            {getCategoryIcon(symptom.category)}
+            <span>{symptom.description}</span>
+          </CardTitle>
+          <div className="flex items-center gap-2">
+            <Badge variant="secondary" className="text-xs">
+              {symptom.remedies.length} remedies
+            </Badge>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-6 w-6"
+              onClick={() => onToggleSelection(symptom.id)}
+            >
+              {isSelected ? <Minus className="h-3 w-3" /> : <Plus className="h-3 w-3" />}
+            </Button>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="flex flex-wrap gap-1">
+          {symptom.remedies.slice(0, 8).map((remedy, idx) => (
+            <Button
+              key={idx}
+              variant="outline"
+              size="sm"
+              className={cn(
+                "h-6 px-2 text-xs rounded-full",
+                getRemedyColor(remedy.grade)
+              )}
+              onClick={() => onRemedyClick(remedy.name)}
+            >
+              <span className="text-white">{remedy.name}</span>
+              <Badge variant="secondary" className="ml-1 h-4 px-1 text-xs">
+                {remedy.grade}
+              </Badge>
+            </Button>
+          ))}
+          {symptom.remedies.length > 8 && (
+            <Badge variant="outline" className="h-6 px-2 text-xs">
+              +{symptom.remedies.length - 8} more
+            </Badge>
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  );
+});
+SymptomCard.displayName = 'SymptomCard';
+
 interface ProfessionalRepertoryBrowserProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any;
@@ -57,6 +149,9 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
   const [sortBy, setSortBy] = useState<'name' | 'frequency' | 'remedies'>('name');
   const [filterGrade, setFilterGrade] = useState<number[]>([1, 2, 3]);
   const [showFilters, setShowFilters] = useState(false);
+
+  // Optimization: Lifted Dialog state to parent
+  const [selectedRemedyName, setSelectedRemedyName] = useState<string | null>(null);
 
   // Process the enhanced database data
   const categories = useMemo(() => {
@@ -143,102 +238,17 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
     return filtered;
   }, [categories, selectedCategory, debouncedSearchTerm, filterGrade, sortBy]);
 
-  const toggleSymptomSelection = (symptomId: string) => {
+  const toggleSymptomSelection = useCallback((symptomId: string) => {
     setSelectedSymptoms(prev => 
       prev.includes(symptomId) 
         ? prev.filter(id => id !== symptomId)
         : [...prev, symptomId]
     );
-  };
+  }, []);
 
-  const getCategoryIcon = (categoryName: string): React.ReactNode => {
-    const icons: { [key: string]: React.ReactNode } = {
-      'Mind': <Brain className="h-5 w-5" />,
-      'Head': <User className="h-5 w-5" />,
-      'Eye': <Eye className="h-5 w-5" />,
-      'Respiration': <Wind className="h-5 w-5" />,
-      'Cough': <Mic className="h-5 w-5" />,
-      'Fever': <Thermometer className="h-5 w-5" />,
-      'Skin': <User className="h-5 w-5" />,
-      'Sleep': <Moon className="h-5 w-5" />,
-      'Gastric': <Droplets className="h-5 w-5" />,
-      'Urinary': <Droplets className="h-5 w-5" />,
-      'Pain': <Zap className="h-5 w-5" />,
-      'Arthritis': <Bone className="h-5 w-5" />
-    };
-    return icons[categoryName] || <Star className="h-5 w-5" />;
-  };
-
-  const getRemedyColor = (grade: number): string => {
-    const colors = {
-      1: 'bg-gray-500 hover:bg-gray-600',
-      2: 'bg-blue-600 hover:bg-blue-700', 
-      3: 'bg-red-600 hover:bg-red-700'
-    };
-    return colors[grade as keyof typeof colors] || colors[1];
-  };
-
-  const SymptomCard: React.FC<{ symptom: Symptom }> = ({ symptom }) => {
-    const isSelected = selectedSymptoms.includes(symptom.id);
-
-    return (
-      <Card className={cn(
-        "transition-all duration-200 hover:shadow-md",
-        isSelected && "ring-2 ring-primary"
-      )}>
-        <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-sm font-medium flex items-center gap-2">
-              {getCategoryIcon(symptom.category)}
-              <span>{symptom.description}</span>
-            </CardTitle>
-            <div className="flex items-center gap-2">
-              <Badge variant="secondary" className="text-xs">
-                {symptom.remedies.length} remedies
-              </Badge>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-6 w-6"
-                onClick={() => toggleSymptomSelection(symptom.id)}
-              >
-                {isSelected ? <Minus className="h-3 w-3" /> : <Plus className="h-3 w-3" />}
-              </Button>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-1">
-            {symptom.remedies.slice(0, 8).map((remedy, idx) => (
-              <Dialog key={idx}>
-                <DialogTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className={cn(
-                      "h-6 px-2 text-xs rounded-full",
-                      getRemedyColor(remedy.grade)
-                    )}
-                  >
-                    <span className="text-white">{remedy.name}</span>
-                    <Badge variant="secondary" className="ml-1 h-4 px-1 text-xs">
-                      {remedy.grade}
-                    </Badge>
-                  </Button>
-                </DialogTrigger>
-                <ProfessionalRemedyDetails remedyName={remedy.name} />
-              </Dialog>
-            ))}
-            {symptom.remedies.length > 8 && (
-              <Badge variant="outline" className="h-6 px-2 text-xs">
-                +{symptom.remedies.length - 8} more
-              </Badge>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-    );
-  };
+  const handleRemedyClick = useCallback((remedyName: string) => {
+    setSelectedRemedyName(remedyName);
+  }, []);
 
   const AnalyticalView: React.FC = () => {
     const analysisData = useMemo(() => {
@@ -543,7 +553,13 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
                     {filteredData.map((category: any) =>
                       // eslint-disable-next-line @typescript-eslint/no-explicit-any
                       category.symptoms.map((symptom: any) => (
-                        <SymptomCard key={symptom.id} symptom={symptom} />
+                        <SymptomCard
+                          key={symptom.id}
+                          symptom={symptom}
+                          isSelected={selectedSymptoms.includes(symptom.id)}
+                          onToggleSelection={toggleSymptomSelection}
+                          onRemedyClick={handleRemedyClick}
+                        />
                       ))
                     )}
                   </div>
@@ -589,6 +605,18 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
           </CardContent>
         </Card>
       )}
+
+      {/* Optimization: Single Dialog instance */}
+      <Dialog open={!!selectedRemedyName} onOpenChange={(open) => !open && setSelectedRemedyName(null)}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0 border-none bg-transparent shadow-none">
+          {selectedRemedyName && (
+            <ProfessionalRemedyDetails
+              remedyName={selectedRemedyName}
+              onClose={() => setSelectedRemedyName(null)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
