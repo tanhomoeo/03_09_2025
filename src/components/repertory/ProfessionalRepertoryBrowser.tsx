@@ -43,22 +43,24 @@ interface Symptom {
   prevalence?: number;
 }
 
+const CATEGORY_ICONS: { [key: string]: React.ElementType } = {
+  'Mind': Brain,
+  'Head': User,
+  'Eye': Eye,
+  'Respiration': Wind,
+  'Cough': Mic,
+  'Fever': Thermometer,
+  'Skin': User,
+  'Sleep': Moon,
+  'Gastric': Droplets,
+  'Urinary': Droplets,
+  'Pain': Zap,
+  'Arthritis': Bone
+};
+
 const getCategoryIcon = (categoryName: string): React.ReactNode => {
-  const icons: { [key: string]: React.ReactNode } = {
-    'Mind': <Brain className="h-5 w-5" />,
-    'Head': <User className="h-5 w-5" />,
-    'Eye': <Eye className="h-5 w-5" />,
-    'Respiration': <Wind className="h-5 w-5" />,
-    'Cough': <Mic className="h-5 w-5" />,
-    'Fever': <Thermometer className="h-5 w-5" />,
-    'Skin': <User className="h-5 w-5" />,
-    'Sleep': <Moon className="h-5 w-5" />,
-    'Gastric': <Droplets className="h-5 w-5" />,
-    'Urinary': <Droplets className="h-5 w-5" />,
-    'Pain': <Zap className="h-5 w-5" />,
-    'Arthritis': <Bone className="h-5 w-5" />
-  };
-  return icons[categoryName] || <Star className="h-5 w-5" />;
+  const Icon = CATEGORY_ICONS[categoryName] || Star;
+  return <Icon className="h-5 w-5" />;
 };
 
 const getRemedyColor = (grade: number): string => {

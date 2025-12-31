@@ -12,7 +12,7 @@ import {
 import type { Chapter, Rubric, Remedy } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { Badge } from '../ui/badge';
-import { Dialog, DialogTrigger, DialogContent } from '../ui/dialog';
+import { Dialog } from '../ui/dialog';
 import { useDebounce } from '@/hooks/use-debounce';
 
 const RemedyDetailsDialogContent = dynamic(() =>
@@ -32,58 +32,58 @@ const gradeColorClasses: { [key: number]: string } = {
   1: 'bg-gray-700 hover:bg-gray-800 text-white border-gray-800',
 };
 
+const CHAPTER_ICONS: { [key: string]: React.ElementType } = {
+  mind: BrainCircuit,
+  vertigo: Star,
+  head: User,
+  eye: Eye,
+  vision: Eye,
+  ear: Ear,
+  hearing: Ear,
+  nose: Wind,
+  face: Smile,
+  mouth: Smile,
+  teeth: Bone,
+  throat: Mic,
+  'external throat': Mic,
+  stomach: Droplet,
+  abdomen: Droplet,
+  rectum: Dot,
+  stool: Dot,
+  'urinary organs': Droplet,
+  bladder: Droplet,
+  kidneys: Droplet,
+  prostate: Droplet,
+  urethra: Droplet,
+  urine: Droplets,
+  'male genitalia': User,
+  'female genitalia': UserRound,
+  larynx: AirVent,
+  trachea: AirVent,
+  respiration: Wind,
+  cough: Mic,
+  expectoration: Mic,
+  chest: Heart,
+  back: User,
+  extremities: Hand,
+  sleep: Moon,
+  chill: Snowflake,
+  fever: Thermometer,
+  perspiration: Droplets,
+  skin: User,
+  generals: User,
+  generalities: User,
+};
+
 const getChapterIcon = (chapterNameEn: string): React.ReactNode => {
     if (!chapterNameEn) {
         return <Dot className="h-5 w-5 mr-3 flex-shrink-0" />;
     }
     const lowerCaseName = chapterNameEn.toLowerCase();
     
-    const iconMap: { [key: string]: React.ElementType } = {
-        mind: BrainCircuit,
-        vertigo: Star,
-        head: User,
-        eye: Eye,
-        vision: Eye,
-        ear: Ear,
-        hearing: Ear,
-        nose: Wind,
-        face: Smile,
-        mouth: Smile,
-        teeth: Bone,
-        throat: Mic,
-        'external throat': Mic,
-        stomach: Droplet,
-        abdomen: Droplet,
-        rectum: Dot,
-        stool: Dot,
-        'urinary organs': Droplet,
-        bladder: Droplet,
-        kidneys: Droplet,
-        prostate: Droplet,
-        urethra: Droplet,
-        urine: Droplets,
-        'male genitalia': User,
-        'female genitalia': UserRound,
-        larynx: AirVent,
-        trachea: AirVent,
-        respiration: Wind,
-        cough: Mic,
-        expectoration: Mic,
-        chest: Heart,
-        back: User,
-        extremities: Hand,
-        sleep: Moon,
-        chill: Snowflake,
-        fever: Thermometer,
-        perspiration: Droplets,
-        skin: User,
-        generals: User,
-        generalities: User,
-    };
-
-    for (const key in iconMap) {
+    for (const key in CHAPTER_ICONS) {
         if (lowerCaseName.includes(key)) {
-            const IconComponent = iconMap[key];
+            const IconComponent = CHAPTER_ICONS[key];
             return <IconComponent className="h-5 w-5 mr-3 flex-shrink-0" />;
         }
     }
