@@ -43,31 +43,33 @@ interface Symptom {
   prevalence?: number;
 }
 
+const CATEGORY_ICONS: { [key: string]: React.ReactNode } = {
+  'Mind': <Brain className="h-5 w-5" />,
+  'Head': <User className="h-5 w-5" />,
+  'Eye': <Eye className="h-5 w-5" />,
+  'Respiration': <Wind className="h-5 w-5" />,
+  'Cough': <Mic className="h-5 w-5" />,
+  'Fever': <Thermometer className="h-5 w-5" />,
+  'Skin': <User className="h-5 w-5" />,
+  'Sleep': <Moon className="h-5 w-5" />,
+  'Gastric': <Droplets className="h-5 w-5" />,
+  'Urinary': <Droplets className="h-5 w-5" />,
+  'Pain': <Zap className="h-5 w-5" />,
+  'Arthritis': <Bone className="h-5 w-5" />
+};
+
+const REMEDY_COLORS = {
+  1: 'bg-gray-500 hover:bg-gray-600',
+  2: 'bg-blue-600 hover:bg-blue-700',
+  3: 'bg-red-600 hover:bg-red-700'
+};
+
 const getCategoryIcon = (categoryName: string): React.ReactNode => {
-  const icons: { [key: string]: React.ReactNode } = {
-    'Mind': <Brain className="h-5 w-5" />,
-    'Head': <User className="h-5 w-5" />,
-    'Eye': <Eye className="h-5 w-5" />,
-    'Respiration': <Wind className="h-5 w-5" />,
-    'Cough': <Mic className="h-5 w-5" />,
-    'Fever': <Thermometer className="h-5 w-5" />,
-    'Skin': <User className="h-5 w-5" />,
-    'Sleep': <Moon className="h-5 w-5" />,
-    'Gastric': <Droplets className="h-5 w-5" />,
-    'Urinary': <Droplets className="h-5 w-5" />,
-    'Pain': <Zap className="h-5 w-5" />,
-    'Arthritis': <Bone className="h-5 w-5" />
-  };
-  return icons[categoryName] || <Star className="h-5 w-5" />;
+  return CATEGORY_ICONS[categoryName] || <Star className="h-5 w-5" />;
 };
 
 const getRemedyColor = (grade: number): string => {
-  const colors = {
-    1: 'bg-gray-500 hover:bg-gray-600',
-    2: 'bg-blue-600 hover:bg-blue-700',
-    3: 'bg-red-600 hover:bg-red-700'
-  };
-  return colors[grade as keyof typeof colors] || colors[1];
+  return REMEDY_COLORS[grade as keyof typeof REMEDY_COLORS] || REMEDY_COLORS[1];
 };
 
 interface SymptomCardProps {
@@ -134,6 +136,99 @@ const SymptomCard = React.memo(({ symptom, isSelected, onToggleSelection, onReme
   );
 });
 SymptomCard.displayName = 'SymptomCard';
+
+interface AnalyticalViewProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  filteredData: any[];
+  selectedSymptoms: string[];
+}
+
+const AnalyticalView: React.FC<AnalyticalViewProps> = ({ filteredData, selectedSymptoms }) => {
+  const analysisData = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const allSymptoms = filteredData.flatMap((cat: any) => cat.symptoms);
+    const remedyFrequency: { [key: string]: number } = {};
+    const gradeDistribution: { [key: number]: number } = { 1: 0, 2: 0, 3: 0 };
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    allSymptoms.forEach((symptom: any) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      symptom.remedies.forEach((remedy: any) => {
+        remedyFrequency[remedy.name] = (remedyFrequency[remedy.name] || 0) + 1;
+        gradeDistribution[remedy.grade] = (gradeDistribution[remedy.grade] || 0) + 1;
+      });
+    });
+
+    const topRemedies = Object.entries(remedyFrequency)
+      .sort(([,a], [,b]) => b - a)
+      .slice(0, 10);
+
+    return { topRemedies, gradeDistribution, totalSymptoms: allSymptoms.length };
+  }, [filteredData]);
+
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <TrendingUp className="h-5 w-5" />
+            Top Remedies
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+          {analysisData.topRemedies.map(([remedy, count]) => (
+              <div key={remedy} className="flex items-center justify-between">
+                <span className="text-sm">{remedy}</span>
+                <Badge variant="secondary">{count}</Badge>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <PieChart className="h-5 w-5" />
+            Grade Distribution
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+            {Object.entries(analysisData.gradeDistribution).map(([grade, count]) => (
+              <div key={grade} className="flex items-center justify-between">
+                <span className="text-sm">Grade {grade}</span>
+                <Badge variant="secondary">{count}</Badge>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <BarChart3 className="h-5 w-5" />
+            Statistics
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+            <div className="flex justify-between">
+              <span className="text-sm">Total Symptoms</span>
+              <Badge variant="secondary">{analysisData.totalSymptoms}</Badge>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm">Selected Symptoms</span>
+              <Badge variant="secondary">{selectedSymptoms.length}</Badge>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
 
 interface ProfessionalRepertoryBrowserProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -249,93 +344,6 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
   const handleRemedyClick = useCallback((remedyName: string) => {
     setSelectedRemedyName(remedyName);
   }, []);
-
-  const AnalyticalView: React.FC = () => {
-    const analysisData = useMemo(() => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const allSymptoms = filteredData.flatMap((cat: any) => cat.symptoms);
-      const remedyFrequency: { [key: string]: number } = {};
-      const gradeDistribution: { [key: number]: number } = { 1: 0, 2: 0, 3: 0 };
-      
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      allSymptoms.forEach((symptom: any) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        symptom.remedies.forEach((remedy: any) => {
-          remedyFrequency[remedy.name] = (remedyFrequency[remedy.name] || 0) + 1;
-          gradeDistribution[remedy.grade] = (gradeDistribution[remedy.grade] || 0) + 1;
-        });
-      });
-
-      const topRemedies = Object.entries(remedyFrequency)
-        .sort(([,a], [,b]) => b - a)
-        .slice(0, 10);
-
-      return { topRemedies, gradeDistribution, totalSymptoms: allSymptoms.length };
-    }, []);
-
-    return (
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5" />
-              Top Remedies
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-            {analysisData.topRemedies.map(([remedy, count]) => (
-                <div key={remedy} className="flex items-center justify-between">
-                  <span className="text-sm">{remedy}</span>
-                  <Badge variant="secondary">{count}</Badge>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <PieChart className="h-5 w-5" />
-              Grade Distribution
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              {Object.entries(analysisData.gradeDistribution).map(([grade, count]) => (
-                <div key={grade} className="flex items-center justify-between">
-                  <span className="text-sm">Grade {grade}</span>
-                  <Badge variant="secondary">{count}</Badge>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <BarChart3 className="h-5 w-5" />
-              Statistics
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <span className="text-sm">Total Symptoms</span>
-                <Badge variant="secondary">{analysisData.totalSymptoms}</Badge>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-sm">Selected Symptoms</span>
-                <Badge variant="secondary">{selectedSymptoms.length}</Badge>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  };
 
   return (
     <div className="space-y-6">
@@ -531,7 +539,7 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
         {/* Main content area */}  
         <div className="lg:col-span-3">
           {viewMode === 'analytical' ? (
-            <AnalyticalView />
+            <AnalyticalView filteredData={filteredData} selectedSymptoms={selectedSymptoms} />
           ) : (
             <Card>
               <CardHeader>
