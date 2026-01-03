@@ -58,6 +58,12 @@ const CATEGORY_ICONS: { [key: string]: React.ElementType } = {
   'Arthritis': Bone
 };
 
+const REMEDY_COLORS: { [key: number]: string } = {
+  3: 'bg-red-600 hover:bg-red-700 text-white border-red-700',
+  2: 'bg-blue-600 hover:bg-blue-700 text-white border-blue-700',
+  1: 'bg-gray-700 hover:bg-gray-800 text-white border-gray-800',
+};
+
 const getCategoryIcon = (categoryName: string): React.ReactNode => {
   const Icon = CATEGORY_ICONS[categoryName] || Star;
   return <Icon className="h-5 w-5" />;
@@ -271,61 +277,65 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
 
   // Filter and search logic
   const filteredData = useMemo(() => {
-    let filtered = categories;
+    // Optimization: Single-pass reduction to filter categories, search symptoms, and filter grades simultaneously.
+    // This avoids creating multiple intermediate arrays from chained map/filter operations.
+    const searchLower = debouncedSearchTerm ? debouncedSearchTerm.toLowerCase() : '';
 
-    // Category filter
-    if (selectedCategory !== 'all') {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      filtered = filtered.filter((cat: any) => cat.id === selectedCategory);
-    }
-
-    // Search filter
-    if (debouncedSearchTerm) {
-      const searchLower = debouncedSearchTerm.toLowerCase();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      filtered = filtered.map((category: any) => ({
-        ...category,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        symptoms: category.symptoms.filter((symptom: any) =>
-          symptom.description.toLowerCase().includes(searchLower) ||
-          symptom.category.toLowerCase().includes(searchLower)
-        )
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      })).filter((category: any) => category.symptoms.length > 0);
-    }
-
-    // Grade filter
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    filtered = filtered.map((category: any) => ({
-      ...category,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      symptoms: category.symptoms.map((symptom: any) => ({
-        ...symptom,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        remedies: symptom.remedies.filter((remedy: any) => filterGrade.includes(remedy.grade))
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      })).filter((symptom: any) => symptom.remedies.length > 0)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    })).filter((category: any) => category.symptoms.length > 0);
+    return categories.reduce((acc: any[], category: any) => {
+      // 1. Category Filter
+      if (selectedCategory !== 'all' && category.id !== selectedCategory) {
+        return acc;
+      }
 
-    // Sort symptoms
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    filtered = filtered.map((category: any) => ({
-      ...category,
+      // 2. Search & Grade Filter (combined loop)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      symptoms: [...category.symptoms].sort((a: any, b: any) => {
-        switch (sortBy) {
-          case 'frequency':
-            return (b.prevalence || 0) - (a.prevalence || 0);
-          case 'remedies':
-            return b.remedies.length - a.remedies.length;
-          default:
-            return a.description.localeCompare(b.description);
+      const filteredSymptoms = category.symptoms.reduce((symptomAcc: any[], symptom: any) => {
+        // Search check
+        if (searchLower) {
+          const matchesSearch =
+            symptom.description.toLowerCase().includes(searchLower) ||
+            symptom.category.toLowerCase().includes(searchLower);
+
+          if (!matchesSearch) return symptomAcc;
         }
-      })
-    }));
 
-    return filtered;
+        // Grade check
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const filteredRemedies = symptom.remedies.filter((remedy: any) => filterGrade.includes(remedy.grade));
+
+        if (filteredRemedies.length > 0) {
+          symptomAcc.push({
+            ...symptom,
+            remedies: filteredRemedies
+          });
+        }
+
+        return symptomAcc;
+      }, []);
+
+      if (filteredSymptoms.length > 0) {
+        // 3. Sort Symptoms
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        filteredSymptoms.sort((a: any, b: any) => {
+          switch (sortBy) {
+            case 'frequency':
+              return (b.prevalence || 0) - (a.prevalence || 0);
+            case 'remedies':
+              return b.remedies.length - a.remedies.length;
+            default:
+              return a.description.localeCompare(b.description);
+          }
+        });
+
+        acc.push({
+          ...category,
+          symptoms: filteredSymptoms
+        });
+      }
+
+      return acc;
+    }, []);
   }, [categories, selectedCategory, debouncedSearchTerm, filterGrade, sortBy]);
 
   const toggleSymptomSelection = useCallback((symptomId: string) => {
