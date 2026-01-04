@@ -43,6 +43,12 @@ interface Symptom {
   prevalence?: number;
 }
 
+const REMEDY_COLORS = {
+  3: 'bg-red-600 hover:bg-red-700 text-white border-red-700',
+  2: 'bg-blue-600 hover:bg-blue-700 text-white border-blue-700',
+  1: 'bg-gray-700 hover:bg-gray-800 text-white border-gray-800',
+};
+
 const CATEGORY_ICONS: { [key: string]: React.ElementType } = {
   'Mind': Brain,
   'Head': User,
@@ -65,6 +71,23 @@ const getCategoryIcon = (categoryName: string): React.ReactNode => {
 
 const getRemedyColor = (grade: number): string => {
   return REMEDY_COLORS[grade as keyof typeof REMEDY_COLORS] || REMEDY_COLORS[1];
+};
+
+// Simple deterministic hash function for consistent "random" numbers
+const stringHash = (str: string): number => {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return Math.abs(hash);
+};
+
+// Helper for consistent prevalence/frequency
+const getDeterministicNumber = (seed: string, min: number, max: number): number => {
+  const hash = stringHash(seed);
+  return (hash % (max - min + 1)) + min;
 };
 
 interface SymptomCardProps {
@@ -261,71 +284,92 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
         remedies: remedies.map((r: any) => ({
           name: r.remedy,
           grade: r.grade || 1,
-          frequency: Math.floor(Math.random() * 100) + 1
+          frequency: getDeterministicNumber(r.remedy, 1, 100)
         })),
-        prevalence: Math.floor(Math.random() * 100) + 1
+        prevalence: getDeterministicNumber(`${categoryName}-${description}`, 1, 100)
       })),
       totalSymptoms: Object.keys(data.repertory[categoryName] || {}).length
     }));
   }, [data]);
 
-  // Filter and search logic
+  // Optimized Filter and search logic
   const filteredData = useMemo(() => {
-    let filtered = categories;
-
-    // Category filter
-    if (selectedCategory !== 'all') {
+    // 1. Category Filter - Filter early to reduce dataset
+    const relevantCategories = selectedCategory === 'all'
+      ? categories
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      filtered = filtered.filter((cat: any) => cat.id === selectedCategory);
-    }
+      : categories.filter((cat: any) => cat.id === selectedCategory);
 
-    // Search filter
-    if (debouncedSearchTerm) {
-      const searchLower = debouncedSearchTerm.toLowerCase();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      filtered = filtered.map((category: any) => ({
-        ...category,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        symptoms: category.symptoms.filter((symptom: any) =>
-          symptom.description.toLowerCase().includes(searchLower) ||
-          symptom.category.toLowerCase().includes(searchLower)
-        )
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      })).filter((category: any) => category.symptoms.length > 0);
-    }
+    const searchLower = debouncedSearchTerm ? debouncedSearchTerm.toLowerCase() : '';
+    const hasSearch = !!searchLower;
+    const hasGradeFilter = filterGrade.length < 3;
 
-    // Grade filter
+    // Single pass map+filter
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    filtered = filtered.map((category: any) => ({
-      ...category,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      symptoms: category.symptoms.map((symptom: any) => ({
-        ...symptom,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        remedies: symptom.remedies.filter((remedy: any) => filterGrade.includes(remedy.grade))
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      })).filter((symptom: any) => symptom.remedies.length > 0)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    })).filter((category: any) => category.symptoms.length > 0);
+    return relevantCategories.map((category: any) => {
+        let symptoms = category.symptoms;
 
-    // Sort symptoms
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    filtered = filtered.map((category: any) => ({
-      ...category,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      symptoms: [...category.symptoms].sort((a: any, b: any) => {
-        switch (sortBy) {
-          case 'frequency':
-            return (b.prevalence || 0) - (a.prevalence || 0);
-          case 'remedies':
-            return b.remedies.length - a.remedies.length;
-          default:
-            return a.description.localeCompare(b.description);
+        // Apply Search and Grade Filter in one pass if possible
+        if (hasSearch || hasGradeFilter) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            symptoms = symptoms.reduce((acc: any[], symptom: any) => {
+                // Search check
+                if (hasSearch) {
+                    const matchesSearch =
+                        symptom.description.toLowerCase().includes(searchLower) ||
+                        symptom.category.toLowerCase().includes(searchLower);
+                    if (!matchesSearch) return acc;
+                }
+
+                // Grade check
+                let filteredRemedies = symptom.remedies;
+                if (hasGradeFilter) {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    const newRemedies = symptom.remedies.filter((r: any) => filterGrade.includes(r.grade));
+
+                    if (newRemedies.length === 0) return acc; // No remedies left, skip symptom
+
+                    // Optimization: Preserve reference if no remedies were filtered out (rare case here since hasGradeFilter is true, but logically possible if all remedies match selected grades)
+                    // Actually, if hasGradeFilter is true, it means filterGrade.length < 3.
+                    // If a symptom ONLY has remedies of the selected grades, newRemedies.length === symptom.remedies.length.
+                    if (newRemedies.length !== symptom.remedies.length) {
+                         filteredRemedies = newRemedies;
+                    }
+                }
+
+                // If remedies changed, we must create new object.
+                if (filteredRemedies !== symptom.remedies) {
+                     acc.push({ ...symptom, remedies: filteredRemedies });
+                } else {
+                     acc.push(symptom);
+                }
+
+                return acc;
+            }, []);
         }
-      })
-    }));
 
-    return filtered;
+        if (symptoms.length === 0) return null;
+
+        // Sort - we create a shallow copy to sort
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const sortedSymptoms = [...symptoms].sort((a: any, b: any) => {
+            switch (sortBy) {
+              case 'frequency':
+                return (b.prevalence || 0) - (a.prevalence || 0);
+              case 'remedies':
+                return b.remedies.length - a.remedies.length;
+              default:
+                return a.description.localeCompare(b.description);
+            }
+        });
+
+        return {
+            ...category,
+            symptoms: sortedSymptoms
+        };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    }).filter((cat: any) => cat !== null);
+
   }, [categories, selectedCategory, debouncedSearchTerm, filterGrade, sortBy]);
 
   const toggleSymptomSelection = useCallback((symptomId: string) => {
