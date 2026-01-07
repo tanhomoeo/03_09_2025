@@ -58,6 +58,13 @@ const CATEGORY_ICONS: { [key: string]: React.ElementType } = {
   'Arthritis': Bone
 };
 
+// Bolt: Defined at module scope to fix missing reference and ensure consistency
+const REMEDY_COLORS = {
+  1: "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300",
+  2: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 font-medium",
+  3: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300 font-bold"
+};
+
 const getCategoryIcon = (categoryName: string): React.ReactNode => {
   const Icon = CATEGORY_ICONS[categoryName] || Star;
   return <Icon className="h-5 w-5" />;
@@ -65,6 +72,17 @@ const getCategoryIcon = (categoryName: string): React.ReactNode => {
 
 const getRemedyColor = (grade: number): string => {
   return REMEDY_COLORS[grade as keyof typeof REMEDY_COLORS] || REMEDY_COLORS[1];
+};
+
+// Bolt: Deterministic pseudo-random number generator to prevent hydration mismatches
+const pseudoRandom = (seed: string) => {
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) {
+    const char = seed.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash;
+  }
+  return Math.abs(hash % 100) + 1;
 };
 
 interface SymptomCardProps {
@@ -248,72 +266,78 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
     if (!data?.categories || !data?.repertory) return [];
     
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return data.categories.map((categoryName: string) => ({
-      id: categoryName.toLowerCase().replace(/\s+/g, '-'),
-      name: categoryName,
-      icon: getCategoryIcon(categoryName),
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      symptoms: Object.entries(data.repertory[categoryName] || {}).map(([description, remedies]: [string, any]) => ({
-        id: `${categoryName}-${description}`,
-        category: categoryName,
-        description,
+    return data.categories.map((categoryName: string) => {
+      const categoryId = categoryName.toLowerCase().replace(/\s+/g, '-');
+      return {
+        id: categoryId,
+        name: categoryName,
+        icon: getCategoryIcon(categoryName),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        remedies: remedies.map((r: any) => ({
-          name: r.remedy,
-          grade: r.grade || 1,
-          frequency: Math.floor(Math.random() * 100) + 1
-        })),
-        prevalence: Math.floor(Math.random() * 100) + 1
-      })),
-      totalSymptoms: Object.keys(data.repertory[categoryName] || {}).length
-    }));
+        symptoms: Object.entries(data.repertory[categoryName] || {}).map(([description, remedies]: [string, any]) => {
+          const symptomId = `${categoryName}-${description}`;
+          return {
+            id: symptomId,
+            category: categoryName,
+            description,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            remedies: remedies.map((r: any) => ({
+              name: r.remedy,
+              grade: r.grade || 1,
+              // Bolt: Use deterministic random for hydration stability
+              frequency: pseudoRandom(`${r.remedy}-${description}`)
+            })),
+            // Bolt: Use deterministic random for hydration stability
+            prevalence: pseudoRandom(symptomId)
+          };
+        }),
+        totalSymptoms: Object.keys(data.repertory[categoryName] || {}).length
+      };
+    });
   }, [data]);
 
-  // Filter and search logic
+  // Bolt: Optimized filter and search logic using single-pass reduce
   const filteredData = useMemo(() => {
-    let filtered = categories;
+    const searchLower = debouncedSearchTerm ? debouncedSearchTerm.toLowerCase() : null;
 
-    // Category filter
-    if (selectedCategory !== 'all') {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      filtered = filtered.filter((cat: any) => cat.id === selectedCategory);
-    }
-
-    // Search filter
-    if (debouncedSearchTerm) {
-      const searchLower = debouncedSearchTerm.toLowerCase();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      filtered = filtered.map((category: any) => ({
-        ...category,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        symptoms: category.symptoms.filter((symptom: any) =>
-          symptom.description.toLowerCase().includes(searchLower) ||
-          symptom.category.toLowerCase().includes(searchLower)
-        )
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      })).filter((category: any) => category.symptoms.length > 0);
-    }
-
-    // Grade filter
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    filtered = filtered.map((category: any) => ({
-      ...category,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      symptoms: category.symptoms.map((symptom: any) => ({
-        ...symptom,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        remedies: symptom.remedies.filter((remedy: any) => filterGrade.includes(remedy.grade))
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      })).filter((symptom: any) => symptom.remedies.length > 0)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    })).filter((category: any) => category.symptoms.length > 0);
+    return categories.reduce((acc: any[], category: any) => {
+      // 1. Category Filter (Early return)
+      if (selectedCategory !== 'all' && category.id !== selectedCategory) {
+        return acc;
+      }
 
-    // Sort symptoms
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    filtered = filtered.map((category: any) => ({
-      ...category,
+      // 2. Process Symptoms (Search, Grade Filter)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      symptoms: [...category.symptoms].sort((a: any, b: any) => {
+      const processedSymptoms = category.symptoms.reduce((symptomAcc: any[], symptom: any) => {
+        // Search Filter
+        if (searchLower) {
+          const matchesSearch =
+            symptom.description.toLowerCase().includes(searchLower) ||
+            symptom.category.toLowerCase().includes(searchLower);
+
+          if (!matchesSearch) return symptomAcc;
+        }
+
+        // Grade Filter
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const filteredRemedies = symptom.remedies.filter((remedy: any) =>
+          filterGrade.includes(remedy.grade)
+        );
+
+        if (filteredRemedies.length === 0) return symptomAcc;
+
+        symptomAcc.push({
+          ...symptom,
+          remedies: filteredRemedies
+        });
+        return symptomAcc;
+      }, []);
+
+      if (processedSymptoms.length === 0) return acc;
+
+      // 3. Sort Symptoms
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      processedSymptoms.sort((a: any, b: any) => {
         switch (sortBy) {
           case 'frequency':
             return (b.prevalence || 0) - (a.prevalence || 0);
@@ -322,10 +346,14 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
           default:
             return a.description.localeCompare(b.description);
         }
-      })
-    }));
+      });
 
-    return filtered;
+      acc.push({
+        ...category,
+        symptoms: processedSymptoms
+      });
+      return acc;
+    }, []);
   }, [categories, selectedCategory, debouncedSearchTerm, filterGrade, sortBy]);
 
   const toggleSymptomSelection = useCallback((symptomId: string) => {
