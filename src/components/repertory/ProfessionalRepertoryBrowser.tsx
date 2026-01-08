@@ -58,6 +58,13 @@ const CATEGORY_ICONS: { [key: string]: React.ElementType } = {
   'Arthritis': Bone
 };
 
+// Defined at module scope to fix missing definition error
+const REMEDY_COLORS = {
+  1: "bg-slate-100 text-slate-700 hover:bg-slate-200 border-slate-200",
+  2: "bg-blue-50 text-blue-700 hover:bg-blue-100 border-blue-200",
+  3: "bg-red-50 text-red-700 hover:bg-red-100 border-red-200"
+};
+
 const getCategoryIcon = (categoryName: string): React.ReactNode => {
   const Icon = CATEGORY_ICONS[categoryName] || Star;
   return <Icon className="h-5 w-5" />;
@@ -140,17 +147,21 @@ interface AnalyticalViewProps {
 
 const AnalyticalView: React.FC<AnalyticalViewProps> = ({ filteredData, selectedSymptoms }) => {
   const analysisData = useMemo(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const allSymptoms = filteredData.flatMap((cat: any) => cat.symptoms);
+    // Optimization: Avoid flatMap to prevent large array allocation
     const remedyFrequency: { [key: string]: number } = {};
     const gradeDistribution: { [key: number]: number } = { 1: 0, 2: 0, 3: 0 };
+    let totalSymptoms = 0;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    allSymptoms.forEach((symptom: any) => {
+    filteredData.forEach((cat: any) => {
+      totalSymptoms += cat.symptoms.length;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      symptom.remedies.forEach((remedy: any) => {
-        remedyFrequency[remedy.name] = (remedyFrequency[remedy.name] || 0) + 1;
-        gradeDistribution[remedy.grade] = (gradeDistribution[remedy.grade] || 0) + 1;
+      cat.symptoms.forEach((symptom: any) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        symptom.remedies.forEach((remedy: any) => {
+          remedyFrequency[remedy.name] = (remedyFrequency[remedy.name] || 0) + 1;
+          gradeDistribution[remedy.grade] = (gradeDistribution[remedy.grade] || 0) + 1;
+        });
       });
     });
 
@@ -158,7 +169,7 @@ const AnalyticalView: React.FC<AnalyticalViewProps> = ({ filteredData, selectedS
       .sort(([,a], [,b]) => b - a)
       .slice(0, 10);
 
-    return { topRemedies, gradeDistribution, totalSymptoms: allSymptoms.length };
+    return { topRemedies, gradeDistribution, totalSymptoms };
   }, [filteredData]);
 
   return (
@@ -269,63 +280,67 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
     }));
   }, [data]);
 
-  // Filter and search logic
+  // Optimized Filter and Search Logic
+  // Using single-pass reduce instead of chained map/filter to avoid multiple iterations and array allocations
   const filteredData = useMemo(() => {
-    let filtered = categories;
+    const searchLower = debouncedSearchTerm ? debouncedSearchTerm.toLowerCase() : null;
 
-    // Category filter
-    if (selectedCategory !== 'all') {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      filtered = filtered.filter((cat: any) => cat.id === selectedCategory);
-    }
-
-    // Search filter
-    if (debouncedSearchTerm) {
-      const searchLower = debouncedSearchTerm.toLowerCase();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      filtered = filtered.map((category: any) => ({
-        ...category,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        symptoms: category.symptoms.filter((symptom: any) =>
-          symptom.description.toLowerCase().includes(searchLower) ||
-          symptom.category.toLowerCase().includes(searchLower)
-        )
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      })).filter((category: any) => category.symptoms.length > 0);
-    }
-
-    // Grade filter
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    filtered = filtered.map((category: any) => ({
-      ...category,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      symptoms: category.symptoms.map((symptom: any) => ({
-        ...symptom,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        remedies: symptom.remedies.filter((remedy: any) => filterGrade.includes(remedy.grade))
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      })).filter((symptom: any) => symptom.remedies.length > 0)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    })).filter((category: any) => category.symptoms.length > 0);
+    return categories.reduce((acc: any[], category: any) => {
+      // 1. Filter Category (early exit)
+      if (selectedCategory !== 'all' && category.id !== selectedCategory) {
+        return acc;
+      }
 
-    // Sort symptoms
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    filtered = filtered.map((category: any) => ({
-      ...category,
+      // 2. Filter/Map Symptoms & 3. Grade Filter
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      symptoms: [...category.symptoms].sort((a: any, b: any) => {
-        switch (sortBy) {
-          case 'frequency':
-            return (b.prevalence || 0) - (a.prevalence || 0);
-          case 'remedies':
-            return b.remedies.length - a.remedies.length;
-          default:
-            return a.description.localeCompare(b.description);
-        }
-      })
-    }));
+      const filteredSymptoms: any[] = [];
 
-    return filtered;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      for (const symptom of category.symptoms) {
+         // Search filter
+         if (searchLower) {
+           const matchesSearch =
+             symptom.description.toLowerCase().includes(searchLower) ||
+             symptom.category.toLowerCase().includes(searchLower);
+           if (!matchesSearch) continue;
+         }
+
+         // Grade filter (filter remedies)
+         // eslint-disable-next-line @typescript-eslint/no-explicit-any
+         const filteredRemedies = symptom.remedies.filter((r: any) => filterGrade.includes(r.grade));
+
+         if (filteredRemedies.length > 0) {
+            filteredSymptoms.push({
+              ...symptom,
+              remedies: filteredRemedies
+            });
+         }
+      }
+
+      if (filteredSymptoms.length > 0) {
+         // 4. Sort Symptoms
+         // eslint-disable-next-line @typescript-eslint/no-explicit-any
+         filteredSymptoms.sort((a: any, b: any) => {
+            switch (sortBy) {
+              case 'frequency':
+                return (b.prevalence || 0) - (a.prevalence || 0);
+              case 'remedies':
+                return b.remedies.length - a.remedies.length;
+              default:
+                return a.description.localeCompare(b.description);
+            }
+         });
+
+         acc.push({
+           ...category,
+           symptoms: filteredSymptoms
+         });
+      }
+
+      return acc;
+    }, []);
+
   }, [categories, selectedCategory, debouncedSearchTerm, filterGrade, sortBy]);
 
   const toggleSymptomSelection = useCallback((symptomId: string) => {
@@ -339,6 +354,17 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
   const handleRemedyClick = useCallback((remedyName: string) => {
     setSelectedRemedyName(remedyName);
   }, []);
+
+  // Helper to find symptom efficiently without allocating new arrays
+  const findSymptom = (id: string) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    for (const cat of filteredData) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const s = cat.symptoms.find((sym: any) => sym.id === id);
+      if (s) return s;
+    }
+    return null;
+  };
 
   return (
     <div className="space-y-6">
@@ -585,11 +611,7 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
           <CardContent>
             <div className="flex flex-wrap gap-2">
               {selectedSymptoms.map(symptomId => {
-                const symptom = filteredData
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  .flatMap((cat: any) => cat.symptoms)
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  .find((s: any) => s.id === symptomId);
+                const symptom = findSymptom(symptomId);
                 return symptom ? (
                   <Badge key={symptomId} variant="secondary" className="text-sm">
                     {symptom.description}
