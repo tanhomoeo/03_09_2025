@@ -63,6 +63,12 @@ const getCategoryIcon = (categoryName: string): React.ReactNode => {
   return <Icon className="h-5 w-5" />;
 };
 
+const REMEDY_COLORS = {
+  1: "bg-slate-100 text-slate-700 hover:bg-slate-200 border-slate-200",
+  2: "bg-blue-100 text-blue-700 hover:bg-blue-200 border-blue-200 font-medium",
+  3: "bg-red-100 text-red-700 hover:bg-red-200 border-red-200 font-bold",
+} as const;
+
 const getRemedyColor = (grade: number): string => {
   return REMEDY_COLORS[grade as keyof typeof REMEDY_COLORS] || REMEDY_COLORS[1];
 };
@@ -270,50 +276,54 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
   }, [data]);
 
   // Filter and search logic
+  // Optimization: Single pass reduce instead of multiple maps and filters
   const filteredData = useMemo(() => {
-    let filtered = categories;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return categories.reduce((acc: any[], category: any) => {
+      // 1. Category Filter
+      if (selectedCategory !== 'all' && category.id !== selectedCategory) {
+        return acc;
+      }
 
-    // Category filter
-    if (selectedCategory !== 'all') {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      filtered = filtered.filter((cat: any) => cat.id === selectedCategory);
-    }
+      let symptoms = category.symptoms;
 
-    // Search filter
-    if (debouncedSearchTerm) {
-      const searchLower = debouncedSearchTerm.toLowerCase();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      filtered = filtered.map((category: any) => ({
-        ...category,
+      // 2. Search Filter
+      if (debouncedSearchTerm) {
+        const searchLower = debouncedSearchTerm.toLowerCase();
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        symptoms: category.symptoms.filter((symptom: any) =>
+        symptoms = symptoms.filter((symptom: any) =>
           symptom.description.toLowerCase().includes(searchLower) ||
           symptom.category.toLowerCase().includes(searchLower)
-        )
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      })).filter((category: any) => category.symptoms.length > 0);
-    }
+        );
+      }
 
-    // Grade filter
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    filtered = filtered.map((category: any) => ({
-      ...category,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      symptoms: category.symptoms.map((symptom: any) => ({
-        ...symptom,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        remedies: symptom.remedies.filter((remedy: any) => filterGrade.includes(remedy.grade))
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      })).filter((symptom: any) => symptom.remedies.length > 0)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    })).filter((category: any) => category.symptoms.length > 0);
+      if (symptoms.length === 0) return acc;
 
-    // Sort symptoms
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    filtered = filtered.map((category: any) => ({
-      ...category,
+      // 3. Grade Filter
+      // Only filter if not all grades are selected to avoid unnecessary processing
+      const allGradesSelected = [1, 2, 3].every(g => filterGrade.includes(g));
+
+      if (!allGradesSelected) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        symptoms = symptoms.reduce((symAcc: any[], symptom: any) => {
+             // eslint-disable-next-line @typescript-eslint/no-explicit-any
+             const filteredRemedies = symptom.remedies.filter((remedy: any) => filterGrade.includes(remedy.grade));
+
+             if (filteredRemedies.length > 0) {
+                 symAcc.push({
+                     ...symptom,
+                     remedies: filteredRemedies
+                 });
+             }
+             return symAcc;
+        }, []);
+      }
+
+      if (symptoms.length === 0) return acc;
+
+      // 4. Sort (Sorting creates a copy, so we only do it if we have symptoms)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      symptoms: [...category.symptoms].sort((a: any, b: any) => {
+      const sortedSymptoms = [...symptoms].sort((a: any, b: any) => {
         switch (sortBy) {
           case 'frequency':
             return (b.prevalence || 0) - (a.prevalence || 0);
@@ -322,10 +332,15 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
           default:
             return a.description.localeCompare(b.description);
         }
-      })
-    }));
+      });
 
-    return filtered;
+      acc.push({
+        ...category,
+        symptoms: sortedSymptoms
+      });
+
+      return acc;
+    }, []);
   }, [categories, selectedCategory, debouncedSearchTerm, filterGrade, sortBy]);
 
   const toggleSymptomSelection = useCallback((symptomId: string) => {
