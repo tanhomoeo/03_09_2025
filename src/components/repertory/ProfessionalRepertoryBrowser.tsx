@@ -43,6 +43,12 @@ interface Symptom {
   prevalence?: number;
 }
 
+const REMEDY_COLORS = {
+  1: "bg-slate-100 text-slate-700 hover:bg-slate-200",
+  2: "bg-blue-100 text-blue-700 hover:bg-blue-200 italic",
+  3: "bg-red-100 text-red-700 hover:bg-red-200 font-bold"
+};
+
 const CATEGORY_ICONS: { [key: string]: React.ElementType } = {
   'Mind': Brain,
   'Head': User,
@@ -268,6 +274,20 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
       totalSymptoms: Object.keys(data.repertory[categoryName] || {}).length
     }));
   }, [data]);
+
+  // Optimization: Map for O(1) lookup of symptoms by ID
+  const symptomMap = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const map = new Map<string, any>();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    categories.forEach((cat: any) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      cat.symptoms.forEach((sym: any) => {
+        map.set(sym.id, sym);
+      });
+    });
+    return map;
+  }, [categories]);
 
   // Filter and search logic
   const filteredData = useMemo(() => {
@@ -585,11 +605,7 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
           <CardContent>
             <div className="flex flex-wrap gap-2">
               {selectedSymptoms.map(symptomId => {
-                const symptom = filteredData
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  .flatMap((cat: any) => cat.symptoms)
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  .find((s: any) => s.id === symptomId);
+                const symptom = symptomMap.get(symptomId);
                 return symptom ? (
                   <Badge key={symptomId} variant="secondary" className="text-sm">
                     {symptom.description}
