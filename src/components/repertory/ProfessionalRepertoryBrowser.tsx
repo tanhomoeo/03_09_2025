@@ -58,6 +58,12 @@ const CATEGORY_ICONS: { [key: string]: React.ElementType } = {
   'Arthritis': Bone
 };
 
+const REMEDY_COLORS = {
+  3: 'bg-red-600 hover:bg-red-700 text-white border-red-700',
+  2: 'bg-blue-600 hover:bg-blue-700 text-white border-blue-700',
+  1: 'bg-gray-700 hover:bg-gray-800 text-white border-gray-800',
+} as const;
+
 const getCategoryIcon = (categoryName: string): React.ReactNode => {
   const Icon = CATEGORY_ICONS[categoryName] || Star;
   return <Icon className="h-5 w-5" />;
@@ -340,6 +346,20 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
     setSelectedRemedyName(remedyName);
   }, []);
 
+  // Optimization: O(1) lookup for selected symptoms instead of O(N*M) search in render loop
+  const symptomsMap = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const map = new Map<string, any>();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    categories.forEach((cat: any) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      cat.symptoms.forEach((sym: any) => {
+        map.set(sym.id, sym);
+      });
+    });
+    return map;
+  }, [categories]);
+
   return (
     <div className="space-y-6">
       {/* Header with controls */}
@@ -585,11 +605,7 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
           <CardContent>
             <div className="flex flex-wrap gap-2">
               {selectedSymptoms.map(symptomId => {
-                const symptom = filteredData
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  .flatMap((cat: any) => cat.symptoms)
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  .find((s: any) => s.id === symptomId);
+                const symptom = symptomsMap.get(symptomId);
                 return symptom ? (
                   <Badge key={symptomId} variant="secondary" className="text-sm">
                     {symptom.description}
