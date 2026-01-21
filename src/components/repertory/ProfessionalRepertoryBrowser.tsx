@@ -7,16 +7,21 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
-  Search, Filter, Grid, List, Star, Brain, Eye, User,
-  Wind, Mic, Droplets, Moon, Thermometer, Zap,
+  Search, Filter, Grid, List, Star,
   Plus, Minus,
   BarChart3, PieChart, TrendingUp, BookOpen, Save, Share2,
-  Download, X, Bone
+  Download, X
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import dynamic from 'next/dynamic';
 import { useDebounce } from '@/hooks/use-debounce';
+import {
+  getCategoryIcon,
+  REMEDY_COLORS,
+  filterRepertoryData,
+  type Symptom
+} from './repertory-utils';
 
 const ProfessionalRemedyDetails = dynamic(() =>
   import('./ProfessionalRemedyDetails').then((mod) => mod.ProfessionalRemedyDetails),
@@ -27,41 +32,6 @@ const ProfessionalRemedyDetails = dynamic(() =>
     ssr: false 
   }
 );
-
-interface Remedy {
-  name: string;
-  grade: number;
-  frequency?: number;
-}
-
-interface Symptom {
-  id: string;
-  category: string;
-  description: string;
-  remedies: Remedy[];
-  children?: Symptom[];
-  prevalence?: number;
-}
-
-const CATEGORY_ICONS: { [key: string]: React.ElementType } = {
-  'Mind': Brain,
-  'Head': User,
-  'Eye': Eye,
-  'Respiration': Wind,
-  'Cough': Mic,
-  'Fever': Thermometer,
-  'Skin': User,
-  'Sleep': Moon,
-  'Gastric': Droplets,
-  'Urinary': Droplets,
-  'Pain': Zap,
-  'Arthritis': Bone
-};
-
-const getCategoryIcon = (categoryName: string): React.ReactNode => {
-  const Icon = CATEGORY_ICONS[categoryName] || Star;
-  return <Icon className="h-5 w-5" />;
-};
 
 const getRemedyColor = (grade: number): string => {
   return REMEDY_COLORS[grade as keyof typeof REMEDY_COLORS] || REMEDY_COLORS[1];
@@ -271,61 +241,8 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
 
   // Filter and search logic
   const filteredData = useMemo(() => {
-    let filtered = categories;
-
-    // Category filter
-    if (selectedCategory !== 'all') {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      filtered = filtered.filter((cat: any) => cat.id === selectedCategory);
-    }
-
-    // Search filter
-    if (debouncedSearchTerm) {
-      const searchLower = debouncedSearchTerm.toLowerCase();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      filtered = filtered.map((category: any) => ({
-        ...category,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        symptoms: category.symptoms.filter((symptom: any) =>
-          symptom.description.toLowerCase().includes(searchLower) ||
-          symptom.category.toLowerCase().includes(searchLower)
-        )
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      })).filter((category: any) => category.symptoms.length > 0);
-    }
-
-    // Grade filter
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    filtered = filtered.map((category: any) => ({
-      ...category,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      symptoms: category.symptoms.map((symptom: any) => ({
-        ...symptom,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        remedies: symptom.remedies.filter((remedy: any) => filterGrade.includes(remedy.grade))
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      })).filter((symptom: any) => symptom.remedies.length > 0)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    })).filter((category: any) => category.symptoms.length > 0);
-
-    // Sort symptoms
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    filtered = filtered.map((category: any) => ({
-      ...category,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      symptoms: [...category.symptoms].sort((a: any, b: any) => {
-        switch (sortBy) {
-          case 'frequency':
-            return (b.prevalence || 0) - (a.prevalence || 0);
-          case 'remedies':
-            return b.remedies.length - a.remedies.length;
-          default:
-            return a.description.localeCompare(b.description);
-        }
-      })
-    }));
-
-    return filtered;
+    return filterRepertoryData(categories, selectedCategory, debouncedSearchTerm, filterGrade, sortBy) as any[];
   }, [categories, selectedCategory, debouncedSearchTerm, filterGrade, sortBy]);
 
   const toggleSymptomSelection = useCallback((symptomId: string) => {
