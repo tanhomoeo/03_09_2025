@@ -43,6 +43,13 @@ interface Symptom {
   prevalence?: number;
 }
 
+const REMEDY_COLORS = {
+  1: "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300",
+  2: "bg-blue-100 text-blue-700 font-medium italic dark:bg-blue-900/30 dark:text-blue-300",
+  3: "bg-red-100 text-red-700 font-bold dark:bg-red-900/30 dark:text-red-300",
+  4: "bg-red-100 text-red-700 font-bold uppercase dark:bg-red-900/30 dark:text-red-300"
+};
+
 const CATEGORY_ICONS: { [key: string]: React.ElementType } = {
   'Mind': Brain,
   'Head': User,
@@ -134,14 +141,13 @@ SymptomCard.displayName = 'SymptomCard';
 
 interface AnalyticalViewProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  filteredData: any[];
+  flatSymptoms: any[];
   selectedSymptoms: string[];
 }
 
-const AnalyticalView: React.FC<AnalyticalViewProps> = ({ filteredData, selectedSymptoms }) => {
+const AnalyticalView: React.FC<AnalyticalViewProps> = ({ flatSymptoms, selectedSymptoms }) => {
   const analysisData = useMemo(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const allSymptoms = filteredData.flatMap((cat: any) => cat.symptoms);
+    const allSymptoms = flatSymptoms;
     const remedyFrequency: { [key: string]: number } = {};
     const gradeDistribution: { [key: number]: number } = { 1: 0, 2: 0, 3: 0 };
 
@@ -159,7 +165,7 @@ const AnalyticalView: React.FC<AnalyticalViewProps> = ({ filteredData, selectedS
       .slice(0, 10);
 
     return { topRemedies, gradeDistribution, totalSymptoms: allSymptoms.length };
-  }, [filteredData]);
+  }, [flatSymptoms]);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -327,6 +333,12 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
 
     return filtered;
   }, [categories, selectedCategory, debouncedSearchTerm, filterGrade, sortBy]);
+
+  // Optimization: Flatten symptoms once to avoid repeated O(N) operations in render loop
+  const allFilteredSymptoms = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return filteredData.flatMap((cat: any) => cat.symptoms);
+  }, [filteredData]);
 
   const toggleSymptomSelection = useCallback((symptomId: string) => {
     setSelectedSymptoms(prev => 
@@ -534,7 +546,7 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
         {/* Main content area */}  
         <div className="lg:col-span-3">
           {viewMode === 'analytical' ? (
-            <AnalyticalView filteredData={filteredData} selectedSymptoms={selectedSymptoms} />
+            <AnalyticalView flatSymptoms={allFilteredSymptoms} selectedSymptoms={selectedSymptoms} />
           ) : (
             <Card>
               <CardHeader>
@@ -585,9 +597,7 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
           <CardContent>
             <div className="flex flex-wrap gap-2">
               {selectedSymptoms.map(symptomId => {
-                const symptom = filteredData
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  .flatMap((cat: any) => cat.symptoms)
+                const symptom = allFilteredSymptoms
                   // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   .find((s: any) => s.id === symptomId);
                 return symptom ? (
