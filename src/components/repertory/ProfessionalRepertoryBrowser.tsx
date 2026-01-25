@@ -58,6 +58,13 @@ const CATEGORY_ICONS: { [key: string]: React.ElementType } = {
   'Arthritis': Bone
 };
 
+const REMEDY_COLORS = {
+  1: "bg-slate-500",
+  2: "bg-blue-600 italic",
+  3: "bg-red-600 font-bold",
+  4: "bg-red-600 font-bold uppercase"
+};
+
 const getCategoryIcon = (categoryName: string): React.ReactNode => {
   const Icon = CATEGORY_ICONS[categoryName] || Star;
   return <Icon className="h-5 w-5" />;
@@ -140,17 +147,21 @@ interface AnalyticalViewProps {
 
 const AnalyticalView: React.FC<AnalyticalViewProps> = ({ filteredData, selectedSymptoms }) => {
   const analysisData = useMemo(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const allSymptoms = filteredData.flatMap((cat: any) => cat.symptoms);
     const remedyFrequency: { [key: string]: number } = {};
     const gradeDistribution: { [key: number]: number } = { 1: 0, 2: 0, 3: 0 };
+    let totalSymptoms = 0;
 
+    // Optimization: Use nested loops instead of flatMap to avoid intermediate array allocation
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    allSymptoms.forEach((symptom: any) => {
+    filteredData.forEach((cat: any) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      symptom.remedies.forEach((remedy: any) => {
-        remedyFrequency[remedy.name] = (remedyFrequency[remedy.name] || 0) + 1;
-        gradeDistribution[remedy.grade] = (gradeDistribution[remedy.grade] || 0) + 1;
+      cat.symptoms.forEach((symptom: any) => {
+        totalSymptoms++;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        symptom.remedies.forEach((remedy: any) => {
+          remedyFrequency[remedy.name] = (remedyFrequency[remedy.name] || 0) + 1;
+          gradeDistribution[remedy.grade] = (gradeDistribution[remedy.grade] || 0) + 1;
+        });
       });
     });
 
@@ -158,7 +169,7 @@ const AnalyticalView: React.FC<AnalyticalViewProps> = ({ filteredData, selectedS
       .sort(([,a], [,b]) => b - a)
       .slice(0, 10);
 
-    return { topRemedies, gradeDistribution, totalSymptoms: allSymptoms.length };
+    return { topRemedies, gradeDistribution, totalSymptoms };
   }, [filteredData]);
 
   return (
@@ -327,6 +338,20 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
 
     return filtered;
   }, [categories, selectedCategory, debouncedSearchTerm, filterGrade, sortBy]);
+
+  // Optimization: O(1) lookup for symptoms to avoid O(N*M) searches in render loop
+  const symptomLookup = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const lookup = new Map<string, any>();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    filteredData.forEach((category: any) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      category.symptoms.forEach((symptom: any) => {
+        lookup.set(symptom.id, symptom);
+      });
+    });
+    return lookup;
+  }, [filteredData]);
 
   const toggleSymptomSelection = useCallback((symptomId: string) => {
     setSelectedSymptoms(prev => 
@@ -585,11 +610,7 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
           <CardContent>
             <div className="flex flex-wrap gap-2">
               {selectedSymptoms.map(symptomId => {
-                const symptom = filteredData
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  .flatMap((cat: any) => cat.symptoms)
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  .find((s: any) => s.id === symptomId);
+                const symptom = symptomLookup.get(symptomId);
                 return symptom ? (
                   <Badge key={symptomId} variant="secondary" className="text-sm">
                     {symptom.description}
