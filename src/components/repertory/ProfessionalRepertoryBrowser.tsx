@@ -43,6 +43,13 @@ interface Symptom {
   prevalence?: number;
 }
 
+const REMEDY_COLORS = {
+  1: 'bg-slate-500',
+  2: 'bg-blue-600 italic',
+  3: 'bg-red-600 font-bold',
+  4: 'bg-red-700 font-bold uppercase'
+};
+
 const CATEGORY_ICONS: { [key: string]: React.ElementType } = {
   'Mind': Brain,
   'Head': User,
@@ -328,6 +335,20 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
     return filtered;
   }, [categories, selectedCategory, debouncedSearchTerm, filterGrade, sortBy]);
 
+  // Optimization: Lookup map for O(1) access to symptoms
+  const symptomLookup = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const lookup = new Map<string, any>();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    filteredData.forEach((cat: any) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      cat.symptoms.forEach((s: any) => {
+        lookup.set(s.id, s);
+      });
+    });
+    return lookup;
+  }, [filteredData]);
+
   const toggleSymptomSelection = useCallback((symptomId: string) => {
     setSelectedSymptoms(prev => 
       prev.includes(symptomId) 
@@ -585,11 +606,7 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
           <CardContent>
             <div className="flex flex-wrap gap-2">
               {selectedSymptoms.map(symptomId => {
-                const symptom = filteredData
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  .flatMap((cat: any) => cat.symptoms)
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  .find((s: any) => s.id === symptomId);
+                const symptom = symptomLookup.get(symptomId);
                 return symptom ? (
                   <Badge key={symptomId} variant="secondary" className="text-sm">
                     {symptom.description}
