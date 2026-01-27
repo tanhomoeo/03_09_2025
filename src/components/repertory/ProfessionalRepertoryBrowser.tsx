@@ -43,6 +43,13 @@ interface Symptom {
   prevalence?: number;
 }
 
+const REMEDY_COLORS = {
+  1: "bg-slate-100 text-slate-800 border-slate-200",
+  2: "bg-blue-100 text-blue-800 border-blue-200 italic",
+  3: "bg-red-100 text-red-800 border-red-200 font-bold",
+  4: "bg-red-100 text-red-800 border-red-200 font-bold uppercase"
+};
+
 const CATEGORY_ICONS: { [key: string]: React.ElementType } = {
   'Mind': Brain,
   'Head': User,
@@ -328,6 +335,19 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
     return filtered;
   }, [categories, selectedCategory, debouncedSearchTerm, filterGrade, sortBy]);
 
+  // Optimization: specific symptom lookup map to avoid O(N) searches in render loop
+  const symptomLookup = useMemo(() => {
+    const lookup = new Map<string, Symptom>();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    categories.forEach((cat: any) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      cat.symptoms.forEach((symptom: any) => {
+        lookup.set(symptom.id, symptom);
+      });
+    });
+    return lookup;
+  }, [categories]);
+
   const toggleSymptomSelection = useCallback((symptomId: string) => {
     setSelectedSymptoms(prev => 
       prev.includes(symptomId) 
@@ -585,11 +605,7 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
           <CardContent>
             <div className="flex flex-wrap gap-2">
               {selectedSymptoms.map(symptomId => {
-                const symptom = filteredData
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  .flatMap((cat: any) => cat.symptoms)
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  .find((s: any) => s.id === symptomId);
+                const symptom = symptomLookup.get(symptomId);
                 return symptom ? (
                   <Badge key={symptomId} variant="secondary" className="text-sm">
                     {symptom.description}
