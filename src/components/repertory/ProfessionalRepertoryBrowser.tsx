@@ -43,13 +43,6 @@ interface Symptom {
   prevalence?: number;
 }
 
-const REMEDY_COLORS = {
-  1: "bg-slate-100 text-slate-800 border-slate-200",
-  2: "bg-blue-100 text-blue-800 border-blue-200 italic",
-  3: "bg-red-100 text-red-800 border-red-200 font-bold",
-  4: "bg-red-100 text-red-800 border-red-200 font-bold uppercase"
-};
-
 const CATEGORY_ICONS: { [key: string]: React.ElementType } = {
   'Mind': Brain,
   'Head': User,
@@ -154,17 +147,21 @@ interface AnalyticalViewProps {
 
 const AnalyticalView: React.FC<AnalyticalViewProps> = ({ filteredData, selectedSymptoms }) => {
   const analysisData = useMemo(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const allSymptoms = filteredData.flatMap((cat: any) => cat.symptoms);
     const remedyFrequency: { [key: string]: number } = {};
     const gradeDistribution: { [key: number]: number } = { 1: 0, 2: 0, 3: 0 };
+    let totalSymptoms = 0;
 
+    // Optimized: Use nested forEach to avoid intermediate array allocation from flatMap
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    allSymptoms.forEach((symptom: any) => {
+    filteredData.forEach((cat: any) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      symptom.remedies.forEach((remedy: any) => {
-        remedyFrequency[remedy.name] = (remedyFrequency[remedy.name] || 0) + 1;
-        gradeDistribution[remedy.grade] = (gradeDistribution[remedy.grade] || 0) + 1;
+      cat.symptoms.forEach((symptom: any) => {
+        totalSymptoms++;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        symptom.remedies.forEach((remedy: any) => {
+          remedyFrequency[remedy.name] = (remedyFrequency[remedy.name] || 0) + 1;
+          gradeDistribution[remedy.grade] = (gradeDistribution[remedy.grade] || 0) + 1;
+        });
       });
     });
 
@@ -172,7 +169,7 @@ const AnalyticalView: React.FC<AnalyticalViewProps> = ({ filteredData, selectedS
       .sort(([,a], [,b]) => b - a)
       .slice(0, 10);
 
-    return { topRemedies, gradeDistribution, totalSymptoms: allSymptoms.length };
+    return { topRemedies, gradeDistribution, totalSymptoms };
   }, [filteredData]);
 
   return (
@@ -428,6 +425,7 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
                 variant={viewMode === 'list' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setViewMode('list')}
+                aria-label="List View"
               >
                 <List className="h-4 w-4" />
               </Button>
@@ -435,6 +433,7 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
                 variant={viewMode === 'grid' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setViewMode('grid')}
+                aria-label="Grid View"
               >
                 <Grid className="h-4 w-4" />
               </Button>
@@ -442,6 +441,7 @@ export const ProfessionalRepertoryBrowser: React.FC<ProfessionalRepertoryBrowser
                 variant={viewMode === 'analytical' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setViewMode('analytical')}
+                aria-label="Analytical View"
               >
                 <BarChart3 className="h-4 w-4" />
               </Button>
