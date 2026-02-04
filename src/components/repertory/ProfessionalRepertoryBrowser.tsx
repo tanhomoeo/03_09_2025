@@ -43,13 +43,6 @@ interface Symptom {
   prevalence?: number;
 }
 
-const REMEDY_COLORS = {
-  1: "bg-slate-100 text-slate-800 border-slate-200",
-  2: "bg-blue-100 text-blue-800 border-blue-200 italic",
-  3: "bg-red-100 text-red-800 border-red-200 font-bold",
-  4: "bg-red-100 text-red-800 border-red-200 font-bold uppercase"
-};
-
 const CATEGORY_ICONS: { [key: string]: React.ElementType } = {
   'Mind': Brain,
   'Head': User,

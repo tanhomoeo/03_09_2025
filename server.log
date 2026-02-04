@@ -1,0 +1,25 @@
+
+> nextn@0.1.0 dev /app
+> npx next dev -p 3005
+
+npm warn Unknown env config "verify-deps-before-run". This will stop working in the next major version of npm.
+npm warn Unknown env config "npm-globalconfig". This will stop working in the next major version of npm.
+npm warn Unknown env config "_jsr-registry". This will stop working in the next major version of npm.
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3005
+  - Environments: .env
+
+ ✓ Starting...
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+ ✓ Ready in 2.1s
+ ○ Compiling /src/middleware ...
+ ✓ Compiled /src/middleware in 823ms (117 modules)
+ ○ Compiling /verify-search ...
+ ✓ Compiled /verify-search in 13.5s (996 modules)
+ GET /verify-search 200 in 15142ms
+ ✓ Compiled in 1595ms (424 modules)
+ ✓ Compiled in 1144ms (513 modules)
