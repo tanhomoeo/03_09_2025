@@ -1,5 +1,6 @@
 'use client';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useDebounce } from '@/hooks/use-debounce';
 import {
   Card,
   CardContent,
@@ -15,6 +16,7 @@ import { searchMateria, type MateriaEntry } from '@/lib/repertoryIndex';
 
 export const MateriaMedicaSearch: React.FC = () => {
   const [query, setQuery] = useState('');
+  const debouncedQuery = useDebounce(query, 500);
   const [results, setResults] = useState<MateriaEntry[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -28,14 +30,16 @@ export const MateriaMedicaSearch: React.FC = () => {
     }
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
-    setQuery(val);
-    if (val.trim().length >= 2) {
-      void onSearch(val);
+  useEffect(() => {
+    if (debouncedQuery.trim().length >= 2) {
+      void onSearch(debouncedQuery);
     } else {
       setResults([]);
     }
+  }, [debouncedQuery, onSearch]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(e.target.value);
   };
 
   return (
