@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
 import { getReturnRequest } from '@/lib/steadfastService';
 
-export async function GET(_: Request, { params }: { params: { id: string } }) {
+export async function GET(req: Request) {
+  const id = req.url.split('/').pop();
   try {
-    const idNum = Number(params.id);
+    const idNum = Number(id);
     if (!idNum || Number.isNaN(idNum)) {
       return NextResponse.json({ error: 'Invalid id' }, { status: 400 });
     }
