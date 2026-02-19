@@ -5,3 +5,18 @@ runConfig:
   # Increase this value if you'd like to automatically spin up
   # more instances in response to increased traffic.
   maxInstances: 1
+
+# Defines secret environment variables that are available to your
+# web framework's server-side code.
+# https://firebase.google.com/docs/app-hosting/configure#secret-environment-variables
+secretEnvironmentVariables:
+  - secret: GOOGLE_GENAI_API_KEY
+    key: GOOGLE_GENAI_API_KEY
+  - secret: STEADFAST_API_URL
+    key: STEADFAST_API_URL
+  - secret: STEADFAST_API_KEY
+    key: STEADFAST_API_KEY
+  - secret: STEADFAST_SECRET_KEY
+    key: STEADFAST_SECRET_KEY
+  - secret: STEADFAST_WEBHOOK_SECRET
+    key: STEADFAST_WEBHOOK_SECRET

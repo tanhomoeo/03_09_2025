@@ -1,23 +1,15 @@
-import {genkit} from 'genkit';
-import {googleAI} from '@genkit-ai/googleai';
 
-if (!process.env.GEMINI_API_KEY) {
-  if (process.env.NODE_ENV === 'production') {
-    console.warn(
-      'GEMINI_API_KEY is not set. AI features will not be available.'
-    );
-  } else {
-    // In development, we can throw an error to make it obvious.
-    // throw new Error('GEMINI_API_KEY is not set. Please set it in your .env file.');
-    console.warn('GEMINI_API_KEY is not set. Please set it in your .env file.');
-  }
-}
+import { firebase } from '@genkit-ai/firebase';
+import { googleAI } from '@genkit-ai/googleai';
+import { configureGenkit } from '@genkit-ai/core';
 
-export const ai = genkit({
+export default configureGenkit({
   plugins: [
-    googleAI({
-      apiKey: process.env.GEMINI_API_KEY,
+    firebase(),
+    googleAI({ 
+      apiKey: process.env.GOOGLE_GENAI_API_KEY as string 
     }),
   ],
-  model: 'googleai/gemini-1.5-flash',
+  logLevel: 'debug',
+  enableTracingAndMetrics: true,
 });

@@ -39,7 +39,7 @@ async function makeSteadfastRequest<T>(
   }
 
   try {
-    const response = await fetch(`${BASE_URL}${path}`, options);
+    const response = await fetch(`${BASE_URL}/api/v1${path}`, options);
 
     // Check if the response is ok (status in the range 200-299)
     if (!response.ok) {
