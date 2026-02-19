@@ -66,12 +66,17 @@ export default function AiRepertoryPage() {
           body: JSON.stringify({ symptoms: values.symptoms }),
         });
         const result: SuggestRemediesOutput | { error?: string } = await res.json();
-        if (!res.ok || ("error" in result && result.error)) {
-          throw new Error(
-            result.error || 'AI কোনো বিশ্লেষণ দিতে পারেনি।'
-          );
+        
+        if (!res.ok) {
+            const mde = ('error' in result && result.error) ? result.error : 'AI কোনো বিশ্লেষণ দিতে পারেনি।';
+            throw new Error(message);
         }
-        setResults(result as SuggestRemediesOutput);
+
+        if ('error' in result) {
+          throw new Error(result.error || 'AI কোনো বিশ্লেষণ দিতে পারেনি।');
+        }
+        
+        setResults(result);
       } catch (e: unknown) {
         const errorMessage =
           e instanceof Error
