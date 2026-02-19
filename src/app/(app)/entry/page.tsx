@@ -51,8 +51,6 @@ import { format, isValid } from 'date-fns';
 import { bn } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import { Textarea } from '@/components/ui/textarea';
-import dynamic from 'next/dynamic';
-import type { HandwrittenFormOutput } from '@/ai/flows/handwritten-patient-form-parser-flow';
 import type { CategorizedCaseNotesOutput } from '@/ai/flows/categorize-case-notes-flow';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import {
@@ -86,23 +84,9 @@ const patientFormSchema = z.object({
 
 type PatientFormValues = z.infer<typeof patientFormSchema>;
 
-const ScanPatientFormModal = dynamic(
-  () => import('@/components/patient/ScanPatientFormModal'),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="fixed inset-0 bg-background/50 flex items-center justify-center z-50">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />{' '}
-        <span className="ml-2">ক্যামেরা লোড হচ্ছে...</span>
-      </div>
-    ),
-  },
-);
-
 function PatientEntryPageContent() {
   const { toast } = useToast();
   const searchParams = useSearchParams();
-  const [isCameraModalOpen, setIsCameraModalOpen] = useState(false);
   const [isCategorizing, setIsCategorizing] = useState(false);
   const [categorizationError, setCategorizationError] = useState<string | null>(
     null,
@@ -168,37 +152,6 @@ function PatientEntryPageContent() {
     }
   }, [searchParams, form]);
 
-  const handleDataExtracted = (extractedData: HandwrittenFormOutput) => {
-    if (extractedData.name)
-      form.setValue('name', extractedData.name, { shouldDirty: true });
-    if (extractedData.phone)
-      form.setValue('phone', extractedData.phone, { shouldDirty: true });
-    if (extractedData.guardianName)
-      form.setValue('guardianName', extractedData.guardianName, {
-        shouldDirty: true,
-      });
-    if (extractedData.villageUnion)
-      form.setValue('villageUnion', extractedData.villageUnion, {
-        shouldDirty: true,
-      });
-    if (extractedData.thanaUpazila)
-      form.setValue('thanaUpazila', extractedData.thanaUpazila, {
-        shouldDirty: true,
-      });
-    if (extractedData.district)
-      form.setValue('district', extractedData.district, { shouldDirty: true });
-    if (extractedData.age)
-      form.setValue('age', extractedData.age, { shouldDirty: true });
-
-    setIsCameraModalOpen(false);
-
-    toast({
-      title: 'ফর্ম পূরণ হয়েছে',
-      description:
-        'AI দ্বারা সনাক্ত করা তথ্য দিয়ে ফর্মটি পূরণ করা হয়েছে। অনুগ্রহ করে যাচাই করে নিন।',
-    });
-  };
-
   const handleCategorizeNotes = async () => {
     const caseNotesText = form.getValues('caseNotes');
     if (!caseNotesText || caseNotesText.trim().length < 20) {
@@ -234,12 +187,11 @@ function PatientEntryPageContent() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ caseNotesText }),
       });
-      const result = (await res.json()) as
-        | CategorizedCaseNotesOutput
-        | { error?: string };
-      if (!res.ok || (result as any)?.error) {
+      const result: CategorizedCaseNotesOutput | { error?: string } = await res.json();
+
+      if (!res.ok || ("error" in result && result.error)) {
         throw new Error(
-          ((result as any)?.error as string) || 'বিশ্লেষণ ব্যর্থ হয়েছে',
+          ("error" in result && result.error) || 'বিশ্লেষণ ব্যর্থ হয়েছে'
         );
       }
       const data = result as CategorizedCaseNotesOutput;
@@ -258,7 +210,7 @@ function PatientEntryPageContent() {
         error instanceof Error ? error.message : 'একটি অজানা ত্রুটি ঘটেছে।';
       setCategorizationError(errorMessage);
       toast({
-        title: 'বিশ্লেষণ ব্য���্থ হয়েছে',
+        title: 'বিশ্লেষণ ব্যর্থ হয়েছে',
         description: errorMessage,
         variant: 'destructive',
       });
@@ -402,7 +354,7 @@ function PatientEntryPageContent() {
                   রোগীর সাধারণ তথ্য
                 </CardTitle>
                 <CardDescription>
-                  রোগীর ব্যক্তিগত ��বং যোগাযোগের তথ্য লিখুন।
+                  রোগীর ব্যক্তিগত এবং যোগাযোগের তথ্য লিখুন।
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -456,7 +408,7 @@ function PatientEntryPageContent() {
                     name="diaryNumber"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>ডায়েরি নম��বর</FormLabel>
+                        <FormLabel>ডায়েরি নম্বর</FormLabel>
                         <FormControl>
                           <Input
                             placeholder="যেমন: F/123, CH/456"
@@ -803,14 +755,6 @@ function PatientEntryPageContent() {
           </form>
         </Form>
       </div>
-
-      {isCameraModalOpen && (
-        <ScanPatientFormModal
-          isOpen={isCameraModalOpen}
-          onClose={() => setIsCameraModalOpen(false)}
-          onDataExtracted={handleDataExtracted}
-        />
-      )}
     </>
   );
 }

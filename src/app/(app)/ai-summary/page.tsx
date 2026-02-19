@@ -65,13 +65,10 @@ export default function AiRepertoryPage() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ symptoms: values.symptoms }),
         });
-        const result = (await res.json()) as
-          | SuggestRemediesOutput
-          | { error?: string };
-        if (!res.ok || (result as any)?.error) {
+        const result: SuggestRemediesOutput | { error?: string } = await res.json();
+        if (!res.ok || ("error" in result && result.error)) {
           throw new Error(
-            ((result as any)?.error as string) ||
-              'AI কোনো বিশ্লেষণ দিতে পারেনি।',
+            result.error || 'AI কোনো বিশ্লেষণ দিতে পারেনি।'
           );
         }
         setResults(result as SuggestRemediesOutput);
@@ -153,7 +150,7 @@ export default function AiRepertoryPage() {
                     <Brain />
                   </div>
                   <p className="text-muted-foreground text-center font-headline text-lg">
-                    AI বিশ্লেষণে�� ফলাফল
+                    AI বিশ্লেষণে ফলাফল
                   </p>
                   <p className="text-muted-foreground/80 text-sm text-center mt-1">
                     বিশ্লেষণের ফলাফল এখানে প্রদর্শিত হবে।
