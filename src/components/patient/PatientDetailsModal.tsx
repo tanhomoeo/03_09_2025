@@ -60,7 +60,7 @@ import {
 import { cn } from '@/lib/utils';
 import { isValid, format as formatDateFns } from 'date-fns';
 import CategorizedSymptomsDisplay, {
-  sectionConfig as CATEGORY_LABELS,
+  sectionConfig,
 } from '@/components/repertory/CategorizedSymptomsDisplay';
 
 export interface PatientDetailsModalProps {
@@ -720,7 +720,7 @@ export function PatientDetailsModal({
                         </h3>
                         {isEditingInfo ? (
                           <div className="space-y-4">
-                            {Object.entries(CATEGORY_LABELS).map(
+                            {Object.entries(sectionConfig).map(
                               ([categoryKey, categoryInfo]) => (
                                 <div key={categoryKey}>
                                   <h4 className="font-semibold text-base mb-2 flex items-center gap-2">
