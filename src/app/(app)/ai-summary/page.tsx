@@ -23,10 +23,7 @@ import {
   CardTitle,
   CardDescription,
 } from '@/components/ui/card';
-import {
-  CategorizedSymptomsDisplay,
-  LABELS as CATEGORY_LABELS,
-} from '@/components/repertory/CategorizedSymptomsDisplay';
+import CategorizedSymptomsDisplay from '@/components/repertory/CategorizedSymptomsDisplay';
 import { RemedySuggestionsDisplay } from '@/components/repertory/RemedySuggestionsDisplay';
 import { RepertorySuggestionDisplay } from '@/components/repertory/RepertorySuggestionDisplay';
 
@@ -185,8 +182,7 @@ export default function AiRepertoryPage() {
                   </CardHeader>
                   <CardContent>
                     <CategorizedSymptomsDisplay
-                      symptoms={results.categorizedSymptoms}
-                      labels={CATEGORY_LABELS}
+                      categorizedNotes={results.categorizedSymptoms}
                     />
                   </CardContent>
                 </Card>

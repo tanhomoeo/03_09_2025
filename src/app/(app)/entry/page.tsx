@@ -53,10 +53,7 @@ import { cn } from '@/lib/utils';
 import { Textarea } from '@/components/ui/textarea';
 import type { CategorizedCaseNotesOutput } from '@/ai/flows/categorize-case-notes-flow';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
-import {
-  CategorizedSymptomsDisplay,
-  LABELS as CATEGORY_LABELS,
-} from '@/components/repertory/CategorizedSymptomsDisplay';
+import CategorizedSymptomsDisplay from '@/components/repertory/CategorizedSymptomsDisplay';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 
 const patientFormSchema = z.object({
@@ -730,8 +727,7 @@ function PatientEntryPageContent() {
                             </Alert>
                           )}
                         <CategorizedSymptomsDisplay
-                          symptoms={categorizationResult.categorizedNotes}
-                          labels={CATEGORY_LABELS}
+                          categorizedNotes={categorizationResult.categorizedNotes}
                         />
                       </div>
                     )}
