@@ -283,6 +283,7 @@ export function PatientDetailsModal({
     data,
   ) => {
     try {
+      // Empty string গুলোকে undefined করে দেওয়া যাতে ফায়ারবেসে অহেতুক ফিল্ড না যায়
       const updatedPatientData: Partial<Patient> = {
         name: data.name,
         phone: data.phone,
@@ -290,7 +291,7 @@ export function PatientDetailsModal({
         district: data.district || undefined,
         diaryNumber: data.diaryNumber || undefined,
         age: data.age || undefined,
-        gender: data.gender as PatientGender,
+        gender: data.gender ? (data.gender as PatientGender) : undefined, // Fix: Empty string bug resolved
         occupation: data.occupation || undefined,
         guardianName: data.guardianName || undefined,
         thanaUpazila: data.thanaUpazila || undefined,
@@ -734,7 +735,7 @@ export function PatientDetailsModal({
                                           key={`${categoryKey}.${subKey}`}
                                           control={patientInfoForm.control}
                                           name={
-                                            `categorizedCaseNotes.${categoryKey}.${subKey}` as any
+                                            `categorizedCaseNotes.${categoryKey}.${subKey}` as const
                                           }
                                           render={({ field }) => (
                                             <FormItem>
