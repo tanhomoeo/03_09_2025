@@ -8,8 +8,8 @@
  * - SuggestRemediesInput - The input type for the suggestRemedies function.
  * - SuggestRemediesOutput - The return type for the suggestRemedies function.
  */
-import {ai} from '../genkit';
-import {z} from 'zod';
+import { ai } from '../genkit';
+import { z } from 'zod';
 import fs from 'fs';
 import path from 'path';
 
