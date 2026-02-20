@@ -11,7 +11,7 @@
  * - CaseNotesInput - The input type for the flow.
  * - CategorizedCaseNotesOutput - The output type for the flow (the structured notes and key symptoms).
  */
-import { ai } from '../genkit';
+import { ai } from '@genkit-ai/core';
 import { z } from 'genkit';
 
 // Input Schema: A single string containing all the case notes.

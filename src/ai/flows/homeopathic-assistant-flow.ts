@@ -9,7 +9,7 @@
  * - HomeopathicAssistantOutput - The output type for the flow.
  */
 
-import { ai } from '../genkit';
+import { ai } from '@genkit-ai/core';
 import { z } from 'genkit';
 
 // Input Schema: A comprehensive patient case.

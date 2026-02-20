@@ -1,5 +1,5 @@
 import 'server-only';
-import { firebase } from '@genkit-ai/firebase';
+import { firebase } from '@genkit-ai/firebase/plugin';
 import { googleAI } from '@genkit-ai/googleai';
 import { configureGenkit } from '@genkit-ai/core';
 
