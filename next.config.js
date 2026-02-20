@@ -1,4 +1,3 @@
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
@@ -10,10 +9,10 @@ const nextConfig = {
     ],
   },
   webpack: (config, { isServer }) => {
-    // Replace raw-loader with native asset modules
+    // Replaced deprecated raw-loader with native asset modules
     config.module.rules.push({
       test: /\.txt$/,
-      type: 'asset/source', // Updated from raw-loader
+      type: 'asset/source',
     });
 
     if (!isServer) {
@@ -22,7 +21,9 @@ const nextConfig = {
             "fs": false,
         };
     }
+    
     config.externals = [...(config.externals || []), 'canvas', 'handlebars', 'eslint'];
+
     return config;
   },
   devIndicators: {
