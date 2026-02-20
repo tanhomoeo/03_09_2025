@@ -59,9 +59,8 @@ import {
 } from '@/components/ui/form';
 import { cn } from '@/lib/utils';
 import { isValid, format as formatDateFns } from 'date-fns';
-import {
-  CategorizedSymptomsDisplay,
-  LABELS as CATEGORY_LABELS,
+import CategorizedSymptomsDisplay, {
+  sectionConfig as CATEGORY_LABELS,
 } from '@/components/repertory/CategorizedSymptomsDisplay';
 
 export interface PatientDetailsModalProps {
@@ -369,7 +368,7 @@ export function PatientDetailsModal({
               value="case_history"
               className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-lg rounded-md p-2 text-sm font-semibold transition-all"
             >
-              কে�� হিস্ট্রি
+              কেস হিস্ট্রি
             </TabsTrigger>
             <TabsTrigger
               value="history"
@@ -645,7 +644,7 @@ export function PatientDetailsModal({
                             name="registrationDate"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>নি��ন্ধনের তারিখ</FormLabel>
+                                <FormLabel>নিবন্ধনের তারিখ</FormLabel>
                                 <FormControl>
                                   <Input
                                     type="date"
@@ -763,10 +762,9 @@ export function PatientDetailsModal({
                           </div>
                         ) : patientInfoForm.watch('categorizedCaseNotes') ? (
                           <CategorizedSymptomsDisplay
-                            symptoms={
-                              patientInfoForm.watch('categorizedCaseNotes')!
-                            }
-                            labels={CATEGORY_LABELS}
+                            categorizedNotes={patientInfoForm.watch(
+                              'categorizedCaseNotes',
+                            )}
                           />
                         ) : (
                           <p className="text-sm text-muted-foreground italic">
@@ -957,7 +955,7 @@ export function PatientDetailsModal({
                   </ul>
                 ) : (
                   <p className="text-muted-foreground text-center py-4">
-                    এই রোগীর ���ন্য কোন পূর্ববর্তী ভিজিটের তথ্য নেই।
+                    এই রোগীর জন্য কোন পূর্ববর্তী ভিজিটের তথ্য নেই।
                   </p>
                 )}
               </TabsContent>

@@ -19,17 +19,12 @@ const firebaseConfig = {
 
 const app: FirebaseApp = getApps().length ? getApp() : initializeApp(firebaseConfig);
 const auth: Auth = getAuth(app);
-
-let db: Firestore;
+const db: Firestore = getFirestore(app);
 
 function getDbInstance(): Firestore {
-  if (!db) {
-    db = getFirestore(app);
-  }
   return db;
 }
 
-// Re-export db as a getter to ensure it's client-side if needed, but getDbInstance is safer.
 export { db, getDbInstance };
 
 

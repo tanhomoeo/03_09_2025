@@ -1,4 +1,3 @@
-'use client';
 import React from 'react';
 import {
   Activity,
@@ -16,7 +15,7 @@ interface SymptomDisplayProps {
   categorizedNotes: any;
 }
 
-const sectionConfig: {
+export const sectionConfig: {
   [key: string]: {
     title: string;
     icon: React.ElementType;
