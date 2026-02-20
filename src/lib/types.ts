@@ -1,3 +1,41 @@
+import { z } from 'zod';
+
+// Schema for Patient Demographics, reusable in Zod and as a TypeScript type.
+export const PatientDemographics = z.object({
+  name: z.string().optional(),
+  age: z.string().optional(),
+  gender: z.string().optional(),
+  height: z.string().optional(),
+  weight: z.string().optional(),
+  complexion: z.string().optional(),
+  mentalState: z.string().optional(),
+});
+export type PatientDemographics = z.infer<typeof PatientDemographics>;
+
+// Schema for AI Analysis Result, reusable in Zod and as a TypeScript type.
+export const AnalysisResultSchema = z.object({
+  categorizedSymptoms: z.object({
+    Locations: z.array(z.string()),
+    Causations: z.array(z.string()),
+    Sensations: z.array(z.string()),
+    Concomitants: z.array(z.string()),
+    Mental: z.array(z.string()),
+  }),
+  remedySuggestions: z.array(
+    z.object({
+      remedyName: z.string(),
+      reasoning: z.string(),
+      dosage: z.object({
+        centesimal: z.string(),
+        millesimal: z.string(),
+      }),
+      precautions: z.string(),
+    })
+  ),
+});
+export type AnalysisResult = z.infer<typeof AnalysisResultSchema>;
+
+
 export interface CategorizedCaseNotes {
   physicalSymptoms?: {
     general?: string;
@@ -62,6 +100,18 @@ export interface Patient {
   district?: string;
   thanaUpazila?: string;
   villageUnion?: string;
+  
+  // New fields for demographics and raw symptoms
+  height?: string;
+  weight?: string;
+  complexion?: string;
+  mentalState?: string;
+  rawSymptoms?: string;
+
+  // New field for AI analysis result
+  analysisResult?: AnalysisResult;
+
+  // Old fields (consider removing if fully replaced)
   caseNotes?: string;
   categorizedCaseNotes?: CategorizedCaseNotes;
 }
