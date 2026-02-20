@@ -416,7 +416,6 @@ export const ProfessionalRemedyDetails: React.FC<ProfessionalRemedyDetailsProps>
 
 // Mock data functions - in a real app, these would come from your database
 const getCommonName = (remedyName: string): string => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const commonNames: { [key: string]: string } = {
     'Arsenicum album': 'Arsenic',
     'Belladonna': 'Deadly Nightshade',
@@ -429,7 +428,6 @@ const getCommonName = (remedyName: string): string => {
 };
 
 const getRemedyDescription = (remedyName: string): string => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const descriptions: { [key: string]: string } = {
     'Arsenicum album': 'A profound acting remedy on every organ and tissue. Its clear-cut characteristic symptoms and correspondence to many severe types of disease make it a frequently indicated remedy.',
     'Belladonna': 'A remedy that affects the nervous system, producing active congestion, throbbing pain, and fever.',
@@ -440,7 +438,6 @@ const getRemedyDescription = (remedyName: string): string => {
 };
 
 const getRemedySphere = (remedyName: string): string => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const spheres: { [key: string]: string } = {
     'Arsenicum album': 'Affects every organ and tissue, particularly the gastrointestinal tract, respiratory system, and skin.',
     'Belladonna': 'Primarily affects the vascular system, brain, and sensory organs.',
@@ -450,7 +447,6 @@ const getRemedySphere = (remedyName: string): string => {
 };
 
 const getConstitution = (remedyName: string): string => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const constitutions: { [key: string]: string } = {
     'Arsenicum album': 'Nervous, restless, anxious individuals with pale, sallow complexion.',
     'Belladonna': 'Plethoric, vigorous individuals with red, flushed face and bright eyes.',
@@ -460,7 +456,6 @@ const getConstitution = (remedyName: string): string => {
 };
 
 const getKeySymptoms = (remedyName: string): string[] => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const symptoms: { [key: string]: string[] } = {
     'Arsenicum album': [
       'Great anxiety and restlessness',
@@ -482,7 +477,6 @@ const getKeySymptoms = (remedyName: string): string[] => {
 
 const getMentalSymptoms = (remedyName: string): string[] => {
   if (Array.isArray(remedyName)) return []; // Handle unexpected type safely
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   return [
     'Anxiety and restlessness',
     'Fear of death',
@@ -503,18 +497,14 @@ const getPhysicalSymptoms = (remedyName: string): string[] => {
   ];
 };
 
-const getModalities = (remedyName: string) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const unused = remedyName;
+const getModalities = (_remedyName: string) => {
   return {
     worse: ['Midnight', 'Cold', 'Alone', 'Motion', 'Noise'],
     better: ['Heat', 'Company', 'Rest', 'Warm drinks', 'Elevation']
   };
 };
 
-const getRelationships = (remedyName: string) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const unused = remedyName;
+const getRelationships = (_remedyName: string) => {
   return {
     complementary: ['Phosphorus', 'Sulphur', 'Thuja'],
     follows_well: ['Arnica', 'Aconite', 'Belladonna'],
@@ -522,14 +512,11 @@ const getRelationships = (remedyName: string) => {
   };
 };
 
-const getPotencies = (remedyName: string): string[] => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const unused = remedyName;
+const getPotencies = (_remedyName: string): string[] => {
   return ['6C', '30C', '200C', '1M', '10M'];
 };
 
 const getSource = (remedyName: string): string => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const sources: { [key: string]: string } = {
     'Arsenicum album': 'Mineral',
     'Belladonna': 'Plant',
@@ -541,14 +528,10 @@ const getSource = (remedyName: string): string => {
   return sources[remedyName] || 'Homeopathic';
 };
 
-const getToxicity = (remedyName: string): string => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const unused = remedyName;
+const getToxicity = (_remedyName: string): string => {
   return 'Highly toxic in crude form, safe when potentized';
 };
 
-const getProvingInfo = (remedyName: string): string => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const unused = remedyName;
+const getProvingInfo = (_remedyName: string): string => {
   return 'Extensively proven by Hahnemann and later provers';
 };

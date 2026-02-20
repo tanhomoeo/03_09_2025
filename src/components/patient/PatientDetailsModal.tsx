@@ -735,7 +735,7 @@ export function PatientDetailsModal({
                                           key={`${categoryKey}.${subKey}`}
                                           control={patientInfoForm.control}
                                           name={
-                                            `categorizedCaseNotes.${categoryKey}.${subKey}` as const
+                                            `categorizedCaseNotes.${categoryKey}.${subKey}` as any
                                           }
                                           render={({ field }) => (
                                             <FormItem>
