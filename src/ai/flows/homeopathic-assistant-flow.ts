@@ -80,7 +80,7 @@ const homeopathicAssistantFlow = ai.defineFlow(
     inputSchema: HomeopathicAssistantInputSchema,
     outputSchema: HomeopathicAssistantOutputSchema,
   },
-  async (input) => {
+  async (input: HomeopathicAssistantInput) => {
     try {
       const { output } = await homeopathicAssistantPrompt(input);
       if (!output) {

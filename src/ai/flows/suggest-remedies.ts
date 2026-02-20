@@ -89,12 +89,13 @@ export type SuggestRemediesOutput = z.infer<typeof SuggestRemediesOutputSchema>;
 
 const loadKnowledgeBase = (fileName: string): string => {
     try {
-        const fullPath = path.join(process.cwd(), 'public', 'data', fileName);
+        // প্রোডাকশনের জন্য আরও নির্ভরযোগ্য পাথ রেজোলিউশন
+        const fullPath = path.resolve(process.cwd(), 'public', 'data', fileName);
         if (fs.existsSync(fullPath)) {
             return fs.readFileSync(fullPath, 'utf-8');
         } else {
              console.warn(`Knowledge base file not found at ${fullPath}. AI will rely on internal knowledge.`);
-             return ''; // Return empty string to indicate missing source
+             return ''; 
         }
     } catch (error) {
         console.error(`Error reading knowledge base file ${fileName}:`, error);
@@ -125,25 +126,25 @@ const prompt = ai.definePrompt({
   prompt: `You are a highly experienced homeopathic doctor. You will analyze the patient's symptoms based on the core principles of classical homeopathy.
 Your tasks are:
 
-1.  **Categorize Symptoms**: Your first task is to categorize the given symptoms into the seven specific sections defined in the 'categorizedSymptoms' output schema. The output object for categorized symptoms should contain the defined fields directly, NOT nested under a title for each category. If no information is provided for a category or sub-category, you MUST leave it as an empty string.
+1.  **Categorize Symptoms**: Categorize the given symptoms exactly according to the provided JSON schema. Ensure the output is properly nested under the correct categories (e.g., physicalSymptoms, mentalAndEmotionalSymptoms). If no information is provided for a category or sub-category, you MUST leave it as an empty string.
 
-2.  **Best Repertory Suggestion**: Analyze the case as a whole and determine which knowledge source (Hahnemann's, Boericke's, Kent's, or your own general AI knowledge) appears most suited for finding the primary remedy for this specific patient. Provide a short justification for your choice in the 'bestRepertorySuggestion' field.
+2.  **Best Repertory Suggestion**: Analyze the case as a whole and determine which knowledge source (Hahnemann's, Boericke's, Kent's, or your own general AI knowledge) appears most suited for finding the primary remedy for this specific case. Provide a short justification in Bengali.
 
 3.  **Suggest Remedies**: Perform a comprehensive analysis using your categorized symptoms and FOUR distinct sources of information (Hahnemann, Boericke, Kent, and your general knowledge) to generate a single, unified list of remedy suggestions.
 
-    *Important Note:* If the provided knowledge base text for any specific Materia Medica (Hahnemann, Boericke, or Kent) is empty or unavailable, you MUST rely on your own extensive internal knowledge and training regarding that specific source to provide accurate analysis and remedy suggestions. Use your general AI knowledge to supplement any gaps.
+    *Important Note:* If the provided knowledge base text for any specific Materia Medica is empty or unavailable, rely on your own extensive internal knowledge regarding that specific source. Use your general AI knowledge to supplement gaps.
 
     -   For each potential remedy, provide:
         a.  The medicine's name in English.
         b.  A brief description in Bengali explaining why it's suggested.
         c.  A confidence score from 1 to 100 indicating the match.
-        d.  A detailed justification in Bengali. If from a text source ('H', 'B', or 'K'), reference how the user's symptoms match.
+        d.  A detailed justification in Bengali. Reference how the user's symptoms match the source.
         e.  The source ('H', 'B', 'K', or 'AI').
 
     -   Combine all found remedies into a single 'remedies' array.
     -   Sort this 'remedies' array from the highest score to the lowest.
 
-All output (descriptions, justifications, categorized symptoms, and repertory suggestions) MUST be in Bengali, except for the medicine names, which must be in English.
+All descriptions, justifications, and categorizations MUST be in Bengali. Medicine names must be in English.
 
 Knowledge Bases:
 - Hahnemann's Materia Medica: {{{hahnemannsMateriaMedica}}}
