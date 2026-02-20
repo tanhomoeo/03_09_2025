@@ -22,8 +22,6 @@ const nextConfig = {
         };
     }
     
-    config.externals = [...(config.externals || []), 'canvas', 'handlebars', 'eslint', 'require-in-the-middle', 'import-in-the-middle', 'express'];
-
     return config;
   },
   devIndicators: {
