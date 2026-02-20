@@ -23,7 +23,7 @@ import {
 } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import { addPatient, updatePatient } from '@/lib/firestoreService';
-import type { Patient, CategorizedCaseNotes } from '@/lib/types';
+import type { Patient, CategorizedCaseNotes, AnalysisResult } from '@/lib/types';
 import { PageHeaderCard } from '@/components/shared/PageHeaderCard';
 import { useSearchParams } from 'next/navigation';
 import {
@@ -33,6 +33,7 @@ import {
   ClipboardEdit,
   Lightbulb,
   Save,
+  Sparkles,
 } from 'lucide-react';
 import {
   Popover,
@@ -51,9 +52,8 @@ import { format, isValid } from 'date-fns';
 import { bn } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import { Textarea } from '@/components/ui/textarea';
-import type { CategorizedCaseNotesOutput } from '@/ai/flows/categorize-case-notes-flow';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
-import CategorizedSymptomsDisplay from '@/components/repertory/CategorizedSymptomsDisplay';
+import AnalysisResultDisplay from '@/components/repertory/AnalysisResultDisplay';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 
 const patientFormSchema = z.object({
@@ -74,9 +74,15 @@ const patientFormSchema = z.object({
   district: z.string().optional(),
   thanaUpazila: z.string().optional(),
   villageUnion: z.string().optional(),
-  caseNotes: z.string().optional(),
-  categorizedCaseNotes: z.custom<CategorizedCaseNotes>().optional(),
-  keySymptoms: z.array(z.string()).optional(),
+  height: z.string().optional(),
+  weight: z.string().optional(),
+  complexion: z.string().optional(),
+  mentalState: z.string().optional(),
+  rawSymptoms: z.string().min(20, {
+    message:
+      'বিশ্লেষণ করার জন্য অনুগ্রহ করে রোগীর সমস্যা ও ইতিহাস সম্পর্কে আরও বিস্তারিত লিখুন (কমপক্ষে ২০ অক্ষর)।',
+  }),
+  analysisResult: z.custom<AnalysisResult>().optional(),
 });
 
 type PatientFormValues = z.infer<typeof patientFormSchema>;
@@ -84,12 +90,9 @@ type PatientFormValues = z.infer<typeof patientFormSchema>;
 function PatientEntryPageContent() {
   const { toast } = useToast();
   const searchParams = useSearchParams();
-  const [isCategorizing, setIsCategorizing] = useState(false);
-  const [categorizationError, setCategorizationError] = useState<string | null>(
-    null,
-  );
-  const [categorizationResult, setCategorizationResult] =
-    useState<CategorizedCaseNotesOutput | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisError, setAnalysisError] = useState<string | null>(null);
+  const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmittingFinal, setIsSubmittingFinal] = useState(false);
   const [savedPatientId, setSavedPatientId] = useState<string | null>(null);
@@ -108,15 +111,16 @@ function PatientEntryPageContent() {
       district: '',
       thanaUpazila: '',
       villageUnion: '',
-      caseNotes: '',
-      categorizedCaseNotes: undefined,
-      keySymptoms: [],
+      height: '',
+      weight: '',
+      complexion: '',
+      mentalState: '',
+      rawSymptoms: '',
+      analysisResult: undefined,
     },
   });
 
-  const {
-    formState: { isDirty },
-  } = form;
+  const { formState: { isDirty } } = form;
 
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
@@ -139,7 +143,7 @@ function PatientEntryPageContent() {
     if (Object.keys(urlParams).length > 0) {
       Object.entries(urlParams).forEach(([key, value]) => {
         if (value && key in form.getValues()) {
-          if (key !== 'registrationDate' && key !== 'categorizedCaseNotes') {
+          if (key !== 'registrationDate' && key !== 'analysisResult') {
             form.setValue(key as keyof PatientFormValues, value, {
               shouldDirty: true,
             });
@@ -149,9 +153,9 @@ function PatientEntryPageContent() {
     }
   }, [searchParams, form]);
 
-  const handleCategorizeNotes = async () => {
-    const caseNotesText = form.getValues('caseNotes');
-    if (!caseNotesText || caseNotesText.trim().length < 20) {
+  const handleAnalyzeSymptoms = async () => {
+    const rawSymptoms = form.getValues('rawSymptoms');
+    if (!rawSymptoms || rawSymptoms.trim().length < 20) {
       toast({
         title: 'অপর্যাপ্ত তথ্য',
         description:
@@ -160,59 +164,69 @@ function PatientEntryPageContent() {
       });
       return;
     }
-
-    // Stop voice input and sync latest DOM value back into form so text never disappears
+    
     try {
       window.dispatchEvent(new CustomEvent('stop-voice-input'));
     } catch (e) {
       console.error(e);
     }
     const el = document.getElementById(
-      'caseNotes-textarea',
+      'rawSymptoms-textarea',
     ) as HTMLTextAreaElement | null;
-    if (el && el.value !== form.getValues('caseNotes')) {
-      form.setValue('caseNotes', el.value, { shouldDirty: true });
+    if (el && el.value !== form.getValues('rawSymptoms')) {
+      form.setValue('rawSymptoms', el.value, { shouldDirty: true });
     }
 
-    setIsCategorizing(true);
-    setCategorizationError(null);
-    setCategorizationResult(null);
+    setIsAnalyzing(true);
+    setAnalysisError(null);
+    setAnalysisResult(null);
 
     try {
-      const res = await fetch('/api/ai/categorize-notes', {
+      const patientDemographics = {
+          name: form.getValues('name'),
+          age: form.getValues('age'),
+          gender: form.getValues('gender'),
+          height: form.getValues('height'),
+          weight: form.getValues('weight'),
+          complexion: form.getValues('complexion'),
+          mentalState: form.getValues('mentalState'),
+      };
+
+      const res = await fetch('/api/ai/homeopathic-assistant', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ caseNotesText }),
+        body: JSON.stringify({ 
+            rawSymptoms, 
+            patientDemographics
+        }),
       });
-      const result: CategorizedCaseNotesOutput | { error?: string } = await res.json();
+      const result: AnalysisResult | { error?: string } = await res.json();
 
-      if (!res.ok || ("error" in result && result.error)) {
+      if (!res.ok || ('error' in result && result.error)) {
         throw new Error(
-          ("error" in result && result.error) || 'বিশ্লেষণ ব্যর্থ হয়েছে'
+          ('error' in result && result.error) || 'বিশ্লেষণ ব্যর্থ হয়েছে'
         );
       }
-      const data = result as CategorizedCaseNotesOutput;
-      setCategorizationResult(data);
-      form.setValue('categorizedCaseNotes', data.categorizedNotes, {
-        shouldDirty: true,
-      });
-      form.setValue('keySymptoms', data.keySymptoms, { shouldDirty: true });
+      const data = result as AnalysisResult;
+      setAnalysisResult(data);
+      form.setValue('analysisResult', data, { shouldDirty: true });
+      
       toast({
-        title: 'লক্ষণ শ্রেণীবিভাগ সফল হয়েছে',
+        title: 'লক্ষণ বিশ্লেষণ সফল হয়েছে',
         description:
-          'AI দ্বারা রোগীর লক্ষণগুলো সফলভাবে ৭টি ক্যাটাগরিতে ভাগ করা হয়েছে এবং গুরুত্বপূর্ণ লক্ষণগুলো চিহ্নিত করা হয়েছে।',
+          'AI দ্বারা রোগীর লক্ষণগুলো বিশ্লেষণ করে সম্ভাব্য ঔষধ ও তার কারণ দেখানো হয়েছে।',
       });
     } catch (error: unknown) {
       const errorMessage =
         error instanceof Error ? error.message : 'একটি অজানা ত্রুটি ঘটেছে।';
-      setCategorizationError(errorMessage);
+      setAnalysisError(errorMessage);
       toast({
         title: 'বিশ্লেষণ ব্যর্থ হয়েছে',
         description: errorMessage,
         variant: 'destructive',
       });
     } finally {
-      setIsCategorizing(false);
+      setIsAnalyzing(false);
     }
   };
 
@@ -229,6 +243,10 @@ function PatientEntryPageContent() {
       'district',
       'thanaUpazila',
       'villageUnion',
+      'height',
+      'weight',
+      'complexion',
+      'mentalState',
     ];
     const triggerResult = await form.trigger(basicInfoFields);
 
@@ -257,6 +275,10 @@ function PatientEntryPageContent() {
         thanaUpazila: data.thanaUpazila || undefined,
         villageUnion: data.villageUnion || undefined,
         diaryNumber: data.diaryNumber || undefined,
+        height: data.height || undefined,
+        weight: data.weight || undefined,
+        complexion: data.complexion || undefined,
+        mentalState: data.mentalState || undefined,
       };
 
       let patientId = savedPatientId;
@@ -270,7 +292,7 @@ function PatientEntryPageContent() {
 
       toast({
         title: 'সাধারণ তথ্য সংরক্ষিত হয়েছে',
-        description: `${data.name}-এর প্রাথমিক তথ্য সফলভাবে সেভ করা হয়েছে। এখন আপনি কেস হিস্ট্রি যোগ করতে পারেন।`,
+        description: `${data.name}-এর প্রাথমিক তথ্য সফলভাবে সেভ করা হয়েছে। এখন আপনি লক্ষণ বিশ্লেষণ করতে পারেন।`,
       });
       window.dispatchEvent(new CustomEvent('firestoreDataChange'));
     } catch (error) {
@@ -289,28 +311,23 @@ function PatientEntryPageContent() {
     setIsSubmittingFinal(true);
     try {
       let patientId = savedPatientId;
+      
+      if (!patientId) {
+          toast({
+              title: 'তথ্য সংরক্ষণ করুন',
+              description: 'চূড়ান্তভাবে নিবন্ধন করার আগে অনুগ্রহ করে "সাধারণ তথ্য সংরক্ষণ করুন" বাটনে ক্লিক করে তথ্য সেভ করুন।',
+              variant: 'destructive'
+          });
+          setIsSubmittingFinal(false);
+          return;
+      }
 
       const fullPatientData: Partial<Patient> = {
-        name: data.name,
-        phone: data.phone,
-        registrationDate: data.registrationDate.toISOString(),
-        age: data.age || undefined,
-        gender: (data.gender as Patient['gender']) || undefined,
-        occupation: data.occupation || undefined,
-        guardianName: data.guardianName || undefined,
-        district: data.district || undefined,
-        thanaUpazila: data.thanaUpazila || undefined,
-        villageUnion: data.villageUnion || undefined,
-        diaryNumber: data.diaryNumber || undefined,
-        caseNotes: data.caseNotes || undefined,
-        categorizedCaseNotes: data.categorizedCaseNotes || undefined,
+        rawSymptoms: data.rawSymptoms || undefined,
+        analysisResult: data.analysisResult || undefined,
       };
 
-      if (patientId) {
-        await updatePatient(patientId, fullPatientData);
-      } else {
-        patientId = await addPatient(fullPatientData);
-      }
+      await updatePatient(patientId, fullPatientData);
 
       toast({
         title: 'রোগী নিবন্ধিত',
@@ -318,7 +335,7 @@ function PatientEntryPageContent() {
       });
 
       form.reset();
-      setCategorizationResult(null);
+      setAnalysisResult(null);
       setSavedPatientId(null);
       window.dispatchEvent(new CustomEvent('firestoreDataChange'));
     } catch (error) {
@@ -348,10 +365,10 @@ function PatientEntryPageContent() {
             <Card className="shadow-lg border-border/30 bg-card/60 backdrop-blur-xl">
               <CardHeader>
                 <CardTitle className="font-headline text-lg">
-                  রোগীর সাধারণ তথ্য
+                  রোগীর সাধারণ ও ডেমোগ্রাফিক তথ্য
                 </CardTitle>
                 <CardDescription>
-                  রোগীর ব্যক্তিগত এবং যোগাযোগের তথ্য লিখুন।
+                  রোগীর ব্যক্তিগত, যোগাযোগের তথ্য এবং ডেমোগ্রাফিক বিবরণ লিখুন।
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -491,7 +508,7 @@ function PatientEntryPageContent() {
                     name="occupation"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>রোগীর পেশা (ঐচ্ছিক)</FormLabel>
+                        <FormLabel>রোগীর পেশা</FormLabel>
                         <Select
                           onValueChange={field.onChange}
                           value={field.value}
@@ -516,6 +533,58 @@ function PatientEntryPageContent() {
                             <SelectItem value="other">অন্যান্য</SelectItem>
                           </SelectContent>
                         </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                   <FormField
+                    control={form.control}
+                    name="height"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>উচ্চতা</FormLabel>
+                        <FormControl>
+                          <Input placeholder="যেমন: ৫ ফুট ৬ ইঞ্চি" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="weight"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>ওজন</FormLabel>
+                        <FormControl>
+                          <Input placeholder="যেমন: ৬৫ কেজি" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="complexion"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>গায়ের বর্ণ</FormLabel>
+                        <FormControl>
+                          <Input placeholder="যেমন: ফর্সা, শ্যামলা, কালো" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="mentalState"
+                    render={({ field }) => (
+                      <FormItem className="lg:col-span-3">
+                        <FormLabel>সাধারণ মানসিক অবস্থা</FormLabel>
+                        <FormControl>
+                          <Input placeholder="যেমন: হাসিখুশি, উদ্বিগ্ন, বিষণ্ণ, খিটখিটে" {...field} />
+                        </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -565,7 +634,7 @@ function PatientEntryPageContent() {
                     name="villageUnion"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>গ্রাম / ইউনিয়ন (ঐচ্ছিক)</FormLabel>
+                        <FormLabel>গ্রাম / ইউনিয়ন</FormLabel>
                         <FormControl>
                           <Input
                             placeholder="গ্রাম বা ইউনিয়ন লিখুন"
@@ -582,7 +651,7 @@ function PatientEntryPageContent() {
                     name="thanaUpazila"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>থানা / উপজেলা (ঐচ্ছিক)</FormLabel>
+                        <FormLabel>থানা / উপজেলা</FormLabel>
                         <FormControl>
                           <Input
                             placeholder="থানা বা উপজেলা লিখুন"
@@ -599,7 +668,7 @@ function PatientEntryPageContent() {
                     name="district"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>জেলা (ঐচ্ছিক)</FormLabel>
+                        <FormLabel>জেলা</FormLabel>
                         <FormControl>
                           <Input
                             placeholder="জেলা লিখুন"
@@ -633,7 +702,7 @@ function PatientEntryPageContent() {
             <Card className="shadow-lg border-border/30 bg-card/60 backdrop-blur-xl">
               <CardHeader>
                 <CardTitle className="font-headline text-lg">
-                  রোগীর সমস্যা ও বিশ্লেষণ
+                  রোগীর বিস্তারিত লক্ষণ ও বিশ্লেষণ
                 </CardTitle>
                 <CardDescription>
                   এখানে রোগীর সকল সমস্যা, মানসিক অবস্থা, রোগের কারণ, পূর্ব ও
@@ -643,18 +712,18 @@ function PatientEntryPageContent() {
               <CardContent className="space-y-6">
                 <FormField
                   control={form.control}
-                  name="caseNotes"
+                  name="rawSymptoms"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel htmlFor="caseNotes-textarea">
-                        রোগীর সমস্যা, ইতিহাস এবং অন্যান্য লক্ষণ
+                      <FormLabel htmlFor="rawSymptoms-textarea">
+                        রোগীর বিস্তারিত লক্ষণ (Raw Symptoms)
                       </FormLabel>
                       <FormControl>
                         <Textarea
-                          id="caseNotes-textarea"
+                          id="rawSymptoms-textarea"
                           placeholder="রোগীর সকল সমস্যা বিস্তারিতভাবে এখানে লিখুন..."
                           {...field}
-                          rows={6}
+                          rows={8}
                           className="text-base"
                         />
                       </FormControl>
@@ -671,64 +740,40 @@ function PatientEntryPageContent() {
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                     <div>
                       <h3 className="font-semibold text-base text-primary flex items-center">
-                        <Brain className="w-5 h-5 mr-2" />
-                        AI দ্বারা লক্ষণ বিশ্লেষণ
+                        <Sparkles className="w-5 h-5 mr-2 text-amber-500" />
+                        AI দ্বারা লক্ষণ বিশ্লেষণ করুন
                       </h3>
                       <p className="text-xs text-muted-foreground">
-                        উপরের টেক্সটবক্সে লেখা বিবরণ থেকে স্বয়ংক্রিয়ভাবে
-                        লক্ষণগুলো ৭টি ক্যাটাগরিতে ভাগ করুন।
+                        উপরের লক্ষণগুলো থেকে AI সবচেয়ে উপযুক্ত ঔষধ খুঁজে বের করবে।
                       </p>
                     </div>
                     <Button
                       type="button"
-                      onClick={handleCategorizeNotes}
-                      disabled={isCategorizing}
+                      onClick={handleAnalyzeSymptoms}
+                      disabled={isAnalyzing}
                       className="bg-gradient-to-r from-teal-400 to-cyan-500 text-white shadow-md hover:shadow-lg hover:brightness-105 transition-all"
                     >
-                      {isCategorizing ? (
+                      {isAnalyzing ? (
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       ) : (
-                        <ClipboardEdit className="mr-2 h-4 w-4" />
+                        <Brain className="mr-2 h-4 w-4" />
                       )}
-                      {isCategorizing
+                      {isAnalyzing
                         ? 'বিশ্লেষণ চলছে...'
-                        : 'নোট বিশ্লেষণ করুন'}
+                        : 'ঔষধ বিশ্লেষণ করুন'}
                     </Button>
                   </div>
 
-                  {categorizationError && (
+                  {analysisError && (
                     <Alert variant="destructive">
                       <AlertTitle>ত্রুটি</AlertTitle>
-                      <AlertDescription>{categorizationError}</AlertDescription>
+                      <AlertDescription>{analysisError}</AlertDescription>
                     </Alert>
                   )}
 
-                  {categorizationResult &&
-                    categorizationResult.categorizedNotes && (
+                  {analysisResult && (
                       <div className="space-y-4 pt-4 mt-4 border-t">
-                        {categorizationResult.keySymptoms &&
-                          categorizationResult.keySymptoms.length > 0 && (
-                            <Alert className="bg-yellow-100/70 border-yellow-300/80 text-yellow-900 dark:bg-yellow-900/20 dark:border-yellow-800/50 dark:text-yellow-200">
-                              <Lightbulb className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
-                              <AlertTitle className="font-bold text-yellow-800 dark:text-yellow-300">
-                                মূল লক্ষণসমূহ
-                              </AlertTitle>
-                              <AlertDescription className="text-yellow-700 dark:text-yellow-300/90">
-                                AI দ্বারা চিহ্নিত প্রধান লক্ষণগুলো নিচে দেওয়া
-                                হলো:
-                                <ul className="list-disc pl-5 mt-1">
-                                  {categorizationResult.keySymptoms.map(
-                                    (symptom, i) => (
-                                      <li key={i}>{symptom}</li>
-                                    ),
-                                  )}
-                                </ul>
-                              </AlertDescription>
-                            </Alert>
-                          )}
-                        <CategorizedSymptomsDisplay
-                          categorizedNotes={categorizationResult.categorizedNotes}
-                        />
+                        <AnalysisResultDisplay result={analysisResult} />
                       </div>
                     )}
                 </div>
@@ -736,7 +781,7 @@ function PatientEntryPageContent() {
               <CardFooter className="flex justify-end border-t pt-6">
                 <Button
                   type="submit"
-                  disabled={isSubmittingFinal || isSubmitting}
+                  disabled={isSubmittingFinal || isSubmitting || !savedPatientId || !analysisResult}
                   className="min-w-[180px] bg-gradient-to-r from-green-500 to-teal-500 text-white font-bold tracking-wider hover:brightness-110 active:brightness-90 transition-all duration-200 shadow-lg"
                 >
                   {isSubmittingFinal ? (
@@ -744,7 +789,7 @@ function PatientEntryPageContent() {
                   ) : (
                     <Save className="mr-2 h-4 w-4" />
                   )}
-                  বিশ্লেষণসহ নিবন্ধন করুন
+                  সম্পূর্ণ তথ্য সেভ করুন
                 </Button>
               </CardFooter>
             </Card>

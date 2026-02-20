@@ -1,108 +1,157 @@
-
 'use client';
 import React from 'react';
 import {
   MapPin,
   Sparkle,
   HeartPulse,
-  GitCompareArrows,
-  Puzzle,
+  Link as LinkIcon,
   Brain,
-  History,
-  AlertTriangle,
+  Pill,
+  Lightbulb,
+  FileText,
+  Beaker,
+  ShieldAlert,
 } from 'lucide-react';
-import type { ComplaintAnalyzerOutput } from '@/ai/flows/complaint-analyzer-flow';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import type { AnalysisResult } from '@/lib/types';
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 
-type CategoryKey = Exclude<keyof ComplaintAnalyzerOutput, 'srpSummary'>;
+const CATEGORY_META = {
+  Locations: {
+    title: 'স্থান (Locations)',
+    icon: MapPin,
+    color: 'blue',
+  },
+  Causations: {
+    title: 'কারণ (Causations)',
+    icon: Sparkle,
+    color: 'green',
+  },
+  Sensations: {
+    title: 'অনুভূতি (Sensations)',
+    icon: HeartPulse,
+    color: 'purple',
+  },
+  Concomitants: {
+    title: 'সহগামী লক্ষণ (Concomitants)',
+    icon: LinkIcon,
+    color: 'orange',
+  },
+  Mental: {
+    title: 'মানসিক অবস্থা (Mental)',
+    icon: Brain,
+    color: 'amber',
+  },
+} as const;
 
-const CATEGORY_META: Record<
-  CategoryKey,
-  {
-    title: string;
-    icon: React.ElementType;
-    color: string; // Tailwind class for background
-    textColor: string;
-  }
-> = {
-  location: { title: 'অবস্থান', icon: MapPin, color: 'bg-blue-100 dark:bg-blue-900/40', textColor: 'text-blue-800 dark:text-blue-300' },
-  causation: { title: 'কারণ', icon: Sparkle, color: 'bg-green-100 dark:bg-green-900/40', textColor: 'text-green-800 dark:text-green-300' },
-  sensation: { title: 'অনুভূতি', icon: HeartPulse, color: 'bg-purple-100 dark:bg-purple-900/40', textColor: 'text-purple-800 dark:text-purple-300' },
-  modalities: { title: 'হ্রাস/বৃদ্ধি', icon: GitCompareArrows, color: 'bg-yellow-100 dark:bg-yellow-900/40', textColor: 'text-yellow-800 dark:text-yellow-300' },
-  concomitant: { title: 'সহগামী লক্ষণ', icon: Puzzle, color: 'bg-orange-100 dark:bg-orange-900/40', textColor: 'text-orange-800 dark:text-orange-300' },
-  generalities: { title: 'সামগ্রিক বৈশিষ্ট্য', icon: Brain, color: 'bg-amber-100 dark:bg-amber-900/40', textColor: 'text-amber-800 dark:text-amber-300' },
-  pastHistory: { title: 'অতীত ইতিহাস', icon: History, color: 'bg-gray-100 dark:bg-gray-900/40', textColor: 'text-gray-800 dark:text-gray-300' },
-};
-
-const LABEL_MAP: Record<string, string> = {
-  general: 'সাধারণ',
-  srp: 'Peculiarity (SRP)',
-  aggravation: 'বৃদ্ধি (Aggravation)',
-  amelioration: 'উপশম (Amelioration)',
-  physical: 'শারীরিক (Physical)',
-  mental: 'মানসিক (Mental)',
-  disease: 'রোগের ইতিহাস',
-  personal: 'ব্যক্তিগত ইতিহাস',
-  family: 'পারিবারিক ইতিহাস',
-  treatment: 'চিকিৎসার ইতিহাস',
-};
+type CategoryKey = keyof typeof CATEGORY_META;
 
 interface AnalysisResultDisplayProps {
-  result: ComplaintAnalyzerOutput;
+  result: AnalysisResult;
 }
 
-export function AnalysisResultDisplay({ result }: AnalysisResultDisplayProps) {
+const AnalysisResultDisplay: React.FC<AnalysisResultDisplayProps> = ({ result }) => {
+  const { categorizedSymptoms, remedySuggestions } = result;
+  const suggestion = remedySuggestions?.[0];
+
+  const renderSymptomCategory = (category: CategoryKey) => {
+    const symptoms = categorizedSymptoms[category];
+    const meta = CATEGORY_META[category];
+    if (!symptoms || symptoms.length === 0) return null;
+
+    return (
+      <Card
+        key={category}
+        className={`bg-${meta.color}-50/50 dark:bg-${meta.color}-900/10 border-${meta.color}-200 dark:border-${meta.color}-800/50 shadow-sm transition-all hover:shadow-md hover:border-${meta.color}-300 dark:hover:border-${meta.color}-700`}
+      >
+        <CardHeader className="p-3">
+          <CardTitle
+            className={`flex items-center text-sm font-semibold text-${meta.color}-700 dark:text-${meta.color}-300`}
+          >
+            <meta.icon className="h-4 w-4 mr-2" />
+            {meta.title}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-3 pt-0 text-sm">
+          <ul className="list-disc list-inside space-y-1">
+            {symptoms.map((symptom, index) => (
+              <li key={index} className="text-gray-700 dark:text-gray-300">
+                {symptom}
+              </li>
+            ))}
+          </ul>
+        </CardContent>
+      </Card>
+    );
+  };
 
   return (
-    <div className="space-y-4">
-      {Object.entries(result).map(([category, data]) => {
-        if (category === 'srpSummary' || typeof data !== 'object' || !data) return null;
+    <div className="space-y-6 rounded-lg bg-gray-50/80 dark:bg-gray-900/20 p-4 border border-gray-200 dark:border-gray-800 shadow-inner">
+      <h2 className="text-xl font-bold text-center text-gray-800 dark:text-gray-200">
+        AI সহকারী দ্বারা বিশ্লেষণ
+      </h2>
 
-        const categoryKey = category as CategoryKey;
-        const meta = CATEGORY_META[categoryKey];
-        if (!meta) return null;
+      <div>
+        <h3 className="font-semibold text-lg mb-3 text-gray-700 dark:text-gray-300">শ্রেণীবদ্ধ লক্ষণসমূহ</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          {Object.keys(categorizedSymptoms).map((key) => renderSymptomCategory(key as CategoryKey))}
+        </div>
+      </div>
 
-        const hasContent = Object.values(data).some(value => value && String(value).trim() !== '');
-        if (!hasContent) return null;
-
-        const generalContent = Object.entries(data).filter(([key]) => key !== 'srp').map(([key, value]) => {
-            if (!value || typeof value !== 'string' || !value.trim()) return null;
-            return { key, value };
-        }).filter(Boolean);
-
-        const srpContent = data.srp;
-
-        return (
-          <Card key={categoryKey} className={cn('overflow-hidden shadow-md border-border/30', meta.color)}>
-            <CardHeader className={cn("p-3 border-b border-black/10 dark:border-white/10")}>
-              <CardTitle className={cn("flex items-center gap-2 text-md font-bold", meta.textColor)}>
-                <meta.icon className="h-5 w-5" />
-                {meta.title}
+      {suggestion && (
+        <div>
+          <h3 className="font-semibold text-lg mb-3 text-gray-700 dark:text-gray-300 pt-4 border-t border-gray-200 dark:border-gray-700/50">প্রস্তাবিত ঔষধ</h3>
+          <Card className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800/40 dark:to-gray-900/30 shadow-lg border-gray-200 dark:border-gray-700/60">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-3">
+                <Pill className="h-8 w-8 text-primary" />
+                <span className="text-2xl font-bold text-primary">
+                  {suggestion.remedyName}
+                </span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-0 text-sm grid grid-cols-3">
-              <div className="col-span-2 space-y-2 p-3">
-                 {generalContent.map(item => item && (
-                     <div key={item.key}>
-                        <strong className="block mb-0.5 font-semibold text-muted-foreground">{LABEL_MAP[item.key] || item.key}</strong>
-                        <p>{item.value}</p>
-                     </div>
-                 ))}
+            <CardContent className="space-y-4">
+              <div className="p-4 rounded-lg bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-400">
+                <h4 className="font-semibold flex items-center text-blue-800 dark:text-blue-300">
+                  <Lightbulb className="h-5 w-5 mr-2" />
+                  নির্বাচনের কারণ (Reasoning)
+                </h4>
+                <p className="mt-1 text-gray-700 dark:text-gray-300 text-sm">
+                  {suggestion.reasoning}
+                </p>
               </div>
-              {srpContent && (
-                  <div className="col-span-1 p-3 bg-red-100/60 dark:bg-red-900/30 border-l border-red-500/20">
-                     <strong className='font-bold text-red-700 dark:text-red-300 flex items-center gap-1.5'>
-                        <AlertTriangle className="h-4 w-4" />
-                        {LABEL_MAP['srp']}
-                     </strong>
-                     <p className="font-semibold pt-1">{srpContent}</p>
+
+              <Separator />
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="p-4 rounded-lg bg-green-50 dark:bg-green-900/20 border-l-4 border-green-400">
+                     <h4 className="font-semibold flex items-center text-green-800 dark:text-green-300">
+                        <Beaker className="h-5 w-5 mr-2" />
+                        প্রস্তাবিত মাত্রা (Dosage)
+                    </h4>
+                     <div className="mt-2 text-sm space-y-2">
+                        <p><strong>Centesimal:</strong> <Badge variant="outline">{suggestion.dosage.centesimal}</Badge></p>
+                        <p><strong>Millesimal:</strong> <Badge variant="outline">{suggestion.dosage.millesimal}</Badge></p>
+                    </div>
                   </div>
-              )}
+                  <div className="p-4 rounded-lg bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-400">
+                     <h4 className="font-semibold flex items-center text-yellow-800 dark:text-yellow-300">
+                        <ShieldAlert className="h-5 w-5 mr-2" />
+                        সতর্কতা (Precautions)
+                    </h4>
+                     <p className="mt-1 text-gray-700 dark:text-gray-300 text-sm">
+                       {suggestion.precautions}
+                     </p>
+                  </div>
+              </div>
             </CardContent>
           </Card>
-        );
-      })}
+        </div>
+      )}
     </div>
   );
-}
+};
+
+export default AnalysisResultDisplay;
