@@ -9,7 +9,7 @@ const nextConfig = {
     ],
   },
   webpack: (config, { isServer }) => {
-    // Replaced deprecated raw-loader with native asset modules
+    // raw-loader এর বদলে Webpack 5 Asset Modules ব্যবহার করা হলো
     config.module.rules.push({
       test: /\.txt$/,
       type: 'asset/source',
@@ -22,13 +22,18 @@ const nextConfig = {
         };
     }
     
+    // externals helps with dependencies that are not meant to be bundled for the client
+    config.externals = [...(config.externals || []), 'canvas', 'handlebars', 'eslint'];
+
     return config;
   },
   devIndicators: {
     allowedDevOrigins: ['*.cloudworkstations.dev'],
   },
   typescript: {
-    ignoreBuildErrors: false,
+    // প্রোডাকশনে যাওয়ার আগে অবশ্যই টাইপ এরর ফিক্স করা উচিত, 
+    // তবে ইমার্জেন্সি ডিপ্লয়মেন্টের জন্য এটি true করে দেখতে পারেন (সুপারিশকৃত নয়)।
+    ignoreBuildErrors: false, 
   },
 };
 
