@@ -7,8 +7,8 @@
  * - RemedyDetailsOutput - The return type for the getRemedyDetails function.
  */
 
-import {ai} from '../genkit';
-import {z} from 'genkit';
+import { ai } from '../genkit';
+import { z } from 'genkit';
 
 // Input Schema: The name of the remedy.
 const RemedyDetailsInputSchema = z.object({
