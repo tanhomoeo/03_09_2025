@@ -8,15 +8,13 @@ import {
   Brain,
   Pill,
   Lightbulb,
-  FileText,
   Beaker,
   ShieldAlert,
 } from 'lucide-react';
 import type { AnalysisResult } from '@/lib/types';
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { cn } from '@/lib/utils';
 
 const CATEGORY_META = {
   Locations: {

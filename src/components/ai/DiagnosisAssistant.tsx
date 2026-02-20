@@ -16,6 +16,7 @@ import {
   ListChecks,
   Pill,
   Copy,
+  Info,
 } from 'lucide-react';
 import type { Patient, Visit } from '@/lib/types';
 import type { HomeopathicAssistantOutput } from '@/ai/flows/homeopathic-assistant-flow';
@@ -149,25 +150,27 @@ export function DiagnosisAssistant({
 
         {analysisResult && (
           <div className="space-y-4 pt-4 border-t">
-            <div>
-              <h4 className="font-semibold text-md mb-2 flex items-center">
-                <ListChecks className="mr-2 h-5 w-5 text-blue-600" />
-                প্রধান লক্ষণসমূহ
-              </h4>
-              <ul className="list-disc list-inside space-y-1 text-sm bg-muted/50 p-3 rounded-md">
-                {analysisResult.keySymptoms.map((symptom, i) => (
-                  <li key={`symptom-${i}`}>{symptom}</li>
-                ))}
-              </ul>
-              <Button
-                onClick={handleUseSymptoms}
-                variant="outline"
-                size="sm"
-                className="mt-2"
-              >
-                <Copy className="mr-2 h-4 w-4" /> এই লক্ষণগুলো ব্যবহার করুন
-              </Button>
-            </div>
+            {analysisResult.keySymptoms && analysisResult.keySymptoms.length > 0 && (
+              <div>
+                <h4 className="font-semibold text-md mb-2 flex items-center">
+                  <ListChecks className="mr-2 h-5 w-5 text-blue-600" />
+                  প্রধান লক্ষণসমূহ
+                </h4>
+                <ul className="list-disc list-inside space-y-1 text-sm bg-muted/50 p-3 rounded-md">
+                  {analysisResult.keySymptoms.map((symptom, i) => (
+                    <li key={`symptom-${i}`}>{symptom}</li>
+                  ))}
+                </ul>
+                <Button
+                  onClick={handleUseSymptoms}
+                  variant="outline"
+                  size="sm"
+                  className="mt-2"
+                >
+                  <Copy className="mr-2 h-4 w-4" /> এই লক্ষণগুলো ব্যবহার করুন
+                </Button>
+              </div>
+            )}
             <div>
               <h4 className="font-semibold text-md mb-2 flex items-center">
                 <Pill className="mr-2 h-5 w-5 text-green-600" />
@@ -184,9 +187,7 @@ export function DiagnosisAssistant({
                     className="text-sm border p-2 rounded-md bg-white/30"
                   >
                     <div className="font-bold flex justify-between items-center text-slate-700">
-                      <span>
-                        {remedy.remedyName} {remedy.potency}
-                      </span>
+                      <span>{remedy.remedyName}</span>
                       <Button
                         variant="ghost"
                         size="icon"
@@ -198,9 +199,26 @@ export function DiagnosisAssistant({
                         <Copy className="h-4 w-4" />
                       </Button>
                     </div>
-                    <p className="text-slate-600 text-xs">
-                      {remedy.justification}
+                    <div className="text-xs text-slate-600 mt-1 mb-2">
+                      <div className="flex gap-2">
+                        <span className="font-semibold">শততমিক:</span> {remedy.dosage.centesimal}
+                      </div>
+                      <div className="flex gap-2">
+                        <span className="font-semibold">সহস্রতমিক:</span> {remedy.dosage.millesimal}
+                      </div>
+                    </div>
+                    <p className="text-slate-700 text-xs mb-2">
+                      <span className="font-semibold block mb-1">যুক্তি (Reasoning):</span>
+                      {remedy.reasoning}
                     </p>
+                    {remedy.precautions && (
+                      <p className="text-amber-700 text-xs bg-amber-50 p-2 rounded border border-amber-100">
+                        <span className="font-semibold flex items-center gap-1 mb-1">
+                          <Info className="h-3 w-3" /> সতর্কতা (Precautions):
+                        </span>
+                        {remedy.precautions}
+                      </p>
+                    )}
                   </div>
                 ))}
               </div>

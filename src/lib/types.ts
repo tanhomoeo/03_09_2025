@@ -14,6 +14,7 @@ export type PatientDemographics = z.infer<typeof PatientDemographics>;
 
 // Schema for AI Analysis Result, reusable in Zod and as a TypeScript type.
 export const AnalysisResultSchema = z.object({
+  keySymptoms: z.array(z.string()).optional(),
   categorizedSymptoms: z.object({
     Locations: z.array(z.string()),
     Causations: z.array(z.string()),
