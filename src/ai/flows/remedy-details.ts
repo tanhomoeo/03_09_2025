@@ -68,7 +68,7 @@ const remedyDetailsFlow = ai.defineFlow(
     inputSchema: RemedyDetailsInputSchema,
     outputSchema: RemedyDetailsOutputSchema,
   },
-  async (input) => {
+  async (input: RemedyDetailsInput) => {
     try {
       const { output } = await remedyDetailsPrompt(input);
       if (!output) {
