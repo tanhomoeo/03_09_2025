@@ -136,7 +136,7 @@ const complaintAnalyzerFlow = ai.defineFlow(
     inputSchema: ComplaintAnalyzerInputSchema,
     outputSchema: ComplaintAnalyzerOutputSchema,
   },
-  async (input) => {
+  async (input: ComplaintAnalyzerInput) => {
     try {
       const { output } = await complaintAnalyzerPrompt(input);
       if (!output) {
