@@ -14,13 +14,34 @@ interface PageHeaderCardProps {
   descriptionClassName?: string;
 }
 
-export const PageHeaderCard: React.FC<PageHeaderCardProps> = ({ title, description, actions, children, className, titleClassName, descriptionClassName }) => {
+export const PageHeaderCard: React.FC<PageHeaderCardProps> = ({
+  title,
+  description,
+  actions,
+  children,
+  className,
+  titleClassName,
+  descriptionClassName,
+}) => {
   return (
-    <Card className={cn("mb-4 shadow-md border-border/20 bg-card/70 backdrop-blur-lg", className)}>
-      <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between gap-2 p-4">
-        <div>
-          <CardTitle className={cn("font-headline text-lg md:text-xl", titleClassName)}>{title}</CardTitle>
-          {description && <CardDescription className={cn("mt-1 text-xs", descriptionClassName, "text-muted-foreground")}>{description}</CardDescription>}
+    <Card
+      className={cn(
+        "sticky top-0 z-10 rounded-none border-x-0 border-t-0 shadow-sm transition-all duration-300 sm:rounded-lg sm:border",
+        "bg-card/80 backdrop-blur-lg",
+        className
+      )}
+      aria-label={`Header for ${title}`}
+    >
+      <CardHeader className="flex flex-col gap-2 p-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex-1">
+          <CardTitle className={cn("font-headline text-lg md:text-xl", titleClassName)}>
+            {title}
+          </CardTitle>
+          {description && (
+            <CardDescription className={cn("mt-1 text-xs text-muted-foreground", descriptionClassName)}>
+              {description}
+            </CardDescription>
+          )}
         </div>
         {actions && <div className="flex items-center gap-2 self-end sm:self-center">{actions}</div>}
       </CardHeader>
