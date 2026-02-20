@@ -12,8 +12,6 @@ import {
   orderBy,
   Timestamp,
   setDoc,
-  or,
-  limit,
   arrayUnion,
 } from 'firebase/firestore';
 import type {
@@ -153,19 +151,6 @@ export const getPatientsByQuery = async (
   }
   const lowerCaseQuery = searchQuery.toLowerCase();
   try {
-    const _q = query(
-      patientsCollectionRef(),
-      or(
-        where('name', '>=', searchQuery),
-        where('name', '<=', searchQuery + '\uf8ff'),
-        where('phone', '==', searchQuery),
-        where('diaryNumber', '==', searchQuery),
-        // Firestore doesn't support case-insensitive or partial text search natively with this method.
-        // For more advanced search, a third-party service like Algolia is recommended.
-        // This query works for exact phone/diary number and prefix-based name search.
-      ),
-      limit(15), // Limit results for performance
-    );
 
     // As Firestore doesn't support `or` with `orderBy` on different fields, manual client-side filter is needed for full text search
     // A more robust solution is to fetch all and filter, or use a dedicated search service.
@@ -869,7 +854,7 @@ export const PAYMENT_METHOD_LABELS: Record<
   string
 > = {
   cash: 'ক্যাশ',
-  bkash: '���িকাশ',
+  bkash: 'বিকাশ',
   nagad: 'নগদ',
   rocket: 'রকেট',
   other: 'অন্যান্য',

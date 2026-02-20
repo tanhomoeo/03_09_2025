@@ -588,7 +588,7 @@ export default function DashboardPage() {
                     </TableHead>
                     <TableHead className="w-[10%] text-right">পরিমাণ</TableHead>
                     <TableHead className="w-[20%] text-center hide-on-print">
-                      অব���্থা ও কার্যক্রম
+                      অবস্থা ও কার্যক্রম
                     </TableHead>
                   </TableRow>
                 </TableHeader>
@@ -786,7 +786,7 @@ export default function DashboardPage() {
               ) : (
                 <TableRow>
                   <TableCell colSpan={7} className="text-center py-8">
-                    আজকের জন্য কোন ��াক্ষাৎ নেই।
+                    আজকের জন্য কোন সাক্ষাৎ নেই।
                   </TableCell>
                 </TableRow>
               )}

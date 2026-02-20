@@ -168,7 +168,7 @@ export function AppSidebar() {
               {APP_NAME}
             </p>
             <p className="text-[10px] text-muted-foreground/70 font-medium whitespace-nowrap">
-              একটি আদর্শ হোমিওপ্যাথিক চিকিৎসালয়
+              একটি আদর্শ হোমিওপ্যাথিক চিকিৎসালয়
             </p>
           </div>
         </button>
