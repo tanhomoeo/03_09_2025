@@ -43,7 +43,10 @@ export async function analyzeHomeopathicCase(input: HomeopathicAssistantInput): 
 const homeopathicAssistantPrompt = ai.definePrompt({
   name: 'homeopathicAssistantPrompt',
   input: { schema: HomeopathicAssistantInputSchema },
-  output: { schema: HomeopathicAssistantOutputSchema },
+  output: { 
+    format: 'json',
+    schema: HomeopathicAssistantOutputSchema 
+  },
   config: {
     temperature: 0.2,
     safetySettings: [
