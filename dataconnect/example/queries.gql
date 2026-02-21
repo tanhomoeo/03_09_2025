@@ -1,0 +1,41 @@
+query ListAllTasksByCompletion($isCompleted: Boolean!) @auth(level: USER) {
+  tasks(where: {isCompleted: {eq: $isCompleted}}) {
+    id
+    title
+    description
+    dueDate
+    isCompleted
+    createdAt
+    category {
+      name
+    }
+    user {
+      displayName
+    }
+  }
+}
+
+mutation CreateNewTask($title: String!, $description: String, $dueDate: Date, $categoryId: UUID) @auth(level: USER) {
+  task_insert(data: {
+    title: $title,
+    description: $description,
+    dueDate: $dueDate,
+    isCompleted: false,
+    createdAt_expr: "request.time",
+    userId_expr: "auth.uid",
+    categoryId: $categoryId
+  })
+}
+
+mutation UpdateTaskCompletionStatus($taskId: UUID!, $isCompleted: Boolean!) @auth(level: USER) {
+  task_update(key: {id: $taskId}, data: {isCompleted: $isCompleted})
+}
+
+query GetMyCategories @auth(level: USER) {
+  categories(where: {userId: {eq_expr: "auth.uid"}}) {
+    id
+    name
+    description
+    createdAt
+  }
+}

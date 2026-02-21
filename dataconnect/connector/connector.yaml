@@ -1,1 +1,13 @@
-connectorId: "default"
+connectorId: default
+generate:
+  javascriptSdk:
+    - outputDir: ../../src/dataconnect-generated
+      package: "@dataconnect/generated"
+      packageJsonDir: ../..
+      react: true
+      angular: false
+    - outputDir: ../../functions/src/dataconnect-generated
+      package: "@dataconnect/generated"
+      packageJsonDir: ../../functions
+      react: false
+      angular: false

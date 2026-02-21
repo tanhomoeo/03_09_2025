@@ -3,8 +3,19 @@ import { getRemedyDetails } from '@/ai/flows/remedy-details';
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
+    let body;
+    try {
+      body = await request.json();
+    } catch (err) {
+      return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+    }
+
+    if (!body || typeof body !== 'object') {
+      return NextResponse.json({ error: 'Body must be a JSON object' }, { status: 400 });
+    }
+
     const { remedyName } = body as { remedyName?: string };
+
     if (!remedyName || typeof remedyName !== 'string') {
       return NextResponse.json(
         { error: 'Invalid or missing remedyName' },

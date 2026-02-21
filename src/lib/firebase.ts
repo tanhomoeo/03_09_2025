@@ -19,14 +19,7 @@ const firebaseConfig = {
 
 const app: FirebaseApp = getApps().length ? getApp() : initializeApp(firebaseConfig);
 const auth: Auth = getAuth(app);
-const db: Firestore = getFirestore(app);
-
-function getDbInstance(): Firestore {
-  return db;
-}
-
-export { db, getDbInstance };
-
+export const db: Firestore = getFirestore(app);
 
 let storageInstance: FirebaseStorage | null = null;
 let analyticsInstance: Analytics | null = null;

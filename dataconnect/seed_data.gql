@@ -1,0 +1,81 @@
+mutation CreateDemoData @transaction @auth(level: USER, insecureReason: "This operation is for seeding demo data, and can be run by any authenticated user.") {
+  user_insertMany(data: [
+    {
+      id: "user1-uuid",
+      uid: "firebase-uid-1",
+      displayName: "Alice",
+      createdAt: "2024-01-01T10:00:00Z"
+    },
+    {
+      id: "user2-uuid",
+      uid: "firebase-uid-2",
+      displayName: "Bob",
+      createdAt: "2024-01-02T11:00:00Z"
+    }
+  ])
+  category_insertMany(data: [
+    {
+      id: "category1-uuid",
+      userId: "user1-uuid",
+      name: "Work Tasks",
+      description: "Tasks related to my job.",
+      createdAt: "2024-01-03T12:00:00Z"
+    },
+    {
+      id: "category2-uuid",
+      userId: "user1-uuid",
+      name: "Personal Errands",
+      description: "Things to do outside of work.",
+      createdAt: "2024-01-04T13:00:00Z"
+    },
+    {
+      id: "category3-uuid",
+      userId: "user2-uuid",
+      name: "Development Projects",
+      description: "Side projects and learning.",
+      createdAt: "2024-01-05T14:00:00Z"
+    }
+  ])
+  task_insertMany(data: [
+    {
+      id: "task1-uuid",
+      userId: "user1-uuid",
+      categoryId: "category1-uuid",
+      title: "Complete project report",
+      description: "Finish the quarterly project report by Friday.",
+      dueDate: "2024-01-10",
+      isCompleted: false,
+      createdAt: "2024-01-06T15:00:00Z"
+    },
+    {
+      id: "task2-uuid",
+      userId: "user1-uuid",
+      categoryId: "category1-uuid",
+      title: "Schedule team meeting",
+      description: "Find a time for the next team sync-up.",
+      dueDate: "2024-01-08",
+      isCompleted: true,
+      createdAt: "2024-01-07T16:00:00Z"
+    },
+    {
+      id: "task3-uuid",
+      userId: "user1-uuid",
+      categoryId: "category2-uuid",
+      title: "Buy groceries",
+      description: "Milk, eggs, bread, and vegetables.",
+      dueDate: "2024-01-09",
+      isCompleted: false,
+      createdAt: "2024-01-07T17:00:00Z"
+    },
+    {
+      id: "task4-uuid",
+      userId: "user2-uuid",
+      categoryId: "category3-uuid",
+      title: "Learn GraphQL",
+      description: "Explore advanced GraphQL concepts with Data Connect.",
+      dueDate: "2024-01-31",
+      isCompleted: false,
+      createdAt: "2024-01-08T18:00:00Z"
+    }
+  ])
+}

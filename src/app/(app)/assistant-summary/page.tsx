@@ -33,7 +33,7 @@ const formSchema = z.object({
   }),
 });
 
-export default function AiRepertoryPage() {
+export default function AssistantRepertoryPage() {
   const [results, setResults] = useState<SuggestRemediesOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -65,12 +65,12 @@ export default function AiRepertoryPage() {
         const result: SuggestRemediesOutput | { error?: string } = await res.json();
         
         if (!res.ok) {
-            const message = ('error' in result && result.error) ? result.error : 'AI কোনো বিশ্লেষণ দিতে পারেনি।';
+            const message = ('error' in result && result.error) ? result.error : 'সহকারী কোনো বিশ্লেষণ দিতে পারেনি।';
             throw new Error(message);
         }
 
         if ('error' in result) {
-          throw new Error(result.error || 'AI কোনো বিশ্লেষণ দিতে পারেনি।');
+          throw new Error(result.error || 'সহকারী কোনো বিশ্লেষণ দিতে পারেনি।');
         }
         
         setResults(result as SuggestRemediesOutput);
@@ -90,8 +90,8 @@ export default function AiRepertoryPage() {
   return (
     <div className="space-y-6">
       <PageHeaderCard
-        title="AI রেপার্টরি ও ঔষধ নির্বাচন"
-        description="রোগীর লক্ষণসমূহের বিস্তারিত বিবরণ দিন এবং Gemini AI-এর মাধ্যমে সেগুলোকে শ্রেণীবদ্ধ করুন, প্রধান লক্ষণগুলো চিহ্নিত করুন এবং মেটেরিয়া মেডিকা ভিত্তিক ঔষধের প্রস্তাবনা পান।"
+        title="সহকারী রেপার্টরি ও ঔষধ নির্বাচন"
+        description="রোগীর লক্ষণসমূহের বিস্তারিত বিবরণ দিন এবং Gemini-এর মাধ্যমে সেগুলোকে শ্রেণীবদ্ধ করুন, প্রধান লক্ষণগুলো চিহ্নিত করুন এবং মেটেরিয়া মেডিকা ভিত্তিক ঔষধের প্রস্তাবনা পান।"
         actions={<Wand2 className="h-8 w-8 text-primary" />}
         className="bg-gradient-to-br from-purple-100 to-indigo-200 dark:from-purple-900/30 dark:to-indigo-900/30"
         titleClassName="text-blue-900 dark:text-blue-300 drop-shadow-sm"
@@ -105,7 +105,7 @@ export default function AiRepertoryPage() {
                 <span>রোগীর লক্ষণ বিবরণ</span>
               </CardTitle>
               <CardDescription className="pt-1 pl-9 text-sm">
-                এখানে রোগীর পূর্ণাঙ্গ বিবরণ লিখুন। AI স্বয়ংক্রিয়ভাবে বিশ্লেষণ
+                এখানে রোগীর পূর্ণাঙ্গ বিবরণ লিখুন। সহকারী স্বয়ংক্রিয়ভাবে বিশ্লেষণ
                 করবে।
               </CardDescription>
             </CardHeader>
@@ -143,7 +143,7 @@ export default function AiRepertoryPage() {
             <Card className="shadow-lg border-border/20 bg-card/50 backdrop-blur-lg p-6 md:p-8 rounded-2xl min-h-[500px]">
               <CardHeader className="p-0 mb-4">
                 <h3 className="font-semibold text-foreground/90 text-xl">
-                  AI দ্বারা বিশ্লেষণ এবং প্রস্তাবনা
+                  সহকারী দ্বারা বিশ্লেষণ এবং প্রস্তাবনা
                 </h3>
               </CardHeader>
               <CardContent className="p-0">
@@ -152,7 +152,7 @@ export default function AiRepertoryPage() {
                     <Brain />
                   </div>
                   <p className="text-muted-foreground text-center font-headline text-lg">
-                    AI বিশ্লেষণে ফলাফল
+                    সহকারী বিশ্লেষণে ফলাফল
                   </p>
                   <p className="text-muted-foreground/80 text-sm text-center mt-1">
                     বিশ্লেষণের ফলাফল এখানে প্রদর্শিত হবে।

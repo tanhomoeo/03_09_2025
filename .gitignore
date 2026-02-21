@@ -16,35 +16,28 @@
 # Production
 /build
 
+# Vercel
+.vercel
+
+# Turbopack
+.turbo
+
+# Static exports
+/export
+
 # Misc
 .DS_Store
 *.pem
+*.log
 
-# Local Environment Variables
+# Environment Variables
+.env
 .env.local
-.env.*.local
-!.env.example
+.env.development.local
+.env.test.local
+.env.production.local
 
-# TypeScript
-*.tsbuildinfo
-next-env.d.ts
-
-# Firebase
-.firebase
-firebase-debug.log
-database-debug.log
-firestore-debug.log
-# App Hosting
-.apphosting # App Hosting temp files
-
-# IDX
-.idx # IDX project files
-*.log # Log files
+# Debugging
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-*.tsbuildinfo
-
-# Cache files
-.eslintcache
-.next/cache

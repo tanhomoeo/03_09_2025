@@ -2,7 +2,6 @@
   "name": "nextn",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
   "scripts": {
     "dev": "next dev --turbo",
     "build": "next build",
@@ -13,6 +12,7 @@
     "lint:fix": "eslint . --ext .ts,.tsx --fix"
   },
   "dependencies": {
+    "@dataconnect/generated": "file:src/dataconnect-generated",
     "@genkit-ai/core": "^1.14.1",
     "@genkit-ai/firebase": "^1.14.1",
     "@genkit-ai/googleai": "^1.14.1",
