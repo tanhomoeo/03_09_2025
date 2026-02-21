@@ -310,7 +310,7 @@ function PatientEntryPageContent() {
   const onSubmit: SubmitHandler<PatientFormValues> = async (data) => {
     setIsSubmittingFinal(true);
     try {
-      let patientId = savedPatientId;
+      const patientId = savedPatientId;
       
       if (!patientId) {
           toast({
