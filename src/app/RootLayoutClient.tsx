@@ -2,18 +2,11 @@
 'use client';
 
 import { useEffect } from 'react';
-import dynamic from 'next/dynamic';
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "next-themes";
 import { AuthProvider } from '@/contexts/AuthContext';
-import { VoiceInputProvider } from '@/contexts/VoiceInputContext';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { getAnalyticsInstance, getStorageInstance } from '@/lib/firebase';
-
-const FloatingVoiceInput = dynamic(
-  () => import('@/components/shared/FloatingVoiceInput').then(mod => mod.FloatingVoiceInput),
-  { ssr: false }
-);
 
 export default function RootLayoutClient({
   children,
@@ -39,13 +32,10 @@ export default function RootLayoutClient({
       >
       <AuthProvider>
         <SidebarProvider>
-            <VoiceInputProvider>
               <div className="flex min-h-svh w-full">
                   {children}
               </div>
               <Toaster />
-              <FloatingVoiceInput />
-            </VoiceInputProvider>
         </SidebarProvider>
       </AuthProvider>
     </ThemeProvider>
