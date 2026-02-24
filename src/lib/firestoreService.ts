@@ -13,6 +13,7 @@ import {
   Timestamp,
   setDoc,
   arrayUnion,
+  DocumentData,
 } from 'firebase/firestore';
 import type {
   Patient,
@@ -74,7 +75,7 @@ const convertDocument = <T extends { id: string }>(docSnap: {
 
 const prepareDataForFirestore = (
   data: Record<string, unknown>,
-): Record<string, unknown> => {
+): DocumentData => {
   if (data === null || typeof data !== 'object') {
     return data;
   }
@@ -242,7 +243,7 @@ export const updatePatient = async (
 
     await updateDoc(
       patientRef,
-      prepareDataForFirestore(firestoreUpdateData) as any,
+      prepareDataForFirestore(firestoreUpdateData),
     );
     return true;
   } catch (error) {
@@ -308,7 +309,7 @@ export const addVisit = async (
     };
     const docRef = await addDoc(
       visitsCollectionRef(),
-      prepareDataForFirestore(newVisit as Record<string, unknown>) as any,
+      prepareDataForFirestore(newVisit as Record<string, unknown>),
     );
     return docRef.id;
   } catch (error) {
@@ -325,7 +326,7 @@ export const updateVisit = async (
     const visitRef = doc(getDbInstance(), 'visits', visitId);
     await updateDoc(
       visitRef,
-      prepareDataForFirestore(visitData as Record<string, unknown>) as any,
+      prepareDataForFirestore(visitData as Record<string, unknown>),
     );
     return true;
   } catch (error) {
@@ -348,7 +349,7 @@ export const createVisitForPrescription = async (
     };
     const docRef = await addDoc(
       visitsCollectionRef(),
-      prepareDataForFirestore(visitData as Record<string, unknown>) as any,
+      prepareDataForFirestore(visitData as Record<string, unknown>),
     );
     return docRef.id;
   } catch (error) {
@@ -436,7 +437,7 @@ export const addPrescription = async (
       prescriptionsCollectionRef(),
       prepareDataForFirestore(
         newPrescription as Record<string, unknown>,
-      ) as any,
+      ),
     );
     return docRef.id;
   } catch (error) {
@@ -455,7 +456,7 @@ export const updatePrescription = async (
       presRef,
       prepareDataForFirestore(
         prescriptionData as Record<string, unknown>,
-      ) as any,
+      ),
     );
     return true;
   } catch (error) {
@@ -519,7 +520,7 @@ export const addPaymentSlip = async (
     };
     const docRef = await addDoc(
       paymentSlipsCollectionRef(),
-      prepareDataForFirestore(newSlip as Record<string, unknown>) as any,
+      prepareDataForFirestore(newSlip as Record<string, unknown>),
     );
     return docRef.id;
   } catch (error) {
@@ -596,7 +597,7 @@ export const addMedicine = async (
     };
     const docRef = await addDoc(
       medicinesCollectionRef(),
-      prepareDataForFirestore(newMedicine as Record<string, unknown>) as any,
+      prepareDataForFirestore(newMedicine as Record<string, unknown>),
     );
     return docRef.id;
   } catch (error) {
@@ -617,7 +618,7 @@ export const updateMedicine = async (
     };
     await updateDoc(
       medicineRef,
-      prepareDataForFirestore(updatedData as Record<string, unknown>) as any,
+      prepareDataForFirestore(updatedData as Record<string, unknown>),
     );
   } catch (error) {
     console.error('Error updating medicine: ', error);
@@ -697,7 +698,7 @@ export const addConsignment = async (
       consignmentRef,
       prepareDataForFirestore(
         consignmentData as unknown as Record<string, unknown>,
-      ) as any,
+      ),
     );
     return String(consignmentData.consignment_id);
   } catch (error) {
@@ -753,7 +754,7 @@ export const addExpense = async (
     };
     const docRef = await addDoc(
       personalExpensesCollectionRef(),
-      prepareDataForFirestore(newExpense as Record<string, unknown>) as any,
+      prepareDataForFirestore(newExpense as Record<string, unknown>),
     );
     return docRef.id;
   } catch (error) {
@@ -774,7 +775,7 @@ export const updateExpense = async (
     };
     await updateDoc(
       expenseRef,
-      prepareDataForFirestore(updatedData as Record<string, unknown>) as any,
+      prepareDataForFirestore(updatedData as Record<string, unknown>),
     );
   } catch (error) {
     console.error('Error updating personal expense: ', error);

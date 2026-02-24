@@ -1,5 +1,8 @@
+
 import { NextResponse } from 'next/server';
 import { analyzeHomeopathicCase } from '@/ai/flows/homeopathic-assistant-flow';
+
+export const runtime = 'nodejs';
 
 export async function POST(request: Request) {
   try {
@@ -26,8 +29,12 @@ export async function POST(request: Request) {
         { status: 400 },
       );
     }
-    const result = await analyzeHomeopathicCase({ caseData });
-    return NextResponse.json(result, { status: 200 });
+    try {
+      const result = await analyzeHomeopathicCase({ caseData });
+      return NextResponse.json(result, { status: 200 });
+    } catch (error) {
+      return NextResponse.json({ error: 'AI failed' }, { status: 500 });
+    }
   } catch (e: unknown) {
     const message = e instanceof Error ? e.message : 'Unknown error';
     return NextResponse.json({ error: message }, { status: 500 });

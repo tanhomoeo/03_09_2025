@@ -1,20 +1,16 @@
-
 {
-  "parser": "@typescript-eslint/parser",
   "extends": [
-    "next/core-web-vitals",
     "eslint:recommended",
+    "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
-    "prettier"
+    "next"
   ],
-  "plugins": ["@typescript-eslint"],
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "react",
+    "@typescript-eslint"
+  ],
   "rules": {
-    "@typescript-eslint/explicit-module-boundary-types": "off",
-    "@typescript-eslint/no-unused-vars": [
-      "error",
-      { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }
-    ],
-    "@typescript-eslint/no-explicit-any": "warn"
-  },
-  "ignorePatterns": ["public/**/*.js", ".next/**/*", "*.config.js", "*.config.ts", "functions/**/*"]
+    "react/react-in-jsx-scope": "off"
+  }
 }

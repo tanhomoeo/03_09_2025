@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { PageHeaderCard } from '@/components/shared/PageHeaderCard';
 import { Loader2, Database, Brain, Heart, Zap } from 'lucide-react';
 import { ProfessionalRepertoryBrowser } from '@/components/repertory/ProfessionalRepertoryBrowser';

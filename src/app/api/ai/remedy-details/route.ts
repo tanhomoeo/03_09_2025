@@ -1,5 +1,8 @@
+
 import { NextResponse } from 'next/server';
 import { getRemedyDetails } from '@/ai/flows/remedy-details';
+
+export const runtime = 'nodejs';
 
 export async function POST(request: Request) {
   try {
@@ -22,8 +25,12 @@ export async function POST(request: Request) {
         { status: 400 },
       );
     }
-    const result = await getRemedyDetails({ remedyName });
-    return NextResponse.json(result, { status: 200 });
+    try {
+      const result = await getRemedyDetails({ remedyName });
+      return NextResponse.json(result, { status: 200 });
+    } catch (error) {
+      return NextResponse.json({ error: 'AI failed' }, { status: 500 });
+    }
   } catch (e: unknown) {
     const message = e instanceof Error ? e.message : 'Unknown error';
     return NextResponse.json({ error: message }, { status: 500 });

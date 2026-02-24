@@ -5,6 +5,9 @@ import type {
   SteadfastConsignment,
   SteadfastStatus,
   SteadfastBalance,
+  SteadfastBulkOrderItem,
+  SteadfastBulkOrderResultItem,
+  SteadfastReturnRequest,
 } from './types';
 
 const BASE_URL = process.env.STEADFAST_API_URL;
@@ -131,10 +134,10 @@ export const getDeliveryStatusByTrackingCode = async (
 
 // Bulk order create
 export const bulkCreateOrders = async (
-  data: import('./types').SteadfastBulkOrderItem[],
-): Promise<import('./types').SteadfastBulkOrderResultItem[]> => {
+  data: SteadfastBulkOrderItem[],
+): Promise<SteadfastBulkOrderResultItem[]> => {
   const res = await makeSteadfastRequest<{
-    data?: import('./types').SteadfastBulkOrderResultItem[];
+    data?: SteadfastBulkOrderResultItem[];
   }>(`/create_order/bulk-order`, 'POST', { data });
   return res?.data || [];
 };
@@ -145,8 +148,8 @@ export const createReturnRequest = async (payload: {
   invoice?: string;
   tracking_code?: string;
   reason?: string;
-}): Promise<import('./types').SteadfastReturnRequest> => {
-  return makeSteadfastRequest<import('./types').SteadfastReturnRequest>(
+}): Promise<SteadfastReturnRequest> => {
+  return makeSteadfastRequest<SteadfastReturnRequest>(
     `/create_return_request`,
     'POST',
     payload,
@@ -155,19 +158,19 @@ export const createReturnRequest = async (payload: {
 
 export const getReturnRequest = async (
   id: number,
-): Promise<import('./types').SteadfastReturnRequest> => {
-  return makeSteadfastRequest<import('./types').SteadfastReturnRequest>(
+): Promise<SteadfastReturnRequest> => {
+  return makeSteadfastRequest<SteadfastReturnRequest>(
     `/get_return_request/${id}`,
   );
 };
 
 export const getReturnRequests = async (): Promise<
-  import('./types').SteadfastReturnRequest[]
+  SteadfastReturnRequest[]
 > => {
   const res = await makeSteadfastRequest<{
-    data?: import('./types').SteadfastReturnRequest[];
+    data?: SteadfastReturnRequest[];
   }>(`/get_return_requests`);
-  return res?.data || ([] as import('./types').SteadfastReturnRequest[]);
+  return res?.data || [];
 };
 
 export const getCurrentBalance = async (): Promise<SteadfastBalance> => {

@@ -1,8 +1,8 @@
+
 import 'server-only';
 import { googleAI } from '@genkit-ai/googleai';
-import { genkit, type Plugin } from 'genkit';
-
-const plugins: Plugin[] = [];
+import { genkit, Plugin } from 'genkit';
+const plugins: Plugin<any>[] = [];
 
 if (process.env.GEMINI_API_KEY) {
   plugins.push(googleAI({ apiKey: process.env.GEMINI_API_KEY as string }));

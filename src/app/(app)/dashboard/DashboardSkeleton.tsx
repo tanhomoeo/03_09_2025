@@ -1,6 +1,5 @@
 
 'use client';
-import React from 'react';
 
 export const DashboardSkeleton = () => (
     <div className="space-y-8 animate-pulse">

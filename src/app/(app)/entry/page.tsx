@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState, Suspense } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -23,15 +23,13 @@ import {
 } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import { addPatient, updatePatient } from '@/lib/firestoreService';
-import type { Patient, CategorizedCaseNotes, AnalysisResult } from '@/lib/types';
+import type { Patient, AnalysisResult } from '@/lib/types';
 import { PageHeaderCard } from '@/components/shared/PageHeaderCard';
 import { useSearchParams } from 'next/navigation';
 import {
   Loader2,
   CalendarIcon,
   Brain,
-  ClipboardEdit,
-  Lightbulb,
   Save,
   Sparkles,
 } from 'lucide-react';

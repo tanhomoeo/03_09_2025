@@ -1,5 +1,5 @@
 
-import React, { Suspense } from 'react';
+import { Suspense } from 'react';
 import SearchPageClient from './SearchPageClient';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 

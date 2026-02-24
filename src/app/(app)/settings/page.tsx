@@ -1,6 +1,6 @@
 
 'use client';
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
@@ -16,6 +16,7 @@ import { APP_NAME, APP_VERSION } from '@/lib/constants';
 import type { Patient, Visit, Prescription, PaymentSlip, ClinicSettings } from '@/lib/types';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
+import { Header } from '@radix-ui/react-accordion';
 
 interface AllData {
   patients: Patient[];
@@ -282,7 +283,7 @@ export default function AppSettingsPage() {
       <Card className="bg-card/80 backdrop-blur-lg">
         <CardHeader>
           <CardTitle className="font-headline text-lg">সম্পর্কিত</CardTitle>
-        </CardHeader>
+        </Header>
         <CardContent className="space-y-1 text-sm">
           <p className="font-semibold">{APP_NAME} - রোগী ম্যানেজমেন্ট সিস্টেম</p>
           <p className="text-muted-foreground">ভার্সন {APP_VERSION}</p>
